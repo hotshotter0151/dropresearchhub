@@ -723,7 +723,7 @@ function renderProducts(){
         <div class="pbar-wrap"><div class="pbar-lbl"><span>Trend score</span><span style="color:#1D9E75;font-weight:500">${p.trend}/100</span></div><div class="pbar"><div class="pbar-fill" style="width:${p.trend}%;background:#1D9E75"></div></div></div>
         <div class="pcard-footer">
           <a class="ad-link tiktok" href="https://www.tiktok.com/search?q=${p.tiktokQ}" target="_blank">TikTok ads</a>
-          <a class="ad-link meta" href="https://www.facebook.com/ads/library/?q=${encodeURIComponent(p.name)}&search_type=keyword_unordered" target="_blank">Meta library</a>
+          <a class="ad-link meta" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}&search_type=keyword_unordered" target="_blank">Meta library</a>
           <button class="creative-btn" onclick="quickCreative('${p.name}')">Make ad ✨</button>
         </div>
       </div>
