@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DropResearch Hub — The Ultimate Product Research Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0A0A0A;
+  --dark:#111111;
+  --card:#181818;
+  --border:#2a2a2a;
+  --green:#1D9E75;
+  --green-light:#5DCAA5;
+  --yellow:#EF9F27;
+  --yellow-light:#FAC775;
+  --blue:#378ADD;
+  --blue-dark:#0C447C;
+  --white:#FFFFFF;
+  --gray:#888780;
+  --gray-light:#B4B2A9;
+  --text:#E8E6E0;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:var(--blue-dark);border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;border:0.5px solid var(--blue)}
+.logo-icon svg{width:20px;height:20px}
+.logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--white)}
+.logo-text span{color:var(--yellow)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.btn-ghost{background:none;border:0.5px solid var(--border);color:var(--gray-light);padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.2s}
+.btn-ghost:hover{border-color:var(--green);color:var(--white)}
+.btn-primary{background:var(--green);border:none;color:var(--white);padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s}
+.btn-primary:hover{background:var(--green-light);color:var(--black)}
+
+/* ── PAGES ── */
+.page{display:none;padding-top:64px}
+.page.active{display:block}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.3}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(29,158,117,0.12) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green-light);margin-bottom:2rem;letter-spacing:1px;text-transform:uppercase}
+.hero-badge span{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:900;line-height:1.1;color:var(--white);max-width:800px;margin-bottom:1.5rem}
+.hero h1 .accent-yellow{color:var(--yellow)}
+.hero h1 .accent-green{color:var(--green)}
+.hero-sub{font-size:1.1rem;color:var(--gray-light);max-width:520px;margin-bottom:2.5rem;font-weight:300}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem}
+.btn-hero{background:var(--green);color:var(--white);border:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;letter-spacing:0.3px}
+.btn-hero:hover{background:var(--green-light);color:var(--black);transform:translateY(-1px)}
+.btn-hero-outline{background:none;color:var(--white);border:0.5px solid var(--border);padding:14px 32px;border-radius:10px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.btn-hero-outline:hover{border-color:var(--gray);background:rgba(255,255,255,0.03)}
+.hero-pricing-note{font-size:13px;color:var(--gray);display:flex;align-items:center;gap:6px}
+.hero-pricing-note strong{color:var(--yellow-light)}
+
+/* ── SNEAK PEEK ── */
+.sneak-section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:1rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:var(--white);margin-bottom:1rem}
+.section-sub{color:var(--gray-light);font-size:1rem;max-width:500px;margin-bottom:3rem;font-weight:300}
+.sneak-wrap{position:relative;border-radius:16px;overflow:hidden;border:0.5px solid var(--border)}
+.sneak-products{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.sneak-card{background:var(--card);padding:20px;border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.sneak-card:nth-child(3n){border-right:none}
+.sneak-card:nth-child(n+4){border-bottom:none}
+.sneak-emoji{font-size:32px;margin-bottom:10px}
+.sneak-name{font-size:14px;font-weight:500;color:var(--white);margin-bottom:4px}
+.sneak-niche{font-size:11px;color:var(--gray);margin-bottom:12px}
+.sneak-metrics{display:flex;gap:12px}
+.sneak-met{flex:1}
+.sneak-met-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px}
+.sneak-met-val{font-size:13px;font-weight:500;color:var(--white)}
+.sneak-bar{height:3px;background:#222;border-radius:2px;margin-top:10px;overflow:hidden}
+.sneak-bar-fill{height:100%;border-radius:2px;background:var(--green)}
+.sneak-blur{filter:blur(6px);opacity:0.4}
+.sneak-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,10,0.7)}
+.sneak-overlay-box{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:2.5rem;text-align:center;max-width:380px}
+.sneak-lock-icon{width:48px;height:48px;background:rgba(29,158,117,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:0.5px solid rgba(29,158,117,0.3)}
+.sneak-overlay-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.5rem}
+.sneak-overlay-sub{font-size:13px;color:var(--gray);margin-bottom:1.5rem;line-height:1.6}
+.sneak-overlay .btn-hero{width:100%;font-size:14px;padding:12px}
+
+/* ── FEATURES ── */
+.features-section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.feature-card{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:1.75rem;transition:border-color 0.2s}
+.feature-card:hover{border-color:var(--green)}
+.feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:1rem}
+.feature-icon.green{background:rgba(29,158,117,0.12);border:0.5px solid rgba(29,158,117,0.2)}
+.feature-icon.yellow{background:rgba(239,159,39,0.12);border:0.5px solid rgba(239,159,39,0.2)}
+.feature-icon.blue{background:rgba(55,138,221,0.12);border:0.5px solid rgba(55,138,221,0.2)}
+.feature-title{font-size:15px;font-weight:500;color:var(--white);margin-bottom:6px}
+.feature-desc{font-size:13px;color:var(--gray);line-height:1.7}
+
+/* ── PRICING ── */
+.pricing-section{padding:5rem 2rem;max-width:700px;margin:0 auto;text-align:center}
+.pricing-card{background:var(--card);border:0.5px solid var(--green);border-radius:20px;padding:3rem;position:relative;overflow:hidden}
+.pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green),var(--yellow))}
+.pricing-badge{background:rgba(239,159,39,0.15);border:0.5px solid rgba(239,159,39,0.3);color:var(--yellow-light);font-size:11px;padding:4px 14px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;display:inline-block;margin-bottom:1.5rem}
+.pricing-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);margin-bottom:0.5rem}
+.pricing-sub{font-size:13px;color:var(--gray);margin-bottom:2rem}
+.pricing-main{margin-bottom:0.5rem}
+.pricing-amount{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--white)}
+.pricing-amount sup{font-size:1.5rem;vertical-align:top;margin-top:1rem;display:inline-block}
+.pricing-period{font-size:13px;color:var(--gray);margin-bottom:0.5rem}
+.pricing-then{background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2);border-radius:10px;padding:12px 20px;margin:1.5rem 0;display:flex;align-items:center;justify-content:space-between}
+.pricing-then-left{text-align:left}
+.pricing-then-label{font-size:12px;color:var(--gray);margin-bottom:2px}
+.pricing-then-amount{font-size:1.4rem;font-weight:500;color:var(--green-light)}
+.pricing-then-badge{background:var(--green);color:var(--white);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
+.pricing-features{text-align:left;margin:1.5rem 0}
+.pricing-feature{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:var(--gray-light)}
+.pricing-feature:last-child{border-bottom:none}
+.pricing-feature svg{flex-shrink:0;color:var(--green)}
+.pricing-cta{width:100%;background:var(--green);color:var(--white);border:none;padding:16px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-bottom:12px}
+.pricing-cta:hover{background:var(--green-light);color:var(--black)}
+.pricing-note{font-size:12px;color:var(--gray)}
+
+/* ── MEMBERS AREA ── */
+.members-wrap{min-height:calc(100vh - 64px);background:var(--black)}
+.members-topbar{background:var(--dark);border-bottom:0.5px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.members-tabs{display:flex;gap:2px}
+.mtab{background:none;border:none;color:var(--gray);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.15s}
+.mtab.active{background:#222;color:var(--white);font-weight:500}
+.mtab:hover:not(.active){color:var(--white)}
+.members-main{padding:1.5rem;max-width:1200px;margin:0 auto}
+.mpage{display:none}
+.mpage.active{display:block}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
+.stat{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:14px}
+.stat-label{font-size:11px;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-value{font-size:22px;font-weight:500;color:var(--white)}
+.stat-sub{font-size:11px;color:var(--gray);margin-top:2px}
+
+/* ── HOTLIST ── */
+.hotlist{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.hotlist-hdr{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.hotlist-hdr-title{font-size:14px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:8px}
+.hot-pill{background:rgba(239,159,39,0.15);color:var(--yellow-light);font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)}
+.hl-row{display:flex;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--border);gap:12px}
+.hl-row:last-child{border-bottom:none}
+.hl-rank{font-size:12px;color:var(--gray);width:16px}
+.hl-em{font-size:20px}
+.hl-info{flex:1}
+.hl-name{font-size:13px;font-weight:500;color:var(--white)}
+.hl-sub{font-size:11px;color:var(--gray)}
+.hl-margin{font-size:13px;font-weight:500;color:var(--green)}
+
+/* ── AI PANEL ── */
+.ai-panel{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:1.5rem}
+.ai-hdr{font-size:13px;font-weight:500;color:var(--white);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ai-hdr-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.ai-row{display:flex;gap:8px}
+.ai-inp{flex:1;background:#222;border:0.5px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.ai-inp:focus{border-color:var(--green)}
+.ai-inp::placeholder{color:var(--gray)}
+.ai-send{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.2s;white-space:nowrap}
+.ai-send:hover{background:var(--green-light);color:var(--black)}
+.ai-resp{margin-top:12px;font-size:13px;color:var(--gray-light);line-height:1.7;min-height:16px}
+.typing{display:inline-flex;gap:3px}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:0.2s}
+.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+
+/* ── PRODUCT GRID ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-hdr-title{font-size:14px;font-weight:500;color:var(--white)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.fbtn{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gray);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.fbtn.active{background:var(--green);color:var(--white);border-color:var(--green)}
+.fbtn:hover:not(.active){color:var(--white);border-color:#444}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:2rem}
+.pcard{background:var(--card);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:border-color 0.2s}
+.pcard:hover{border-color:#444}
+.pcard-img{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;border-bottom:0.5px solid var(--border)}
+.pcard-body{padding:14px}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.pcard-name{font-size:13px;font-weight:500;color:var(--white);line-height:1.3}
+.pcard-niche{font-size:11px;color:var(--gray)}
+.hbtn{background:none;border:none;cursor:pointer;color:var(--gray);font-size:18px;padding:0;line-height:1;transition:color 0.2s}
+.hbtn.saved{color:#E24B4A}
+.pmetrics{display:flex;gap:8px;margin-bottom:10px}
+.pmet{flex:1}
+.pmet-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px}
+.pmet-val{font-size:13px;font-weight:500;color:var(--white)}
+.pbar-wrap{margin-bottom:8px}
+.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--gray);margin-bottom:3px}
+.pbar{height:3px;background:#222;border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px}
+.ptags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.ptag{font-size:10px;padding:2px 8px;border-radius:20px}
+.pcard-footer{display:flex;gap:6px;align-items:center;padding-top:10px;border-top:0.5px solid var(--border);flex-wrap:wrap}
+.ad-link{font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid var(--border);text-decoration:none;display:flex;align-items:center;gap:4px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.ad-link.tiktok{border-color:#AFA9EC;color:#AFA9EC;background:rgba(175,169,236,0.08)}
+.ad-link.tiktok:hover{background:rgba(175,169,236,0.15)}
+.ad-link.meta{border-color:var(--blue);color:var(--blue);background:rgba(55,138,221,0.08)}
+.ad-link.meta:hover{background:rgba(55,138,221,0.15)}
+.creative-btn{font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid rgba(29,158,117,0.3);color:var(--green-light);background:rgba(29,158,117,0.08);cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto;transition:all 0.15s}
+.creative-btn:hover{background:rgba(29,158,117,0.15)}
+
+/* ── CREATIVE TAB ── */
+.creative-panel{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:1.5rem}
+.creative-hdr{font-size:14px;font-weight:500;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.cgroup label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px}
+.cgroup input,.cgroup select{width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
+.cgroup input:focus,.cgroup select:focus{border-color:var(--green)}
+.cgroup select option{background:var(--dark)}
+.gen-btn{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+.gen-btn:hover{background:var(--green-light);color:var(--black)}
+.creative-out{display:none;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--border)}
+.creative-out.show{display:block}
+.stabs{display:flex;gap:6px;margin-bottom:12px}
+.stab{padding:5px 14px;font-size:12px;border:0.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--card);color:var(--gray);font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.stab.active{background:var(--green);color:var(--white);border-color:var(--green)}
+.script-box{background:#111;border-radius:10px;padding:14px;font-size:13px;color:var(--gray-light);line-height:1.8;white-space:pre-wrap;border:0.5px solid var(--border)}
+.brief-box{background:rgba(29,158,117,0.06);border-radius:10px;padding:14px;font-size:13px;color:var(--green-light);line-height:1.8;white-space:pre-wrap;border:0.5px solid rgba(29,158,117,0.2)}
+.sactions{display:flex;gap:8px;margin-top:8px}
+.copy-btn{font-size:12px;padding:5px 14px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;background:none;color:var(--gray);display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.copy-btn:hover{color:var(--white);border-color:#444}
+.quick-products{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem}
+
+/* ── ADMIN ── */
+.admin-section{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.admin-hdr{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.admin-hdr-title{font-size:14px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:8px}
+.pub-btn{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.pub-btn:hover{background:var(--green-light);color:var(--black)}
+.admin-row{display:flex;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--border);gap:12px}
+.admin-row:last-child{border-bottom:none}
+.admin-em{font-size:20px;width:28px;text-align:center}
+.admin-info{flex:1}
+.admin-name{font-size:13px;font-weight:500;color:var(--white)}
+.admin-meta{font-size:11px;color:var(--gray)}
+.score-chip{font-size:11px;padding:2px 8px;border-radius:20px;margin-left:4px}
+.toggle-wrap{display:flex;align-items:center;gap:6px}
+.toggle{width:36px;height:20px;border-radius:10px;background:#222;border:0.5px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.toggle.on{background:var(--green);border-color:var(--green)}
+.toggle-thumb{width:16px;height:16px;border-radius:50%;background:var(--white);position:absolute;top:2px;left:2px;transition:left 0.2s}
+.toggle.on .toggle-thumb{left:18px}
+.toggle-label{font-size:12px;color:var(--gray)}
+.refresh-zone{padding:16px;border-top:0.5px solid var(--border)}
+.refresh-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.regen-btn{background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;color:var(--gray-light);display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.regen-btn:hover{border-color:#444;color:var(--white)}
+.last-updated{font-size:11px;color:var(--gray);margin-top:6px}
+.admin-stats{padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:var(--white);padding:12px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none;font-family:'DM Sans',sans-serif}
+.toast.show{opacity:1}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;text-align:center;font-size:12px;color:var(--gray)}
+footer span{color:var(--green)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#" onclick="showLanding()">
+    <div class="logo-icon">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="3" y1="5" x2="12" y2="5" stroke="#FAC775" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="3" y1="10" x2="17" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="3" y1="15" x2="10" y2="15" stroke="#5DCAA5" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="15" cy="15" r="3.5" fill="#1D9E75"/>
+        <polyline points="13.5,15 15,16.5 17,13.5" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="logo-text">Drop<span>Research</span> Hub</div>
+  </a>
+  <div class="nav-right" id="nav-right">
+    <button class="btn-ghost" onclick="showLogin()">Log in</button>
+    <button class="btn-primary" onclick="showSignup()">Get access</button>
+  </div>
+</nav>
+
+<!-- LANDING PAGE -->
+<div class="page active" id="page-landing">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-badge"><span></span>Updated weekly — new products every Monday</div>
+    <h1>The <span class="accent-yellow">ultimate</span> product research tool for <span class="accent-green">serious</span> ecom sellers</h1>
+    <p class="hero-sub">Stop spending hours searching for winning products. Get curated, data-driven product intelligence — with ad creatives ready to send.</p>
+    <div class="hero-cta">
+      <button class="btn-hero" onclick="showSignup()">Start now — £49.99 first month</button>
+      <button class="btn-hero-outline" onclick="document.getElementById('sneak').scrollIntoView({behavior:'smooth'})">See what's inside</button>
+    </div>
+    <div class="hero-pricing-note">Then just <strong>£24.99/month</strong> — 50% off forever. Cancel anytime.</div>
+  </section>
+
+  <!-- SNEAK PEEK -->
+  <section class="sneak-section" id="sneak">
+    <div class="section-label">Sneak peek</div>
+    <h2 class="section-title">See what members get every week</h2>
+    <p class="section-sub">A glimpse of the live product feed — updated every Monday with curated winning products.</p>
+    <div class="sneak-wrap">
+      <div class="sneak-products">
+        <div class="sneak-card">
+          <div class="sneak-emoji">🧲</div>
+          <div class="sneak-name">Magnetic phone mount</div>
+          <div class="sneak-niche">Tech accessories</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">83%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">94/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:94%"></div></div>
+        </div>
+        <div class="sneak-card">
+          <div class="sneak-emoji">🌿</div>
+          <div class="sneak-name">Bamboo kitchen organiser</div>
+          <div class="sneak-niche">Home & kitchen</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">79%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">88/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="sneak-card">
+          <div class="sneak-emoji">🐾</div>
+          <div class="sneak-name">Slow feeder pet bowl</div>
+          <div class="sneak-niche">Pet products</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">81%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">85/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:85%"></div></div>
+        </div>
+        <div class="sneak-card sneak-blur">
+          <div class="sneak-emoji">💆</div>
+          <div class="sneak-name">Gua sha facial tool</div>
+          <div class="sneak-niche">Beauty</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">85%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">79/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:79%"></div></div>
+        </div>
+        <div class="sneak-card sneak-blur">
+          <div class="sneak-emoji">🏋️</div>
+          <div class="sneak-name">Resistance band set</div>
+          <div class="sneak-niche">Fitness</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">79%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">76/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:76%"></div></div>
+        </div>
+        <div class="sneak-card sneak-blur">
+          <div class="sneak-emoji">🔆</div>
+          <div class="sneak-name">LED desk lamp USB-C</div>
+          <div class="sneak-niche">Tech / Office</div>
+          <div class="sneak-metrics">
+            <div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">78%</div></div>
+            <div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">82/100</div></div>
+          </div>
+          <div class="sneak-bar"><div class="sneak-bar-fill" style="width:82%"></div></div>
+        </div>
+      </div>
+      <div class="sneak-overlay">
+        <div class="sneak-overlay-box">
+          <div class="sneak-lock-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div class="sneak-overlay-title">47 products waiting for you</div>
+          <div class="sneak-overlay-sub">Saturation scores, trend data, supplier links, TikTok & Meta ad links, and AI-generated ad creatives — all in one place.</div>
+          <button class="btn-hero" onclick="showSignup()">Unlock full access</button>
+          <div style="font-size:12px;color:#5F5E5A;margin-top:10px">£49.99 first month · then £24.99/mo forever</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="section-label">Everything included</div>
+    <h2 class="section-title">One subscription, everything you need</h2>
+    <p class="section-sub">No tiers, no upsells. Every member gets the full suite from day one.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">📦</div>
+        <div class="feature-title">Weekly product feed</div>
+        <div class="feature-desc">Fresh winning products every Monday. Each with cost price, sell price, margin, saturation score and trend score.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon yellow">📺</div>
+        <div class="feature-title">Live ad library links</div>
+        <div class="feature-desc">One click to see real running TikTok and Meta ads for every product. Know exactly how competitors are selling it.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">🤖</div>
+        <div class="feature-title">AI research assistant</div>
+        <div class="feature-desc">Ask anything. "Find me a winning pet product under £8 cost." Get instant, expert-level product suggestions.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon yellow">🎬</div>
+        <div class="feature-title">Ad creative generator</div>
+        <div class="feature-desc">Generate video scripts, hook variations, and ready-to-send briefs for Viral Ecom Ads and Bands Off Ads in seconds.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🔥</div>
+        <div class="feature-title">Weekly hot list</div>
+        <div class="feature-desc">The top 5 products ranked by trend score every Monday. Know exactly what to test first.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">💾</div>
+        <div class="feature-title">Save your favourites</div>
+        <div class="feature-desc">Save products to your personal list and come back to them anytime. Never lose track of a winner.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section">
+    <div class="section-label" style="text-align:center">Pricing</div>
+    <h2 class="section-title" style="text-align:center">Simple, honest pricing</h2>
+    <p class="section-sub" style="margin:0 auto 3rem;text-align:center">One plan. Everything included. Lock in your rate today.</p>
+    <div class="pricing-card">
+      <div class="pricing-badge">⚡ Limited time — 50% off from month 2</div>
+      <div class="pricing-title">Full access membership</div>
+      <div class="pricing-sub">Everything included from day one</div>
+      <div class="pricing-main">
+        <div class="pricing-amount"><sup>£</sup>49.99</div>
+        <div class="pricing-period">first month — full access immediately</div>
+      </div>
+      <div class="pricing-then">
+        <div class="pricing-then-left">
+          <div class="pricing-then-label">Then every month after</div>
+          <div class="pricing-then-amount">£24.99/mo</div>
+        </div>
+        <div class="pricing-then-badge">50% off forever</div>
+      </div>
+      <div class="pricing-features">
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>47+ winning products updated every week</div>
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Live TikTok & Meta ad library links</div>
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>AI product research assistant</div>
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ad creative generator — scripts, hooks & briefs</div>
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Weekly hot list — top 5 products every Monday</div>
+        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Cancel anytime — no contracts</div>
+      </div>
+      <button class="pricing-cta" onclick="showSignup()">Get full access now</button>
+      <div class="pricing-note">Secure payment via Stripe · Cancel anytime · Keep 50% rate as long as you stay subscribed</div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:#fff;margin-bottom:8px">Drop<span style="color:#EF9F27">Research</span> Hub</div>
+    <div>© 2026 DropResearch Hub. Built for serious ecom sellers.</div>
+  </footer>
+</div>
+
+<!-- LOGIN PAGE -->
+<div class="page" id="page-login">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem">
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:420px">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);margin-bottom:4px">Welcome back</div>
+        <div style="font-size:13px;color:var(--gray)">Log in to your DropResearch Hub account</div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Email</label>
+        <input type="email" placeholder="your@email.com" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Password</label>
+        <input type="password" placeholder="••••••••" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <button onclick="showMembers()" style="width:100%;background:var(--green);color:var(--white);border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px">Log in</button>
+      <div style="text-align:center;font-size:13px;color:var(--gray)">Don't have an account? <a href="#" onclick="showSignup()" style="color:var(--green);text-decoration:none">Get access</a></div>
+      <div style="text-align:center;margin-top:8px"><a href="#" onclick="showMembers()" style="font-size:12px;color:var(--gray);text-decoration:none">Demo: skip login →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div class="page" id="page-signup">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem">
+    <div style="background:var(--card);border:0.5px solid var(--green);border-radius:20px;padding:2.5rem;width:100%;max-width:460px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green),var(--yellow))"></div>
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);margin-bottom:4px">Get full access</div>
+        <div style="font-size:13px;color:var(--gray)">Join DropResearch Hub today</div>
+      </div>
+      <div style="background:rgba(29,158,117,0.08);border:0.5px solid rgba(29,158,117,0.2);border-radius:10px;padding:12px 16px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:12px;color:var(--gray);margin-bottom:2px">First month</div>
+          <div style="font-size:1.3rem;font-weight:500;color:var(--white)">£49.99</div>
+        </div>
+        <div style="font-size:20px;color:var(--gray)">→</div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--gray);margin-bottom:2px">Then every month</div>
+          <div style="font-size:1.3rem;font-weight:500;color:var(--green)">£24.99 <span style="font-size:11px;background:var(--green);color:var(--white);padding:2px 8px;border-radius:20px">50% off</span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div>
+          <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">First name</label>
+          <input type="text" placeholder="John" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Last name</label>
+          <input type="text" placeholder="Smith" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Email</label>
+        <input type="email" placeholder="your@email.com" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Password</label>
+        <input type="password" placeholder="••••••••" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <button onclick="showMembers()" style="width:100%;background:var(--green);color:var(--white);border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Pay £49.99 & get instant access</button>
+      <div style="text-align:center;font-size:12px;color:var(--gray)">Secured by Stripe · Cancel anytime · 50% off every month after</div>
+      <div style="text-align:center;margin-top:8px"><a href="#" onclick="showMembers()" style="font-size:12px;color:var(--gray);text-decoration:none">Demo: skip payment →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS AREA -->
+<div class="page" id="page-members">
+  <div class="members-wrap">
+    <div class="members-topbar">
+      <div class="members-tabs">
+        <button class="mtab active" onclick="showMTab('feed',this)">📦 Feed</button>
+        <button class="mtab" onclick="showMTab('creative',this)">🎬 Ad creative</button>
+        <button class="mtab" onclick="showMTab('admin',this)">⚙️ Admin</button>
+      </div>
+      <div style="font-size:12px;color:var(--gray)">Updated Mon 2 Jun · <a href="#" onclick="showLanding()" style="color:var(--green);text-decoration:none">Sign out</a></div>
+    </div>
+    <div class="members-main">
+
+      <!-- FEED -->
+      <div class="mpage active" id="mpage-feed">
+        <div class="stats-row">
+          <div class="stat"><div class="stat-label">Live products</div><div class="stat-value" id="live-count">6</div><div class="stat-sub">this week</div></div>
+          <div class="stat"><div class="stat-label">Avg margin</div><div class="stat-value">71%</div><div class="stat-sub">across feed</div></div>
+          <div class="stat"><div class="stat-label">Low saturation</div><div class="stat-value">4</div><div class="stat-sub">under score 40</div></div>
+          <div class="stat"><div class="stat-label">Saved</div><div class="stat-value" id="saved-count">0</div><div class="stat-sub">your list</div></div>
+        </div>
+        <div class="hotlist">
+          <div class="hotlist-hdr">
+            <div class="hotlist-hdr-title">🔥 This week's hot list <span class="hot-pill">Week of 2 Jun</span></div>
+            <div style="font-size:11px;color:var(--gray)">Auto-ranked by trend score</div>
+          </div>
+          <div class="hl-row"><span class="hl-rank">1</span><span class="hl-em">🧲</span><div class="hl-info"><div class="hl-name">Magnetic phone mount</div><div class="hl-sub">Tech · sat 22 · trend 94</div></div><span class="hl-margin">83% margin</span></div>
+          <div class="hl-row"><span class="hl-rank">2</span><span class="hl-em">🐾</span><div class="hl-info"><div class="hl-name">Slow feeder pet bowl</div><div class="hl-sub">Pet · sat 28 · trend 85</div></div><span class="hl-margin">81% margin</span></div>
+          <div class="hl-row"><span class="hl-rank">3</span><span class="hl-em">🌿</span><div class="hl-info"><div class="hl-name">Bamboo kitchen organiser</div><div class="hl-sub">Home · sat 31 · trend 88</div></div><span class="hl-margin">79% margin</span></div>
+          <div class="hl-row"><span class="hl-rank">4</span><span class="hl-em">💆</span><div class="hl-info"><div class="hl-name">Gua sha facial tool</div><div class="hl-sub">Beauty · sat 55 · trend 79</div></div><span class="hl-margin">85% margin</span></div>
+          <div class="hl-row"><span class="hl-rank">5</span><span class="hl-em">🔆</span><div class="hl-info"><div class="hl-name">LED desk lamp USB-C</div><div class="hl-sub">Tech · sat 38 · trend 82</div></div><span class="hl-margin">78% margin</span></div>
+        </div>
+        <div class="ai-panel">
+          <div class="ai-hdr"><div class="ai-hdr-dot"></div>AI research assistant</div>
+          <div class="ai-row">
+            <input class="ai-inp" id="ai-q" type="text" placeholder="e.g. find me a winning pet product under £8 cost...">
+            <button class="ai-send" onclick="askAI()">Ask AI</button>
+          </div>
+          <div class="ai-resp" id="ai-resp"></div>
+        </div>
+        <div class="section-hdr"><div class="section-hdr-title">Product feed</div></div>
+        <div class="filters">
+          <button class="fbtn active" onclick="setFilter(this,'all')">All niches</button>
+          <button class="fbtn" onclick="setFilter(this,'tech')">Tech</button>
+          <button class="fbtn" onclick="setFilter(this,'home')">Home</button>
+          <button class="fbtn" onclick="setFilter(this,'pet')">Pet</button>
+          <button class="fbtn" onclick="setFilter(this,'beauty')">Beauty</button>
+          <button class="fbtn" onclick="setFilter(this,'fitness')">Fitness</button>
+        </div>
+        <div class="pgrid" id="pgrid"></div>
+      </div>
+
+      <!-- CREATIVE -->
+      <div class="mpage" id="mpage-creative">
+        <div class="creative-panel">
+          <div class="creative-hdr">🎬 Ad creative generator</div>
+          <div class="cform">
+            <div class="cgroup"><label>Product name</label><input type="text" id="cp-product" placeholder="e.g. Magnetic phone mount"></div>
+            <div class="cgroup"><label>Platform</label><select id="cp-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
+            <div class="cgroup"><label>Ad service</label><select id="cp-service"><option>Viral Ecom Ads</option><option>Bands Off Ads</option><option>Custom / in-house</option></select></div>
+            <div class="cgroup"><label>Ad angle</label><select id="cp-angle"><option>Problem → solution</option><option>Social proof / testimonial</option><option>Lifestyle / aspirational</option><option>Curiosity / pattern interrupt</option><option>Direct offer / price reveal</option></select></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button class="gen-btn" onclick="generateCreative()">✨ Generate creative pack</button>
+            <span style="font-size:12px;color:var(--gray)" id="gen-status"></span>
+          </div>
+          <div class="creative-out" id="creative-out">
+            <div class="stabs">
+              <button class="stab active" onclick="setScriptTab('script',this)">Video script</button>
+              <button class="stab" onclick="setScriptTab('hooks',this)">Hook variations</button>
+              <button class="stab" onclick="setScriptTab('brief',this)">Brief to send</button>
+            </div>
+            <div id="tab-script"><div class="script-box" id="script-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('script-content')">📋 Copy</button></div></div>
+            <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('hooks-content')">📋 Copy</button></div></div>
+            <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('brief-content')">📋 Copy brief</button><button class="copy-btn" onclick="alert('Connect your email to send directly — coming soon!')">✉️ Send to service</button></div></div>
+          </div>
+        </div>
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:14px">
+          <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:10px">Quick generate from feed</div>
+          <div class="quick-products" id="quick-products"></div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="mpage" id="mpage-admin">
+        <div class="admin-section">
+          <div class="admin-hdr">
+            <div class="admin-hdr-title">📋 Pending products <span style="background:rgba(239,159,39,0.15);color:var(--yellow-light);font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)" id="pending-count">6 awaiting review</span></div>
+            <button class="pub-btn" onclick="publishFeed()">🚀 Publish approved</button>
+          </div>
+          <div id="admin-rows"></div>
+          <div class="refresh-zone">
+            <div class="refresh-row">
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px">Weekly feed refresh</div>
+                <div style="font-size:12px;color:var(--gray)">AI generates a fresh batch every week. Review, approve, then publish to members.</div>
+              </div>
+              <button class="regen-btn" onclick="regenFeed(this)">🔄 Regenerate feed</button>
+            </div>
+            <div class="last-updated" id="last-updated">Last published: Mon 2 Jun · 09:14</div>
+          </div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-hdr"><div class="admin-hdr-title">📊 Platform stats</div></div>
+          <div class="admin-stats">
+            <div class="stat"><div class="stat-label">Active members</div><div class="stat-value">148</div><div class="stat-sub">+12 this month</div></div>
+            <div class="stat"><div class="stat-label">Subscribers</div><div class="stat-value">89</div><div class="stat-sub">60% conversion</div></div>
+            <div class="stat"><div class="stat-label">MRR</div><div class="stat-value">£5.2k</div><div class="stat-sub">at £24.99/mo</div></div>
+            <div class="stat"><div class="stat-label">Creatives made</div><div class="stat-value">312</div><div class="stat-sub">this month</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ANTHROPIC_API_KEY = 'YOUR_API_KEY_HERE';
+
+const products=[
+  {id:1,emoji:'🧲',name:'Magnetic phone mount',niche:'Tech',cost:'£3.20',sell:'£18.99',margin:'83%',sat:22,trend:94,bg:'#0C447C',tiktokQ:'magnetic+phone+mount',metaQ:'magnetic phone mount'},
+  {id:2,emoji:'🌿',name:'Bamboo kitchen organiser',niche:'Home',cost:'£4.10',sell:'£19.99',margin:'79%',sat:31,trend:88,bg:'#27500A',tiktokQ:'bamboo+kitchen+organizer',metaQ:'bamboo kitchen organizer'},
+  {id:3,emoji:'🐾',name:'Slow feeder pet bowl',niche:'Pet',cost:'£2.80',sell:'£14.99',margin:'81%',sat:28,trend:85,bg:'#633806',tiktokQ:'slow+feeder+dog+bowl',metaQ:'slow feeder pet bowl'},
+  {id:4,emoji:'💆',name:'Gua sha facial tool',niche:'Beauty',cost:'£1.90',sell:'£12.99',margin:'85%',sat:55,trend:79,bg:'#72243E',tiktokQ:'gua+sha+tool',metaQ:'gua sha facial tool'},
+  {id:5,emoji:'🏋️',name:'Resistance band set',niche:'Fitness',cost:'£3.50',sell:'£16.99',margin:'79%',sat:44,trend:76,bg:'#0C447C',tiktokQ:'resistance+bands',metaQ:'resistance band set'},
+  {id:6,emoji:'🔆',name:'LED desk lamp USB-C',niche:'Tech',cost:'£5.60',sell:'£24.99',margin:'78%',sat:38,trend:82,bg:'#085041',tiktokQ:'led+desk+lamp',metaQ:'LED desk lamp'}
+];
+
+let saved=new Set();
+let approvals={};
+let activeFilter='all';
+products.forEach(p=>approvals[p.id]=true);
+
+function showLanding(){showPage('landing');document.getElementById('nav-right').innerHTML='<button class="btn-ghost" onclick="showLogin()">Log in</button><button class="btn-primary" onclick="showSignup()">Get access</button>'}
+function showLogin(){showPage('login')}
+function showSignup(){showPage('signup')}
+function showMembers(){showPage('members');document.getElementById('nav-right').innerHTML='<span style="font-size:13px;color:var(--gray)">Welcome back 👋</span>';renderProducts();renderAdmin();renderQuickProducts()}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showMTab(name,btn){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mpage').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mpage-'+name).classList.add('active');
+}
+
+function getSatColor(s){return s<35?'#1D9E75':s<55?'#EF9F27':'#E24B4A'}
+
+function setFilter(btn,val){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter=val;
+  renderProducts();
+}
+
+function renderProducts(){
+  const grid=document.getElementById('pgrid');
+  const list=activeFilter==='all'?products:products.filter(p=>p.niche.toLowerCase()===activeFilter);
+  grid.innerHTML=list.map(p=>`
+    <div class="pcard">
+      <div class="pcard-img" style="background:${p.bg}22">${p.emoji}</div>
+      <div class="pcard-body">
+        <div class="pcard-top">
+          <div><div class="pcard-name">${p.name}</div><div class="pcard-niche">${p.niche}</div></div>
+          <button class="hbtn ${saved.has(p.id)?'saved':''}" onclick="toggleSave(${p.id})" aria-label="Save">♥</button>
+        </div>
+        <div class="pmetrics">
+          <div class="pmet"><div class="pmet-label">Cost</div><div class="pmet-val">${p.cost}</div></div>
+          <div class="pmet"><div class="pmet-label">Sell</div><div class="pmet-val">${p.sell}</div></div>
+          <div class="pmet"><div class="pmet-label">Margin</div><div class="pmet-val" style="color:#1D9E75">${p.margin}</div></div>
+        </div>
+        <div class="pbar-wrap"><div class="pbar-lbl"><span>Saturation</span><span style="color:${getSatColor(p.sat)};font-weight:500">${p.sat}/100</span></div><div class="pbar"><div class="pbar-fill" style="width:${p.sat}%;background:${getSatColor(p.sat)}"></div></div></div>
+        <div class="pbar-wrap"><div class="pbar-lbl"><span>Trend score</span><span style="color:#1D9E75;font-weight:500">${p.trend}/100</span></div><div class="pbar"><div class="pbar-fill" style="width:${p.trend}%;background:#1D9E75"></div></div></div>
+        <div class="pcard-footer">
+          <a class="ad-link tiktok" href="https://www.tiktok.com/search?q=${p.tiktokQ}" target="_blank">TikTok ads</a>
+          <a class="ad-link meta" href="https://www.facebook.com/ads/library/?q=${encodeURIComponent(p.name)}&search_type=keyword_unordered" target="_blank">Meta library</a>
+          <button class="creative-btn" onclick="quickCreative('${p.name}')">Make ad ✨</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSave(id){
+  if(saved.has(id))saved.delete(id);else saved.add(id);
+  document.getElementById('saved-count').textContent=saved.size;
+  renderProducts();
+}
+
+function quickCreative(name){
+  showMTab('creative',document.querySelectorAll('.mtab')[1]);
+  document.getElementById('cp-product').value=name;
+  window.scrollTo(0,0);
+}
+
+function renderQuickProducts(){
+  const el=document.getElementById('quick-products');
+  if(el)el.innerHTML=products.map(p=>`<button class="fbtn" onclick="quickCreative('${p.name}')" style="font-size:12px">${p.emoji} ${p.name}</button>`).join('');
+}
+
+async function generateCreative(){
+  const product=document.getElementById('cp-product').value.trim();
+  if(!product){showToast('Enter a product name first');return}
+  const platform=document.getElementById('cp-platform').value;
+  const service=document.getElementById('cp-service').value;
+  const angle=document.getElementById('cp-angle').value;
+  const status=document.getElementById('gen-status');
+  status.textContent='Generating...';
+  document.getElementById('creative-out').classList.remove('show');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an expert dropshipping ad creative strategist writing scripts for ${service} and ${platform}. Respond ONLY with a JSON object (no markdown, no backticks) with exactly 3 keys: "script" (punchy video ad script, hook+middle+CTA, max 150 words, use line breaks, angle: ${angle}), "hooks" (5 alternative opening hook lines numbered 1-5), "brief" (ready-to-send brief for ${service} with product name, platform, video length, angle, tone, key points, CTA — formatted clearly).`,
+        messages:[{role:'user',content:`Product: ${product}. Platform: ${platform}. Service: ${service}. Angle: ${angle}.`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content.map(i=>i.text||'').join('');
+    let parsed;
+    try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim())}
+    catch(e){parsed={script:text,hooks:'Could not parse hooks.',brief:'Could not parse brief.'}}
+    document.getElementById('script-content').textContent=parsed.script||'';
+    document.getElementById('hooks-content').textContent=parsed.hooks||'';
+    document.getElementById('brief-content').textContent=parsed.brief||'';
+    document.getElementById('creative-out').classList.add('show');
+    status.textContent='Done ✓';
+    setTimeout(()=>status.textContent='',2000);
+  }catch(e){status.textContent='Error — check your API key'}
+}
+
+function setScriptTab(tab,btn){
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#mpage-creative [id^="tab-"]').forEach(c=>c.style.display='none');
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).style.display='block';
+}
+
+function copyText(id){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>showToast('Copied to clipboard ✓'));
+}
+
+async function askAI(){
+  const q=document.getElementById('ai-q').value.trim();
+  if(!q)return;
+  const resp=document.getElementById('ai-resp');
+  resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'You are a dropshipping product research expert. Suggest 1-2 winning products with: name, cost price (£), sell price (£), margin %, why it\'s trending right now, target audience, and one killer TikTok hook idea. Be concise and practical.',
+        messages:[{role:'user',content:q}]
+      })
+    });
+    const data=await res.json();
+    resp.textContent=data.content.map(i=>i.text||'').join('');
+  }catch(e){resp.textContent='Could not connect to AI. Check your API key.'}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const ai=document.getElementById('ai-q');
+  if(ai)ai.addEventListener('keydown',e=>{if(e.key==='Enter')askAI()});
+});
+
+function renderAdmin(){
+  const rows=document.getElementById('admin-rows');
+  if(!rows)return;
+  rows.innerHTML=products.map(p=>`
+    <div class="admin-row">
+      <span class="admin-em">${p.emoji}</span>
+      <div class="admin-info">
+        <div class="admin-name">${p.name}</div>
+        <div class="admin-meta">${p.niche} · cost ${p.cost} · sell ${p.sell} · ${p.margin} margin</div>
+      </div>
+      <span class="score-chip" style="background:rgba(29,158,117,0.1);color:#5DCAA5;border:0.5px solid rgba(29,158,117,0.2)">trend ${p.trend}</span>
+      <span class="score-chip" style="background:rgba(239,159,39,0.1);color:#FAC775;border:0.5px solid rgba(239,159,39,0.2)">sat ${p.sat}</span>
+      <div class="toggle-wrap">
+        <div class="toggle ${approvals[p.id]?'on':''}" onclick="toggleApproval(${p.id},this)"><div class="toggle-thumb"></div></div>
+        <span class="toggle-label" id="tlabel-${p.id}">${approvals[p.id]?'Approved':'Skip'}</span>
+      </div>
+    </div>
+  `).join('');
+  updatePendingCount();
+}
+
+function toggleApproval(id,el){
+  approvals[id]=!approvals[id];
+  el.classList.toggle('on');
+  document.getElementById('tlabel-'+id).textContent=approvals[id]?'Approved':'Skip';
+  updatePendingCount();
+}
+
+function updatePendingCount(){
+  const approved=Object.values(approvals).filter(Boolean).length;
+  const el=document.getElementById('pending-count');
+  if(el)el.textContent=`${approved} approved · ${products.length-approved} skipped`;
+}
+
+function publishFeed(){
+  const approved=Object.values(approvals).filter(Boolean).length;
+  if(approved===0){showToast('Approve at least one product first');return}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  const timeStr=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  document.getElementById('last-updated').textContent=`Last published: ${dateStr} · ${timeStr}`;
+  document.getElementById('live-count').textContent=approved;
+  showToast(`✅ Feed published — ${approved} products now live for members`);
+}
+
+async function regenFeed(btn){
+  btn.textContent='🔄 Generating...';
+  btn.disabled=true;
+  showToast('AI generating new product suggestions...');
+  await new Promise(r=>setTimeout(r,2000));
+  btn.textContent='🔄 Regenerate feed';
+  btn.disabled=false;
+  showToast('✅ New batch ready — review and approve above');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
