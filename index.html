@@ -350,7 +350,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
       </div>
       <div class="hero-right">
         <div class="hero-img-wrap">
-          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80q=80" alt="Entrepreneur working on laptop" onerror="this.style.background='#181818';this.style.height='480px'"/>
+          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80" alt="Entrepreneur working on laptop" onerror="this.style.background='#181818';this.style.height='480px'"/>
           <div class="hero-img-badge">
             <div class="hero-img-badge-title">This week's top margin</div>
             <div class="hero-img-badge-val">83% profit</div>
@@ -373,7 +373,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
 
   <section class="lifestyle-section">
     <div class="lifestyle-img-wrap">
-      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80q=80" alt="Ecom seller researching products" onerror="this.style.background='#181818';this.style.height='420px'"/>
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Ecom seller researching products" onerror="this.style.background='#181818';this.style.height='420px'"/>
       <div class="lifestyle-overlay"></div>
       <div class="lifestyle-card">
         <div class="lifestyle-card-title">Live product snapshot</div>
@@ -673,7 +673,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
 <div class="toast" id="toast"></div>
 
 <script>
-const API_KEY='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';
+const API_KEY='';
 
 let products=[
   {id:1,emoji:'🧲',name:'Magnetic phone mount',niche:'Tech',cost:'£3.20',sell:'£18.99',margin:'83%',sat:22,trend:94,bg:'#0C447C22',tiktokQ:'magnetic+phone+mount',metaQ:'magnetic phone mount',approved:true},
@@ -849,9 +849,9 @@ async function regenFeed(btn){
   btn.disabled=true;
   showToast('AI is researching trending products...');
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/generate',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:2000,
@@ -886,9 +886,9 @@ async function generateCreative(){
   status.textContent='Generating...';
   document.getElementById('creative-out').classList.remove('show');
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/generate',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -925,9 +925,9 @@ async function askAI(){
   const resp=document.getElementById('ai-resp');
   resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/generate',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
