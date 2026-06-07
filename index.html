@@ -673,7 +673,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
 <div class="toast" id="toast"></div>
 
 <script>
-
+const API_KEY='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';
 
 let products=[
   {id:1,emoji:'🧲',name:'Magnetic phone mount',niche:'Tech',cost:'£3.20',sell:'£18.99',margin:'83%',sat:22,trend:94,bg:'#0C447C22',tiktokQ:'magnetic+phone+mount',metaQ:'magnetic phone mount',approved:true},
@@ -849,9 +849,9 @@ async function regenFeed(btn){
   btn.disabled=true;
   showToast('AI is researching trending products...');
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:2000,
@@ -886,9 +886,9 @@ async function generateCreative(){
   status.textContent='Generating...';
   document.getElementById('creative-out').classList.remove('show');
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -925,9 +925,9 @@ async function askAI(){
   const resp=document.getElementById('ai-resp');
   resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
