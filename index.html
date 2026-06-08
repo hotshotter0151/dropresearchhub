@@ -849,11 +849,11 @@ async function regenFeed(btn){
   btn.disabled=true;
   showToast('AI is researching trending products...');
   try{
-    const res=await fetch('/api/generate',{
+    const res=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-5',
         max_tokens:2000,
         system:`You are a dropshipping product research expert for UK ecom sellers in June 2026. Generate exactly 10 trending winning products. Respond ONLY with a JSON array (no markdown, no backticks, no explanation). Each product must have these exact fields:
 {"name":"string","niche":"Tech|Home|Pet|Beauty|Fitness|Kitchen","cost":"£X.XX","sell":"£XX.XX","margin":"XX%","sat":number_1_to_100,"trend":number_1_to_100,"emoji":"single_emoji","tiktokQ":"search+terms","metaQ":"search terms"}
@@ -886,11 +886,11 @@ async function generateCreative(){
   status.textContent='Generating...';
   document.getElementById('creative-out').classList.remove('show');
   try{
-    const res=await fetch('/api/generate',{
+    const res=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-5',
         max_tokens:1000,
         system:`You are an expert dropshipping ad creative strategist writing scripts for ${service} and ${platform}. Respond ONLY with a JSON object (no markdown, no backticks) with exactly 3 keys: "script" (punchy video ad script, hook+middle+CTA, max 150 words, use line breaks, angle: ${angle}), "hooks" (5 alternative opening hook lines numbered 1-5, one per line), "brief" (ready-to-send brief for ${service} with: Product Name, Platform, Video Length, Angle, Tone, Key Points to Show, CTA — formatted clearly with line breaks).`,
         messages:[{role:'user',content:`Product: ${product}. Platform: ${platform}. Service: ${service}. Angle: ${angle}.`}]
@@ -925,11 +925,11 @@ async function askAI(){
   const resp=document.getElementById('ai-resp');
   resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const res=await fetch('/api/generate',{
+    const res=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-5',
         max_tokens:500,
         system:'You are a dropshipping product research expert for UK sellers. Suggest 1-2 winning products with: name, cost price (£), sell price (£), margin %, why it\'s trending, target audience, and one killer TikTok hook. Be concise and practical.',
         messages:[{role:'user',content:q}]
