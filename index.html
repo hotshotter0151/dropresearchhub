@@ -849,7 +849,7 @@ async function regenFeed(btn){
   btn.disabled=true;
   showToast('AI is researching trending products...');
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('/api/generate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -886,7 +886,7 @@ async function generateCreative(){
   status.textContent='Generating...';
   document.getElementById('creative-out').classList.remove('show');
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('/api/generate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -925,7 +925,7 @@ async function askAI(){
   const resp=document.getElementById('ai-resp');
   resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('/api/generate',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
