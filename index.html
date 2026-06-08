@@ -319,22 +319,10 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
     <div class="logo-text">Drop<span>Research</span> Hub</div>
   </div>
   <div class="nav-right" id="nav-right">
-    <button class="hamburger" onclick="toggleMenu()" style="background:none;border:0.5px solid #2a2a2a;color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:18px;margin-right:4px">☰</button><button class="btn-ghost" onclick="showLogin()">Log in</button>
+    <button class="btn-ghost" onclick="showLogin()">Log in</button>
     <button class="btn-primary" onclick="showSignup()">Get access</button>
   </div>
 </nav>
-
-
-<div id="mobile-menu" style="display:none;position:fixed;top:64px;left:0;right:0;background:#111;border-bottom:0.5px solid #2a2a2a;z-index:199;flex-direction:column;padding:1rem">
-  <a href="#" onclick="document.getElementById('sneak').scrollIntoView({behavior:'smooth'});toggleMenu()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">📦 Product Feed</a>
-  <a href="#" onclick="showSignup()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">🎬 Ad Creative</a>
-  <a href="#" onclick="showSignup()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">🧮 Calculators</a>
-  <a href="#" onclick="showSignup()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">💾 Saved Products</a>
-  <a href="#" onclick="showSignup()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">🏪 Store Audit</a>
-  <a href="#" onclick="document.getElementById('whitelabel').scrollIntoView({behavior:'smooth'});toggleMenu()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">🏷️ White Label</a>
-  <a href="#" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'});toggleMenu()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">💳 Pricing</a>
-  <a href="#" onclick="showLogin()" style="color:#B4B2A9;text-decoration:none;padding:10px 16px;display:block;border-radius:8px;font-size:14px">🔑 Log in</a>
-</div>
 
 <!-- LANDING -->
 <div class="page active" id="page-landing">
@@ -477,7 +465,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
     </div>
   </section>
 
-  <section class="pricing-section" id="pricing">
+  <section class="pricing-section">
     <div class="section-label" style="text-align:center">Pricing</div>
     <h2 class="section-title" style="text-align:center">Simple, honest pricing</h2>
     <p class="section-sub" style="margin:0 auto 3rem;text-align:center">One plan. Everything included. Lock in 50% off forever.</p>
@@ -504,34 +492,7 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
     </div>
   </section>
 
-  
-  <!-- WHITE LABEL SECTION -->
-  <section id="whitelabel" style="padding:5rem 4rem;max-width:1200px;margin:0 auto">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
-      <div>
-        <div class="section-label">White label & stock</div>
-        <h2 class="section-title">Ready to build your own brand?</h2>
-        <p class="section-sub">Go beyond dropshipping. Source customisable products, add your branding, and hold stock for faster delivery and 2-3x margins.</p>
-        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:2rem">
-          <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:36px;height:36px;border-radius:8px;background:rgba(239,159,39,0.12);border:0.5px solid rgba(239,159,39,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🏷️</div><div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">Custom branded products via Alibaba</div><div style="font-size:13px;color:#888">Add your logo. MOQs from 50 units. Direct Alibaba supplier links weekly.</div></div></div>
-          <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:36px;height:36px;border-radius:8px;background:rgba(29,158,117,0.12);border:0.5px solid rgba(29,158,117,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📦</div><div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">Stock & fulfillment guidance</div><div style="font-size:13px;color:#888">UK warehouses for next-day delivery and higher customer satisfaction.</div></div></div>
-          <div style="display:flex;gap:12px;align-items:flex-start"><div style="width:36px;height:36px;border-radius:8px;background:rgba(55,138,221,0.12);border:0.5px solid rgba(55,138,221,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💰</div><div><div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:2px">2-3x margins vs dropshipping</div><div style="font-size:13px;color:#888">Your own brand means premium prices, repeat customers and a real sellable business.</div></div></div>
-        </div>
-        <button class="btn-hero" onclick="showSignup()">Explore white label products</button>
-      </div>
-      <div style="background:#181818;border:0.5px solid #2a2a2a;border-radius:20px;padding:2rem">
-        <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:1.5rem">🏷️ This week's white label picks</div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="background:#111;border-radius:10px;padding:14px;border:0.5px solid #2a2a2a"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:13px;font-weight:500;color:#fff">🧴 Custom skincare serum</div><span style="background:rgba(239,159,39,0.15);color:#FAC775;font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)">White label</span></div><div style="font-size:12px;color:#888;margin-bottom:4px">MOQ: 100 units · Cost: £2.80 · Sell: £24.99</div><div style="font-size:12px;color:#1D9E75;margin-bottom:8px">89% margin · Low saturation</div><div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=private+label+skincare+serum" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #FF6A00;text-decoration:none;color:#FF6A00">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=private+label+skincare+serum" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #E85A00;text-decoration:none;color:#E85A00">Alibaba</a></div></div>
-          <div style="background:#111;border-radius:10px;padding:14px;border:0.5px solid #2a2a2a"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:13px;font-weight:500;color:#fff">☕ Branded insulated tumbler</div><span style="background:rgba(239,159,39,0.15);color:#FAC775;font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)">White label</span></div><div style="font-size:12px;color:#888;margin-bottom:4px">MOQ: 50 units · Cost: £4.20 · Sell: £29.99</div><div style="font-size:12px;color:#1D9E75;margin-bottom:8px">86% margin · Evergreen</div><div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=custom+insulated+tumbler+logo" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #FF6A00;text-decoration:none;color:#FF6A00">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=custom+insulated+tumbler+logo" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #E85A00;text-decoration:none;color:#E85A00">Alibaba</a></div></div>
-          <div style="background:#111;border-radius:10px;padding:14px;border:0.5px solid #2a2a2a"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:13px;font-weight:500;color:#fff">🐾 Custom pet accessories</div><span style="background:rgba(239,159,39,0.15);color:#FAC775;font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)">White label</span></div><div style="font-size:12px;color:#888;margin-bottom:4px">MOQ: 200 units · Cost: £1.90 · Sell: £14.99</div><div style="font-size:12px;color:#1D9E75;margin-bottom:8px">87% margin · High demand</div><div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=custom+pet+accessories+logo" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #FF6A00;text-decoration:none;color:#FF6A00">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=custom+pet+accessories+branding" target="_blank" style="font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #E85A00;text-decoration:none;color:#E85A00">Alibaba</a></div></div>
-        </div>
-        <div style="font-size:12px;color:#888;text-align:center;margin-top:14px">Full white label guide included with membership</div>
-      </div>
-    </div>
-  </section>
-
-<footer>
+  <footer>
     <div style="font-family:'Playfair Display',serif;font-size:16px;color:#fff;margin-bottom:8px">Drop<span style="color:#EF9F27">Research</span> Hub</div>
     <div>© 2026 DropResearch Hub. Built for serious ecom sellers.</div>
   </footer>
@@ -626,10 +587,6 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
           <button class="fbtn" onclick="setFilter(this,'beauty')">Beauty</button>
           <button class="fbtn" onclick="setFilter(this,'fitness')">Fitness</button>
           <button class="fbtn" onclick="setFilter(this,'kitchen')">Kitchen</button>
-          <button class="fbtn" onclick="setFilter(this,'outdoor')">Outdoor</button>
-          <button class="fbtn" onclick="setFilter(this,'baby')">Baby</button>
-          <button class="fbtn" onclick="setFilter(this,'office')">Office</button>
-          <button class="fbtn" onclick="setFilter(this,'fashion')">Fashion</button>
         </div>
         <div class="pgrid" id="pgrid"></div>
       </div>
@@ -665,31 +622,12 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
         </div>
       </div>
 
-      <!-- SAVED TAB -->
-      <div class="mpage" id="mpage-saved">
-        <div style="font-size:14px;font-weight:500;color:#fff;margin-bottom:1rem">💾 Your saved products</div>
-        <div class="pgrid" id="saved-grid">
-          <div style="text-align:center;padding:3rem;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:1rem">💾</div><div style="font-size:14px;color:#fff;margin-bottom:8px">No saved products yet</div><div style="font-size:13px">Click the ♥ on any product to save it here</div></div>
-        </div>
-      </div>
-
       <!-- ADMIN TAB -->
       <div class="mpage" id="mpage-admin">
-        <div id="admin-lock-screen">
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px;text-align:center">
-            <div style="font-size:36px">🔒</div>
-            <div style="font-size:16px;font-weight:500;color:#fff">Admin access only</div>
-            <div style="font-size:13px;color:#888">Enter your admin password to continue</div>
-            <input type="password" id="admin-pw" placeholder="••••••••" style="background:#1a1a1a;border:0.5px solid #2a2a2a;border-radius:8px;padding:10px 16px;font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;outline:none;width:240px;text-align:center">
-            <button onclick="checkAdminPw()" style="background:#1D9E75;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">Unlock admin</button>
-            <div style="font-size:12px;color:#E24B4A;display:none" id="pw-error">Incorrect password</div>
-          </div>
-        </div>
-        <div id="admin-content" style="display:none">
         <div class="admin-section">
           <div class="admin-hdr">
             <div class="admin-hdr-title">📋 Product manager <span style="background:rgba(239,159,39,0.15);color:var(--yellow-light);font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)" id="pending-count">10 live products</span></div>
-            <button id="sel-all-btn" onclick="toggleSelectAll()" style="background:#1a1a1a;color:#B4B2A9;border:0.5px solid #2a2a2a;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-right:4px">✓ Select all</button><button class="pub-btn" onclick="publishFeed()">🚀 Publish approved</button>
+            <button class="pub-btn" onclick="publishFeed()">🚀 Publish approved</button>
           </div>
           <div id="admin-rows"></div>
           <div class="add-product-form">
@@ -727,20 +665,8 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
           </div>
         </div>
       </div>
-        </div><!-- end admin-content -->
-      </div>
 
     </div>
-  </div>
-</div>
-
-
-<!-- CHECKLIST MODAL -->
-<div id="checklist-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:center;justify-content:center">
-  <div style="background:#181818;border:0.5px solid #2a2a2a;border-radius:16px;padding:1.5rem;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto">
-    <button onclick="document.getElementById('checklist-modal').style.display='none'" style="float:right;background:none;border:none;color:#888;font-size:20px;cursor:pointer">✕</button>
-    <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:1rem" id="checklist-title">Launch checklist</div>
-    <div id="checklist-items"></div>
   </div>
 </div>
 
@@ -748,96 +674,6 @@ footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;
 
 <script>
 
-
-
-const ADMIN_PW='Billy1234.';
-const CHECKLIST_ITEMS=['Order a product sample from AliExpress','Research 3 competitor Shopify stores','Set up your Shopify product page','Write benefit-led product description','Add 5+ product photos or UGC content','Set up trust badges and reviews app','Add urgency element (limited stock/timer)','Run store audit — fix all fails','Order 3 ad creatives','Set up Meta or TikTok ad account','Launch campaign with 3 ad variations','Monitor and optimise for 3 days'];
-let checklistState={};
-let allSelected=true;
-
-function toggleMenu(){const m=document.getElementById('mobile-menu');m.style.display=m.style.display==='flex'?'none':'flex';}
-
-function checkAdminPw(){
-  const pw=document.getElementById('admin-pw').value;
-  if(pw===ADMIN_PW){document.getElementById('admin-lock-screen').style.display='none';document.getElementById('admin-content').style.display='block';renderAdmin();}
-  else{document.getElementById('pw-error').style.display='block';document.getElementById('admin-pw').value='';}
-}
-
-function toggleSelectAll(){
-  allSelected=!allSelected;
-  products.forEach(p=>p.approved=allSelected);
-  document.getElementById('sel-all-btn').textContent=allSelected?'✓ Select all':'○ Deselect all';
-  renderAdmin();updateStats();
-}
-
-function renderSaved(){
-  const grid=document.getElementById('saved-grid');
-  if(!grid)return;
-  const list=products.filter(p=>savedIds.has(p.id));
-  if(list.length===0){grid.innerHTML='<div style="text-align:center;padding:3rem;color:#888;grid-column:1/-1"><div style="font-size:48px;margin-bottom:1rem">💾</div><div style="font-size:14px;color:#fff;margin-bottom:8px">No saved products yet</div><div style="font-size:13px">Click the ♥ on any product to save it here</div></div>';return;}
-  grid.innerHTML=list.map(p=>`<div class="pcard"><div class="pcard-body"><div class="pcard-top"><div><div class="pcard-name">${p.name}</div><div class="pcard-niche">${p.niche}</div></div><button class="hbtn saved" onclick="toggleSave(${p.id})">♥</button></div><div class="pmetrics"><div class="pmet"><div class="pmet-label">Cost</div><div class="pmet-val">${p.cost}</div></div><div class="pmet"><div class="pmet-label">Sell</div><div class="pmet-val">${p.sell}</div></div><div class="pmet"><div class="pmet-label">Margin</div><div class="pmet-val" style="color:#1D9E75">${p.margin}</div></div></div><div class="pcard-footer"><button class="creative-btn" onclick="quickCreative('${p.name}')">🎬 Make ad</button><button onclick="openChecklist('${p.name}',${p.id})" style="font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid rgba(55,138,221,0.3);color:#378ADD;background:rgba(55,138,221,0.08);cursor:pointer;font-family:'DM Sans',sans-serif">✓ Checklist</button></div></div></div>`).join('');
-}
-
-function openChecklist(name,id){
-  if(!checklistState[id])checklistState[id]=new Array(CHECKLIST_ITEMS.length).fill(false);
-  document.getElementById('checklist-title').textContent='✓ Launch checklist — '+name;
-  renderChecklist(id);
-  document.getElementById('checklist-modal').style.display='flex';
-}
-
-function renderChecklist(id){
-  document.getElementById('checklist-items').innerHTML=CHECKLIST_ITEMS.map((item,i)=>`<div onclick="toggleCheck(${id},${i})" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid #2a2a2a;cursor:pointer"><div style="width:20px;height:20px;border-radius:4px;border:0.5px solid #2a2a2a;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${checklistState[id][i]?'#1D9E75':'transparent'};border-color:${checklistState[id][i]?'#1D9E75':'#2a2a2a'}">${checklistState[id][i]?'✓':''}</div><span style="font-size:13px;color:${checklistState[id][i]?'#888':'#E8E6E0'};${checklistState[id][i]?'text-decoration:line-through':''}">${item}</span></div>`).join('');
-}
-
-function toggleCheck(id,i){
-  checklistState[id][i]=!checklistState[id][i];
-  renderChecklist(id);
-  if(checklistState[id].every(Boolean))showToast('🎉 All done — ready to launch!');
-}
-
-function calcProfit(){
-  const cost=parseFloat(document.getElementById('calc-cost').value)||0;
-  const sell=parseFloat(document.getElementById('calc-sell').value)||0;
-  const adSpend=parseFloat(document.getElementById('calc-adspend').value)||0;
-  const orders=parseInt(document.getElementById('calc-orders').value)||0;
-  if(!cost||!sell){showToast('Enter cost and sell price');return}
-  const profitPerOrder=sell-cost;
-  const dailyProfit=(profitPerOrder*orders)-adSpend;
-  const breakEven=adSpend>0?Math.ceil(adSpend/profitPerOrder):0;
-  const monthlyProfit=dailyProfit*30;
-  const margin=((profitPerOrder/sell)*100).toFixed(1);
-  const resultStyle=(v)=>v>=0?'color:#1D9E75':'color:#E24B4A';
-  document.getElementById('profit-results').innerHTML=`
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Profit per order</span><span style="font-weight:500;color:#1D9E75">£${profitPerOrder.toFixed(2)}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Margin</span><span style="font-weight:500;color:#fff">${margin}%</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Break even orders/day</span><span style="font-weight:500;color:#fff">${breakEven}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Daily profit</span><span style="font-weight:500;${resultStyle(dailyProfit)}">£${dailyProfit.toFixed(2)}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:#888">Monthly projection</span><span style="font-weight:500;${resultStyle(monthlyProfit)}">£${monthlyProfit.toFixed(0)}</span></div>
-  `;
-}
-
-function calcROAS(){
-  const spend=parseFloat(document.getElementById('roas-spend').value)||0;
-  const revenue=parseFloat(document.getElementById('roas-revenue').value)||0;
-  const cost=parseFloat(document.getElementById('roas-cost').value)||0;
-  const sell=parseFloat(document.getElementById('roas-sell').value)||0;
-  if(!spend||!revenue){showToast('Enter ad spend and revenue');return}
-  const roas=(revenue/spend).toFixed(2);
-  const margin=sell>0?((sell-cost)/sell)*100:0;
-  const breakEvenROAS=margin>0?(100/margin).toFixed(2):0;
-  const profitable=parseFloat(roas)>=parseFloat(breakEvenROAS);
-  const profit=revenue-spend-(cost*(revenue/Math.max(sell,0.01)));
-  const indicatorStyle=profitable?'background:rgba(29,158,117,0.12);color:#5DCAA5;border:0.5px solid rgba(29,158,117,0.2)':parseFloat(roas)>parseFloat(breakEvenROAS)*0.8?'background:rgba(239,159,39,0.12);color:#FAC775;border:0.5px solid rgba(239,159,39,0.2)':'background:rgba(226,75,74,0.12);color:#F87171;border:0.5px solid rgba(226,75,74,0.2)';
-  document.getElementById('roas-results').innerHTML=`
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Your ROAS</span><span style="font-weight:500;color:${profitable?'#1D9E75':'#E24B4A'}">${roas}x</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Break even ROAS</span><span style="font-weight:500;color:#EF9F27">${breakEvenROAS}x</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #2a2a2a;font-size:13px"><span style="color:#888">Estimated profit</span><span style="font-weight:500;color:${profit>=0?'#1D9E75':'#E24B4A'}">£${profit.toFixed(2)}</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:#888">Product margin</span><span style="font-weight:500;color:#fff">${margin.toFixed(1)}%</span></div>
-    <div style="margin-top:12px;padding:12px;border-radius:8px;text-align:center;font-size:13px;font-weight:500;${indicatorStyle}">${profitable?'✅ Profitable — consider scaling':'⚠️ Below break even — optimise first'}</div>
-  `;
-}
-
-let savedIds=new Set();
 
 let products=[
   {id:1,emoji:'🧲',name:'Magnetic phone mount',niche:'Tech',cost:'£3.20',sell:'£18.99',margin:'83%',sat:22,trend:94,bg:'#0C447C22',tiktokQ:'magnetic+phone+mount',metaQ:'magnetic phone mount',approved:true},
@@ -856,7 +692,7 @@ let saved=new Set();
 let activeFilter='all';
 let nextId=11;
 
-function showLanding(){showPage('landing');document.getElementById('nav-right').innerHTML='<button class="hamburger" onclick="toggleMenu()" style="background:none;border:0.5px solid #2a2a2a;color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:18px;margin-right:4px">☰</button><button class="btn-ghost" onclick="showLogin()">Log in</button><button class="btn-primary" onclick="showSignup()">Get access</button>'}
+function showLanding(){showPage('landing');document.getElementById('nav-right').innerHTML='<button class="btn-ghost" onclick="showLogin()">Log in</button><button class="btn-primary" onclick="showSignup()">Get access</button>'}
 function showLogin(){showPage('login')}
 function showSignup(){showPage('signup')}
 function showMembers(){showPage('members');document.getElementById('nav-right').innerHTML='<span style="font-size:13px;color:var(--gray)">Welcome back 👋</span>';renderAll()}
@@ -883,7 +719,7 @@ function setFilter(btn,val){
   renderProducts();
 }
 
-function renderAll(){renderProducts();renderHotlist();renderAdmin();renderQuickProducts();updateStats();renderSaved()}
+function renderAll(){renderProducts();renderHotlist();renderAdmin();renderQuickProducts();updateStats()}
 
 function updateStats(){
   const approved=products.filter(p=>p.approved);
@@ -912,7 +748,7 @@ function renderProducts(){
       <div class="pcard-body">
         <div class="pcard-top">
           <div><div class="pcard-name">${p.name}</div><div class="pcard-niche">${p.niche}</div></div>
-          <button class="hbtn ${savedIds.has(p.id)?'saved':''}" onclick="toggleSave(${p.id})" aria-label="Save">♥</button>
+          <button class="hbtn ${saved.has(p.id)?'saved':''}" onclick="toggleSave(${p.id})" aria-label="Save">♥</button>
         </div>
         <div class="pmetrics">
           <div class="pmet"><div class="pmet-label">Cost</div><div class="pmet-val">${p.cost}</div></div>
@@ -924,10 +760,7 @@ function renderProducts(){
         <div class="pcard-footer">
           <a class="ad-link tiktok" href="https://www.tiktok.com/search?q=${p.tiktokQ}" target="_blank">TikTok ads</a>
           <a class="ad-link meta" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}&search_type=keyword_unordered" target="_blank">Meta ads</a>
-          <a class="ad-link" href="https://www.aliexpress.com/wholesale?SearchText=${p.tiktokQ}" target="_blank" style="border-color:#FF6A00;color:#FF6A00;background:rgba(255,106,0,0.08)">AliExpress</a>
-          <a class="ad-link" href="https://www.google.com/search?q=site:myshopify.com+${encodeURIComponent(p.name)}" target="_blank" style="border-color:#5DCAA5;color:#5DCAA5;background:rgba(29,158,117,0.08)">Competitor stores</a>
-          <button class="creative-btn" onclick="quickCreative('${p.name}')">🎬 Make ad</button>
-          <button onclick="openChecklist('${p.name}',${p.id})" style="font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid rgba(55,138,221,0.3);color:#378ADD;background:rgba(55,138,221,0.08);cursor:pointer;font-family:'DM Sans',sans-serif">✓ Checklist</button>
+          <button class="creative-btn" onclick="quickCreative('${p.name}')">Make ad ✨</button>
         </div>
       </div>
     </div>
@@ -935,10 +768,9 @@ function renderProducts(){
 }
 
 function toggleSave(id){
-  if(savedIds.has(id))savedIds.delete(id);else savedIds.add(id);
-  document.getElementById('saved-count').textContent=savedIds.size;
+  if(saved.has(id))saved.delete(id);else saved.add(id);
+  document.getElementById('saved-count').textContent=saved.size;
   renderProducts();
-  renderSaved();
 }
 
 function quickCreative(name){
@@ -1122,11 +954,8 @@ function publishFeed(){
   const txt=`Last published: ${dateStr} · ${timeStr}`;
   document.getElementById('last-updated').textContent=txt;
   document.getElementById('last-updated-nav').innerHTML=`Updated ${dateStr} · <a href="#" onclick="showLanding()" style="color:var(--green);text-decoration:none">Sign out</a>`;
-  renderProducts();
-  renderHotlist();
-  renderQuickProducts();
   updateStats();
-  showToast(`✅ Feed published — ${approved} products now live in feed!`);
+  showToast(`✅ Feed published — ${approved} products live for members`);
 }
 
 function showToast(msg){
