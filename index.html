@@ -3,967 +3,952 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DropResearch Hub — The Ultimate Product Research Tool</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>DropResearch Hub — Stop Guessing. Start Selling What Works.</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#0A0A0A;--dark:#111111;--card:#181818;--border:#2a2a2a;
-  --green:#1D9E75;--green-light:#5DCAA5;--yellow:#EF9F27;--yellow-light:#FAC775;
-  --blue:#378ADD;--blue-dark:#0C447C;--white:#FFFFFF;--gray:#888780;--gray-light:#B4B2A9;--text:#E8E6E0;
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;--gold-dark:#D97706;
+  --white:#ffffff;--off-white:#F8FAFF;--gray-50:#F9FAFB;
+  --gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;
+  --gray-400:#9CA3AF;--gray-500:#6B7280;--gray-700:#374151;--gray-900:#111827;
+  --green:#16A34A;--green-light:#DCFCE7;
 }
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--black)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--gray-900);line-height:1.6;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
-.logo-icon{width:36px;height:36px;background:var(--blue-dark);border-radius:8px;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--blue)}
-.logo-icon svg{width:20px;height:20px}
-.logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--white)}
-.logo-text span{color:var(--yellow)}
-.nav-right{display:flex;align-items:center;gap:12px}
-.btn-ghost{background:none;border:0.5px solid var(--border);color:var(--gray-light);padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.2s}
-.btn-ghost:hover{border-color:var(--green);color:var(--white)}
-.btn-primary{background:var(--green);border:none;color:var(--white);padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s}
-.btn-primary:hover{background:var(--green-light);color:var(--black)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--gray-200);height:68px;display:flex;align-items:center;padding:0 5%}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.nav-logo-icon{width:38px;height:38px;border-radius:10px;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.nav-logo-bars{display:flex;align-items:flex-end;gap:2px;padding:8px 7px 6px}
+.nav-logo-bar{border-radius:1.5px;background:#fff}
+.nav-logo-bar.gold{background:var(--gold)}
+.nav-logo-text{font-size:17px;font-weight:700;color:var(--navy);letter-spacing:-0.3px}
+.nav-logo-text span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{font-size:14px;font-weight:500;color:var(--gray-500);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all 0.2s;position:relative;cursor:pointer}
+.nav-link::after{content:'';position:absolute;bottom:4px;left:14px;right:14px;height:2px;background:var(--navy);border-radius:1px;transform:scaleX(0);transition:transform 0.2s}
+.nav-link:hover{color:var(--navy)}
+.nav-link:hover::after{transform:scaleX(1)}
+.nav-free{font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;padding:8px 14px;border-radius:8px;transition:all 0.2s;cursor:pointer;position:relative}
+.nav-free::after{content:'';position:absolute;bottom:4px;left:14px;right:14px;height:2px;background:var(--gold);border-radius:1px;transform:scaleX(0);transition:transform 0.2s}
+.nav-free:hover{color:var(--gold-dark)}
+.nav-free:hover::after{transform:scaleX(1)}
+.nav-free-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;margin-left:5px;vertical-align:middle;letter-spacing:0.3px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn-login{font-size:14px;font-weight:500;color:var(--gray-700);text-decoration:none;padding:8px 16px;border-radius:8px;border:1px solid var(--gray-200);transition:all 0.2s;cursor:pointer;background:#fff}
+.btn-login:hover{border-color:var(--navy);color:var(--navy)}
+.btn-start{font-size:14px;font-weight:600;color:#fff;background:var(--navy);padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.btn-start:hover{background:var(--navy-light);transform:translateY(-1px)}
+.hamburger{display:none;background:none;border:1px solid var(--gray-200);border-radius:8px;padding:8px;cursor:pointer;color:var(--gray-700)}
 
-.page{display:none;padding-top:64px}
-.page.active{display:block}
+/* MOBILE MENU */
+.mobile-nav{display:none;position:fixed;top:68px;left:0;right:0;background:#fff;border-bottom:1px solid var(--gray-200);z-index:99;flex-direction:column;padding:12px 24px 20px}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-size:15px;font-weight:500;color:var(--gray-700);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--gray-100)}
+.mobile-nav a:last-child{border-bottom:none}
+
+/* PAGE */
+.page{display:none;padding-top:68px}.page.active{display:block}
 
 /* HERO */
-.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:4rem 4rem 4rem;max-width:1200px;margin:0 auto}
-.hero-left{}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green-light);margin-bottom:2rem;letter-spacing:1px;text-transform:uppercase}
-.hero-badge span{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.8rem);font-weight:900;line-height:1.1;color:var(--white);margin-bottom:1.5rem}
-.hero h1 .accent-yellow{color:var(--yellow)}
-.hero h1 .accent-green{color:var(--green)}
-.hero-sub{font-size:1rem;color:var(--gray-light);max-width:480px;margin-bottom:2rem;font-weight:300;line-height:1.7}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1.5rem}
-.btn-hero{background:var(--green);color:var(--white);border:none;padding:14px 28px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.btn-hero:hover{background:var(--green-light);color:var(--black);transform:translateY(-1px)}
-.btn-hero-outline{background:none;color:var(--white);border:0.5px solid var(--border);padding:14px 28px;border-radius:10px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.btn-hero-outline:hover{border-color:var(--gray)}
-.hero-pricing-note{font-size:13px;color:var(--gray);display:flex;align-items:center;gap:6px}
-.hero-pricing-note strong{color:var(--yellow-light)}
-.hero-social-proof{display:flex;align-items:center;gap:12px;margin-top:2rem;padding-top:2rem;border-top:0.5px solid var(--border)}
+.hero{padding:80px 5% 60px;text-align:center;background:#fff;max-width:1200px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--off-white);border:1px solid var(--gray-200);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:500;color:var(--navy);margin-bottom:28px}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:800;line-height:1.1;color:var(--gray-900);margin-bottom:20px;letter-spacing:-1.5px}
+.hero h1 em{font-style:normal;color:var(--navy)}
+.hero h1 span{color:var(--gold)}
+.hero-sub{font-size:1.1rem;color:var(--gray-500);max-width:580px;margin:0 auto 36px;font-weight:400;line-height:1.7}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.btn-primary{background:var(--navy);color:#fff;font-size:15px;font-weight:600;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--navy-light);transform:translateY(-2px)}
+.btn-secondary{background:#fff;color:var(--navy);font-size:15px;font-weight:600;padding:13px 28px;border-radius:10px;border:2px solid var(--navy);cursor:pointer;transition:all 0.2s;text-decoration:none}
+.btn-secondary:hover{background:var(--off-white)}
+.hero-note{font-size:13px;color:var(--gray-400);margin-bottom:50px}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.hero-stars{display:flex;gap:2px;color:var(--gold);font-size:18px}
+.hero-trust-text{font-size:14px;color:var(--gray-500)}
+.hero-trust-text strong{color:var(--gray-900)}
 .hero-avatars{display:flex}
-.hero-avatar{width:32px;height:32px;border-radius:50%;border:2px solid var(--black);margin-left:-8px;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.hero-avatar{width:30px;height:30px;border-radius:50%;border:2px solid #fff;margin-left:-8px;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
 .hero-avatar:first-child{margin-left:0}
-.hero-proof-text{font-size:13px;color:var(--gray)}
-.hero-proof-text strong{color:var(--white)}
-.hero-right{position:relative}
-.hero-img-wrap{border-radius:20px;overflow:hidden;border:0.5px solid var(--border);position:relative}
-.hero-img-wrap img{width:100%;height:480px;object-fit:cover;display:block;filter:brightness(0.85)}
-.hero-img-badge{position:absolute;bottom:20px;left:20px;background:rgba(10,10,10,0.9);border:0.5px solid var(--border);border-radius:12px;padding:12px 16px;backdrop-filter:blur(10px)}
-.hero-img-badge-title{font-size:12px;color:var(--gray);margin-bottom:4px}
-.hero-img-badge-val{font-size:20px;font-weight:500;color:var(--green)}
-.hero-img-badge2{position:absolute;top:20px;right:20px;background:rgba(10,10,10,0.9);border:0.5px solid var(--border);border-radius:12px;padding:10px 14px;backdrop-filter:blur(10px)}
-.hero-img-badge2-title{font-size:11px;color:var(--gray);margin-bottom:2px}
-.hero-img-badge2-val{font-size:14px;font-weight:500;color:var(--yellow)}
+
+/* DASHBOARD MOCKUP */
+.hero-mockup{max-width:1100px;margin:50px auto 0;background:#fff;border:1px solid var(--gray-200);border-radius:16px;overflow:hidden;box-shadow:0 4px 40px rgba(30,58,95,0.08)}
+.mockup-bar{background:var(--gray-50);border-bottom:1px solid var(--gray-200);padding:12px 20px;display:flex;align-items:center;gap:8px}
+.mockup-dot{width:10px;height:10px;border-radius:50%}
+.mockup-url{flex:1;background:#fff;border:1px solid var(--gray-200);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--gray-400);margin:0 12px}
+.mockup-tabs{background:var(--navy);padding:0 20px;display:flex;gap:2px}
+.mockup-tab{padding:12px 14px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:2px solid transparent}
+.mockup-tab.active{color:#fff;border-bottom-color:var(--gold)}
+.mockup-body{padding:20px;background:var(--gray-50)}
+.mockup-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.mockup-stat{background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:14px}
+.mockup-stat-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.mockup-stat-val{font-size:20px;font-weight:700;color:var(--gray-900)}
+.mockup-stat-sub{font-size:10px;color:var(--gray-400);margin-top:2px}
+.mockup-products{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mockup-card{background:#fff;border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
+.mockup-card-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+.mockup-grade{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff}
+.mockup-trend{position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.9);border-radius:6px;padding:3px 7px;font-size:10px;font-weight:600}
+.mockup-card-body{padding:10px}
+.mockup-card-name{font-size:12px;font-weight:600;color:var(--gray-900);margin-bottom:2px}
+.mockup-card-niche{font-size:10px;color:var(--gray-400);margin-bottom:8px}
+.mockup-card-metrics{display:flex;gap:8px}
+.mockup-card-met{flex:1}
+.mockup-card-met-label{font-size:9px;color:var(--gray-400);text-transform:uppercase}
+.mockup-card-met-val{font-size:12px;font-weight:600;color:var(--gray-900)}
+.mockup-bar-fill{height:3px;border-radius:2px;background:var(--gray-100);margin-top:6px;overflow:hidden}
+.mockup-bar-inner{height:100%;border-radius:2px}
 
 /* STATS BAR */
-.stats-bar{background:var(--dark);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:1.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:100%}
-.stats-bar-item{text-align:center}
-.stats-bar-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--white);margin-bottom:4px}
-.stats-bar-val span{color:var(--green)}
-.stats-bar-label{font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px}
+.stats-bar{background:var(--navy);padding:28px 5%}
+.stats-bar-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stats-item-val{font-size:2rem;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-1px}
+.stats-item-val span{color:var(--gold)}
+.stats-item-label{font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px}
 
-/* LIFESTYLE SECTION */
-.lifestyle-section{padding:5rem 4rem;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-.lifestyle-img-wrap{border-radius:20px;overflow:hidden;border:0.5px solid var(--border);position:relative}
-.lifestyle-img-wrap img{width:100%;height:420px;object-fit:cover;display:block;filter:brightness(0.8)}
-.lifestyle-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,0.6) 0%,transparent 50%)}
-.lifestyle-card{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(10,10,10,0.85);border:0.5px solid var(--border);border-radius:12px;padding:14px;backdrop-filter:blur(10px)}
-.lifestyle-card-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:8px}
-.lifestyle-card-row{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:4px}
-.lifestyle-card-row span:last-child{color:var(--green);font-weight:500}
-.lifestyle-right{}
-.section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:1rem}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--white);margin-bottom:1rem;line-height:1.2}
-.section-sub{color:var(--gray-light);font-size:1rem;margin-bottom:2rem;font-weight:300;line-height:1.7}
-.lifestyle-points{display:flex;flex-direction:column;gap:16px}
-.lifestyle-point{display:flex;gap:12px;align-items:flex-start}
-.lifestyle-point-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
-.lifestyle-point-title{font-size:14px;font-weight:500;color:var(--white);margin-bottom:2px}
-.lifestyle-point-desc{font-size:13px;color:var(--gray);line-height:1.6}
+/* FEATURE SECTIONS */
+.features{padding:80px 5%}
+.features-inner{max-width:1200px;margin:0 auto}
+.section-eyebrow{font-size:13px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.section-h2{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;color:var(--gray-900);letter-spacing:-0.5px;line-height:1.2;margin-bottom:16px}
+.section-sub{font-size:1rem;color:var(--gray-500);line-height:1.7;max-width:480px}
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:80px}
+.feature-row.reverse{direction:rtl}
+.feature-row.reverse > *{direction:ltr}
+.feature-points{display:flex;flex-direction:column;gap:16px;margin-top:24px}
+.feature-point{display:flex;gap:12px;align-items:flex-start}
+.feature-point-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:1px}
+.feature-point-title{font-size:14px;font-weight:600;color:var(--gray-900);margin-bottom:2px}
+.feature-point-desc{font-size:13px;color:var(--gray-500);line-height:1.6}
+.feature-visual{background:var(--off-white);border:1px solid var(--gray-200);border-radius:16px;overflow:hidden}
 
-/* SNEAK PEEK */
-.sneak-section{padding:5rem 4rem;max-width:1200px;margin:0 auto}
-.sneak-wrap{position:relative;border-radius:16px;overflow:hidden;border:0.5px solid var(--border)}
-.sneak-products{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-.sneak-card{background:var(--card);padding:20px;border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
-.sneak-card:nth-child(3n){border-right:none}
-.sneak-card:nth-child(n+4){border-bottom:none}
-.sneak-emoji{font-size:32px;margin-bottom:10px}
-.sneak-name{font-size:14px;font-weight:500;color:var(--white);margin-bottom:4px}
-.sneak-niche{font-size:11px;color:var(--gray);margin-bottom:12px}
-.sneak-metrics{display:flex;gap:12px}
-.sneak-met{flex:1}
-.sneak-met-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px}
-.sneak-met-val{font-size:13px;font-weight:500;color:var(--white)}
-.sneak-bar{height:3px;background:#222;border-radius:2px;margin-top:10px;overflow:hidden}
-.sneak-bar-fill{height:100%;border-radius:2px;background:var(--green)}
-.sneak-blur{filter:blur(6px);opacity:0.4;pointer-events:none}
-.sneak-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,10,0.7)}
-.sneak-overlay-box{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:2.5rem;text-align:center;max-width:380px}
-.sneak-lock-icon{width:48px;height:48px;background:rgba(29,158,117,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:0.5px solid rgba(29,158,117,0.3)}
-.sneak-overlay-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);margin-bottom:0.5rem}
-.sneak-overlay-sub{font-size:13px;color:var(--gray);margin-bottom:1.5rem;line-height:1.6}
+/* PRODUCT FEED VISUAL */
+.feed-visual{padding:16px}
+.feed-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.feed-title{font-size:13px;font-weight:600;color:var(--gray-900)}
+.feed-badge{background:var(--green-light);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.feed-cards{display:flex;flex-direction:column;gap:8px}
+.feed-card{background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px}
+.feed-emoji{font-size:24px;width:40px;text-align:center}
+.feed-info{flex:1}
+.feed-name{font-size:13px;font-weight:600;color:var(--gray-900)}
+.feed-meta{font-size:11px;color:var(--gray-400)}
+.feed-right{text-align:right}
+.feed-margin{font-size:14px;font-weight:700;color:var(--navy)}
+.feed-grade{display:inline-block;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:700;color:#fff;text-align:center;line-height:22px;margin-top:3px}
 
-/* FEATURES */
-.features-section{padding:5rem 4rem;max-width:1200px;margin:0 auto}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.feature-card{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:1.75rem;transition:border-color 0.2s}
-.feature-card:hover{border-color:var(--green)}
-.feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:1rem}
-.fi-green{background:rgba(29,158,117,0.12);border:0.5px solid rgba(29,158,117,0.2)}
-.fi-yellow{background:rgba(239,159,39,0.12);border:0.5px solid rgba(239,159,39,0.2)}
-.fi-blue{background:rgba(55,138,221,0.12);border:0.5px solid rgba(55,138,221,0.2)}
-.feature-title{font-size:15px;font-weight:500;color:var(--white);margin-bottom:6px}
-.feature-desc{font-size:13px;color:var(--gray);line-height:1.7}
+/* AD CREATIVE VISUAL */
+.creative-visual{padding:16px}
+.creative-tabs{display:flex;gap:6px;margin-bottom:12px}
+.creative-tab{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--gray-200);color:var(--gray-500)}
+.creative-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.creative-var{background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:8px}
+.creative-var-label{font-size:10px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.creative-script{font-size:12px;color:var(--gray-700);line-height:1.6;font-style:italic}
+.creative-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.creative-meta-item{background:var(--gray-50);border-radius:8px;padding:8px 10px}
+.creative-meta-label{font-size:9px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.creative-meta-val{font-size:11px;font-weight:500;color:var(--gray-700)}
+
+/* CALCULATOR VISUAL */
+.calc-visual{padding:16px}
+.calc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.calc-input-item{background:#fff;border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px}
+.calc-input-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.calc-input-val{font-size:14px;font-weight:600;color:var(--gray-900)}
+.calc-result-box{background:var(--navy);border-radius:10px;padding:14px}
+.calc-result-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:12px}
+.calc-result-row:last-child{border-bottom:none}
+.calc-result-label{color:rgba(255,255,255,0.6)}
+.calc-result-val{color:#fff;font-weight:600}
+.calc-result-val.gold{color:var(--gold)}
+.calc-result-val.green{color:#4ADE80}
 
 /* TESTIMONIALS */
-.testimonials-section{padding:5rem 4rem;max-width:1200px;margin:0 auto}
-.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.testimonial-card{background:var(--card);border:0.5px solid var(--border);border-radius:16px;padding:1.5rem}
-.testimonial-stars{color:var(--yellow);font-size:14px;margin-bottom:12px;letter-spacing:2px}
-.testimonial-text{font-size:14px;color:var(--gray-light);line-height:1.7;margin-bottom:16px;font-style:italic}
-.testimonial-author{display:flex;align-items:center;gap:10px}
-.testimonial-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500}
-.testimonial-name{font-size:13px;font-weight:500;color:var(--white)}
-.testimonial-role{font-size:11px;color:var(--gray)}
+.testimonials{padding:80px 5%;background:var(--gray-50)}
+.testimonials-inner{max-width:1200px;margin:0 auto}
+.testimonials-header{text-align:center;margin-bottom:48px}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testimonial{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:24px}
+.testimonial-stars{color:var(--gold);font-size:16px;margin-bottom:14px;letter-spacing:2px}
+.testimonial-text{font-size:14px;color:var(--gray-700);line-height:1.7;margin-bottom:20px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.testimonial-name{font-size:14px;font-weight:600;color:var(--gray-900)}
+.testimonial-role{font-size:12px;color:var(--gray-400)}
+.testimonial-result{display:inline-block;background:var(--green-light);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:6px}
 
 /* PRICING */
-.pricing-section{padding:5rem 4rem;max-width:700px;margin:0 auto;text-align:center}
-.pricing-card{background:var(--card);border:0.5px solid var(--green);border-radius:20px;padding:3rem;position:relative;overflow:hidden}
-.pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green),var(--yellow))}
-.pricing-badge{background:rgba(239,159,39,0.15);border:0.5px solid rgba(239,159,39,0.3);color:var(--yellow-light);font-size:11px;padding:4px 14px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;display:inline-block;margin-bottom:1.5rem}
-.pricing-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);margin-bottom:0.5rem}
-.pricing-sub{font-size:13px;color:var(--gray);margin-bottom:2rem}
-.pricing-amount{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--white)}
-.pricing-amount sup{font-size:1.5rem;vertical-align:top;margin-top:1rem;display:inline-block}
-.pricing-period{font-size:13px;color:var(--gray);margin-bottom:0.5rem}
-.pricing-then{background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2);border-radius:10px;padding:12px 20px;margin:1.5rem 0;display:flex;align-items:center;justify-content:space-between}
+.pricing{padding:80px 5%;background:#fff}
+.pricing-inner{max-width:600px;margin:0 auto;text-align:center}
+.pricing-header{margin-bottom:40px}
+.pricing-card{background:#fff;border:2px solid var(--navy);border-radius:20px;padding:40px;position:relative;overflow:hidden}
+.pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--gold))}
+.pricing-tag{background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:20px;letter-spacing:0.5px}
+.pricing-amount{font-size:4rem;font-weight:800;color:var(--gray-900);letter-spacing:-2px;line-height:1}
+.pricing-amount sup{font-size:1.6rem;vertical-align:top;margin-top:12px;display:inline-block;font-weight:600}
+.pricing-period{font-size:14px;color:var(--gray-400);margin-top:4px;margin-bottom:20px}
+.pricing-then{background:var(--off-white);border:1px solid var(--gray-200);border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
 .pricing-then-left{text-align:left}
-.pricing-then-label{font-size:12px;color:var(--gray);margin-bottom:2px}
-.pricing-then-amount{font-size:1.4rem;font-weight:500;color:var(--green-light)}
-.pricing-then-badge{background:var(--green);color:var(--white);font-size:11px;padding:4px 10px;border-radius:20px;font-weight:500}
-.pricing-features{text-align:left;margin:1.5rem 0}
-.pricing-feature{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:var(--gray-light)}
+.pricing-then-label{font-size:12px;color:var(--gray-400);margin-bottom:2px}
+.pricing-then-amount{font-size:1.4rem;font-weight:700;color:var(--navy)}
+.pricing-then-badge{background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px}
+.pricing-features{text-align:left;margin-bottom:28px}
+.pricing-feature{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:14px;color:var(--gray-700)}
 .pricing-feature:last-child{border-bottom:none}
-.pricing-cta{width:100%;background:var(--green);color:var(--white);border:none;padding:16px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;margin-bottom:12px}
-.pricing-cta:hover{background:var(--green-light);color:var(--black)}
-.pricing-note{font-size:12px;color:var(--gray)}
+.pricing-check{width:18px;height:18px;border-radius:50%;background:var(--green-light);color:var(--green);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700}
+.pricing-cta{width:100%;background:var(--navy);color:#fff;font-size:16px;font-weight:700;padding:16px;border-radius:12px;border:none;cursor:pointer;transition:all 0.2s;margin-bottom:10px}
+.pricing-cta:hover{background:var(--navy-light);transform:translateY(-1px)}
+.pricing-note{font-size:12px;color:var(--gray-400)}
 
-/* MEMBERS */
-.members-wrap{min-height:calc(100vh - 64px);background:var(--black)}
-.members-topbar{background:var(--dark);border-bottom:0.5px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between}
-.members-tabs{display:flex;gap:2px}
-.mtab{background:none;border:none;color:var(--gray);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.15s}
-.mtab.active{background:#222;color:var(--white);font-weight:500}
-.mtab:hover:not(.active){color:var(--white)}
-.members-main{padding:1.5rem;max-width:1200px;margin:0 auto}
-.mpage{display:none}
-.mpage.active{display:block}
-.mstats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
-.mstat{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:14px}
-.mstat-label{font-size:11px;color:var(--gray);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
-.mstat-value{font-size:22px;font-weight:500;color:var(--white)}
-.mstat-sub{font-size:11px;color:var(--gray);margin-top:2px}
-.hotlist{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
-.hotlist-hdr{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.hotlist-hdr-title{font-size:14px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:8px}
-.hot-pill{background:rgba(239,159,39,0.15);color:var(--yellow-light);font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)}
-.hl-row{display:flex;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--border);gap:12px}
-.hl-row:last-child{border-bottom:none}
-.hl-rank{font-size:12px;color:var(--gray);width:16px}
-.hl-em{font-size:20px}
-.hl-info{flex:1}
-.hl-name{font-size:13px;font-weight:500;color:var(--white)}
-.hl-sub{font-size:11px;color:var(--gray)}
-.hl-margin{font-size:13px;font-weight:500;color:var(--green)}
-.ai-panel{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:1.5rem}
-.ai-hdr{font-size:13px;font-weight:500;color:var(--white);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.ai-hdr-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-.ai-inp{flex:1;background:#222;border:0.5px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
-.ai-inp:focus{border-color:var(--green)}
-.ai-inp::placeholder{color:var(--gray)}
-.ai-send{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.2s}
-.ai-send:hover{background:var(--green-light);color:var(--black)}
-.ai-resp{margin-top:12px;font-size:13px;color:var(--gray-light);line-height:1.7;min-height:16px}
-.typing{display:inline-flex;gap:3px}
-.typing span{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.2s infinite}
-.typing span:nth-child(2){animation-delay:0.2s}
-.typing span:nth-child(3){animation-delay:0.4s}
-@keyframes blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.section-hdr-title{font-size:14px;font-weight:500;color:var(--white)}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.fbtn{background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gray);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.fbtn.active{background:var(--green);color:var(--white);border-color:var(--green)}
-.fbtn:hover:not(.active){color:var(--white);border-color:#444}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:2rem}
-.pcard{background:var(--card);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:border-color 0.2s}
-.pcard:hover{border-color:#444}
-.pcard-img{height:110px;display:flex;align-items:center;justify-content:center;font-size:44px;border-bottom:0.5px solid var(--border)}
-.pcard-body{padding:14px}
-.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.pcard-name{font-size:13px;font-weight:500;color:var(--white);line-height:1.3}
-.pcard-niche{font-size:11px;color:var(--gray)}
-.hbtn{background:none;border:none;cursor:pointer;color:var(--gray);font-size:18px;padding:0;line-height:1;transition:color 0.2s}
-.hbtn.saved{color:#E24B4A}
-.pmetrics{display:flex;gap:8px;margin-bottom:10px}
-.pmet{flex:1}
-.pmet-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px}
-.pmet-val{font-size:13px;font-weight:500;color:var(--white)}
-.pbar-wrap{margin-bottom:8px}
-.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--gray);margin-bottom:3px}
-.pbar{height:3px;background:#222;border-radius:2px;overflow:hidden}
-.pbar-fill{height:100%;border-radius:2px}
-.ptags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
-.ptag{font-size:10px;padding:2px 8px;border-radius:20px}
-.pcard-footer{display:flex;gap:6px;align-items:center;padding-top:10px;border-top:0.5px solid var(--border);flex-wrap:wrap}
-.ad-link{font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid var(--border);text-decoration:none;display:flex;align-items:center;gap:4px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.ad-link.tiktok{border-color:#AFA9EC;color:#AFA9EC;background:rgba(175,169,236,0.08)}
-.ad-link.meta{border-color:var(--blue);color:var(--blue);background:rgba(55,138,221,0.08)}
-.creative-btn{font-size:11px;padding:4px 10px;border-radius:8px;border:0.5px solid rgba(29,158,117,0.3);color:var(--green-light);background:rgba(29,158,117,0.08);cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto;transition:all 0.15s}
-.creative-btn:hover{background:rgba(29,158,117,0.15)}
-.creative-panel{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:1.5rem}
-.creative-hdr{font-size:14px;font-weight:500;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.cform{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.cgroup label{font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px}
-.cgroup input,.cgroup select{width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s}
-.cgroup input:focus,.cgroup select:focus{border-color:var(--green)}
-.cgroup select option{background:var(--dark)}
-.gen-btn{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px;transition:all 0.2s}
-.gen-btn:hover{background:var(--green-light);color:var(--black)}
-.creative-out{display:none;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--border)}
-.creative-out.show{display:block}
-.stabs{display:flex;gap:6px;margin-bottom:12px}
-.stab{padding:5px 14px;font-size:12px;border:0.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--card);color:var(--gray);font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.stab.active{background:var(--green);color:var(--white);border-color:var(--green)}
-.script-box{background:#111;border-radius:10px;padding:14px;font-size:13px;color:var(--gray-light);line-height:1.8;white-space:pre-wrap;border:0.5px solid var(--border)}
-.brief-box{background:rgba(29,158,117,0.06);border-radius:10px;padding:14px;font-size:13px;color:var(--green-light);line-height:1.8;white-space:pre-wrap;border:0.5px solid rgba(29,158,117,0.2)}
-.sactions{display:flex;gap:8px;margin-top:8px}
-.copy-btn{font-size:12px;padding:5px 14px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;background:none;color:var(--gray);display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.copy-btn:hover{color:var(--white);border-color:#444}
-.admin-section{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
-.admin-hdr{padding:12px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.admin-hdr-title{font-size:14px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:8px}
-.pub-btn{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.pub-btn:hover{background:var(--green-light);color:var(--black)}
-.admin-row{display:flex;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--border);gap:12px;flex-wrap:wrap}
-.admin-row:last-child{border-bottom:none}
-.admin-em{font-size:20px;width:28px;text-align:center}
-.admin-info{flex:1;min-width:150px}
-.admin-name{font-size:13px;font-weight:500;color:var(--white)}
-.admin-meta{font-size:11px;color:var(--gray)}
-.score-chip{font-size:11px;padding:2px 8px;border-radius:20px;margin-left:4px}
-.toggle-wrap{display:flex;align-items:center;gap:6px}
-.toggle{width:36px;height:20px;border-radius:10px;background:#222;border:0.5px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
-.toggle.on{background:var(--green);border-color:var(--green)}
-.toggle-thumb{width:16px;height:16px;border-radius:50%;background:var(--white);position:absolute;top:2px;left:2px;transition:left 0.2s}
-.toggle.on .toggle-thumb{left:18px}
-.toggle-label{font-size:12px;color:var(--gray)}
-.refresh-zone{padding:16px;border-top:0.5px solid var(--border)}
-.refresh-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.regen-btn{background:var(--green);border:none;border-radius:8px;padding:10px 18px;font-size:13px;cursor:pointer;color:var(--white);display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.2s;white-space:nowrap}
-.regen-btn:hover{background:var(--green-light);color:var(--black)}
-.regen-btn:disabled{background:#222;color:var(--gray);cursor:default}
-.last-updated{font-size:11px;color:var(--gray);margin-top:8px}
-.admin-stats{padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.gen-output{margin-top:14px;display:none}
-.gen-output.show{display:block}
-.gen-output-title{font-size:12px;color:var(--gray);margin-bottom:8px}
-.gen-code-box{background:#111;border:0.5px solid var(--border);border-radius:8px;padding:12px;font-size:11px;color:var(--green-light);font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto;line-height:1.5}
-.add-product-form{padding:16px;border-top:0.5px solid var(--border)}
-.add-product-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.add-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:12px}
-.add-form-group label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px}
-.add-form-group input,.add-form-group select{width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none}
-.add-form-group input:focus,.add-form-group select:focus{border-color:var(--green)}
-.add-product-btn{background:var(--green);color:var(--white);border:none;border-radius:8px;padding:8px 18px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.2s}
-.add-product-btn:hover{background:var(--green-light);color:var(--black)}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:var(--white);padding:12px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity 0.3s;z-index:999;pointer-events:none;font-family:'DM Sans',sans-serif}
-.toast.show{opacity:1}
-footer{background:var(--dark);border-top:0.5px solid var(--border);padding:2rem;text-align:center;font-size:12px;color:var(--gray)}
+/* FAQ */
+.faq{padding:80px 5%;background:var(--gray-50)}
+.faq-inner{max-width:720px;margin:0 auto}
+.faq-header{text-align:center;margin-bottom:40px}
+.faq-items{display:flex;flex-direction:column;gap:12px}
+.faq-item{background:#fff;border:1px solid var(--gray-200);border-radius:12px;overflow:hidden}
+.faq-question{padding:18px 20px;font-size:15px;font-weight:600;color:var(--gray-900);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.faq-question:hover{color:var(--navy)}
+.faq-icon{font-size:20px;color:var(--gray-400);transition:transform 0.2s;flex-shrink:0}
+.faq-answer{display:none;padding:0 20px 18px;font-size:14px;color:var(--gray-500);line-height:1.7}
+.faq-item.open .faq-answer{display:block}
+.faq-item.open .faq-icon{transform:rotate(45deg);color:var(--navy)}
+
+/* CTA FOOTER SECTION */
+.cta-section{padding:80px 5%;background:var(--navy);text-align:center}
+.cta-inner{max-width:700px;margin:0 auto}
+.cta-h2{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:16px;line-height:1.2}
+.cta-sub{font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:32px;line-height:1.7}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold);color:var(--navy);font-size:15px;font-weight:700;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-white-outline{background:transparent;color:#fff;font-size:15px;font-weight:600;padding:13px 28px;border-radius:10px;border:2px solid rgba(255,255,255,0.3);cursor:pointer;transition:all 0.2s;text-decoration:none}
+.btn-white-outline:hover{border-color:rgba(255,255,255,0.7)}
+.cta-note{font-size:13px;color:rgba(255,255,255,0.5);margin-top:16px}
+
+/* FOOTER */
+footer{background:var(--navy-dark);padding:40px 5% 24px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;text-decoration:none}
+.footer-logo-text{font-size:16px;font-weight:700;color:#fff}
+.footer-logo-text span{color:var(--gold)}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:220px}
+.footer-col-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.footer-link{display:block;font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;margin-bottom:8px;transition:color 0.2s;cursor:pointer}
+.footer-link:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:13px;color:rgba(255,255,255,0.4)}
+.footer-copy span{color:var(--gold)}
+
+/* LOGIN / SIGNUP PAGES */
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--gray-50)}
+.auth-card{background:#fff;border:1px solid var(--gray-200);border-radius:20px;padding:2.5rem;width:100%;max-width:440px}
+.auth-logo{display:flex;align-items:center;gap:8px;margin-bottom:24px;justify-content:center}
+.auth-title{font-size:22px;font-weight:700;color:var(--gray-900);text-align:center;margin-bottom:6px}
+.auth-sub{font-size:14px;color:var(--gray-400);text-align:center;margin-bottom:24px}
+.auth-label{font-size:12px;font-weight:500;color:var(--gray-700);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px}
+.auth-input{width:100%;border:1px solid var(--gray-200);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--gray-900);font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:14px}
+.auth-input:focus{border-color:var(--navy)}
+.auth-btn{width:100%;background:var(--navy);color:#fff;font-size:15px;font-weight:600;padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:10px;transition:all 0.2s}
+.auth-btn:hover{background:var(--navy-light)}
+.auth-link{font-size:13px;color:var(--gray-400);text-align:center}
+.auth-link a{color:var(--navy);text-decoration:none;font-weight:500}
+.pricing-box{background:var(--off-white);border:1px solid var(--gray-200);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.pricing-box-left div:first-child{font-size:12px;color:var(--gray-400);margin-bottom:2px}
+.pricing-box-left div:last-child{font-size:1.2rem;font-weight:700;color:var(--gray-900)}
+.pricing-box-right div:first-child{font-size:12px;color:var(--gray-400);margin-bottom:2px;text-align:right}
+.pricing-box-right div:last-child{font-size:1.2rem;font-weight:700;color:var(--navy);text-align:right}
+.fifty-badge{font-size:10px;background:var(--navy);color:#fff;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle}
+
 @media(max-width:768px){
-  .hero{grid-template-columns:1fr;padding:2rem}
-  .hero-right{display:none}
-  .lifestyle-section{grid-template-columns:1fr;padding:2rem}
-  .stats-bar{grid-template-columns:repeat(2,1fr);padding:1.5rem 2rem}
-  .sneak-section,.features-section,.testimonials-section,.pricing-section{padding:3rem 1.5rem}
-  .cform{grid-template-columns:1fr}
+  .nav-links,.nav-right .btn-login{display:none}
+  .hamburger{display:block}
+  .hero{padding:60px 5% 40px}
+  .hero-mockup{margin:30px 5% 0}
+  .stats-bar-inner{grid-template-columns:repeat(2,1fr)}
+  .feature-row,.feature-row.reverse{grid-template-columns:1fr;direction:ltr}
+  .mockup-products{grid-template-columns:repeat(2,1fr)}
+  .mockup-stats{grid-template-columns:repeat(2,1fr)}
+  .testimonials-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .calc-inputs{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo" onclick="showLanding()">
-    <div class="logo-icon">
-      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="3" y1="5" x2="12" y2="5" stroke="#FAC775" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="3" y1="10" x2="17" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="3" y1="15" x2="10" y2="15" stroke="#5DCAA5" stroke-width="1.8" stroke-linecap="round"/>
-        <circle cx="15" cy="15" r="3.5" fill="#1D9E75"/>
-        <polyline points="13.5,15 15,16.5 17,13.5" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('landing')">
+      <div class="nav-logo-icon">
+        <div class="nav-logo-bars">
+          <div class="nav-logo-bar" style="width:5px;height:10px;opacity:0.4"></div>
+          <div class="nav-logo-bar" style="width:5px;height:16px;opacity:0.7"></div>
+          <div class="nav-logo-bar" style="width:5px;height:22px"></div>
+          <div class="nav-logo-bar gold" style="width:5px;height:18px"></div>
+        </div>
+      </div>
+      <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
     </div>
-    <div class="logo-text">Drop<span>Research</span> Hub</div>
-  </div>
-  <div class="nav-right" id="nav-right">
-    <button class="btn-ghost" onclick="showLogin()">Log in</button>
-    <button class="btn-primary" onclick="showSignup()">Get access</button>
+    <div class="nav-links">
+      <a class="nav-link" onclick="scrollTo('features')">Features</a>
+      <a class="nav-link" onclick="scrollTo('how-it-works')">Why it works</a>
+      <a class="nav-link" onclick="scrollTo('pricing')">Pricing</a>
+      <a class="nav-link" onclick="scrollTo('whitelabel')">White Label</a>
+      <a class="nav-free" onclick="showPage('free-trial')">Try for free <span class="nav-free-badge">FREE</span></a>
+    </div>
+    <div class="nav-right">
+      <button class="btn-login" onclick="showPage('login')">Log in</button>
+      <button class="btn-start" onclick="showPage('signup')">Start free →</button>
+      <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
   </div>
 </nav>
 
-<!-- LANDING -->
+<div class="mobile-nav" id="mobile-nav">
+  <a onclick="scrollTo('features');toggleMobileMenu()">Features</a>
+  <a onclick="scrollTo('how-it-works');toggleMobileMenu()">Why it works</a>
+  <a onclick="scrollTo('pricing');toggleMobileMenu()">Pricing</a>
+  <a onclick="scrollTo('whitelabel');toggleMobileMenu()">White Label</a>
+  <a onclick="showPage('free-trial');toggleMobileMenu()">Try for free</a>
+  <a onclick="showPage('login')">Log in</a>
+  <a onclick="showPage('signup')">Start free →</a>
+</div>
+
+<!-- LANDING PAGE -->
 <div class="page active" id="page-landing">
 
-  <section style="background:var(--black);padding-top:0">
-    <div class="hero">
-      <div class="hero-left">
-        <div class="hero-badge"><span></span>Updated weekly — new products every Monday</div>
-        <h1>The <span class="accent-yellow">ultimate</span> product research tool for <span class="accent-green">serious</span> ecom sellers</h1>
-        <p class="hero-sub">Stop spending hours searching for winning products. Get curated, data-driven product intelligence — with ad creatives ready to send to Viral Ecom Ads or Bands Off Ads.</p>
-        <div class="hero-cta">
-          <button class="btn-hero" onclick="showSignup()">Start now — £49.99 first month</button>
-          <button class="btn-hero-outline" onclick="document.getElementById('sneak').scrollIntoView({behavior:'smooth'})">See what's inside</button>
-        </div>
-        <div class="hero-pricing-note">Then just <strong>£24.99/month</strong> — 50% off forever. Cancel anytime.</div>
-        <div class="hero-social-proof">
-          <div class="hero-avatars">
-            <div class="hero-avatar" style="background:#0C447C;color:#85B7EB">JM</div>
-            <div class="hero-avatar" style="background:#27500A;color:#97C459">SK</div>
-            <div class="hero-avatar" style="background:#633806;color:#FAC775">TR</div>
-            <div class="hero-avatar" style="background:#72243E;color:#ED93B1">AL</div>
-          </div>
-          <div class="hero-proof-text"><strong>148 ecom sellers</strong> already finding winning products</div>
-        </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Google Trends verified · Updated every Monday</div>
+    <h1><em>Stop Guessing.</em><br><span>Start Selling What Works.</span></h1>
+    <p class="hero-sub">The UK's #1 product research tool for serious ecom sellers. Find winning products before anyone else — with grades, trend scores, ad creatives and profit calculators built in.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="showPage('free-trial')">Try for free →</button>
+      <button class="btn-secondary" onclick="showPage('signup')">Get full access — £49.99</button>
+    </div>
+    <p class="hero-note">No credit card required for free trial</p>
+    <div class="hero-trust">
+      <div class="hero-avatars">
+        <div class="hero-avatar" style="background:#1E3A5F;color:#93C5FD">JM</div>
+        <div class="hero-avatar" style="background:#14532D;color:#86EFAC">SK</div>
+        <div class="hero-avatar" style="background:#7C2D12;color:#FCA5A5">TR</div>
+        <div class="hero-avatar" style="background:#4C1D95;color:#C4B5FD">AL</div>
       </div>
-      <div class="hero-right">
-        <div class="hero-img-wrap">
-          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80" alt="Entrepreneur working on laptop" onerror="this.style.background='#181818';this.style.height='480px'"/>
-          <div class="hero-img-badge">
-            <div class="hero-img-badge-title">This week's top margin</div>
-            <div class="hero-img-badge-val">83% profit</div>
+      <div class="hero-stars">★★★★★</div>
+      <div class="hero-trust-text">Trusted by <strong>189 ecom sellers</strong> across the UK</div>
+    </div>
+
+    <!-- DASHBOARD MOCKUP -->
+    <div class="hero-mockup">
+      <div class="mockup-bar">
+        <div class="mockup-dot" style="background:#FF5F57"></div>
+        <div class="mockup-dot" style="background:#FFBD2E"></div>
+        <div class="mockup-dot" style="background:#28C840"></div>
+        <div class="mockup-url">dropresearchhub.vercel.app/members</div>
+      </div>
+      <div class="mockup-tabs">
+        <div class="mockup-tab active">📦 Product Feed</div>
+        <div class="mockup-tab">🎬 Ad Creative</div>
+        <div class="mockup-tab">🧮 Calculators</div>
+        <div class="mockup-tab">🏪 Store Audit</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-stats">
+          <div class="mockup-stat"><div class="mockup-stat-label">Live products</div><div class="mockup-stat-val" style="color:#1E3A5F">47</div><div class="mockup-stat-sub">this week</div></div>
+          <div class="mockup-stat"><div class="mockup-stat-label">Grade A picks</div><div class="mockup-stat-val" style="color:#F59E0B">12</div><div class="mockup-stat-sub">top opportunities</div></div>
+          <div class="mockup-stat"><div class="mockup-stat-label">Trending up</div><div class="mockup-stat-val" style="color:#16A34A">31</div><div class="mockup-stat-sub">↑ rising now</div></div>
+          <div class="mockup-stat"><div class="mockup-stat-label">Avg margin</div><div class="mockup-stat-val" style="color:#1E3A5F">79%</div><div class="mockup-stat-sub">across feed</div></div>
+        </div>
+        <div class="mockup-products">
+          <div class="mockup-card">
+            <div class="mockup-card-img" style="background:#EFF6FF">
+              🧲
+              <div class="mockup-grade" style="background:#16A34A">A</div>
+              <div class="mockup-trend" style="color:#16A34A">↑ 94</div>
+            </div>
+            <div class="mockup-card-body">
+              <div class="mockup-card-name">Magnetic phone mount</div>
+              <div class="mockup-card-niche">Tech · Evergreen</div>
+              <div class="mockup-card-metrics">
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Cost</div><div class="mockup-card-met-val">£3.20</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Sell</div><div class="mockup-card-met-val">£18.99</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Margin</div><div class="mockup-card-met-val" style="color:#16A34A">83%</div></div>
+              </div>
+              <div class="mockup-bar-fill"><div class="mockup-bar-inner" style="width:83%;background:#16A34A"></div></div>
+            </div>
           </div>
-          <div class="hero-img-badge2">
-            <div class="hero-img-badge2-title">🔥 Trending now</div>
-            <div class="hero-img-badge2-val">47 winning products</div>
+          <div class="mockup-card">
+            <div class="mockup-card-img" style="background:#FFF7ED">
+              🧊
+              <div class="mockup-grade" style="background:#16A34A">A</div>
+              <div class="mockup-trend" style="color:#16A34A">↑ 91</div>
+            </div>
+            <div class="mockup-card-body">
+              <div class="mockup-card-name">Ice roller facial tool</div>
+              <div class="mockup-card-niche">Beauty · Summer peak</div>
+              <div class="mockup-card-metrics">
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Cost</div><div class="mockup-card-met-val">£2.10</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Sell</div><div class="mockup-card-met-val">£14.99</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Margin</div><div class="mockup-card-met-val" style="color:#16A34A">86%</div></div>
+              </div>
+              <div class="mockup-bar-fill"><div class="mockup-bar-inner" style="width:86%;background:#16A34A"></div></div>
+            </div>
+          </div>
+          <div class="mockup-card">
+            <div class="mockup-card-img" style="background:#F0FDF4">
+              🌸
+              <div class="mockup-grade" style="background:#16A34A">A</div>
+              <div class="mockup-trend" style="color:#16A34A">↑ 87</div>
+            </div>
+            <div class="mockup-card-body">
+              <div class="mockup-card-name">Silk pillowcase set</div>
+              <div class="mockup-card-niche">Beauty · Evergreen</div>
+              <div class="mockup-card-metrics">
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Cost</div><div class="mockup-card-met-val">£4.20</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Sell</div><div class="mockup-card-met-val">£22.99</div></div>
+                <div class="mockup-card-met"><div class="mockup-card-met-label">Margin</div><div class="mockup-card-met-val" style="color:#16A34A">82%</div></div>
+              </div>
+              <div class="mockup-bar-fill"><div class="mockup-bar-inner" style="width:82%;background:#16A34A"></div></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stats-bar-item"><div class="stats-bar-val"><span>47+</span></div><div class="stats-bar-label">Products weekly</div></div>
-    <div class="stats-bar-item"><div class="stats-bar-val"><span>71%</span></div><div class="stats-bar-label">Avg profit margin</div></div>
-    <div class="stats-bar-item"><div class="stats-bar-val"><span>148</span></div><div class="stats-bar-label">Active members</div></div>
-    <div class="stats-bar-item"><div class="stats-bar-val"><span>£24.99</span></div><div class="stats-bar-label">Per month after first</div></div>
+    <div class="stats-bar-inner">
+      <div class="stats-item"><div class="stats-item-val"><span>47+</span></div><div class="stats-item-label">Products weekly</div></div>
+      <div class="stats-item"><div class="stats-item-val"><span>79%</span></div><div class="stats-item-label">Avg profit margin</div></div>
+      <div class="stats-item"><div class="stats-item-val"><span>189</span></div><div class="stats-item-label">Active members</div></div>
+      <div class="stats-item"><div class="stats-item-val"><span>£24.99</span></div><div class="stats-item-label">Per month after first</div></div>
+    </div>
   </div>
 
-  <section class="lifestyle-section">
-    <div class="lifestyle-img-wrap">
-      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Ecom seller researching products" onerror="this.style.background='#181818';this.style.height='420px'"/>
-      <div class="lifestyle-overlay"></div>
-      <div class="lifestyle-card">
-        <div class="lifestyle-card-title">Live product snapshot</div>
-        <div class="lifestyle-card-row"><span>Magnetic phone mount</span><span>83% margin ✓</span></div>
-        <div class="lifestyle-card-row"><span>Slow feeder pet bowl</span><span>81% margin ✓</span></div>
-        <div class="lifestyle-card-row"><span>Ice roller facial tool</span><span>79% margin ✓</span></div>
-      </div>
-    </div>
-    <div class="lifestyle-right">
-      <div class="section-label">How it works</div>
-      <h2 class="section-title">Research smarter, sell faster</h2>
-      <p class="section-sub">Every Monday your feed refreshes with fresh winning products — fully researched, scored, and ready to sell. No more hours on AliExpress guessing what will work.</p>
-      <div class="lifestyle-points">
-        <div class="lifestyle-point">
-          <div class="lifestyle-point-icon fi-green">📦</div>
-          <div><div class="lifestyle-point-title">Get your weekly product drop</div><div class="lifestyle-point-desc">10-47 curated winning products land in your feed every Monday with full data.</div></div>
+  <!-- FEATURE SECTIONS -->
+  <section class="features" id="features">
+    <div class="features-inner">
+
+      <!-- FEATURE 1: Product Feed -->
+      <div class="feature-row" id="how-it-works">
+        <div>
+          <div class="section-eyebrow">Product Research</div>
+          <h2 class="section-h2">Find winning products before anyone else does</h2>
+          <p class="section-sub">Every product is verified by Google Trends. No dead products, no guesswork — just rising trend opportunities graded A to D.</p>
+          <div class="feature-points">
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#EFF6FF">📈</div>
+              <div><div class="feature-point-title">Google Trends verified</div><div class="feature-point-desc">Only products with rising search trends make it through. Dead products never appear.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#FFFBEB">⭐</div>
+              <div><div class="feature-point-title">Graded A to D</div><div class="feature-point-desc">Every product gets an overall grade combining trend, saturation, margin and competition.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#F0FDF4">🔗</div>
+              <div><div class="feature-point-title">AliExpress, TikTok & competitor links</div><div class="feature-point-desc">One click to supplier, live ads and competitor Shopify stores for every product.</div></div>
+            </div>
+          </div>
         </div>
-        <div class="lifestyle-point">
-          <div class="lifestyle-point-icon fi-yellow">📺</div>
-          <div><div class="lifestyle-point-title">Check real running ads instantly</div><div class="lifestyle-point-desc">One click to see live TikTok and Meta ads for any product. Know what's working.</div></div>
+        <div class="feature-visual">
+          <div class="feed-visual">
+            <div class="feed-header">
+              <div class="feed-title">This week's product feed</div>
+              <div class="feed-badge">47 live products</div>
+            </div>
+            <div class="feed-cards">
+              <div class="feed-card">
+                <div class="feed-emoji">🧲</div>
+                <div class="feed-info">
+                  <div class="feed-name">Magnetic phone mount</div>
+                  <div class="feed-meta">Tech · Sat 22 · 🇬🇧 UK supplier · 7-14 days</div>
+                </div>
+                <div class="feed-right">
+                  <div class="feed-margin">83%</div>
+                  <div class="feed-grade" style="background:#16A34A">A</div>
+                </div>
+              </div>
+              <div class="feed-card">
+                <div class="feed-emoji">🧊</div>
+                <div class="feed-info">
+                  <div class="feed-name">Ice roller facial tool</div>
+                  <div class="feed-meta">Beauty · Sat 24 · Summer peak · 8-15 days</div>
+                </div>
+                <div class="feed-right">
+                  <div class="feed-margin">86%</div>
+                  <div class="feed-grade" style="background:#16A34A">A</div>
+                </div>
+              </div>
+              <div class="feed-card">
+                <div class="feed-emoji">🌸</div>
+                <div class="feed-info">
+                  <div class="feed-name">Silk pillowcase set</div>
+                  <div class="feed-meta">Beauty · Sat 29 · Evergreen · 8-14 days</div>
+                </div>
+                <div class="feed-right">
+                  <div class="feed-margin">82%</div>
+                  <div class="feed-grade" style="background:#16A34A">A</div>
+                </div>
+              </div>
+              <div class="feed-card" style="opacity:0.4;filter:blur(3px)">
+                <div class="feed-emoji">🐾</div>
+                <div class="feed-info">
+                  <div class="feed-name">Slow feeder pet bowl</div>
+                  <div class="feed-meta">Pet · Sat 28 · Evergreen</div>
+                </div>
+                <div class="feed-right">
+                  <div class="feed-margin">81%</div>
+                  <div class="feed-grade" style="background:#16A34A">A</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="lifestyle-point">
-          <div class="lifestyle-point-icon fi-blue">🎬</div>
-          <div><div class="lifestyle-point-title">Generate your ad creative</div><div class="lifestyle-point-desc">AI writes your video script, hooks, and sends a brief to Viral Ecom Ads or Bands Off Ads.</div></div>
+      </div>
+
+      <!-- FEATURE 2: Ad Creative Generator -->
+      <div class="feature-row reverse">
+        <div>
+          <div class="section-eyebrow">Ad Creative</div>
+          <h2 class="section-h2">3 complete ad creative variations in seconds</h2>
+          <p class="section-sub">Stop spending hours writing ad scripts. Generate 3 full video scripts with hooks, TikTok music suggestions, Meta audiences and ready-to-send briefs.</p>
+          <div class="feature-points">
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#EFF6FF">🎬</div>
+              <div><div class="feature-point-title">3 variation scripts</div><div class="feature-point-desc">Three completely different angles — problem/solution, testimonial, lifestyle. Split test them all.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#FFF7ED">📋</div>
+              <div><div class="feature-point-title">Ready to send briefs</div><div class="feature-point-desc">One-click brief ready for Viral Ecom Ads or Bands Off Ads — no back and forth needed.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#FFFBEB">🎯</div>
+              <div><div class="feature-point-title">TikTok music + Meta audiences</div><div class="feature-point-desc">AI suggests the best music vibe for TikTok and the exact Meta audience to target.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="feature-visual">
+          <div class="creative-visual">
+            <div class="creative-tabs">
+              <div class="creative-tab active">Variation 1</div>
+              <div class="creative-tab">Variation 2</div>
+              <div class="creative-tab">Variation 3</div>
+            </div>
+            <div class="creative-var">
+              <div class="creative-var-label">Problem → Solution · TikTok</div>
+              <div class="creative-script">"You're still spending hours searching AliExpress for products that might sell... while your competitors are already running ads on verified winners. Here's what they're using — and it takes 30 seconds."</div>
+            </div>
+            <div class="creative-meta">
+              <div class="creative-meta-item">
+                <div class="creative-meta-label">🎵 TikTok music</div>
+                <div class="creative-meta-val">Upbeat trending sound — high energy, punchy cuts</div>
+              </div>
+              <div class="creative-meta-item">
+                <div class="creative-meta-label">🎯 Meta audience</div>
+                <div class="creative-meta-val">25-40, interests: dropshipping, Shopify, ecommerce</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE 3: Calculators -->
+      <div class="feature-row">
+        <div>
+          <div class="section-eyebrow">Profit & ROAS</div>
+          <h2 class="section-h2">Know if your ads are profitable before you scale</h2>
+          <p class="section-sub">Stop scaling losing campaigns. Enter your numbers and instantly know your profit per order, daily projection, break-even ROAS and whether to scale or stop.</p>
+          <div class="feature-points">
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#F0FDF4">💰</div>
+              <div><div class="feature-point-title">Profit calculator</div><div class="feature-point-desc">Cost, sell price, ad spend and orders — instant daily and monthly profit projection.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#EFF6FF">📊</div>
+              <div><div class="feature-point-title">ROAS calculator</div><div class="feature-point-desc">Enter your spend and revenue — see your current ROAS vs break-even ROAS instantly.</div></div>
+            </div>
+            <div class="feature-point">
+              <div class="feature-point-icon" style="background:#FFFBEB">🏪</div>
+              <div><div class="feature-point-title">Store audit tool</div><div class="feature-point-desc">Paste your Shopify URL — AI audits your store and gives a readiness score before you spend on ads.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="feature-visual">
+          <div class="calc-visual">
+            <div class="calc-inputs">
+              <div class="calc-input-item"><div class="calc-input-label">Cost price</div><div class="calc-input-val">£3.20</div></div>
+              <div class="calc-input-item"><div class="calc-input-label">Sell price</div><div class="calc-input-val">£18.99</div></div>
+              <div class="calc-input-item"><div class="calc-input-label">Daily ad spend</div><div class="calc-input-val">£30</div></div>
+              <div class="calc-input-item"><div class="calc-input-label">Daily orders</div><div class="calc-input-val">8</div></div>
+            </div>
+            <div class="calc-result-box">
+              <div class="calc-result-row"><span class="calc-result-label">Profit per order</span><span class="calc-result-val">£15.79</span></div>
+              <div class="calc-result-row"><span class="calc-result-label">Break even orders</span><span class="calc-result-val">2/day</span></div>
+              <div class="calc-result-row"><span class="calc-result-label">Daily profit</span><span class="calc-result-val green">£96.32</span></div>
+              <div class="calc-result-row"><span class="calc-result-label">Monthly projection</span><span class="calc-result-val gold">£2,889</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testimonials-inner">
+      <div class="testimonials-header">
+        <div class="section-eyebrow" style="text-align:center">Member results</div>
+        <h2 class="section-h2" style="text-align:center;max-width:500px;margin:0 auto">What our members say</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Found my first winning product in week one. Did £3,400 in sales in 30 days. The grade A system stopped me wasting money on dead products straight away."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#1E3A5F">JM</div>
+            <div>
+              <div class="testimonial-name">Jake M.</div>
+              <div class="testimonial-role">Shopify seller · Manchester</div>
+              <div class="testimonial-result">£3,400 in first month</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The store audit told me exactly what was broken before I wasted money on ads. Fixed 3 things, my conversion went from 1.2% to 3.8%. Genuinely life-changing."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#14532D">SK</div>
+            <div>
+              <div class="testimonial-name">Sarah K.</div>
+              <div class="testimonial-role">Dropshipper · London</div>
+              <div class="testimonial-result">CVR 1.2% → 3.8%</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The 3 creative variations are brilliant for split testing. I used to spend hours writing ad scripts — now it takes 30 seconds. Found 3 winners in my first month."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#7C2D12">TR</div>
+            <div>
+              <div class="testimonial-name">Tom R.</div>
+              <div class="testimonial-role">Ecom entrepreneur · Birmingham</div>
+              <div class="testimonial-result">3 winners in month 1</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="sneak-section" id="sneak">
-    <div class="section-label">Sneak peek</div>
-    <h2 class="section-title">See what members get every week</h2>
-    <p class="section-sub" style="margin-bottom:2rem">A glimpse of the live product feed — updated every Monday.</p>
-    <div class="sneak-wrap">
-      <div class="sneak-products">
-        <div class="sneak-card"><div class="sneak-emoji">🧲</div><div class="sneak-name">Magnetic phone mount</div><div class="sneak-niche">Tech accessories</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">83%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">94/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:94%"></div></div></div>
-        <div class="sneak-card"><div class="sneak-emoji">🌿</div><div class="sneak-name">Bamboo kitchen organiser</div><div class="sneak-niche">Home & kitchen</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">79%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">88/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:88%"></div></div></div>
-        <div class="sneak-card"><div class="sneak-emoji">🐾</div><div class="sneak-name">Slow feeder pet bowl</div><div class="sneak-niche">Pet products</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val" style="color:#1D9E75">81%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">85/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:85%"></div></div></div>
-        <div class="sneak-card sneak-blur"><div class="sneak-emoji">💆</div><div class="sneak-name">Ice roller facial tool</div><div class="sneak-niche">Beauty</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">82%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">91/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:91%"></div></div></div>
-        <div class="sneak-card sneak-blur"><div class="sneak-emoji">🏋️</div><div class="sneak-name">Resistance band set</div><div class="sneak-niche">Fitness</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">79%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">76/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:76%"></div></div></div>
-        <div class="sneak-card sneak-blur"><div class="sneak-emoji">🔆</div><div class="sneak-name">LED desk lamp USB-C</div><div class="sneak-niche">Tech / Office</div><div class="sneak-metrics"><div class="sneak-met"><div class="sneak-met-label">Margin</div><div class="sneak-met-val">78%</div></div><div class="sneak-met"><div class="sneak-met-label">Trend</div><div class="sneak-met-val">82/100</div></div></div><div class="sneak-bar"><div class="sneak-bar-fill" style="width:82%"></div></div></div>
+  <!-- WHITE LABEL -->
+  <section style="padding:80px 5%;background:#fff" id="whitelabel">
+    <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div>
+        <div class="section-eyebrow">White Label & Stock</div>
+        <h2 class="section-h2">Ready to build your own brand?</h2>
+        <p class="section-sub">Go beyond dropshipping. Source customisable products via Alibaba, add your branding and hold stock for 2-3x margins and repeat customers.</p>
+        <div class="feature-points" style="margin-top:24px">
+          <div class="feature-point"><div class="feature-point-icon" style="background:#FFFBEB">🏷️</div><div><div class="feature-point-title">Alibaba + AliExpress links weekly</div><div class="feature-point-desc">Direct supplier links for every white label pick. MOQs from 50 units.</div></div></div>
+          <div class="feature-point"><div class="feature-point-icon" style="background:#F0FDF4">📦</div><div><div class="feature-point-title">UK warehouse guidance</div><div class="feature-point-desc">Next-day delivery, higher customer satisfaction, lower return rates.</div></div></div>
+          <div class="feature-point"><div class="feature-point-icon" style="background:#EFF6FF">💰</div><div><div class="feature-point-title">2-3x margins vs dropshipping</div><div class="feature-point-desc">Your own brand, premium prices, repeat customers and a real sellable business.</div></div></div>
+        </div>
+        <button class="btn-primary" style="margin-top:28px" onclick="showPage('signup')">Explore white label picks →</button>
       </div>
-      <div class="sneak-overlay">
-        <div class="sneak-overlay-box">
-          <div class="sneak-lock-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-          <div class="sneak-overlay-title">47 products waiting for you</div>
-          <div class="sneak-overlay-sub">Saturation scores, trend data, supplier links, TikTok & Meta ad links, and AI-generated ad creatives — all in one place.</div>
-          <button class="btn-hero" onclick="showSignup()" style="width:100%;font-size:14px;padding:12px">Unlock full access</button>
-          <div style="font-size:12px;color:#5F5E5A;margin-top:10px">£49.99 first month · then £24.99/mo forever</div>
+      <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:16px;padding:24px">
+        <div style="font-size:13px;font-weight:600;color:var(--gray-900);margin-bottom:16px">🏷️ This week's white label picks</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-900)">🧴 Custom skincare serum</span><span style="background:#FFFBEB;color:#B45309;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid #FDE68A">White label</span></div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:6px">MOQ: 100 units · Cost £2.80 · Sell £24.99 · 89% margin</div>
+            <div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=private+label+skincare+serum" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #FF6A00;color:#FF6A00;text-decoration:none">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=private+label+skincare+serum" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #E85A00;color:#E85A00;text-decoration:none">Alibaba</a></div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-900)">☕ Branded insulated tumbler</span><span style="background:#FFFBEB;color:#B45309;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid #FDE68A">White label</span></div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:6px">MOQ: 50 units · Cost £4.20 · Sell £29.99 · 86% margin</div>
+            <div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=custom+insulated+tumbler+logo" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #FF6A00;color:#FF6A00;text-decoration:none">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=custom+insulated+tumbler+logo" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #E85A00;color:#E85A00;text-decoration:none">Alibaba</a></div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-900)">🐾 Custom pet accessories</span><span style="background:#FFFBEB;color:#B45309;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid #FDE68A">White label</span></div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:6px">MOQ: 200 units · Cost £1.90 · Sell £14.99 · 87% margin</div>
+            <div style="display:flex;gap:8px"><a href="https://www.aliexpress.com/wholesale?SearchText=custom+pet+accessories+logo" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #FF6A00;color:#FF6A00;text-decoration:none">AliExpress</a><a href="https://www.alibaba.com/trade/search?SearchText=custom+pet+accessories+branding" target="_blank" style="font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;border:1px solid #E85A00;color:#E85A00;text-decoration:none">Alibaba</a></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="features-section">
-    <div class="section-label">Everything included</div>
-    <h2 class="section-title">One subscription, everything you need</h2>
-    <p class="section-sub" style="margin-bottom:2rem">No tiers, no upsells. Every member gets the full suite from day one.</p>
-    <div class="features-grid">
-      <div class="feature-card"><div class="feature-icon fi-green">📦</div><div class="feature-title">Weekly product feed</div><div class="feature-desc">Fresh winning products every Monday. Each with cost price, sell price, margin, saturation score and trend score.</div></div>
-      <div class="feature-card"><div class="feature-icon fi-yellow">📺</div><div class="feature-title">Live ad library links</div><div class="feature-desc">One click to see real running TikTok and Meta ads for every product. Know exactly how competitors are selling it.</div></div>
-      <div class="feature-card"><div class="feature-icon fi-blue">🤖</div><div class="feature-title">AI research assistant</div><div class="feature-desc">Ask anything. "Find me a winning pet product under £8 cost." Get instant, expert-level product suggestions.</div></div>
-      <div class="feature-card"><div class="feature-icon fi-yellow">🎬</div><div class="feature-title">Ad creative generator</div><div class="feature-desc">Generate video scripts, hook variations, and ready-to-send briefs for Viral Ecom Ads and Bands Off Ads in seconds.</div></div>
-      <div class="feature-card"><div class="feature-icon fi-green">🔥</div><div class="feature-title">Weekly hot list</div><div class="feature-desc">The top 5 products ranked by trend score every Monday. Know exactly what to test first.</div></div>
-      <div class="feature-card"><div class="feature-icon fi-blue">💾</div><div class="feature-title">Save your favourites</div><div class="feature-desc">Save products to your personal list and come back to them anytime. Never lose track of a winner.</div></div>
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="pricing-inner">
+      <div class="pricing-header">
+        <div class="section-eyebrow" style="text-align:center">Pricing</div>
+        <h2 class="section-h2" style="text-align:center">Simple, honest pricing</h2>
+        <p style="font-size:1rem;color:var(--gray-500);text-align:center;margin-top:8px">One plan. Everything included. Lock in 50% off forever.</p>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tag">⚡ 50% off every month after your first</div>
+        <div style="font-size:18px;font-weight:700;color:var(--gray-900);margin-bottom:4px">Full Access Membership</div>
+        <div style="font-size:14px;color:var(--gray-400);margin-bottom:20px">Everything included from day one — no tiers, no upsells</div>
+        <div class="pricing-amount"><sup>£</sup>49.99</div>
+        <div class="pricing-period">first month — full access immediately</div>
+        <div class="pricing-then">
+          <div class="pricing-then-left">
+            <div class="pricing-then-label">Then every month after</div>
+            <div class="pricing-then-amount">£24.99/mo</div>
+          </div>
+          <div class="pricing-then-badge">50% off forever</div>
+        </div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><div class="pricing-check">✓</div>Google Trends verified products — no dead products ever</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>Grades A-D, trend arrows, seasonality, UK supplier flags</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>TikTok ads, Meta library, competitor stores, AliExpress links</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>3x ad creative variations with hooks, briefs + Meta audiences</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>Profit calculator + ROAS calculator</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>AI store audit — know if your store is ready before running ads</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>Launch checklist + white label picks with Alibaba links</div>
+          <div class="pricing-feature"><div class="pricing-check">✓</div>Cancel anytime — no contracts</div>
+        </div>
+        <button class="pricing-cta" onclick="showPage('signup')">Get full access now</button>
+        <p class="pricing-note">Secured by Stripe · Cancel anytime · Keep 50% rate as long as you stay subscribed</p>
+      </div>
     </div>
   </section>
 
-  <section class="testimonials-section">
-    <div class="section-label" style="text-align:center">Member results</div>
-    <h2 class="section-title" style="text-align:center;margin-bottom:0.5rem">What our members say</h2>
-    <p class="section-sub" style="text-align:center;margin:0 auto 2.5rem;max-width:500px">Real feedback from ecom sellers using DropResearch Hub every week.</p>
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
-        <div class="testimonial-stars">★★★★★</div>
-        <div class="testimonial-text">"Found my first winning product in the first week. Did £3,400 in sales in 30 days. The ad creative generator saved me hours — brief went straight to Viral Ecom Ads."</div>
-        <div class="testimonial-author"><div class="testimonial-avatar" style="background:#0C447C;color:#85B7EB">JM</div><div><div class="testimonial-name">Jake M.</div><div class="testimonial-role">Shopify seller · Manchester</div></div></div>
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="section-eyebrow" style="text-align:center">FAQ</div>
+        <h2 class="section-h2" style="text-align:center">We handle your questions</h2>
       </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">★★★★★</div>
-        <div class="testimonial-text">"I was wasting hours on product research. Now I log in Monday morning, check the feed, pick my product and I'm running ads by Tuesday. Genuinely changed my workflow."</div>
-        <div class="testimonial-author"><div class="testimonial-avatar" style="background:#27500A;color:#97C459">SK</div><div><div class="testimonial-name">Sarah K.</div><div class="testimonial-role">Dropshipper · London</div></div></div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">★★★★★</div>
-        <div class="testimonial-text">"The saturation score alone is worth the subscription. Stopped me wasting money on products that were already dead. Found 3 winners in my first month."</div>
-        <div class="testimonial-author"><div class="testimonial-avatar" style="background:#633806;color:#FAC775">TR</div><div><div class="testimonial-name">Tom R.</div><div class="testimonial-role">Ecom entrepreneur · Birmingham</div></div></div>
+      <div class="faq-items">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">What is DropResearch Hub? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">DropResearch Hub is a product research tool built exclusively for UK ecom sellers and dropshippers. Every week we publish a curated feed of Google Trends verified winning products with full data — margins, saturation scores, grades, supplier links and ad creative tools.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How is this different from Minea or other tools? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">Minea is a great ad spy tool — but it requires you to do the research yourself. DropResearch Hub does the research for you. Every product is already verified, graded and comes with cost prices, margins, supplier links and 3 ready-to-use ad creative scripts. It's a complete end-to-end product launch system, not just a data library.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">Can I cancel anytime? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">Absolutely. There are no contracts or commitments. You can cancel at any time from your account. If you cancel you lose the 50% rate — so most members stay subscribed even in months they're not actively testing products.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How often is the product feed updated? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">The feed is updated every Monday morning with fresh products verified by Google Trends data. You'll get a notification when new products drop. All products from previous weeks remain accessible so you can go back and review older picks.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">What is the free trial? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">The free trial gives you access to 3 products from the feed, 1 AI research question per day and a preview of the platform. No credit card required. When you're ready to unlock everything — all 47+ products, ad creatives, calculators and store audit — you can upgrade to full access for £49.99 for your first month.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">Is this suitable for complete beginners? <span class="faq-icon">+</span></div>
+          <div class="faq-answer">Yes — in fact it's designed with beginners in mind. Every product comes with a launch checklist, step-by-step ad creative briefs and a store audit tool to make sure you're ready before spending on ads. If you're part of our mentorship community you'll already know how to use everything the tool gives you.</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="pricing-section">
-    <div class="section-label" style="text-align:center">Pricing</div>
-    <h2 class="section-title" style="text-align:center">Simple, honest pricing</h2>
-    <p class="section-sub" style="margin:0 auto 3rem;text-align:center">One plan. Everything included. Lock in 50% off forever.</p>
-    <div class="pricing-card">
-      <div class="pricing-badge">⚡ 50% off every month after your first</div>
-      <div class="pricing-title">Full access membership</div>
-      <div class="pricing-sub">Everything included from day one</div>
-      <div class="pricing-amount"><sup>£</sup>49.99</div>
-      <div class="pricing-period">first month — full access immediately</div>
-      <div class="pricing-then">
-        <div class="pricing-then-left"><div class="pricing-then-label">Then every month after</div><div class="pricing-then-amount">£24.99/mo</div></div>
-        <div class="pricing-then-badge">50% off forever</div>
+  <!-- CTA SECTION -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-h2">Start finding winning products today</h2>
+      <p class="cta-sub">Join 189 UK ecom sellers already using DropResearch Hub to find, research and launch winning products every week.</p>
+      <div class="cta-btns">
+        <button class="btn-gold" onclick="showPage('free-trial')">Try for free — no card needed</button>
+        <button class="btn-white-outline" onclick="showPage('signup')">Get full access — £49.99</button>
       </div>
-      <div class="pricing-features">
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>47+ winning products updated every week</div>
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Live TikTok & Meta ad library links</div>
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>AI product research assistant</div>
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Ad creative generator — scripts, hooks & briefs</div>
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Weekly hot list — top 5 products every Monday</div>
-        <div class="pricing-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Cancel anytime — no contracts</div>
-      </div>
-      <button class="pricing-cta" onclick="showSignup()">Get full access now</button>
-      <div class="pricing-note">Secure payment via Stripe · Cancel anytime · Keep 50% rate as long as you stay subscribed</div>
+      <p class="cta-note">£49.99 first month · then £24.99/mo forever · cancel anytime</p>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
-    <div style="font-family:'Playfair Display',serif;font-size:16px;color:#fff;margin-bottom:8px">Drop<span style="color:#EF9F27">Research</span> Hub</div>
-    <div>© 2026 DropResearch Hub. Built for serious ecom sellers.</div>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo" onclick="showPage('landing')">
+            <div class="nav-logo-icon" style="width:32px;height:32px">
+              <div class="nav-logo-bars" style="padding:6px 5px 5px">
+                <div class="nav-logo-bar" style="width:4px;height:8px;opacity:0.4"></div>
+                <div class="nav-logo-bar" style="width:4px;height:13px;opacity:0.7"></div>
+                <div class="nav-logo-bar" style="width:4px;height:18px"></div>
+                <div class="nav-logo-bar gold" style="width:4px;height:14px"></div>
+              </div>
+            </div>
+            <div class="footer-logo-text">Drop<span>Research</span> Hub</div>
+          </div>
+          <p class="footer-tagline">The UK's #1 product research tool for serious ecom sellers. Google Trends verified. Updated every Monday.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Product</div>
+          <a class="footer-link" onclick="scrollTo('features')">Features</a>
+          <a class="footer-link" onclick="scrollTo('how-it-works')">Why it works</a>
+          <a class="footer-link" onclick="scrollTo('pricing')">Pricing</a>
+          <a class="footer-link" onclick="scrollTo('whitelabel')">White Label</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Account</div>
+          <a class="footer-link" onclick="showPage('free-trial')">Try for free</a>
+          <a class="footer-link" onclick="showPage('signup')">Get access</a>
+          <a class="footer-link" onclick="showPage('login')">Log in</a>
+        </div>
+        <div>
+          <div class="footer-col-title">Legal</div>
+          <a class="footer-link">Privacy Policy</a>
+          <a class="footer-link">Terms of Service</a>
+          <a class="footer-link">Cookie Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 <span>DropResearch Hub</span>. Built for serious ecom sellers.</div>
+        <div class="footer-copy">Secured by Stripe · UK based</div>
+      </div>
+    </div>
   </footer>
+
 </div>
 
 <!-- LOGIN -->
 <div class="page" id="page-login">
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem">
-    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:420px">
-      <div style="text-align:center;margin-bottom:2rem">
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);margin-bottom:4px">Welcome back</div>
-        <div style="font-size:13px;color:var(--gray)">Log in to your DropResearch Hub account</div>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="nav-logo-icon"><div class="nav-logo-bars"><div class="nav-logo-bar" style="width:5px;height:10px;opacity:0.4"></div><div class="nav-logo-bar" style="width:5px;height:16px;opacity:0.7"></div><div class="nav-logo-bar" style="width:5px;height:22px"></div><div class="nav-logo-bar gold" style="width:5px;height:18px"></div></div></div>
+        <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
       </div>
-      <div style="margin-bottom:14px"><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Email</label><input type="email" placeholder="your@email.com" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
-      <div style="margin-bottom:20px"><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Password</label><input type="password" placeholder="••••••••" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
-      <button onclick="showMembers()" style="width:100%;background:var(--green);color:var(--white);border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px">Log in</button>
-      <div style="text-align:center;font-size:13px;color:var(--gray)">Don't have an account? <a href="#" onclick="showSignup()" style="color:var(--green);text-decoration:none">Get access</a></div>
-      <div style="text-align:center;margin-top:8px"><a href="#" onclick="showMembers()" style="font-size:12px;color:var(--gray);text-decoration:none">Demo: skip login →</a></div>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Log in to your account to access your product feed</div>
+      <label class="auth-label">Email</label>
+      <input class="auth-input" type="email" placeholder="your@email.com">
+      <label class="auth-label">Password</label>
+      <input class="auth-input" type="password" placeholder="••••••••">
+      <button class="auth-btn" onclick="showPage('members')">Log in</button>
+      <div class="auth-link">Don't have an account? <a onclick="showPage('signup')">Get access</a> · <a onclick="showPage('members')">Demo →</a></div>
     </div>
   </div>
 </div>
 
 <!-- SIGNUP -->
 <div class="page" id="page-signup">
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem">
-    <div style="background:var(--card);border:0.5px solid var(--green);border-radius:20px;padding:2.5rem;width:100%;max-width:460px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green),var(--yellow))"></div>
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);margin-bottom:4px">Get full access</div>
-        <div style="font-size:13px;color:var(--gray)">Join DropResearch Hub today</div>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="nav-logo-icon"><div class="nav-logo-bars"><div class="nav-logo-bar" style="width:5px;height:10px;opacity:0.4"></div><div class="nav-logo-bar" style="width:5px;height:16px;opacity:0.7"></div><div class="nav-logo-bar" style="width:5px;height:22px"></div><div class="nav-logo-bar gold" style="width:5px;height:18px"></div></div></div>
+        <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
       </div>
-      <div style="background:rgba(29,158,117,0.08);border:0.5px solid rgba(29,158,117,0.2);border-radius:10px;padding:12px 16px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center">
-        <div><div style="font-size:12px;color:var(--gray);margin-bottom:2px">First month</div><div style="font-size:1.3rem;font-weight:500;color:var(--white)">£49.99</div></div>
-        <div style="font-size:20px;color:var(--gray)">→</div>
-        <div style="text-align:right"><div style="font-size:12px;color:var(--gray);margin-bottom:2px">Then every month</div><div style="font-size:1.3rem;font-weight:500;color:var(--green)">£24.99 <span style="font-size:11px;background:var(--green);color:var(--white);padding:2px 8px;border-radius:20px">50% off</span></div></div>
+      <div class="auth-title">Get full access</div>
+      <div class="pricing-box">
+        <div class="pricing-box-left"><div>First month</div><div>£49.99</div></div>
+        <div style="font-size:20px;color:var(--gray-300)">→</div>
+        <div class="pricing-box-right"><div>Then every month</div><div>£24.99 <span class="fifty-badge">50% off</span></div></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-        <div><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">First name</label><input type="text" placeholder="John" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
-        <div><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Last name</label><input type="text" placeholder="Smith" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label class="auth-label">First name</label><input class="auth-input" type="text" placeholder="John"></div>
+        <div><label class="auth-label">Last name</label><input class="auth-input" type="text" placeholder="Smith"></div>
       </div>
-      <div style="margin-bottom:14px"><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Email</label><input type="email" placeholder="your@email.com" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
-      <div style="margin-bottom:20px"><label style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Password</label><input type="password" placeholder="••••••••" style="width:100%;background:#1a1a1a;border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--white);font-family:'DM Sans',sans-serif;outline:none"></div>
-      <button onclick="showMembers()" style="width:100%;background:var(--green);color:var(--white);border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Pay £49.99 & get instant access</button>
-      <div style="text-align:center;font-size:12px;color:var(--gray)">Secured by Stripe · Cancel anytime · 50% off every month after</div>
-      <div style="text-align:center;margin-top:8px"><a href="#" onclick="showMembers()" style="font-size:12px;color:var(--gray);text-decoration:none">Demo: skip payment →</a></div>
+      <label class="auth-label">Email</label>
+      <input class="auth-input" type="email" placeholder="your@email.com">
+      <label class="auth-label">Password</label>
+      <input class="auth-input" type="password" placeholder="Create a password">
+      <button class="auth-btn" onclick="showPage('members')">Pay £49.99 & get instant access</button>
+      <div class="auth-link">Secured by Stripe · Cancel anytime · <a onclick="showPage('free-trial')">Try free first</a></div>
     </div>
   </div>
 </div>
 
-<!-- MEMBERS -->
+<!-- FREE TRIAL PAGE -->
+<div class="page" id="page-free-trial">
+  <div class="auth-page">
+    <div class="auth-card" style="max-width:480px">
+      <div class="auth-logo">
+        <div class="nav-logo-icon"><div class="nav-logo-bars"><div class="nav-logo-bar" style="width:5px;height:10px;opacity:0.4"></div><div class="nav-logo-bar" style="width:5px;height:16px;opacity:0.7"></div><div class="nav-logo-bar" style="width:5px;height:22px"></div><div class="nav-logo-bar gold" style="width:5px;height:18px"></div></div></div>
+        <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
+      </div>
+      <div class="auth-title">Start your free trial</div>
+      <div class="auth-sub">No credit card needed. Get instant access to see why 189 sellers trust DropResearch Hub.</div>
+      <div style="background:var(--off-white);border:1px solid var(--gray-200);border-radius:12px;padding:16px;margin-bottom:20px">
+        <div style="font-size:13px;font-weight:600;color:var(--gray-900);margin-bottom:10px">Free trial includes:</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:13px;color:var(--gray-500);display:flex;align-items:center;gap:8px"><span style="color:var(--green);font-weight:700">✓</span> 3 products from this week's feed</div>
+          <div style="font-size:13px;color:var(--gray-500);display:flex;align-items:center;gap:8px"><span style="color:var(--green);font-weight:700">✓</span> 1 AI research question per day</div>
+          <div style="font-size:13px;color:var(--gray-500);display:flex;align-items:center;gap:8px"><span style="color:var(--green);font-weight:700">✓</span> Preview of ad creative tool</div>
+          <div style="font-size:13px;color:var(--gray-400);display:flex;align-items:center;gap:8px"><span style="color:var(--gray-300)">✕</span> Full product feed (47+ products)</div>
+          <div style="font-size:13px;color:var(--gray-400);display:flex;align-items:center;gap:8px"><span style="color:var(--gray-300)">✕</span> Ad creative generator</div>
+          <div style="font-size:13px;color:var(--gray-400);display:flex;align-items:center;gap:8px"><span style="color:var(--gray-300)">✕</span> Profit & ROAS calculators</div>
+        </div>
+      </div>
+      <label class="auth-label">First name</label>
+      <input class="auth-input" type="text" placeholder="John">
+      <label class="auth-label">Email</label>
+      <input class="auth-input" type="email" placeholder="your@email.com">
+      <button class="auth-btn" onclick="showPage('free-members')">Start free trial — no card needed</button>
+      <div class="auth-link">Already have an account? <a onclick="showPage('login')">Log in</a> · <a onclick="showPage('signup')">Get full access</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS PAGE (placeholder - will be built next) -->
 <div class="page" id="page-members">
-  <div class="members-wrap">
-    <div class="members-topbar">
-      <div class="members-tabs">
-        <button class="mtab active" onclick="showMTab('feed',this)">📦 Feed</button>
-        <button class="mtab" onclick="showMTab('creative',this)">🎬 Ad creative</button>
-        <button class="mtab" onclick="showMTab('admin',this)">⚙️ Admin</button>
-      </div>
-      <div style="font-size:12px;color:var(--gray)" id="last-updated-nav">Updated Mon 2 Jun · <a href="#" onclick="showLanding()" style="color:var(--green);text-decoration:none">Sign out</a></div>
-    </div>
-    <div class="members-main">
-
-      <!-- FEED TAB -->
-      <div class="mpage active" id="mpage-feed">
-        <div class="mstats-row">
-          <div class="mstat"><div class="mstat-label">Live products</div><div class="mstat-value" id="live-count">10</div><div class="mstat-sub">this week</div></div>
-          <div class="mstat"><div class="mstat-label">Avg margin</div><div class="mstat-value">79%</div><div class="mstat-sub">across feed</div></div>
-          <div class="mstat"><div class="mstat-label">Low saturation</div><div class="mstat-value" id="low-sat-count">6</div><div class="mstat-sub">under score 40</div></div>
-          <div class="mstat"><div class="mstat-label">Saved</div><div class="mstat-value" id="saved-count">0</div><div class="mstat-sub">your list</div></div>
-        </div>
-        <div class="hotlist">
-          <div class="hotlist-hdr">
-            <div class="hotlist-hdr-title">🔥 This week's hot list <span class="hot-pill">Week of 2 Jun</span></div>
-            <div style="font-size:11px;color:var(--gray)">Auto-ranked by trend score</div>
-          </div>
-          <div id="hotlist-rows"></div>
-        </div>
-        <div class="ai-panel">
-          <div class="ai-hdr"><div class="ai-hdr-dot"></div>AI research assistant</div>
-          <div style="display:flex;gap:8px">
-            <input class="ai-inp" id="ai-q" type="text" placeholder="e.g. find me a winning pet product under £8 cost...">
-            <button class="ai-send" onclick="askAI()">Ask AI</button>
-          </div>
-          <div class="ai-resp" id="ai-resp"></div>
-        </div>
-        <div class="section-hdr"><div class="section-hdr-title">Product feed</div></div>
-        <div class="filters">
-          <button class="fbtn active" onclick="setFilter(this,'all')">All niches</button>
-          <button class="fbtn" onclick="setFilter(this,'tech')">Tech</button>
-          <button class="fbtn" onclick="setFilter(this,'home')">Home</button>
-          <button class="fbtn" onclick="setFilter(this,'pet')">Pet</button>
-          <button class="fbtn" onclick="setFilter(this,'beauty')">Beauty</button>
-          <button class="fbtn" onclick="setFilter(this,'fitness')">Fitness</button>
-          <button class="fbtn" onclick="setFilter(this,'kitchen')">Kitchen</button>
-        </div>
-        <div class="pgrid" id="pgrid"></div>
-      </div>
-
-      <!-- CREATIVE TAB -->
-      <div class="mpage" id="mpage-creative">
-        <div class="creative-panel">
-          <div class="creative-hdr">🎬 Ad creative generator</div>
-          <div class="cform">
-            <div class="cgroup"><label>Product name</label><input type="text" id="cp-product" placeholder="e.g. Magnetic phone mount"></div>
-            <div class="cgroup"><label>Platform</label><select id="cp-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
-            <div class="cgroup"><label>Ad service</label><select id="cp-service"><option>Viral Ecom Ads</option><option>Bands Off Ads</option><option>Custom / in-house</option></select></div>
-            <div class="cgroup"><label>Ad angle</label><select id="cp-angle"><option>Problem → solution</option><option>Social proof / testimonial</option><option>Lifestyle / aspirational</option><option>Curiosity / pattern interrupt</option><option>Direct offer / price reveal</option></select></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <button class="gen-btn" onclick="generateCreative()">✨ Generate creative pack</button>
-            <span style="font-size:12px;color:var(--gray)" id="gen-status"></span>
-          </div>
-          <div class="creative-out" id="creative-out">
-            <div class="stabs">
-              <button class="stab active" onclick="setScriptTab('script',this)">Video script</button>
-              <button class="stab" onclick="setScriptTab('hooks',this)">Hook variations</button>
-              <button class="stab" onclick="setScriptTab('brief',this)">Brief to send</button>
-            </div>
-            <div id="tab-script"><div class="script-box" id="script-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('script-content')">📋 Copy</button></div></div>
-            <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('hooks-content')">📋 Copy</button></div></div>
-            <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="sactions"><button class="copy-btn" onclick="copyText('brief-content')">📋 Copy brief</button></div></div>
-          </div>
-        </div>
-        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:14px">
-          <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:10px">Quick generate from feed</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="quick-products"></div>
-        </div>
-      </div>
-
-      <!-- ADMIN TAB -->
-      <div class="mpage" id="mpage-admin">
-        <div class="admin-section">
-          <div class="admin-hdr">
-            <div class="admin-hdr-title">📋 Product manager <span style="background:rgba(239,159,39,0.15);color:var(--yellow-light);font-size:11px;padding:2px 8px;border-radius:20px;border:0.5px solid rgba(239,159,39,0.2)" id="pending-count">10 live products</span></div>
-            <button class="pub-btn" onclick="publishFeed()">🚀 Publish approved</button>
-          </div>
-          <div id="admin-rows"></div>
-          <div class="add-product-form">
-            <div class="add-product-title">➕ Add product manually</div>
-            <div class="add-form-grid">
-              <div class="add-form-group"><label>Product name</label><input type="text" id="new-name" placeholder="e.g. Ice roller"></div>
-              <div class="add-form-group"><label>Niche</label><select id="new-niche"><option>Tech</option><option>Home</option><option>Pet</option><option>Beauty</option><option>Fitness</option><option>Kitchen</option></select></div>
-              <div class="add-form-group"><label>Cost price</label><input type="text" id="new-cost" placeholder="£3.50"></div>
-              <div class="add-form-group"><label>Sell price</label><input type="text" id="new-sell" placeholder="£19.99"></div>
-              <div class="add-form-group"><label>Margin %</label><input type="text" id="new-margin" placeholder="82%"></div>
-              <div class="add-form-group"><label>Sat score (1-100)</label><input type="number" id="new-sat" placeholder="35" min="1" max="100"></div>
-              <div class="add-form-group"><label>Trend score (1-100)</label><input type="number" id="new-trend" placeholder="88" min="1" max="100"></div>
-              <div class="add-form-group"><label>Emoji</label><input type="text" id="new-emoji" placeholder="🧊"></div>
-            </div>
-            <button class="add-product-btn" onclick="addProductManually()">➕ Add to feed</button>
-          </div>
-          <div class="refresh-zone">
-            <div class="refresh-row">
-              <div>
-                <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px">🤖 AI product generator</div>
-                <div style="font-size:12px;color:var(--gray)">Click to generate 10 fresh trending products instantly using AI. Review them above, toggle off any you don't want, then hit Publish.</div>
-              </div>
-              <button class="regen-btn" id="regen-btn" onclick="regenFeed(this)">✨ Generate new products</button>
-            </div>
-            <div class="last-updated" id="last-updated">Last published: Mon 2 Jun · 09:14</div>
-          </div>
-        </div>
-        <div class="admin-section">
-          <div class="admin-hdr"><div class="admin-hdr-title">📊 Platform stats</div></div>
-          <div class="admin-stats">
-            <div class="mstat"><div class="mstat-label">Active members</div><div class="mstat-value">148</div><div class="mstat-sub">+12 this month</div></div>
-            <div class="mstat"><div class="mstat-label">Subscribers</div><div class="mstat-value">89</div><div class="mstat-sub">60% conversion</div></div>
-            <div class="mstat"><div class="mstat-label">MRR</div><div class="mstat-value">£5.2k</div><div class="mstat-sub">at £24.99/mo</div></div>
-            <div class="mstat"><div class="mstat-label">Creatives made</div><div class="mstat-value">312</div><div class="mstat-sub">this month</div></div>
-          </div>
-        </div>
-      </div>
-
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--gray-50)">
+    <div style="text-align:center;padding:3rem">
+      <div style="font-size:48px;margin-bottom:1rem">🚀</div>
+      <div style="font-size:20px;font-weight:700;color:var(--gray-900);margin-bottom:8px">Members area coming next!</div>
+      <div style="font-size:14px;color:var(--gray-500);margin-bottom:24px">We're building this page together step by step.</div>
+      <button class="btn-primary" onclick="showPage('landing')">← Back to landing page</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- FREE MEMBERS PAGE (placeholder) -->
+<div class="page" id="page-free-members">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--gray-50)">
+    <div style="text-align:center;padding:3rem">
+      <div style="font-size:48px;margin-bottom:1rem">🎉</div>
+      <div style="font-size:20px;font-weight:700;color:var(--gray-900);margin-bottom:8px">Free trial area coming next!</div>
+      <div style="font-size:14px;color:var(--gray-500);margin-bottom:24px">Building this page together step by step.</div>
+      <button class="btn-primary" onclick="showPage('landing')">← Back to landing page</button>
+    </div>
+  </div>
+</div>
 
 <script>
-
-
-let products=[
-  {id:1,emoji:'🧲',name:'Magnetic phone mount',niche:'Tech',cost:'£3.20',sell:'£18.99',margin:'83%',sat:22,trend:94,bg:'#0C447C22',tiktokQ:'magnetic+phone+mount',metaQ:'magnetic phone mount',approved:true},
-  {id:2,emoji:'🌿',name:'Bamboo kitchen organiser',niche:'Home',cost:'£4.10',sell:'£19.99',margin:'79%',sat:31,trend:88,bg:'#27500A22',tiktokQ:'bamboo+kitchen+organizer',metaQ:'bamboo kitchen organizer',approved:true},
-  {id:3,emoji:'🐾',name:'Slow feeder pet bowl',niche:'Pet',cost:'£2.80',sell:'£14.99',margin:'81%',sat:28,trend:85,bg:'#63380622',tiktokQ:'slow+feeder+dog+bowl',metaQ:'slow feeder pet bowl',approved:true},
-  {id:4,emoji:'🧊',name:'Ice roller facial tool',niche:'Beauty',cost:'£2.10',sell:'£14.99',margin:'86%',sat:24,trend:91,bg:'#0C447C22',tiktokQ:'ice+roller+face',metaQ:'ice roller facial tool',approved:true},
-  {id:5,emoji:'🏋️',name:'Resistance band set',niche:'Fitness',cost:'£3.50',sell:'£16.99',margin:'79%',sat:44,trend:76,bg:'#0C447C22',tiktokQ:'resistance+bands+workout',metaQ:'resistance band set',approved:true},
-  {id:6,emoji:'🔆',name:'LED desk lamp USB-C',niche:'Tech',cost:'£5.60',sell:'£24.99',margin:'78%',sat:38,trend:82,bg:'#08504122',tiktokQ:'led+desk+lamp',metaQ:'LED desk lamp',approved:true},
-  {id:7,emoji:'🌸',name:'Silk pillowcase set',niche:'Beauty',cost:'£4.20',sell:'£22.99',margin:'82%',sat:29,trend:87,bg:'#72243E22',tiktokQ:'silk+pillowcase',metaQ:'silk pillowcase',approved:true},
-  {id:8,emoji:'🍳',name:'Foldable kitchen drainer',niche:'Kitchen',cost:'£3.80',sell:'£17.99',margin:'79%',sat:33,trend:80,bg:'#63380622',tiktokQ:'foldable+dish+rack',metaQ:'foldable kitchen drainer',approved:true},
-  {id:9,emoji:'🐕',name:'Dog rope chew toy set',niche:'Pet',cost:'£2.40',sell:'£12.99',margin:'82%',sat:25,trend:83,bg:'#63380622',tiktokQ:'dog+chew+toys',metaQ:'dog rope toy',approved:true},
-  {id:10,emoji:'💪',name:'Ab roller wheel',niche:'Fitness',cost:'£4.10',sell:'£19.99',margin:'80%',sat:41,trend:78,bg:'#0C447C22',tiktokQ:'ab+roller+workout',metaQ:'ab roller wheel',approved:true}
-];
-
-let saved=new Set();
-let activeFilter='all';
-let nextId=11;
-
-function showLanding(){showPage('landing');document.getElementById('nav-right').innerHTML='<button class="btn-ghost" onclick="showLogin()">Log in</button><button class="btn-primary" onclick="showSignup()">Get access</button>'}
-function showLogin(){showPage('login')}
-function showSignup(){showPage('signup')}
-function showMembers(){showPage('members');document.getElementById('nav-right').innerHTML='<span style="font-size:13px;color:var(--gray)">Welcome back 👋</span>';renderAll()}
-
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  window.scrollTo(0,0);
+  const el=document.getElementById('page-'+name);
+  if(el){el.classList.add('active');window.scrollTo(0,0);}
 }
-
-function showMTab(name,btn){
-  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.mpage').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('mpage-'+name).classList.add('active');
+function scrollTo(id){
+  showPage('landing');
+  setTimeout(()=>{
+    const el=document.getElementById(id);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },100);
 }
-
-function getSatColor(s){return s<35?'#1D9E75':s<55?'#EF9F27':'#E24B4A'}
-
-function setFilter(btn,val){
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  activeFilter=val;
-  renderProducts();
+function toggleMobileMenu(){
+  const m=document.getElementById('mobile-nav');
+  m.classList.toggle('open');
 }
-
-function renderAll(){renderProducts();renderHotlist();renderAdmin();renderQuickProducts();updateStats()}
-
-function updateStats(){
-  const approved=products.filter(p=>p.approved);
-  document.getElementById('live-count').textContent=approved.length;
-  document.getElementById('low-sat-count').textContent=approved.filter(p=>p.sat<40).length;
+function toggleFaq(item){
+  item.classList.toggle('open');
 }
-
-function renderHotlist(){
-  const top5=[...products].filter(p=>p.approved).sort((a,b)=>b.trend-a.trend).slice(0,5);
-  document.getElementById('hotlist-rows').innerHTML=top5.map((p,i)=>`
-    <div class="hl-row">
-      <span class="hl-rank">${i+1}</span>
-      <span class="hl-em">${p.emoji}</span>
-      <div class="hl-info"><div class="hl-name">${p.name}</div><div class="hl-sub">${p.niche} · sat ${p.sat} · trend ${p.trend}</div></div>
-      <span class="hl-margin">${p.margin}</span>
-    </div>
-  `).join('');
-}
-
-function renderProducts(){
-  const grid=document.getElementById('pgrid');
-  const list=activeFilter==='all'?products.filter(p=>p.approved):products.filter(p=>p.approved&&p.niche.toLowerCase()===activeFilter);
-  grid.innerHTML=list.map(p=>`
-    <div class="pcard">
-      <div class="pcard-img" style="background:${p.bg}">${p.emoji}</div>
-      <div class="pcard-body">
-        <div class="pcard-top">
-          <div><div class="pcard-name">${p.name}</div><div class="pcard-niche">${p.niche}</div></div>
-          <button class="hbtn ${saved.has(p.id)?'saved':''}" onclick="toggleSave(${p.id})" aria-label="Save">♥</button>
-        </div>
-        <div class="pmetrics">
-          <div class="pmet"><div class="pmet-label">Cost</div><div class="pmet-val">${p.cost}</div></div>
-          <div class="pmet"><div class="pmet-label">Sell</div><div class="pmet-val">${p.sell}</div></div>
-          <div class="pmet"><div class="pmet-label">Margin</div><div class="pmet-val" style="color:#1D9E75">${p.margin}</div></div>
-        </div>
-        <div class="pbar-wrap"><div class="pbar-lbl"><span>Saturation</span><span style="color:${getSatColor(p.sat)};font-weight:500">${p.sat}/100</span></div><div class="pbar"><div class="pbar-fill" style="width:${p.sat}%;background:${getSatColor(p.sat)}"></div></div></div>
-        <div class="pbar-wrap"><div class="pbar-lbl"><span>Trend score</span><span style="color:#1D9E75;font-weight:500">${p.trend}/100</span></div><div class="pbar"><div class="pbar-fill" style="width:${p.trend}%;background:#1D9E75"></div></div></div>
-        <div class="pcard-footer">
-          <a class="ad-link tiktok" href="https://www.tiktok.com/search?q=${p.tiktokQ}" target="_blank">TikTok ads</a>
-          <a class="ad-link meta" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}&search_type=keyword_unordered" target="_blank">Meta ads</a>
-          <button class="creative-btn" onclick="quickCreative('${p.name}')">Make ad ✨</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleSave(id){
-  if(saved.has(id))saved.delete(id);else saved.add(id);
-  document.getElementById('saved-count').textContent=saved.size;
-  renderProducts();
-}
-
-function quickCreative(name){
-  showMTab('creative',document.querySelectorAll('.mtab')[1]);
-  document.getElementById('cp-product').value=name;
-  window.scrollTo(0,0);
-}
-
-function renderQuickProducts(){
-  const el=document.getElementById('quick-products');
-  if(el)el.innerHTML=products.filter(p=>p.approved).map(p=>`<button class="fbtn" onclick="quickCreative('${p.name}')" style="font-size:12px">${p.emoji} ${p.name}</button>`).join('');
-}
-
-function renderAdmin(){
-  const rows=document.getElementById('admin-rows');
-  if(!rows)return;
-  rows.innerHTML=products.map(p=>`
-    <div class="admin-row">
-      <span class="admin-em">${p.emoji}</span>
-      <div class="admin-info"><div class="admin-name">${p.name}</div><div class="admin-meta">${p.niche} · ${p.cost} cost · ${p.sell} sell · ${p.margin} margin</div></div>
-      <span class="score-chip" style="background:rgba(29,158,117,0.1);color:#5DCAA5;border:0.5px solid rgba(29,158,117,0.2)">trend ${p.trend}</span>
-      <span class="score-chip" style="background:rgba(239,159,39,0.1);color:#FAC775;border:0.5px solid rgba(239,159,39,0.2)">sat ${p.sat}</span>
-      <div class="toggle-wrap">
-        <div class="toggle ${p.approved?'on':''}" onclick="toggleApproval(${p.id},this)"><div class="toggle-thumb"></div></div>
-        <span class="toggle-label" id="tlabel-${p.id}">${p.approved?'Live':'Hidden'}</span>
-      </div>
-      <button onclick="deleteProduct(${p.id})" style="background:none;border:none;cursor:pointer;color:#888;font-size:16px;padding:0 4px" title="Delete">🗑️</button>
-    </div>
-  `).join('');
-  updatePendingCount();
-}
-
-function toggleApproval(id,el){
-  const p=products.find(p=>p.id===id);
-  if(p){p.approved=!p.approved;el.classList.toggle('on');document.getElementById('tlabel-'+id).textContent=p.approved?'Live':'Hidden';updatePendingCount();updateStats();}
-}
-
-function deleteProduct(id){
-  products=products.filter(p=>p.id!==id);
-  renderAdmin();renderProducts();renderHotlist();renderQuickProducts();updateStats();
-  showToast('Product removed from feed');
-}
-
-function updatePendingCount(){
-  const live=products.filter(p=>p.approved).length;
-  const el=document.getElementById('pending-count');
-  if(el)el.textContent=`${live} live · ${products.length-live} hidden`;
-}
-
-function addProductManually(){
-  const name=document.getElementById('new-name').value.trim();
-  if(!name){showToast('Enter a product name');return}
-  const newP={
-    id:nextId++,
-    emoji:document.getElementById('new-emoji').value||'📦',
-    name:name,
-    niche:document.getElementById('new-niche').value,
-    cost:document.getElementById('new-cost').value||'£0.00',
-    sell:document.getElementById('new-sell').value||'£0.00',
-    margin:document.getElementById('new-margin').value||'0%',
-    sat:parseInt(document.getElementById('new-sat').value)||50,
-    trend:parseInt(document.getElementById('new-trend').value)||50,
-    bg:'#18181822',
-    tiktokQ:name.replace(/\s+/g,'+'),
-    metaQ:name,
-    approved:true
-  };
-  products.unshift(newP);
-  ['new-name','new-cost','new-sell','new-margin','new-sat','new-trend','new-emoji'].forEach(id=>document.getElementById(id).value='');
-  renderAll();
-  showToast(`✅ ${name} added to feed!`);
-}
-
-async function regenFeed(btn){
-  btn.textContent='✨ Generating...';
-  btn.disabled=true;
-  showToast('AI is researching trending products...');
-  try{
-    const res=await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-5',
-        max_tokens:2000,
-        system:`You are a dropshipping product research expert for UK ecom sellers in June 2026. Generate exactly 10 trending winning products. Respond ONLY with a JSON array (no markdown, no backticks, no explanation). Each product must have these exact fields:
-{"name":"string","niche":"Tech|Home|Pet|Beauty|Fitness|Kitchen","cost":"£X.XX","sell":"£XX.XX","margin":"XX%","sat":number_1_to_100,"trend":number_1_to_100,"emoji":"single_emoji","tiktokQ":"search+terms","metaQ":"search terms"}
-sat = saturation score (lower is better opportunity). trend = trending score. Focus on products with high visual appeal for TikTok, good margins 70-85%, and low-medium saturation under 50. Mix niches.`,
-        messages:[{role:'user',content:'Generate 10 fresh winning dropshipping products for UK ecom sellers right now in June 2026. Focus on what is actually trending on TikTok and low competition.'}]
-      })
-    });
-    const data=await res.json();
-    const text=data.content.map(i=>i.text||'').join('');
-    let newProducts;
-    try{newProducts=JSON.parse(text.replace(/```json|```/g,'').trim())}
-    catch(e){showToast('AI returned unexpected format — try again');btn.textContent='✨ Generate new products';btn.disabled=false;return}
-    const generated=newProducts.map((p,i)=>({...p,id:nextId+i,bg:'#18181822',approved:false}));
-    nextId+=newProducts.length;
-    products=[...products,...generated];
-    renderAll();
-    showToast(`✅ ${generated.length} new products generated — review and toggle on above!`);
-  }catch(e){showToast('Error connecting to AI — check your API key')}
-  btn.textContent='✨ Generate new products';
-  btn.disabled=false;
-}
-
-async function generateCreative(){
-  const product=document.getElementById('cp-product').value.trim();
-  if(!product){showToast('Enter a product name first');return}
-  const platform=document.getElementById('cp-platform').value;
-  const service=document.getElementById('cp-service').value;
-  const angle=document.getElementById('cp-angle').value;
-  const status=document.getElementById('gen-status');
-  status.textContent='Generating...';
-  document.getElementById('creative-out').classList.remove('show');
-  try{
-    const res=await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-5',
-        max_tokens:1000,
-        system:`You are an expert dropshipping ad creative strategist writing scripts for ${service} and ${platform}. Respond ONLY with a JSON object (no markdown, no backticks) with exactly 3 keys: "script" (punchy video ad script, hook+middle+CTA, max 150 words, use line breaks, angle: ${angle}), "hooks" (5 alternative opening hook lines numbered 1-5, one per line), "brief" (ready-to-send brief for ${service} with: Product Name, Platform, Video Length, Angle, Tone, Key Points to Show, CTA — formatted clearly with line breaks).`,
-        messages:[{role:'user',content:`Product: ${product}. Platform: ${platform}. Service: ${service}. Angle: ${angle}.`}]
-      })
-    });
-    const data=await res.json();
-    const text=data.content.map(i=>i.text||'').join('');
-    let parsed;
-    try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim())}
-    catch(e){parsed={script:text,hooks:'Could not parse hooks.',brief:'Could not parse brief.'}}
-    document.getElementById('script-content').textContent=parsed.script||'';
-    document.getElementById('hooks-content').textContent=parsed.hooks||'';
-    document.getElementById('brief-content').textContent=parsed.brief||'';
-    document.getElementById('creative-out').classList.add('show');
-    status.textContent='Done ✓';
-    setTimeout(()=>status.textContent='',2000);
-  }catch(e){status.textContent='Error — check API key'}
-}
-
-function setScriptTab(tab,btn){
-  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('#mpage-creative [id^="tab-"]').forEach(c=>c.style.display='none');
-  btn.classList.add('active');
-  document.getElementById('tab-'+tab).style.display='block';
-}
-
-function copyText(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>showToast('Copied ✓'))}
-
-async function askAI(){
-  const q=document.getElementById('ai-q').value.trim();
-  if(!q)return;
-  const resp=document.getElementById('ai-resp');
-  resp.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  try{
-    const res=await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-5',
-        max_tokens:500,
-        system:'You are a dropshipping product research expert for UK sellers. Suggest 1-2 winning products with: name, cost price (£), sell price (£), margin %, why it\'s trending, target audience, and one killer TikTok hook. Be concise and practical.',
-        messages:[{role:'user',content:q}]
-      })
-    });
-    const data=await res.json();
-    resp.textContent=data.content.map(i=>i.text||'').join('');
-  }catch(e){resp.textContent='Could not connect to AI.'}
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  const ai=document.getElementById('ai-q');
-  if(ai)ai.addEventListener('keydown',e=>{if(e.key==='Enter')askAI()});
+document.addEventListener('click',function(e){
+  const mn=document.getElementById('mobile-nav');
+  if(!mn.contains(e.target)&&!e.target.closest('.hamburger'))mn.classList.remove('open');
 });
-
-function publishFeed(){
-  const approved=products.filter(p=>p.approved).length;
-  if(approved===0){showToast('Toggle on at least one product first');return}
-  const now=new Date();
-  const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
-  const timeStr=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-  const txt=`Last published: ${dateStr} · ${timeStr}`;
-  document.getElementById('last-updated').textContent=txt;
-  document.getElementById('last-updated-nav').innerHTML=`Updated ${dateStr} · <a href="#" onclick="showLanding()" style="color:var(--green);text-decoration:none">Sign out</a>`;
-  updateStats();
-  showToast(`✅ Feed published — ${approved} products live for members`);
-}
-
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3500);
-}
 </script>
 </body>
 </html>
