@@ -8,48 +8,18 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-700:#374151;--gray-900:#111827;--green:#16A34A;--green-light:#DCFCE7;--red:#DC2626;--orange:#EA580C;--off-white:#F8FAFF}
-body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6;overflow-x:hidden}.app{display:flex;min-height:100vh}.sidebar{width:260px;background:var(--navy-dark);color:#fff;padding:24px 18px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto}.logo{display:flex;align-items:center;gap:10px;margin-bottom:30px;text-decoration:none;color:#fff}.logo-icon{width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:9px 8px}.logo-bar{width:5px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}.logo-text{font-size:17px;font-weight:800;letter-spacing:-0.4px}.logo-text span{color:var(--gold)}.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,0.42);font-weight:700;margin:20px 10px 8px}.nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,0.72);font:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:10px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;transition:all .18s;margin-bottom:4px}.nav-btn:hover{background:rgba(255,255,255,0.08);color:#fff}.nav-btn.active{background:#fff;color:var(--navy)}.upgrade-box{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:16px;margin-top:24px}.upgrade-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:6px}.upgrade-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:12px}.upgrade-btn{width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:11px;font-weight:800;cursor:pointer}.main{margin-left:260px;width:calc(100% - 260px);padding:26px 4% 60px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:26px}.top-title h1{font-size:28px;letter-spacing:-.8px;color:var(--gray-900);line-height:1.15}.top-title p{font-size:14px;color:var(--gray-500);margin-top:5px}.user-pill{background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 15px rgba(17,24,39,0.04)}.avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}.user-pill span{font-size:13px;font-weight:700;color:var(--gray-700)}.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}.stat-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:18px;box-shadow:0 2px 20px rgba(17,24,39,0.03)}.stat-label{font-size:11px;color:var(--gray-400);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}.stat-value{font-size:27px;font-weight:900;color:var(--gray-900);letter-spacing:-1px}.stat-note{font-size:12px;color:var(--gray-500);margin-top:2px}.gold{color:var(--gold)}.green{color:var(--green)}.navy{color:var(--navy)}.section{display:none}.section.active{display:block}.panel{background:#fff;border:1px solid var(--gray-200);border-radius:20px;box-shadow:0 3px 25px rgba(17,24,39,0.04);overflow:hidden;margin-bottom:20px}.panel-head{padding:20px 22px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.panel-title{font-size:18px;font-weight:900;letter-spacing:-.4px;color:var(--gray-900)}.panel-sub{font-size:13px;color:var(--gray-500);margin-top:2px}.panel-body{padding:18px 22px}.filter-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{min-width:260px;flex:1;border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;outline:none}.select{border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--gray-700)}.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.product-card{border:1px solid var(--gray-200);border-radius:18px;background:#fff;overflow:hidden;transition:all .18s}.product-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,58,95,.09)}.product-img{height:128px;background:var(--off-white);display:flex;align-items:center;justify-content:center;font-size:42px;position:relative}.score-pill{position:absolute;top:12px;left:12px;border-radius:999px;color:#fff;font-size:12px;font-weight:900;padding:5px 10px}.stage-pill{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.92);border:1px solid var(--gray-200);border-radius:999px;color:var(--navy);font-size:11px;font-weight:800;padding:5px 9px}.product-content{padding:15px}.product-name{font-size:15px;font-weight:900;color:var(--gray-900);letter-spacing:-.2px}.product-meta{font-size:12px;color:var(--gray-400);margin:2px 0 12px}.metric{margin-bottom:9px}.metric-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}.metric-label{color:var(--gray-500);font-weight:700}.metric-value{font-weight:900;color:var(--gray-900)}.bar{height:6px;background:var(--gray-100);border-radius:99px;overflow:hidden}.bar-inner{height:100%;border-radius:99px}.product-footer{display:flex;gap:8px;margin-top:13px}.small-btn{flex:1;border:1px solid var(--gray-200);background:#fff;color:var(--navy);border-radius:10px;padding:10px;font-size:12px;font-weight:800;cursor:pointer}.small-btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.locked{position:relative;filter:blur(2px);opacity:.46}.lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);font-weight:900;color:var(--navy);font-size:13px;text-align:center;z-index:2}.validator-wrap{display:grid;grid-template-columns:1fr .9fr;gap:18px}.validator-box{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:20px;padding:26px;color:#fff}.validator-box h2{font-size:28px;line-height:1.1;letter-spacing:-.8px;margin-bottom:10px}.validator-box p{color:rgba(255,255,255,.72);font-size:14px;margin-bottom:20px}.input-wrap{display:flex;gap:10px;background:#fff;border-radius:14px;padding:7px}.validator-input{flex:1;border:none;outline:none;padding:12px 10px;font-size:14px;font-family:inherit;color:var(--gray-900)}.analyse-btn{border:none;background:var(--gold);color:var(--navy);border-radius:10px;padding:0 18px;font-weight:900;cursor:pointer}.analyse-btn:disabled{opacity:.6;cursor:not-allowed}.hint{font-size:12px;color:rgba(255,255,255,.58);margin-top:12px}.example-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.tag{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}.validator-top-panel{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:20px;padding:26px;color:#fff;margin-bottom:18px}.validator-top-panel h2{font-size:30px;line-height:1.1;letter-spacing:-.9px;margin-bottom:8px}.validator-top-panel p{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:18px}.validator-result-full{border:1px solid var(--gray-200);background:#fff;border-radius:20px;padding:22px;min-height:260px}.validator-result-layout{display:grid;grid-template-columns:1fr;gap:16px}.validator-examples{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}.validator-examples-label{font-size:12px;color:rgba(255,255,255,.6);font-weight:800;margin-right:2px}.result-panel{border:1px solid var(--gray-200);background:#fff;border-radius:20px;padding:22px;min-height:320px}.empty-result{height:100%;min-height:278px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--gray-400);font-size:14px}.result-score{display:flex;align-items:center;gap:16px;margin-bottom:18px}.score-circle{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:900}.result-title{font-size:20px;font-weight:900;color:var(--gray-900);letter-spacing:-.4px}.result-stage{display:inline-block;margin-top:5px;background:var(--green-light);color:var(--green);font-size:11px;font-weight:900;padding:4px 9px;border-radius:999px}.result-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.result-metric{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:13px;padding:12px}.result-metric-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:900}.result-metric-value{font-size:19px;font-weight:900;color:var(--gray-900);margin-top:3px}.verdict{background:var(--off-white);border:1px solid var(--gray-200);border-radius:14px;padding:14px;font-size:13px;color:var(--gray-700);line-height:1.65}.growth-card{margin-top:12px;border:1px solid var(--gray-200);border-radius:14px;padding:14px;background:#fff}.growth-title{font-size:13px;font-weight:900;color:var(--gray-900);margin-bottom:4px}.growth-note{font-size:11px;color:var(--gray-400);margin-bottom:12px}.growth-bars{display:flex;gap:7px;align-items:end;height:120px;border-left:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);padding:8px 6px}.growth-bar{flex:1;background:linear-gradient(180deg,var(--gold),var(--navy));border-radius:8px 8px 0 0;min-height:8px}.growth-labels{display:flex;gap:7px;margin-top:7px}.growth-labels span{flex:1;font-size:10px;color:var(--gray-400);text-align:center}.research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.research-btn{display:block;text-align:center;text-decoration:none;background:var(--gray-50);border:1px solid var(--gray-200);color:var(--navy);border-radius:12px;padding:12px;font-size:12px;font-weight:900}.research-btn:hover{background:var(--off-white);border-color:var(--navy)}.brief-output{margin-top:12px;background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:14px}.brief-output h4{font-size:13px;color:var(--gray-900);margin-bottom:8px}.brief-output ul{padding-left:18px;font-size:13px;color:var(--gray-700);line-height:1.75}.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:14px 16px;font-size:13px;margin-bottom:18px}.notice strong{color:#7c2d12}.loading{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;min-height:278px;text-align:center;color:var(--gray-500)}.spinner{width:34px;height:34px;border-radius:50%;border:4px solid var(--gray-200);border-top-color:var(--gold);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.error-box{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:14px;padding:14px;font-size:13px}
+body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6;overflow-x:hidden}.app{display:flex;min-height:100vh}.sidebar{width:260px;background:var(--navy-dark);color:#fff;padding:24px 18px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto}.logo{display:flex;align-items:center;gap:10px;margin-bottom:30px;text-decoration:none;color:#fff}.logo-icon{width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:9px 8px}.logo-bar{width:5px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}.logo-text{font-size:17px;font-weight:800;letter-spacing:-0.4px}.logo-text span{color:var(--gold)}.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,0.42);font-weight:700;margin:20px 10px 8px}.nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,0.72);font:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:10px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;transition:all .18s;margin-bottom:4px}.nav-btn:hover{background:rgba(255,255,255,0.08);color:#fff}.nav-btn.active{background:#fff;color:var(--navy)}.upgrade-box{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:16px;margin-top:24px}.upgrade-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:6px}.upgrade-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:12px}.upgrade-btn{width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:11px;font-weight:800;cursor:pointer}.main{margin-left:260px;width:calc(100% - 260px);padding:26px 4% 60px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:26px}.top-title h1{font-size:28px;letter-spacing:-.8px;color:var(--gray-900);line-height:1.15}.top-title p{font-size:14px;color:var(--gray-500);margin-top:5px}.user-pill{background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 15px rgba(17,24,39,0.04)}.avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}.user-pill span{font-size:13px;font-weight:700;color:var(--gray-700)}.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}.stat-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:18px;box-shadow:0 2px 20px rgba(17,24,39,0.03)}.stat-label{font-size:11px;color:var(--gray-400);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}.stat-value{font-size:27px;font-weight:900;color:var(--gray-900);letter-spacing:-1px}.stat-note{font-size:12px;color:var(--gray-500);margin-top:2px}.gold{color:var(--gold)}.green{color:var(--green)}.navy{color:var(--navy)}.section{display:none}.section.active{display:block}.panel{background:#fff;border:1px solid var(--gray-200);border-radius:20px;box-shadow:0 3px 25px rgba(17,24,39,0.04);overflow:hidden;margin-bottom:20px}.panel-head{padding:20px 22px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.panel-title{font-size:18px;font-weight:900;letter-spacing:-.4px;color:var(--gray-900)}.panel-sub{font-size:13px;color:var(--gray-500);margin-top:2px}.panel-body{padding:18px 22px}.filter-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.search{min-width:260px;flex:1;border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;outline:none}.select{border:1px solid var(--gray-200);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;color:var(--gray-700)}.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.product-card{border:1px solid var(--gray-200);border-radius:18px;background:#fff;overflow:hidden;transition:all .18s}.product-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,58,95,.09)}.product-img{height:128px;background:var(--off-white);display:flex;align-items:center;justify-content:center;font-size:42px;position:relative}.score-pill{position:absolute;top:12px;left:12px;border-radius:999px;color:#fff;font-size:12px;font-weight:900;padding:5px 10px}.stage-pill{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.92);border:1px solid var(--gray-200);border-radius:999px;color:var(--navy);font-size:11px;font-weight:800;padding:5px 9px}.product-content{padding:15px}.product-name{font-size:15px;font-weight:900;color:var(--gray-900);letter-spacing:-.2px}.product-meta{font-size:12px;color:var(--gray-400);margin:2px 0 12px}.metric{margin-bottom:9px}.metric-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}.metric-label{color:var(--gray-500);font-weight:700}.metric-value{font-weight:900;color:var(--gray-900)}.bar{height:6px;background:var(--gray-100);border-radius:99px;overflow:hidden}.bar-inner{height:100%;border-radius:99px}.product-footer{display:flex;gap:8px;margin-top:13px}.small-btn{flex:1;border:1px solid var(--gray-200);background:#fff;color:var(--navy);border-radius:10px;padding:10px;font-size:12px;font-weight:800;cursor:pointer}.small-btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.locked{position:relative;filter:blur(2px);opacity:.46}.lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);font-weight:900;color:var(--navy);font-size:13px;text-align:center;z-index:2}.validator-wrap{display:grid;grid-template-columns:1fr .9fr;gap:18px}.validator-box{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:20px;padding:26px;color:#fff}.validator-box h2{font-size:28px;line-height:1.1;letter-spacing:-.8px;margin-bottom:10px}.validator-box p{color:rgba(255,255,255,.72);font-size:14px;margin-bottom:20px}.input-wrap{display:flex;gap:10px;background:#fff;border-radius:14px;padding:7px}.validator-input{flex:1;border:none;outline:none;padding:12px 10px;font-size:14px;font-family:inherit;color:var(--gray-900)}.analyse-btn{border:none;background:var(--gold);color:var(--navy);border-radius:10px;padding:0 18px;font-weight:900;cursor:pointer}.analyse-btn:disabled{opacity:.6;cursor:not-allowed}.hint{font-size:12px;color:rgba(255,255,255,.58);margin-top:12px}.example-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.tag{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}.result-panel{border:1px solid var(--gray-200);background:#fff;border-radius:20px;padding:22px;min-height:320px}.empty-result{height:100%;min-height:278px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--gray-400);font-size:14px}.result-score{display:flex;align-items:center;gap:16px;margin-bottom:18px}.score-circle{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:900}.result-title{font-size:20px;font-weight:900;color:var(--gray-900);letter-spacing:-.4px}.result-stage{display:inline-block;margin-top:5px;background:var(--green-light);color:var(--green);font-size:11px;font-weight:900;padding:4px 9px;border-radius:999px}.result-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.result-metric{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:13px;padding:12px}.result-metric-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:900}.result-metric-value{font-size:19px;font-weight:900;color:var(--gray-900);margin-top:3px}.verdict{background:var(--off-white);border:1px solid var(--gray-200);border-radius:14px;padding:14px;font-size:13px;color:var(--gray-700);line-height:1.65}.growth-card{margin-top:12px;border:1px solid var(--gray-200);border-radius:14px;padding:14px;background:#fff}.growth-title{font-size:13px;font-weight:900;color:var(--gray-900);margin-bottom:4px}.growth-note{font-size:11px;color:var(--gray-400);margin-bottom:12px}.growth-bars{display:flex;gap:7px;align-items:end;height:120px;border-left:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);padding:8px 6px}.growth-bar{flex:1;background:linear-gradient(180deg,var(--gold),var(--navy));border-radius:8px 8px 0 0;min-height:8px}.growth-labels{display:flex;gap:7px;margin-top:7px}.growth-labels span{flex:1;font-size:10px;color:var(--gray-400);text-align:center}.research-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.research-btn{display:block;text-align:center;text-decoration:none;background:var(--gray-50);border:1px solid var(--gray-200);color:var(--navy);border-radius:12px;padding:12px;font-size:12px;font-weight:900}.research-btn:hover{background:var(--off-white);border-color:var(--navy)}.brief-output{margin-top:12px;background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:14px}.brief-output h4{font-size:13px;color:var(--gray-900);margin-bottom:8px}.brief-output ul{padding-left:18px;font-size:13px;color:var(--gray-700);line-height:1.75}.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:14px 16px;font-size:13px;margin-bottom:18px}.notice strong{color:#7c2d12}.loading{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;min-height:278px;text-align:center;color:var(--gray-500)}.spinner{width:34px;height:34px;border-radius:50%;border:4px solid var(--gray-200);border-top-color:var(--gold);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.error-box{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:14px;padding:14px;font-size:13px}
+
+/* PRODUCT VALIDATOR IMAGE + CREATIVE HUB UPGRADE */
+.result-image-wrap{margin-bottom:18px;border-radius:18px;overflow:hidden;border:1px solid var(--gray-200);background:var(--gray-100);position:relative;min-height:220px}
+.result-image-wrap img{width:100%;height:260px;object-fit:cover;display:block;background:var(--gray-100)}
+.result-image-overlay{position:absolute;left:14px;bottom:14px;background:rgba(20,40,64,.88);color:#fff;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:900;backdrop-filter:blur(6px)}
+.creative-studio-shell{display:flex;flex-direction:column;gap:20px}.creative-hero-wow{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:stretch;background:#fff;border:1px solid var(--gray-200);border-radius:24px;overflow:hidden;box-shadow:0 8px 35px rgba(17,24,39,.06)}.creative-hero-left{padding:34px}.creative-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--off-white);border:1px solid var(--gray-200);border-radius:999px;padding:7px 12px;color:var(--navy);font-size:12px;font-weight:900;margin-bottom:16px}.creative-hero-left h2{font-size:38px;letter-spacing:-1.2px;line-height:1.05;color:var(--gray-900);margin-bottom:12px}.creative-hero-left p{font-size:15px;color:var(--gray-500);max-width:560px;margin-bottom:20px}.creative-hero-actions{display:flex;gap:10px;flex-wrap:wrap}.creative-primary,.creative-secondary{border:none;border-radius:12px;padding:13px 18px;font-weight:900;cursor:pointer;font-family:inherit}.creative-primary{background:var(--navy);color:#fff}.creative-secondary{background:#fff;color:var(--navy);border:1px solid var(--gray-200)}.creative-hero-right{position:relative;min-height:360px;background:linear-gradient(135deg,#eef5ff,#fff7ed);overflow:hidden}.studio-photo{position:absolute;inset:22px;border-radius:22px;background-image:url('https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=1200&q=80');background-size:cover;background-position:center;box-shadow:0 18px 50px rgba(20,40,64,.18)}.studio-phone{position:absolute;right:26px;bottom:24px;width:150px;height:245px;border-radius:28px;background:#111827;border:8px solid #111827;box-shadow:0 18px 45px rgba(0,0,0,.25);overflow:hidden}.studio-phone-img{height:100%;background-image:url('https://images.unsplash.com/photo-1612832021040-31e5cde17ebe?auto=format&fit=crop&w=600&q=80');background-size:cover;background-position:center}.studio-floating{position:absolute;left:24px;bottom:28px;background:rgba(255,255,255,.94);border:1px solid var(--gray-200);border-radius:18px;padding:15px;box-shadow:0 15px 35px rgba(17,24,39,.16);width:230px}.studio-floating b{font-size:13px;color:var(--gray-900)}.studio-floating span{display:block;font-size:11px;color:var(--gray-500);margin-top:3px}.studio-mini-bars{display:flex;gap:5px;margin-top:12px;align-items:end;height:42px}.studio-mini-bars div{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--gold),var(--navy))}.creative-mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.creative-mode-card{background:#fff;border:1px solid var(--gray-200);border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(17,24,39,.04)}.creative-mode-img{height:140px;background-size:cover;background-position:center}.creative-mode-body{padding:18px}.creative-mode-body h3{font-size:17px;margin-bottom:6px;color:var(--gray-900)}.creative-mode-body p{font-size:13px;color:var(--gray-500);margin-bottom:12px}.pill-list{display:flex;gap:7px;flex-wrap:wrap}.mini-pill{font-size:11px;font-weight:900;color:var(--navy);background:var(--off-white);border:1px solid var(--gray-200);border-radius:999px;padding:5px 8px}.creative-builder{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:24px;padding:24px;color:#fff}.creative-builder-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}.creative-builder h3{font-size:26px;letter-spacing:-.7px}.creative-builder p{color:rgba(255,255,255,.74);font-size:14px}.creative-form-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:10px}.creative-input,.creative-select{border:none;border-radius:13px;padding:13px 14px;font-family:inherit;font-size:14px;outline:none;background:#fff;color:var(--gray-900)}.creative-build-btn{border:none;border-radius:13px;background:var(--gold);color:var(--navy);font-weight:900;padding:13px 18px;cursor:pointer;font-family:inherit}.package-output{display:none;background:#fff;border:1px solid var(--gray-200);border-radius:24px;overflow:hidden;box-shadow:0 5px 30px rgba(17,24,39,.05)}.package-output.show{display:block}.package-head{padding:22px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.package-head h3{font-size:22px;letter-spacing:-.6px}.package-head p{font-size:13px;color:var(--gray-500);margin-top:3px}.copy-brief-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer}.brief-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:18px}.brief-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:18px;padding:16px}.brief-card.wide{grid-column:1/-1}.brief-label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:900;color:var(--gray-400);margin-bottom:8px}.brief-card h4{font-size:16px;color:var(--gray-900);margin-bottom:9px}.brief-card ul{padding-left:18px;color:var(--gray-700);font-size:13px;line-height:1.75}.scene-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.scene-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:13px}.scene-time{font-size:11px;color:var(--gold);font-weight:900;margin-bottom:5px}.scene-card b{font-size:13px;color:var(--gray-900);display:block;margin-bottom:6px}.scene-card p{font-size:12px;color:var(--gray-600);line-height:1.55}.example-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.example-card{height:190px;border-radius:20px;overflow:hidden;position:relative;background-size:cover;background-position:center}.example-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(20,40,64,.72))}.example-card div{position:absolute;left:16px;right:16px;bottom:14px;color:#fff;z-index:1}.example-card b{display:block;font-size:16px}.example-card span{font-size:12px;color:rgba(255,255,255,.78)}
+@media(max-width:980px){.creative-hero-wow{grid-template-columns:1fr}.creative-mode-grid,.creative-form-grid,.brief-grid,.example-strip{grid-template-columns:1fr}.scene-grid{grid-template-columns:1fr 1fr}.creative-hero-left h2{font-size:30px}.creative-hero-right{min-height:310px}.result-image-wrap img{height:220px}}
+@media(max-width:620px){.scene-grid{grid-template-columns:1fr}.studio-floating{width:200px}.studio-phone{width:118px;height:200px}}
+
 @media(max-width:980px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin-left:0;width:100%;padding:20px}.stat-grid{grid-template-columns:repeat(2,1fr)}.product-grid{grid-template-columns:repeat(2,1fr)}.validator-wrap{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.user-pill{align-self:flex-start}}
 @media(max-width:620px){.product-grid,.stat-grid,.result-metrics,.research-grid{grid-template-columns:1fr}.input-wrap{flex-direction:column}.analyse-btn{padding:13px}}
-
-/* CREATIVE STUDIO REDESIGN */
-.creative-studio{display:flex;flex-direction:column;gap:18px}
-.creative-hero{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(135deg,#142840 0%,#1E3A5F 52%,#2B4F82 100%);min-height:430px;padding:34px;display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:center;box-shadow:0 18px 45px rgba(30,58,95,.18)}
-.creative-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 15%,rgba(245,158,11,.22),transparent 28%),radial-gradient(circle at 82% 20%,rgba(255,255,255,.14),transparent 24%);pointer-events:none}
-.creative-hero-copy{position:relative;z-index:2;color:#fff;max-width:650px}
-.creative-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;margin-bottom:18px}
-.creative-hero-copy h2{font-size:clamp(32px,4vw,56px);line-height:1.02;letter-spacing:-1.8px;margin-bottom:16px;color:#fff}
-.creative-hero-copy p{font-size:17px;line-height:1.7;color:rgba(255,255,255,.78);max-width:590px;margin-bottom:22px}
-.creative-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-.creative-primary{border:none;background:var(--gold);color:var(--navy);font-weight:900;border-radius:14px;padding:14px 18px;cursor:pointer;box-shadow:0 10px 25px rgba(245,158,11,.25)}
-.creative-secondary{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:900;border-radius:14px;padding:14px 18px;cursor:pointer}
-.creative-proof-row{display:flex;gap:10px;flex-wrap:wrap}
-.creative-proof{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 12px;min-width:130px}
-.creative-proof strong{display:block;font-size:17px;color:#fff;line-height:1}
-.creative-proof span{font-size:11px;color:rgba(255,255,255,.62);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.creative-visual{position:relative;z-index:2;min-height:370px}
-.studio-photo-main{position:absolute;right:0;top:10px;width:82%;height:285px;border-radius:26px;background-image:linear-gradient(180deg,rgba(20,40,64,0) 40%,rgba(20,40,64,.4)),url('https://source.unsplash.com/900x700/?content-creator,product,smartphone,studio');background-size:cover;background-position:center;border:1px solid rgba(255,255,255,.22);box-shadow:0 25px 55px rgba(0,0,0,.28)}
-.phone-preview{position:absolute;left:0;bottom:0;width:190px;height:315px;border:9px solid #111827;border-radius:32px;background:#fff;box-shadow:0 22px 45px rgba(0,0,0,.34);overflow:hidden}
-.phone-screen-img{height:182px;background-image:url('https://source.unsplash.com/500x700/?product,unboxing,creator');background-size:cover;background-position:center}
-.phone-caption{padding:12px;background:#fff}
-.phone-caption small{display:block;color:var(--gray-400);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
-.phone-caption b{display:block;color:var(--gray-900);font-size:13px;line-height:1.25}
-.floating-brief{position:absolute;right:18px;bottom:22px;background:#fff;border:1px solid var(--gray-200);border-radius:18px;padding:14px;width:230px;box-shadow:0 18px 45px rgba(0,0,0,.2)}
-.floating-brief-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.floating-brief-title{font-size:12px;font-weight:900;color:var(--gray-900)}
-.floating-brief-badge{background:var(--green-light);color:var(--green);font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px}
-.floating-line{height:9px;background:var(--gray-100);border-radius:99px;margin:8px 0}
-.floating-line.gold{background:linear-gradient(90deg,var(--gold),#fcd34d);width:78%}.floating-line.navy{background:linear-gradient(90deg,var(--navy),var(--navy-light));width:62%}.floating-line.green{background:linear-gradient(90deg,var(--green),#86efac);width:86%}
-.creative-mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.creative-mode-card{background:#fff;border:1px solid var(--gray-200);border-radius:22px;overflow:hidden;box-shadow:0 6px 25px rgba(17,24,39,.04)}
-.mode-img{height:150px;background-size:cover;background-position:center}
-.mode-content{padding:18px}.mode-label{display:inline-block;background:var(--off-white);color:var(--navy);border:1px solid var(--gray-200);border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px}.mode-content h3{font-size:18px;letter-spacing:-.4px;margin-bottom:7px}.mode-content p{font-size:13px;color:var(--gray-500);line-height:1.6;margin-bottom:12px}.mode-list{display:grid;gap:8px}.mode-list div{font-size:12px;color:var(--gray-700);font-weight:700;background:var(--gray-50);border:1px solid var(--gray-100);border-radius:10px;padding:8px}
-.creative-workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.workflow-step{background:#fff;border:1px solid var(--gray-200);border-radius:18px;padding:16px;position:relative;overflow:hidden}.workflow-step:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--gold))}.workflow-num{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;margin-bottom:12px}.workflow-step h4{font-size:14px;color:var(--gray-900);margin-bottom:5px}.workflow-step p{font-size:12px;color:var(--gray-500);line-height:1.55}
-.package-builder{display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;align-items:start}.builder-card{background:#fff;border:1px solid var(--gray-200);border-radius:22px;padding:22px;box-shadow:0 6px 25px rgba(17,24,39,.04)}.builder-card.dark{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;border:none}.builder-card h3{font-size:24px;letter-spacing:-.8px;margin-bottom:8px}.builder-card.dark p{color:rgba(255,255,255,.72)}.builder-field{margin-top:14px}.builder-label{display:block;font-size:11px;font-weight:900;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px}.builder-input,.builder-select,.builder-textarea{width:100%;border:none;border-radius:13px;padding:13px 14px;font:inherit;outline:none;background:#fff;color:var(--gray-900)}.builder-textarea{min-height:84px;resize:vertical}.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.builder-btn{width:100%;margin-top:16px;border:none;background:var(--gold);color:var(--navy);border-radius:14px;padding:14px 16px;font-weight:900;cursor:pointer}
-.output-board{display:grid;gap:14px}.output-header{background:#fff;border:1px solid var(--gray-200);border-radius:22px;padding:20px;display:flex;justify-content:space-between;gap:12px;align-items:center}.output-header h3{font-size:22px;letter-spacing:-.7px}.output-header p{font-size:13px;color:var(--gray-500)}.copy-package-btn{border:none;background:var(--navy);color:#fff;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;white-space:nowrap}.creative-output-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.creative-output-card{background:#fff;border:1px solid var(--gray-200);border-radius:20px;padding:18px;box-shadow:0 5px 22px rgba(17,24,39,.035)}.creative-output-card.wide{grid-column:1/-1}.output-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.output-card-title{font-size:14px;font-weight:900;color:var(--gray-900);letter-spacing:-.2px}.output-pill{font-size:10px;font-weight:900;color:var(--navy);background:var(--off-white);border:1px solid var(--gray-200);padding:4px 8px;border-radius:999px}.hook-card{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:14px;padding:12px;margin-bottom:9px;font-size:13px;font-weight:800;color:var(--gray-800);line-height:1.45}.shot-list{display:grid;gap:9px}.shot-item{display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start}.shot-num{width:32px;height:32px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}.shot-text b{display:block;font-size:13px;color:var(--gray-900)}.shot-text span{font-size:12px;color:var(--gray-500)}.script-box{background:#0f172a;color:#e5e7eb;border-radius:16px;padding:16px;font-size:13px;line-height:1.7}.script-box b{color:#fff}.creative-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.gallery-card{height:170px;border-radius:18px;background-size:cover;background-position:center;position:relative;overflow:hidden}.gallery-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.65))}.gallery-card span{position:absolute;left:12px;right:12px;bottom:12px;color:#fff;font-size:12px;font-weight:900;z-index:2}.creative-empty{background:#fff;border:1px dashed var(--gray-300);border-radius:22px;padding:34px;text-align:center;color:var(--gray-500)}.creative-empty strong{display:block;color:var(--gray-900);font-size:18px;margin-bottom:6px}
-@media(max-width:980px){.creative-hero,.package-builder{grid-template-columns:1fr}.creative-visual{min-height:360px}.creative-mode-grid,.creative-workflow{grid-template-columns:1fr 1fr}.creative-output-grid,.creative-gallery{grid-template-columns:1fr}}
-@media(max-width:620px){.creative-hero{padding:22px;border-radius:22px}.creative-hero-copy h2{font-size:34px}.creative-hero-copy p{font-size:15px}.studio-photo-main{position:relative;width:100%;height:230px;top:auto;right:auto;margin-bottom:14px}.phone-preview,.floating-brief{display:none}.creative-mode-grid,.creative-workflow,.builder-grid{grid-template-columns:1fr}.output-header{align-items:flex-start;flex-direction:column}.copy-package-btn{width:100%}}
-
 </style>
 </head>
 <body>
@@ -60,7 +30,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-9
     <button class="nav-btn active" onclick="showSection('dashboard',this)">📊 Dashboard</button>
     <button class="nav-btn" onclick="showSection('products',this)">📈 Emerging Products</button>
     <button class="nav-btn" onclick="showSection('validator',this)">✅ Product Validator</button>
-    <button class="nav-btn" onclick="showSection('briefs',this)">🎬 Creative Briefs</button>
+    <button class="nav-btn" onclick="showSection('briefs',this)">🎬 Creative Hub</button>
     <div class="nav-label">Account</div>
     <button class="nav-btn" onclick="alert('Account page coming next')">👤 Account</button>
     <button class="nav-btn" onclick="window.location.href='index.html'">← Back to homepage</button>
@@ -69,7 +39,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-9
 
   <main class="main">
     <div class="topbar"><div class="top-title"><h1>Members Dashboard</h1><p>Spot emerging products, validate your ideas and create briefs before you build.</p></div><div class="user-pill"><div class="avatar">BH</div><span>Free Trial</span></div></div>
-    <div class="stat-grid"><div class="stat-card"><div class="stat-label">Emerging Opportunities</div><div class="stat-value navy">47+</div><div class="stat-note">updated weekly</div></div><div class="stat-card"><div class="stat-label">Unlocked On Trial</div><div class="stat-value gold">3</div><div class="stat-note">upgrade for full feed</div></div><div class="stat-card"><div class="stat-label">Opportunity Engine</div><div class="stat-value green">Live</div><div class="stat-note">DropResearchHub engine</div></div><div class="stat-card"><div class="stat-label">Research Hub</div><div class="stat-value navy">Free</div><div class="stat-note">opens live public sources</div></div></div>
+    <div class="stat-grid"><div class="stat-card"><div class="stat-label">Emerging Opportunities</div><div class="stat-value navy">47+</div><div class="stat-note">updated weekly</div></div><div class="stat-card"><div class="stat-label">Unlocked On Trial</div><div class="stat-value gold">3</div><div class="stat-note">upgrade for full feed</div></div><div class="stat-card"><div class="stat-label">Opportunity Engine</div><div class="stat-value green">Live</div><div class="stat-note">live validation</div></div><div class="stat-card"><div class="stat-label">Research Hub</div><div class="stat-value navy">Free</div><div class="stat-note">opens live public sources</div></div></div>
 
     <section id="dashboard" class="section active">
       <div class="notice"><strong>MVP version:</strong> The dashboard combines sample emerging products with live product validation. Research links open public source sites in new tabs.</div>
@@ -81,177 +51,62 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-9
 
     <section id="products" class="section"><div class="panel"><div class="panel-head"><div><div class="panel-title">Emerging Products Feed</div><div class="panel-sub">Products showing early growth signals before they become mainstream.</div></div><div class="filter-row"><input class="search" id="productSearch" placeholder="Search products..." oninput="renderProducts()"><select class="select" id="stageFilter" onchange="renderProducts()"><option value="all">All stages</option><option>Emerging</option><option>Growing</option><option>Mature</option></select></div></div><div class="panel-body"><div class="product-grid" id="product-grid"></div></div></div></section>
 
-    <section id="validator" class="section">
-      <div class="validator-top-panel">
-        <h2>Product Validator</h2>
-        <p>Enter a product name, Amazon link, AliExpress link, TikTok link or product idea. DropResearchHub will create a practical ecommerce opportunity analysis.</p>
-        <div class="input-wrap">
-          <input class="validator-input" id="validatorInput" placeholder="Enter product name or idea...">
-          <button class="analyse-btn" id="analyseButton" onclick="analyseProduct()">Analyse Opportunity →</button>
-        </div>
-        <div class="hint">Free trial: 1 validation per day · Paid members: unlimited validations</div>
-        <div class="validator-examples">
-          <span class="validator-examples-label">Try:</span>
-          <button class="tag" onclick="setExample('Portable Ice Bath')">Portable Ice Bath</button>
-          <button class="tag" onclick="setExample('Dog Cooling Mat')">Dog Cooling Mat</button>
-          <button class="tag" onclick="setExample('Pet Hair Remover')">Pet Hair Remover</button>
-          <button class="tag" onclick="setExample('LED Teeth Whitening Kit')">LED Teeth Whitening Kit</button>
-        </div>
-      </div>
-      <div class="validator-result-layout">
-        <div class="validator-result-full" id="resultPanel">
-          <div class="empty-result">Enter a product idea above to generate your first DropResearchHub opportunity analysis.</div>
-        </div>
-      </div>
-    </section>
+    <section id="validator" class="section"><div class="validator-wrap"><div class="validator-box"><h2>Product Validator</h2><p>Enter a product name, Amazon link, AliExpress link, TikTok link or product idea. Claude will create a practical ecommerce opportunity analysis.</p><div class="input-wrap"><input class="validator-input" id="validatorInput" placeholder="Enter product name or idea..."><button class="analyse-btn" id="analyseButton" onclick="analyseProduct()">Analyse Opportunity →</button></div><div class="hint">Free trial: 1 validation per day · Paid members: unlimited validations</div><div class="example-tags"><button class="tag" onclick="setExample('Portable Ice Bath')">Portable Ice Bath</button><button class="tag" onclick="setExample('Dog Cooling Mat')">Dog Cooling Mat</button><button class="tag" onclick="setExample('Pet Hair Remover')">Pet Hair Remover</button><button class="tag" onclick="setExample('LED Teeth Whitening Kit')">LED Teeth Whitening Kit</button></div></div><div class="result-panel" id="resultPanel"><div class="empty-result">Enter a product idea to generate your first DropResearchHub opportunity analysis.</div></div></div></section>
 
     
-    <section id="briefs" class="section">
-      <div class="creative-studio">
-        <div class="creative-hero">
-          <div class="creative-hero-copy">
-            <div class="creative-kicker">Creative Studio · Creator-ready content system</div>
-            <h2>Turn products into content people actually stop for.</h2>
-            <p>Build a complete creative package for your product: hooks, shot list, creator instructions, scripts, b-roll ideas and ready-to-send filming direction.</p>
-            <div class="creative-hero-actions">
-              <button class="creative-primary" onclick="document.getElementById('creativeProduct').focus()">Build Creative Package</button>
-              <button class="creative-secondary" onclick="loadExamplePackage()">View Example Package</button>
-            </div>
-            <div class="creative-proof-row">
-              <div class="creative-proof"><strong>3</strong><span>ad angles</span></div>
-              <div class="creative-proof"><strong>6</strong><span>scroll hooks</span></div>
-              <div class="creative-proof"><strong>9</strong><span>shot ideas</span></div>
-            </div>
-          </div>
-          <div class="creative-visual">
-            <div class="studio-photo-main"></div>
-            <div class="phone-preview">
-              <div class="phone-screen-img"></div>
-              <div class="phone-caption">
-                <small>Creator view</small>
-                <b>Hook → demo → proof → CTA</b>
-              </div>
-            </div>
-            <div class="floating-brief">
-              <div class="floating-brief-top">
-                <div class="floating-brief-title">Brief package</div>
-                <div class="floating-brief-badge">Ready</div>
-              </div>
-              <div class="floating-line gold"></div>
-              <div class="floating-line navy"></div>
-              <div class="floating-line green"></div>
-              <div class="floating-line" style="width:72%"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="creative-mode-grid">
-          <div class="creative-mode-card">
-            <div class="mode-img" style="background-image:url('https://source.unsplash.com/700x500/?ugc,creator,filming,product')"></div>
-            <div class="mode-content">
-              <span class="mode-label">Creator Ready</span>
-              <h3>Send to your video creator</h3>
-              <p>Give creators the direction they need without writing long messy messages.</p>
-              <div class="mode-list">
-                <div>Hooks & scroll stoppers</div>
-                <div>Creator script structure</div>
-                <div>Clear filming instructions</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="creative-mode-card">
-            <div class="mode-img" style="background-image:url('https://source.unsplash.com/700x500/?iphone,product,photography,lightbox')"></div>
-            <div class="mode-content">
-              <span class="mode-label">DIY Content</span>
-              <h3>Film it yourself at home</h3>
-              <p>Use your phone, daylight, a kitchen table, a lightbox or a simple tripod setup.</p>
-              <div class="mode-list">
-                <div>Phone shot ideas</div>
-                <div>B-roll and close-ups</div>
-                <div>Simple lighting guidance</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="creative-mode-card">
-            <div class="mode-img" style="background-image:url('https://source.unsplash.com/700x500/?social,media,ads,editing')"></div>
-            <div class="mode-content">
-              <span class="mode-label">Launch Ready</span>
-              <h3>Build variants for testing</h3>
-              <p>Get multiple concepts so you can test different hooks, angles and formats.</p>
-              <div class="mode-list">
-                <div>Problem / solution angle</div>
-                <div>Demo and transformation</div>
-                <div>Lifestyle and proof angle</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="creative-workflow">
-          <div class="workflow-step"><div class="workflow-num">1</div><h4>Add the product</h4><p>Type the product name and choose the type of content you need.</p></div>
-          <div class="workflow-step"><div class="workflow-num">2</div><h4>Pick the direction</h4><p>Choose creator, DIY filming, Meta ad or TikTok organic style.</p></div>
-          <div class="workflow-step"><div class="workflow-num">3</div><h4>Build the package</h4><p>Get hooks, shot list, script, CTA and creator notes in one place.</p></div>
-          <div class="workflow-step"><div class="workflow-num">4</div><h4>Send or film</h4><p>Copy the package to your creator or use it to film the content yourself.</p></div>
-        </div>
-
-        <div class="package-builder">
-          <div class="builder-card dark">
-            <h3>Build Creative Package</h3>
-            <p>Tell DropResearchHub what you're filming and we'll structure it like a real creator brief, not a generic text answer.</p>
-
-            <div class="builder-field">
-              <label class="builder-label">Product</label>
-              <input class="builder-input" id="creativeProduct" placeholder="e.g. Portable Ice Bath">
-            </div>
-
-            <div class="builder-grid">
-              <div class="builder-field">
-                <label class="builder-label">Content style</label>
-                <select class="builder-select" id="creativeStyle">
-                  <option>UGC video ad</option>
-                  <option>TikTok organic post</option>
-                  <option>Meta paid ad</option>
-                  <option>Product demo</option>
-                  <option>Before and after</option>
-                </select>
-              </div>
-              <div class="builder-field">
-                <label class="builder-label">Filming route</label>
-                <select class="builder-select" id="creativeRoute">
-                  <option>Send to video creator</option>
-                  <option>Film it myself</option>
-                  <option>Send to editor</option>
-                  <option>Creator + editor</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="builder-field">
-              <label class="builder-label">Main selling point</label>
-              <textarea class="builder-textarea" id="creativeBenefit" placeholder="What problem does it solve? What makes it interesting?"></textarea>
-            </div>
-
-            <button class="builder-btn" onclick="generateCreativePackage()">Build My Creative Package →</button>
-          </div>
-
-          <div class="output-board" id="creativeOutput">
-            <div class="creative-empty">
-              <strong>Your creative package will appear here.</strong>
-              Add a product and build a package with hooks, shot list, script and creator-ready instructions.
-            </div>
-
-            <div class="creative-gallery">
-              <div class="gallery-card" style="background-image:url('https://source.unsplash.com/500x500/?product,unboxing,video')"><span>Unboxing moment</span></div>
-              <div class="gallery-card" style="background-image:url('https://source.unsplash.com/500x500/?product,demo,creator')"><span>Product demo</span></div>
-              <div class="gallery-card" style="background-image:url('https://source.unsplash.com/500x500/?lifestyle,product,content')"><span>Lifestyle content</span></div>
-            </div>
-          </div>
+<section id="briefs" class="section">
+  <div class="creative-studio-shell">
+    <div class="creative-hero-wow">
+      <div class="creative-hero-left">
+        <div class="creative-kicker">Creative Hub · Creator submission packages</div>
+        <h2>Turn any product into a creator-ready ad brief.</h2>
+        <p>Build a professional brief you can send to Viral Ecom Adz, Fiverr creators, UGC creators or your own content team. No vague scripts. Clear product info, audience, shots, hooks, voiceover and deliverables.</p>
+        <div class="creative-hero-actions">
+          <button class="creative-primary" onclick="document.getElementById('creativeProduct').focus()">Build Creator Brief</button>
+          <button class="creative-secondary" onclick="loadExamplePackage()">View Example Brief</button>
         </div>
       </div>
-    </section>
+      <div class="creative-hero-right">
+        <div class="studio-photo"></div>
+        <div class="studio-phone"><div class="studio-phone-img"></div></div>
+        <div class="studio-floating"><b>Creator brief ready</b><span>Hooks · shot list · voiceover · notes</span><div class="studio-mini-bars"><div style="height:35%"></div><div style="height:62%"></div><div style="height:88%"></div><div style="height:54%"></div></div></div>
+      </div>
+    </div>
 
+    <div class="creative-mode-grid">
+      <div class="creative-mode-card"><div class="creative-mode-img" style="background-image:url('https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=900&q=80')"></div><div class="creative-mode-body"><h3>Send To Creator</h3><p>Everything your video creator needs in one clean package.</p><div class="pill-list"><span class="mini-pill">Product info</span><span class="mini-pill">Shot list</span><span class="mini-pill">Voiceover</span></div></div></div>
+      <div class="creative-mode-card"><div class="creative-mode-img" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80')"></div><div class="creative-mode-body"><h3>Film It Yourself</h3><p>Use the same brief to shoot content at home with your phone.</p><div class="pill-list"><span class="mini-pill">9:16 video</span><span class="mini-pill">B-roll</span><span class="mini-pill">Lighting notes</span></div></div></div>
+      <div class="creative-mode-card"><div class="creative-mode-img" style="background-image:url('https://images.unsplash.com/photo-1553484771-371a605b060b?auto=format&fit=crop&w=900&q=80')"></div><div class="creative-mode-body"><h3>Launch Variants</h3><p>Create multiple angles ready for split testing across TikTok and Meta.</p><div class="pill-list"><span class="mini-pill">Hooks</span><span class="mini-pill">CTA</span><span class="mini-pill">Ad angles</span></div></div></div>
+    </div>
+
+    <div class="creative-builder">
+      <div class="creative-builder-top">
+        <div><h3>Creator Submission Package</h3><p>Enter the product, link and campaign details. DropResearchHub turns it into a ready-to-send creator brief.</p></div>
+      </div>
+      <div class="creative-form-grid">
+        <input class="creative-input" id="creativeProduct" placeholder="Product name e.g. Dog Harness">
+        <input class="creative-input" id="creativeLink" placeholder="Product link optional">
+        <select class="creative-select" id="creativePlatform"><option>TikTok + Meta</option><option>TikTok</option><option>Meta</option></select>
+        <select class="creative-select" id="creativeAngle"><option>Problem → Solution</option><option>UGC Testimonial</option><option>Demonstration</option><option>Before & After</option><option>Lifestyle</option></select>
+        <input class="creative-input" id="creativeOffer" placeholder="Offer e.g. 20% off / free shipping">
+        <button class="creative-build-btn" onclick="buildCreativePackage()">Build Creator Brief →</button>
+      </div>
+    </div>
+
+    <div class="package-output" id="packageOutput"></div>
+
+    <div class="panel">
+      <div class="panel-head"><div><div class="panel-title">Real-world brief examples</div><div class="panel-sub">The aim is to tell the creator exactly what footage to capture.</div></div></div>
+      <div class="panel-body">
+        <div class="example-strip">
+          <div class="example-card" style="background-image:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80')"><div><b>White Trainers</b><span>Before/after clean, close-up transformation, lifestyle finish.</span></div></div>
+          <div class="example-card" style="background-image:url('https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?auto=format&fit=crop&w=900&q=80')"><div><b>Dog Harness</b><span>Pulling problem, fitting demo, calm walk result.</span></div></div>
+          <div class="example-card" style="background-image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80')"><div><b>Recovery Product</b><span>Workout pain point, product demo, recovery routine.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
   </main>
 </div>
 
@@ -271,94 +126,18 @@ function quickAnalyse(){const v=document.getElementById('quickInput').value;show
 function briefFromInput(){const v=document.getElementById('briefInput').value;showSectionByName('validator');document.getElementById('validatorInput').value=v;analyseProduct()}
 function encodeProduct(name){return encodeURIComponent(name || '')}
 function researchLinks(productName){const q=encodeProduct(productName);return `<div class="growth-card"><div class="growth-title">Research Hub</div><div class="growth-note">Open live research sources in new tabs. These links do not cost you API money.</div><div class="research-grid"><a class="research-btn" target="_blank" rel="noopener" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${q}">📢 Meta Ads Library</a><a class="research-btn" target="_blank" rel="noopener" href="https://www.tiktok.com/search?q=${q}">🎵 TikTok Videos</a><a class="research-btn" target="_blank" rel="noopener" href="https://ads.tiktok.com/business/creativecenter/inspiration/topads">🎬 TikTok Creative Center</a><a class="research-btn" target="_blank" rel="noopener" href="https://trends.google.com/trends/explore?geo=GB&q=${q}">📈 Google Trends</a><a class="research-btn" target="_blank" rel="noopener" href="https://www.amazon.co.uk/s?k=${q}">🛒 Amazon UK</a><a class="research-btn" target="_blank" rel="noopener" href="https://www.google.com/search?tbm=shop&q=${q}">🏪 Competitor Shopping</a></div></div>`}
-function growthGraph(points){const safe=(Array.isArray(points)&&points.length)?points:[{label:'Week 1',value:18},{label:'Week 2',value:25},{label:'Week 3',value:37},{label:'Week 4',value:52},{label:'Week 5',value:70},{label:'Week 6',value:86}];const max=Math.max(...safe.map(p=>Number(p.value)||0),1);return `<div class="growth-card"><div class="growth-title">Growth Signal Graph</div><div class="growth-note">Estimated growth signal pattern for MVP. Use the Google Trends button for live trend checking.</div><div class="growth-bars">${safe.map(p=>`<div class="growth-bar" title="${p.label}: ${p.value}" style="height:${Math.max(8,(Number(p.value)||0)/max*100)}%"></div>`).join('')}</div><div class="growth-labels">${safe.map(p=>`<span>${p.label.replace('Week ','W')}</span>`).join('')}</div></div>`}
+function growthGraph(points){const safe=(Array.isArray(points)&&points.length)?points:[{label:'Week 1',value:18},{label:'Week 2',value:25},{label:'Week 3',value:37},{label:'Week 4',value:52},{label:'Week 5',value:70},{label:'Week 6',value:86}];const max=Math.max(...safe.map(p=>Number(p.value)||0),1);return `<div class="growth-card"><div class="growth-title">Growth Signal Graph</div><div class="growth-note">AI-estimated signal pattern for MVP. Use the Google Trends button for live trend checking.</div><div class="growth-bars">${safe.map(p=>`<div class="growth-bar" title="${p.label}: ${p.value}" style="height:${Math.max(8,(Number(p.value)||0)/max*100)}%"></div>`).join('')}</div><div class="growth-labels">${safe.map(p=>`<span>${p.label.replace('Week ','W')}</span>`).join('')}</div></div>`}
 function listBlock(title,items){if(!Array.isArray(items)||!items.length)return '';return `<div class="brief-output"><h4>${title}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`}
-function renderResult(p){const productName=p.productName||p.name||'Product idea';const score=p.opportunityScore||p.score||'B';const growth=Number(p.growthScore ?? p.growth ?? 68);const competition=Number(p.competitionScore ?? p.competition ?? 55);const margin=Number(p.marginScore ?? p.margin ?? 72);const stage=p.marketStage||p.stage||'Needs Research';const verdict=p.verdict||'This product needs further research before committing time or money.';document.getElementById('resultPanel').innerHTML=`<div class="result-score"><div class="score-circle" style="background:${scoreColor(score)}">${score}</div><div><div class="result-title">${productName}</div><div class="result-stage">${stage}</div></div></div><div class="result-metrics"><div class="result-metric"><div class="result-metric-label">Growth Potential</div><div class="result-metric-value">${growth}/100</div></div><div class="result-metric"><div class="result-metric-label">Competition</div><div class="result-metric-value">${competition}/100</div></div><div class="result-metric"><div class="result-metric-label">Margin Potential</div><div class="result-metric-value">${margin}/100</div></div><div class="result-metric"><div class="result-metric-label">Saturation Risk</div><div class="result-metric-value">${p.saturationRisk||'Medium'}</div></div></div><div class="verdict"><strong>DropResearchHub Verdict:</strong> ${verdict}</div>${growthGraph(p.growthGraph)}${researchLinks(productName)}${listBlock('Why it could work',p.whyItCouldWork)}${listBlock('Risks to check',p.risks)}${listBlock('Creative angles',p.creativeAngles)}${listBlock('Hooks',p.hooks)}`}
-async function analyseProduct(){const input=document.getElementById('validatorInput').value.trim();const panel=document.getElementById('resultPanel');const button=document.getElementById('analyseButton');if(!input){panel.innerHTML='<div class="empty-result">Enter a product idea to generate your first DropResearchHub opportunity analysis.</div>';return}panel.innerHTML='<div class="loading"><div class="spinner"></div><strong>Analysing opportunity...</strong><span>Analysing the product idea, market stage, risks and creative angles.</span></div>';if(button)button.disabled=true;try{const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:input})});const data=await response.json();if(!response.ok){throw new Error(data?.error || data?.message || 'AI analysis failed')}renderResult(data)}catch(error){const local=products.find(p=>input.toLowerCase().includes(p.name.toLowerCase())||p.name.toLowerCase().includes(input.toLowerCase()));if(local){renderResult({...local,productName:local.name,opportunityScore:local.score,growthScore:local.growth,competitionScore:local.competition,marginScore:local.margin,marketStage:local.stage,whyItCouldWork:['Clear problem-solution product','Good demo potential for short-form video','Simple to explain in ads'],risks:['Check supplier quality','Review current competition','Avoid overclaiming benefits'],creativeAngles:['Before and after demo','Problem-solution UGC','Day-in-the-life product use'],hooks:['I found this before everyone starts selling it...','This solves a problem most people ignore...','This is one of those products that looks boring until you see it work...']});}else{panel.innerHTML=`<div class="error-box"><strong>AI connection issue:</strong> ${error.message}<br><br>Check that <strong>ANTHROPIC_API_KEY</strong> is added in Vercel and that <strong>api/generate.js</strong> has been updated.</div>${researchLinks(input)}`}}finally{if(button)button.disabled=false}}
+function renderResult(p){const productName=p.productName||p.name||'Product idea';const score=p.opportunityScore||p.score||'B';const growth=Number(p.growthScore ?? p.growth ?? 68);const competition=Number(p.competitionScore ?? p.competition ?? 55);const margin=Number(p.marginScore ?? p.margin ?? 72);const stage=p.marketStage||p.stage||'Needs Research';const verdict=p.verdict||'This product needs further research before committing time or money.';document.getElementById('resultPanel').innerHTML=`${productImage(productName)}<div class="result-score"><div class="score-circle" style="background:${scoreColor(score)}">${score}</div><div><div class="result-title">${productName}</div><div class="result-stage">${stage}</div></div></div><div class="result-metrics"><div class="result-metric"><div class="result-metric-label">Growth Potential</div><div class="result-metric-value">${growth}/100</div></div><div class="result-metric"><div class="result-metric-label">Competition</div><div class="result-metric-value">${competition}/100</div></div><div class="result-metric"><div class="result-metric-label">Margin Potential</div><div class="result-metric-value">${margin}/100</div></div><div class="result-metric"><div class="result-metric-label">Saturation Risk</div><div class="result-metric-value">${p.saturationRisk||'Medium'}</div></div></div><div class="verdict"><strong>DropResearchHub Verdict:</strong> ${verdict}</div>${growthGraph(p.growthGraph)}${researchLinks(productName)}${listBlock('Why it could work',p.whyItCouldWork)}${listBlock('Risks to check',p.risks)}${listBlock('Creative angles',p.creativeAngles)}${listBlock('Hooks',p.hooks)}`}
+async function analyseProduct(){const input=document.getElementById('validatorInput').value.trim();const panel=document.getElementById('resultPanel');const button=document.getElementById('analyseButton');if(!input){panel.innerHTML='<div class="empty-result">Enter a product idea to generate your first DropResearchHub opportunity analysis.</div>';return}panel.innerHTML='<div class="loading"><div class="spinner"></div><strong>Analysing opportunity...</strong><span>Analysing product opportunity, market stage, risks and creative angles.</span></div>';if(button)button.disabled=true;try{const response=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:input})});const data=await response.json();if(!response.ok){throw new Error(data?.error || data?.message || 'Opportunity analysis failed')}renderResult(data)}catch(error){const local=products.find(p=>input.toLowerCase().includes(p.name.toLowerCase())||p.name.toLowerCase().includes(input.toLowerCase()));if(local){renderResult({...local,productName:local.name,opportunityScore:local.score,growthScore:local.growth,competitionScore:local.competition,marginScore:local.margin,marketStage:local.stage,whyItCouldWork:['Clear problem-solution product','Good demo potential for short-form video','Simple to explain in ads'],risks:['Check supplier quality','Review current competition','Avoid overclaiming benefits'],creativeAngles:['Before and after demo','Problem-solution UGC','Day-in-the-life product use'],hooks:['I found this before everyone starts selling it...','This solves a problem most people ignore...','This is one of those products that looks boring until you see it work...']});}else{panel.innerHTML=`<div class="error-box"><strong>Connection issue:</strong> ${error.message}<br><br>Check that <strong>ANTHROPIC_API_KEY</strong> is added in Vercel and that <strong>api/generate.js</strong> has been updated.</div>${researchLinks(input)}`}}finally{if(button)button.disabled=false}}
 
-function generateCreativePackage(){
-  const product=(document.getElementById('creativeProduct')?.value||'').trim() || 'Your Product';
-  const style=document.getElementById('creativeStyle')?.value || 'UGC video ad';
-  const route=document.getElementById('creativeRoute')?.value || 'Send to video creator';
-  const benefit=(document.getElementById('creativeBenefit')?.value||'').trim() || 'solves a clear problem and makes the result easy to show on camera';
-  const clean=product.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  document.getElementById('creativeOutput').innerHTML = `
-    <div class="output-header">
-      <div>
-        <h3>${clean} Creative Package</h3>
-        <p>${style} · ${route}</p>
-      </div>
-      <button class="copy-package-btn" onclick="copyCreativePackage()">Copy Package</button>
-    </div>
-
-    <div class="creative-output-grid">
-      <div class="creative-output-card">
-        <div class="output-card-top"><div class="output-card-title">Scroll-stopping hooks</div><span class="output-pill">Use first 3 seconds</span></div>
-        <div class="hook-card">“I didn’t think ${clean.toLowerCase()} would actually work until I tried this...”</div>
-        <div class="hook-card">“If you’ve been ignoring this problem, this is your sign.”</div>
-        <div class="hook-card">“This is one of those products that makes sense as soon as you see it used.”</div>
-      </div>
-
-      <div class="creative-output-card">
-        <div class="output-card-top"><div class="output-card-title">Ad angles to test</div><span class="output-pill">3 variants</span></div>
-        <div class="hook-card">Problem / solution: show the frustration first, then the product fixing it.</div>
-        <div class="hook-card">Demo angle: fast visual proof with close-ups and simple captions.</div>
-        <div class="hook-card">Lifestyle angle: show the product being used naturally in a real setting.</div>
-      </div>
-
-      <div class="creative-output-card wide">
-        <div class="output-card-top"><div class="output-card-title">Creator shot list</div><span class="output-pill">Filmable brief</span></div>
-        <div class="shot-list">
-          <div class="shot-item"><div class="shot-num">1</div><div class="shot-text"><b>Hook shot</b><span>Creator holding or using the product with a clear visual problem in frame.</span></div></div>
-          <div class="shot-item"><div class="shot-num">2</div><div class="shot-text"><b>Close-up demo</b><span>Show exactly how ${clean.toLowerCase()} works. Keep the shot tight and easy to understand.</span></div></div>
-          <div class="shot-item"><div class="shot-num">3</div><div class="shot-text"><b>Result shot</b><span>Show the final outcome, benefit or transformation clearly.</span></div></div>
-          <div class="shot-item"><div class="shot-num">4</div><div class="shot-text"><b>Proof shot</b><span>Show texture, size, movement, packaging or real use so the product feels trustworthy.</span></div></div>
-          <div class="shot-item"><div class="shot-num">5</div><div class="shot-text"><b>CTA shot</b><span>Creator looks at camera and gives one simple reason to try it.</span></div></div>
-        </div>
-      </div>
-
-      <div class="creative-output-card wide">
-        <div class="output-card-top"><div class="output-card-title">30-second creator script</div><span class="output-pill">Ready to send</span></div>
-        <div class="script-box">
-          <b>0-3s Hook:</b> “I found this ${clean.toLowerCase()} and had to test if it was actually worth it.”<br>
-          <b>3-10s Problem:</b> “The problem is most people struggle with this because ${benefit}.”<br>
-          <b>10-22s Demo:</b> “Here’s how it works. You can see straight away why it’s useful.”<br>
-          <b>22-28s Result:</b> “This is the result after using it properly.”<br>
-          <b>28-30s CTA:</b> “If you want something simple that actually solves this, this is worth checking out.”
-        </div>
-      </div>
-
-      <div class="creative-output-card">
-        <div class="output-card-top"><div class="output-card-title">B-roll checklist</div><span class="output-pill">Visuals</span></div>
-        <div class="hook-card">Product in hand</div>
-        <div class="hook-card">Close-up of product detail</div>
-        <div class="hook-card">Before / after or setup / result</div>
-        <div class="hook-card">Packaging or delivery moment</div>
-      </div>
-
-      <div class="creative-output-card">
-        <div class="output-card-top"><div class="output-card-title">Creator notes</div><span class="output-pill">Direction</span></div>
-        <div class="hook-card">Keep it natural. Do not over-polish the delivery.</div>
-        <div class="hook-card">Show the product within the first 2 seconds.</div>
-        <div class="hook-card">Use simple captions for silent viewers.</div>
-        <div class="hook-card">Make the benefit obvious without making unrealistic claims.</div>
-      </div>
-    </div>
-  `;
-}
-function loadExamplePackage(){
-  showSectionByName('briefs');
-  document.getElementById('creativeProduct').value='Portable Ice Bath';
-  document.getElementById('creativeStyle').value='UGC video ad';
-  document.getElementById('creativeRoute').value='Send to video creator';
-  document.getElementById('creativeBenefit').value='helps people create a recovery routine at home without needing an expensive gym setup';
-  generateCreativePackage();
-}
-function copyCreativePackage(){
-  const output=document.getElementById('creativeOutput')?.innerText || '';
-  navigator.clipboard?.writeText(output);
-  alert('Creative package copied');
-}
+function productImage(productName){const q=encodeURIComponent((productName||'ecommerce product').replace(/\s+/g,' '));return `<div class="result-image-wrap"><img alt="${productName} product image" src="https://source.unsplash.com/1000x560/?${q},product,ecommerce" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80'"><div class="result-image-overlay">${productName}</div></div>`}
+function inferAudience(product){const p=(product||'').toLowerCase();if(p.includes('dog')||p.includes('pet'))return 'Pet owners who want an easier, cleaner or more controlled daily routine.';if(p.includes('gym')||p.includes('ice')||p.includes('recovery')||p.includes('fitness'))return 'Fitness, wellness and recovery-focused customers who want practical results at home.';if(p.includes('clean')||p.includes('shoe')||p.includes('trainer'))return 'People who care about keeping everyday items looking clean with less effort.';if(p.includes('beauty')||p.includes('skin')||p.includes('hair'))return 'Beauty buyers looking for simple, visible results and easy routines.';return 'Customers with a clear everyday problem who need a simple product-led solution.'}
+function buildCreativePackage(){const product=document.getElementById('creativeProduct').value.trim()||'Dog Harness';const link=document.getElementById('creativeLink').value.trim()||'Add product link here';const platform=document.getElementById('creativePlatform').value;const angle=document.getElementById('creativeAngle').value;const offer=document.getElementById('creativeOffer').value.trim()||'Add current offer, discount or bundle here';const audience=inferAudience(product);let lower=product.toLowerCase();let problem='Show the everyday problem this product solves in a real-life setting.';let result='Show the product making the task easier, quicker or more enjoyable.';let hook=`I found this ${product} and wanted to see if it actually solved the problem.`;if(lower.includes('dog')||lower.includes('harness')){problem='Dog pulling on the lead, owner struggling for control, lead going tight.';result='Loose lead, calmer walk, owner more relaxed.';hook='I bought this dog harness because my dog pulls on every walk.'}else if(lower.includes('ice bath')||lower.includes('cold plunge')){problem='Tired legs after training, recovery struggle, expensive gym/spa alternatives.';result='At-home recovery setup, quick use after workout, calmer recovery routine.';hook='I wanted to see if an at-home ice bath was actually worth it.'}else if(lower.includes('clean')||lower.includes('shoe')||lower.includes('trainer')){problem='Dirty trainers, muddy soles, marks that do not come off with a quick wipe.';result='Before and after clean reveal with close-up transformation.';hook='I tested this on my dirtiest pair to see if it actually worked.'}
+const briefText=`PRODUCT: ${product}\nPRODUCT LINK: ${link}\nPLATFORM: ${platform}\nFORMAT: 9:16 vertical video, 20-30 seconds\nCREATIVE ANGLE: ${angle}\nTARGET CUSTOMER: ${audience}\nOFFER: ${offer}\n\nHOOK SCENE 0-3s\nWhat to film: ${problem}\nVoiceover: "${hook}"\n\nPROBLEM SCENE 3-10s\nWhat to film: Make the pain point obvious. Use real-life footage, not staged product-only shots.\nClose-ups: hands using product, facial reaction, problem detail, product before use.\n\nDEMO SCENE 10-22s\nWhat to film: Show exactly how the product works step by step.\nClose-ups: product detail, setup, usage, transformation moment.\n\nRESULT SCENE 22-28s\nWhat to film: ${result}\n\nCTA 28-30s\nVoiceover: "If you deal with this problem too, this is worth checking out."\n\nCREATOR NOTES\n- Film vertically 9:16\n- Use natural daylight where possible\n- Show the product in the first 3 seconds\n- Keep it natural, like a real customer review\n- Add captions throughout\n- Capture 5 raw clips as well as the edited ad\n\nDELIVERABLES\n- 1 x 20-30 second edited ad\n- 3 x alternative hooks\n- 5 x raw clips\n- 1 x thumbnail frame`;
+const out=document.getElementById('packageOutput');out.className='package-output show';out.innerHTML=`<div class="package-head"><div><h3>Creator Submission Package</h3><p>${product} · Ready to send to your video creator</p></div><button class="copy-brief-btn" onclick="copyCreatorBrief()">Copy Creator Brief</button></div><div class="brief-grid"><div class="brief-card"><div class="brief-label">Product Info</div><h4>${product}</h4><ul><li>Product link: ${link}</li><li>Platform: ${platform}</li><li>Format: 9:16 vertical, 20-30 seconds</li><li>Offer: ${offer}</li></ul></div><div class="brief-card"><div class="brief-label">Creative Direction</div><h4>${angle}</h4><ul><li>Target customer: ${audience}</li><li>Keep tone natural and believable</li><li>Show product in first 3 seconds</li></ul></div><div class="brief-card wide"><div class="brief-label">Scene Plan</div><div class="scene-grid"><div class="scene-card"><div class="scene-time">0-3s</div><b>Hook</b><p>${hook}</p></div><div class="scene-card"><div class="scene-time">3-10s</div><b>Problem</b><p>${problem}</p></div><div class="scene-card"><div class="scene-time">10-22s</div><b>Demo</b><p>Show exactly how the product works, step by step.</p></div><div class="scene-card"><div class="scene-time">22-28s</div><b>Result</b><p>${result}</p></div><div class="scene-card"><div class="scene-time">28-30s</div><b>CTA</b><p>If you deal with this problem too, this is worth checking out.</p></div></div></div><div class="brief-card"><div class="brief-label">Shot List</div><h4>Must Capture</h4><ul><li>Problem close-up</li><li>Product reveal</li><li>Hands-on demo</li><li>Result/reveal shot</li><li>Natural reaction shot</li></ul></div><div class="brief-card"><div class="brief-label">Deliverables</div><h4>Send Back</h4><ul><li>1 x 20-30 second edited ad</li><li>3 x alternative hooks</li><li>5 x raw clips</li><li>1 x thumbnail frame</li></ul></div><div class="brief-card wide"><div class="brief-label">Ready-To-Copy Brief</div><textarea id="creatorBriefText" style="width:100%;min-height:260px;border:1px solid var(--gray-200);border-radius:14px;padding:14px;font-family:Inter,sans-serif;font-size:13px;line-height:1.6;color:var(--gray-700)">${briefText}</textarea></div></div>`;out.scrollIntoView({behavior:'smooth',block:'start'});}
+function copyCreatorBrief(){const el=document.getElementById('creatorBriefText');if(!el)return;el.select();document.execCommand('copy');alert('Creator brief copied');}
+function loadExamplePackage(){document.getElementById('creativeProduct').value='Dog Harness';document.getElementById('creativeLink').value='https://example-store.com/dog-harness';document.getElementById('creativeOffer').value='15% off today';document.getElementById('creativePlatform').value='TikTok + Meta';document.getElementById('creativeAngle').value='Problem → Solution';buildCreativePackage();}
 
 renderProducts();renderDashboard();
 </script>
