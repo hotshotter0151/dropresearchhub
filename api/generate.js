@@ -1,80 +1,112 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { product } = req.body || {};
+    const {
+      product,
+      originalInput,
+      sourceUrl,
+      sourceType,
+      productId
+    } = req.body || {};
 
-    if (!product || typeof product !== 'string') {
-      return res.status(400).json({ error: 'Missing product name' });
+    if (!product || typeof product !== "string") {
+      return res.status(400).json({ error: "Missing product name or product link" });
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not set in Vercel environment variables' });
+      return res.status(500).json({
+        error: "ANTHROPIC_API_KEY is missing in Vercel Environment Variables"
+      });
     }
 
-    const prompt = `You are an ecommerce product research analyst for a UK dropshipping/product research platform called DropResearch Hub.
+    const prompt = `
+You are the DropResearchHub ecommerce product opportunity engine.
 
-Analyse this product idea: "${product}"
+Analyse this ecommerce product idea or product link:
+
+PRODUCT INPUT:
+${product}
+
+ORIGINAL USER INPUT:
+${originalInput || "Not provided"}
+
+SOURCE TYPE:
+${sourceType || "text"}
+
+SOURCE URL:
+${sourceUrl || "Not provided"}
+
+PRODUCT ID:
+${productId || "Not provided"}
 
 Important rules:
-- Do not claim you have live Google Trends, Meta Ads, TikTok Ads, Amazon sales, or real-time data access.
-- Give a practical ecommerce assessment based on general market knowledge, product characteristics, likely demand, content potential, saturation risk, margin potential, and ease of marketing.
-- Keep it useful for a beginner ecommerce seller.
-- Return ONLY valid JSON. No markdown. No explanation outside JSON.
+- Do not mention Claude, AI, ChatGPT, Anthropic or artificial intelligence.
+- Do not claim you have live Google Trends, TikTok, Meta Ads, Amazon sales or real-time data access.
+- Assess the product using ecommerce logic: market demand, likely customer problem, content potential, margin potential, competition risk, saturation risk and ease of marketing.
+- If the user pasted only a URL and the exact product title is unclear, say further product detail is needed.
+- Keep it practical for a beginner ecommerce seller.
+- Return ONLY valid JSON.
+- No markdown.
+- No text outside the JSON.
 
 Return this exact JSON structure:
+
 {
   "productName": "string",
   "opportunityScore": "A+ | A | B | C | D",
   "marketStage": "Emerging | Growing | Mature | Saturated | Needs Research",
-  "growthScore": number between 0 and 100,
-  "competitionScore": number between 0 and 100,
-  "marginScore": number between 0 and 100,
+  "growthScore": 0,
+  "competitionScore": 0,
+  "marginScore": 0,
   "saturationRisk": "Low | Medium | High",
-  "verdict": "short paragraph",
+  "verdict": "short useful paragraph",
   "whyItCouldWork": ["point 1", "point 2", "point 3"],
   "risks": ["risk 1", "risk 2", "risk 3"],
   "creativeAngles": ["angle 1", "angle 2", "angle 3"],
   "hooks": ["hook 1", "hook 2", "hook 3"],
+  "broad": "broader market keyword",
+  "alt": "alternative product names or related keywords",
   "growthGraph": [
-    {"label":"Week 1","value":number},
-    {"label":"Week 2","value":number},
-    {"label":"Week 3","value":number},
-    {"label":"Week 4","value":number},
-    {"label":"Week 5","value":number},
-    {"label":"Week 6","value":number}
+    {"label":"W1","value":20},
+    {"label":"W2","value":30},
+    {"label":"W3","value":40},
+    {"label":"W4","value":55},
+    {"label":"W5","value":70},
+    {"label":"W6","value":85}
   ]
-}`;
+}
+`;
 
-    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
       headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
+        model: "claude-3-5-sonnet-latest",
         max_tokens: 1600,
         temperature: 0.3,
         messages: [
           {
-            role: 'user',
+            role: "user",
             content: prompt
           }
         ]
       })
     });
 
-    const data = await anthropicResponse.json();
+    const data = await response.json();
 
-    if (!anthropicResponse.ok) {
-      return res.status(anthropicResponse.status).json({
-        error: 'Claude API error',
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: "DropResearchHub analysis engine error",
         details: data
       });
     }
@@ -82,24 +114,32 @@ Return this exact JSON structure:
     const text = data?.content?.[0]?.text;
 
     if (!text) {
-      return res.status(500).json({ error: 'No response text returned from Claude' });
+      return res.status(500).json({
+        error: "No analysis returned"
+      });
     }
 
     let parsed;
+
     try {
       parsed = JSON.parse(text);
-    } catch (parseError) {
+    } catch (error) {
       const match = text.match(/\{[\s\S]*\}/);
+
       if (!match) {
-        return res.status(500).json({ error: 'Claude did not return valid JSON', raw: text });
+        return res.status(500).json({
+          error: "Analysis returned invalid format",
+          raw: text
+        });
       }
+
       parsed = JSON.parse(match[0]);
     }
 
     return res.status(200).json(parsed);
   } catch (error) {
     return res.status(500).json({
-      error: 'Server error',
+      error: "Server error",
       message: error.message
     });
   }
