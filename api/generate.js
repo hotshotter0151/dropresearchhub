@@ -98,10 +98,12 @@ Return this JSON structure:
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({
-        error: "DropResearchHub analysis engine error"
-      });
-    }
+  return res.status(500).json({
+    error: "DropResearchHub analysis engine error",
+    status: response.status,
+    details: data
+  });
+}
 
     const text = data?.content?.[0]?.text;
 
