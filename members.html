@@ -99,7 +99,7 @@ async function analyseProduct(){
   panel.innerHTML='<div class="empty-result">Building your DropResearchHub product assessment...</div>';
 
   try{
-    const response=await fetch('/api/generate',{
+    const response=await fetch('/api/generate.js',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
