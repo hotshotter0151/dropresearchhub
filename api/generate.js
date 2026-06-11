@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "ANTHROPIC_API_KEY is missing in Vercel Environment Variables"
+        error: "DropResearchHub analysis engine is not configured"
       });
     }
 
