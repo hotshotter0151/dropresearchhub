@@ -4,13 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const {
-      product,
-      originalInput,
-      sourceUrl,
-      sourceType,
-      productId
-    } = req.body || {};
+    const { product, originalInput, sourceUrl, sourceType, productId } = req.body || {};
 
     if (!product || typeof product !== "string") {
       return res.status(400).json({ error: "Missing product name or product link" });
@@ -44,33 +38,32 @@ ${sourceUrl || "Not provided"}
 PRODUCT ID:
 ${productId || "Not provided"}
 
-Important rules:
+Rules:
 - Do not mention Claude, AI, ChatGPT, Anthropic or artificial intelligence.
-- Do not claim you have live Google Trends, TikTok, Meta Ads, Amazon sales or real-time data access.
-- Assess the product using ecommerce logic: market demand, likely customer problem, content potential, margin potential, competition risk, saturation risk and ease of marketing.
-- If the user pasted only a URL and the exact product title is unclear, say further product detail is needed.
+- Do not claim live Google Trends, TikTok, Meta Ads, Amazon sales or real-time access.
+- Assess using ecommerce logic: demand, customer problem, content potential, margin, competition, saturation and ease of marketing.
 - Keep it practical for a beginner ecommerce seller.
 - Return ONLY valid JSON.
 - No markdown.
-- No text outside the JSON.
+- No text outside JSON.
 
-Return this exact JSON structure:
+Return this JSON structure:
 
 {
   "productName": "string",
-  "opportunityScore": "A+ | A | B | C | D",
-  "marketStage": "Emerging | Growing | Mature | Saturated | Needs Research",
-  "growthScore": 0,
-  "competitionScore": 0,
-  "marginScore": 0,
-  "saturationRisk": "Low | Medium | High",
+  "opportunityScore": "A+",
+  "marketStage": "Emerging",
+  "growthScore": 75,
+  "competitionScore": 45,
+  "marginScore": 70,
+  "saturationRisk": "Medium",
   "verdict": "short useful paragraph",
   "whyItCouldWork": ["point 1", "point 2", "point 3"],
   "risks": ["risk 1", "risk 2", "risk 3"],
   "creativeAngles": ["angle 1", "angle 2", "angle 3"],
   "hooks": ["hook 1", "hook 2", "hook 3"],
   "broad": "broader market keyword",
-  "alt": "alternative product names or related keywords",
+  "alt": "alternative product names",
   "growthGraph": [
     {"label":"W1","value":20},
     {"label":"W2","value":30},
@@ -90,7 +83,7 @@ Return this exact JSON structure:
         "content-type": "application/json"
       },
       body: JSON.stringify({
-        model: "claude-3-5-sonnet-latest",
+        model: "claude-sonnet-4-20250514",
         max_tokens: 1600,
         temperature: 0.3,
         messages: [
@@ -105,9 +98,8 @@ Return this exact JSON structure:
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: "DropResearchHub analysis engine error",
-        details: data
+      return res.status(500).json({
+        error: "DropResearchHub analysis engine error"
       });
     }
 
@@ -123,24 +115,20 @@ Return this exact JSON structure:
 
     try {
       parsed = JSON.parse(text);
-    } catch (error) {
+    } catch {
       const match = text.match(/\{[\s\S]*\}/);
-
       if (!match) {
         return res.status(500).json({
-          error: "Analysis returned invalid format",
-          raw: text
+          error: "Analysis returned invalid format"
         });
       }
-
       parsed = JSON.parse(match[0]);
     }
 
     return res.status(200).json(parsed);
   } catch (error) {
     return res.status(500).json({
-      error: "Server error",
-      message: error.message
+      error: "Server error"
     });
   }
 }
