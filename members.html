@@ -819,8 +819,9 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        system: `Respond ONLY with a valid JSON array of exactly 8 products. No markdown, no backticks. Each object: {name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData}. Products must be early Google Trends risers for UK ecom — NOT already viral on social. grade: A+/A/B/C. trendScore: 60-99. saturation: 5-45. growthData: array of 6 {label:W1-W6, value:number}.`,
-        messages: [{role:'user',content:`Generate 8 emerging products for UK ecom sellers in ${new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'})}. Focus on Google Trends early signals.`}]
+        system: `Return ONLY a JSON array of 5 products. No markdown. Fields: name,niche,emoji,stage("Emerging"),season,grade(A/B/C),trendScore(60-99),saturation(5-45),margin,whyNow,verdict,whyItCouldWork(3 items),risks(3 items),creativeAngles(3 items),aliSearchTerm,googleTrendsKeyword,bgColor,growthData(6 items: label W1-W6, value 10-99). Early Google Trends UK products not yet viral on social.`,
+        messages: [{role:'user',content:'5 early-trend UK ecom products June 2026. Not viral yet.'}],
+        max_tokens: 1500
       })
     });
 
