@@ -637,12 +637,11 @@ async function generateCreative(productName) {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 2000,
         system: `You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:
 {"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}
 Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,
-        messages: [{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}]
+        messages: [{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],
+        max_tokens: 2000
       })
     });
     const data = await res.json();
