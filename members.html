@@ -819,8 +819,6 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 4000,
         system: `You are an expert ecom product researcher specialising in finding products that are starting to show early growth on Google Trends for UK sellers. These are NOT already viral on TikTok or Instagram. They are products just beginning to trend — in the first 1-3 months of growth — with rising search volume but low social media saturation yet.
 
 Respond ONLY with a valid JSON array of exactly 20 products. Each product object must have these exact fields:
