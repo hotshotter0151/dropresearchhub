@@ -326,7 +326,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         <h2>🤖 Generate weekly product feed</h2>
         <p>Click to generate 20 fresh emerging products using AI. These are products showing early Google Trends growth signals before they become mainstream on social media. Review them below then publish.</p>
         <button class="admin-generate-btn" id="admin-gen-btn" onclick="adminGenerate()">
-          <span>✨ Generate 20 emerging products</span>
+          <span>✨ Generate 8 emerging products</span>
         </button>
         <div class="admin-status" id="admin-status"></div>
       </div>
@@ -638,7 +638,7 @@ async function generateCreative(productName) {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 2500,
+        max_tokens: 2000,
         system: `You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:
 {"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}
 Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,
@@ -819,32 +819,8 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        system: `You are an expert ecom product researcher specialising in finding products that are starting to show early growth on Google Trends for UK sellers. These are NOT already viral on TikTok or Instagram. They are products just beginning to trend — in the first 1-3 months of growth — with rising search volume but low social media saturation yet.
-
-Respond ONLY with a valid JSON array of exactly 20 products. Each product object must have these exact fields:
-{
-  "name": "Product name",
-  "niche": "Single niche word e.g. Fitness/Pet/Home/Beauty/Tech/Kitchen/Outdoor/Baby/Office/Fashion",
-  "emoji": "single emoji",
-  "stage": "Emerging",
-  "season": "Evergreen OR Summer peak OR Winter peak OR Jan peak OR Back to school",
-  "grade": "A+ OR A OR B OR C",
-  "trendScore": number 60-99,
-  "saturation": number 5-45,
-  "margin": "XX%",
-  "whyNow": "One sentence — why this product is starting to trend NOW on Google Trends",
-  "verdict": "2-3 sentence practical assessment for a UK dropshipper",
-  "whyItCouldWork": ["reason 1","reason 2","reason 3"],
-  "risks": ["risk 1","risk 2","risk 3"],
-  "creativeAngles": ["angle 1","angle 2","angle 3"],
-  "aliSearchTerm": "best aliexpress search term for this product",
-  "googleTrendsKeyword": "exact google trends search keyword",
-  "bgColor": "a subtle hex background colour for the card e.g. #EFF6FF",
-  "growthData": [{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]
-}
-
-Focus on products with: rising Google Trends signal, low saturation on Meta and TikTok ads, high visual demo potential, good margins for UK dropshipping. Mix niches. No products that are already massively viral.`,
-        messages: [{role:'user',content:`Generate 20 emerging products for UK ecom sellers in ${new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'})}. Focus on Google Trends early signals.`}]
+        system: `Respond ONLY with a valid JSON array of exactly 8 products. No markdown, no backticks. Each object: {name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData}. Products must be early Google Trends risers for UK ecom — NOT already viral on social. grade: A+/A/B/C. trendScore: 60-99. saturation: 5-45. growthData: array of 6 {label:W1-W6, value:number}.`,
+        messages: [{role:'user',content:`Generate 8 emerging products for UK ecom sellers in ${new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'})}. Focus on Google Trends early signals.`}]
       })
     });
 
@@ -869,7 +845,7 @@ Focus on products with: rising Google Trends signal, low saturation on Meta and 
   }
 
   btn.disabled = false;
-  btn.querySelector('span').textContent = '✨ Generate 20 emerging products';
+  btn.querySelector('span').textContent = '✨ Generate 8 emerging products';
 }
 
 function renderAdminProductsList() {
