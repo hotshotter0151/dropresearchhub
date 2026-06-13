@@ -1,13 +1,13 @@
 {
   "version": 2,
   "functions": {
-    "api/generate.js": {
-      "memory": 1024,
-      "maxDuration": 59
-    }
+    "api/generate.js": { "memory": 1024, "maxDuration": 59 },
+    "api/stripe-checkout.js": { "memory": 512, "maxDuration": 10 }
   },
   "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/members", "destination": "/members.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/trial", "destination": "/trial.html" },
+    { "source": "/signup", "destination": "/signup.html" }
   ]
 }
