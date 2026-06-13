@@ -158,13 +158,28 @@ function handleSignup() {
   if (password !== confirm) { alert('Passwords do not match.'); return; }
 
   btn.disabled = true;
-  btn.textContent = 'Creating your account...';
+  btn.textContent = 'Setting up your trial...';
 
-  // Simulate account creation (replace with real auth when ready)
-  setTimeout(() => {
-    document.getElementById('form-section').style.display = 'none';
-    document.getElementById('success-section').style.display = 'block';
-  }, 1500);
+  fetch('/api/stripe-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, name })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Something went wrong: ' + (data.error || 'Please try again.'));
+      btn.disabled = false;
+      btn.textContent = 'Start my free 7-day trial →';
+    }
+  })
+  .catch(e => {
+    alert('Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Start my free 7-day trial →';
+  });
 }
 
 // Allow enter key on last field
