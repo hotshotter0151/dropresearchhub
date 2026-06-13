@@ -357,12 +357,13 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <div class="admin-card" id="admin-products-card" style="display:none">
         <h2>Review generated products</h2>
         <p>Toggle on the products you want to send to members. Toggle off any you don't want to include. Then hit Publish.</p>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
           <button class="admin-generate-btn" onclick="publishProducts()" style="background:var(--green)">
             <span>🚀 Publish selected to feed</span>
           </button>
           <button onclick="toggleAll(true)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✓ Select all</button>
           <button onclick="toggleAll(false)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✕ Deselect all</button>
+          <button onclick="selectGradeA()" style="background:var(--green-bg);border:1px solid #bbf7d0;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--green)">⭐ Select Grade A only</button>
           <span id="selected-count" style="font-size:13px;color:var(--g400)"></span>
         </div>
         <div class="admin-products-list" id="admin-products-list"></div>
@@ -851,36 +852,18 @@ async function adminGenerate() {
   const statusTimer = setInterval(nextLine, 7000);
 
   try {
-    // Call API twice with 10 products each to stay within timeout
-    status.textContent = 'Fetching batch 1 of 2...';
-    
-    async function fetchBatch(batchNum) {
-      const r = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ mode: 'emerging' })
-      });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Batch ' + batchNum + ' failed');
-      const t = (d.content || []).map(i => i.text || '').join('');
-      let c = t.replace(/```json|```/g,'').trim();
-      const s = c.indexOf('['), e = c.lastIndexOf(']');
-      if (s === -1 || e === -1) throw new Error('No array in batch ' + batchNum);
-      return JSON.parse(c.slice(s, e + 1));
-    }
-
-    const batch1 = await fetchBatch(1);
-    status.textContent = `Batch 1 done (${batch1.length} products). Fetching batch 2...`;
-    const batch2 = await fetchBatch(2);
-    status.textContent = `Batch 2 done. Processing...`;
-    
-    // Combine and deduplicate by name
-    const seen = new Set();
-    const products = [...batch1, ...batch2].filter(p => {
-      if (seen.has(p.name)) return false;
-      seen.add(p.name);
-      return true;
+    const r = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ mode: 'emerging' })
     });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Generate failed');
+    const t = (d.content || []).map(i => i.text || '').join('');
+    let c = t.replace(/```json|```/g,'').trim();
+    const s = c.indexOf('['), e = c.lastIndexOf(']');
+    if (s === -1 || e === -1) throw new Error('No product array found');
+    const products = JSON.parse(c.slice(s, e + 1));
 
     pendingProducts = products;
     clearInterval(statusTimer);
@@ -909,18 +892,31 @@ async function adminGenerate() {
 function renderAdminProductsList() {
   const list = document.getElementById('admin-products-list');
   list.innerHTML = pendingProducts.map((p, i) => `
-    <div class="admin-product-row" id="apr-${i}">
-      <div class="admin-product-emoji">${p.emoji || '📦'}</div>
-      <div class="admin-product-info">
+    <div class="admin-product-row" id="apr-${i}" style="flex-wrap:wrap;gap:10px;align-items:flex-start;padding:14px 16px">
+      <div style="font-size:32px;width:44px;text-align:center;flex-shrink:0">${p.emoji || '📦'}</div>
+      <div class="admin-product-info" style="min-width:200px">
         <div class="admin-product-name">${p.name}</div>
-        <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore} · Sat: ${p.saturation} · ${p.margin} margin · ${p.stage}</div>
-        <div style="font-size:12px;color:var(--g500);margin-top:3px;font-style:italic">${p.whyNow || ''}</div>
+        <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore}/100 · Sat: ${p.saturation}/100 · ${p.margin} margin</div>
+        <div style="font-size:12px;color:var(--g500);margin-top:4px;font-style:italic;line-height:1.5">${p.whyNow || ''}</div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <a href="https://trends.google.com/trends/explore?geo=GB&q=${encodeURIComponent(p.googleTrendsKeyword||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#e8f0fe;color:#1d4ed8;text-decoration:none;border:1px solid #bfdbfe">📊 Google Trends</a>
+          <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #bfdbfe">📺 Meta Ads</a>
+          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fff0e6;color:#c2410c;text-decoration:none;border:1px solid #fed7aa">🛒 AliExpress</a>
+        </div>
       </div>
-      <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)};margin-right:8px">Grade ${p.grade}</div>
-      <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})"></button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-left:auto">
+        <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade}</div>
+        <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})" title="Toggle product"></button>
+        <button onclick="deletePending(${i})" style="background:none;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--g400);cursor:pointer;font-family:inherit" title="Remove">🗑️ Remove</button>
+      </div>
     </div>
   `).join('');
   updateSelectedCount();
+}
+
+function deletePending(i) {
+  pendingProducts.splice(i, 1);
+  renderAdminProductsList();
 }
 
 function toggleProduct(i) {
@@ -935,6 +931,16 @@ function toggleAll(on) {
     if(btn) btn.className = 'admin-product-toggle' + (on ? ' on' : '');
   });
   updateSelectedCount();
+}
+
+function selectGradeA() {
+  pendingProducts.forEach((p, i) => {
+    const btn = document.getElementById('toggle-' + i);
+    const isA = p.grade && (p.grade === 'A+' || p.grade === 'A');
+    if(btn) btn.className = 'admin-product-toggle' + (isA ? ' on' : '');
+  });
+  updateSelectedCount();
+  showToast('Grade A and A+ products selected');
 }
 
 function updateSelectedCount() {
