@@ -124,15 +124,15 @@ section{padding:96px 5%}
 /* ── WINNING PRODUCTS SECTION ── */
 .winning{background:var(--off)}
 .winning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;max-width:1200px;margin-left:auto;margin-right:auto}
-.winning-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;transition:all .2s}
+.winning-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;transition:all .2s;display:flex;flex-direction:column}
 .winning-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(30,58,95,.1)}
 .winning-card-img{height:200px;position:relative;overflow:hidden}
 .winning-card-img img{width:100%;height:100%;object-fit:cover}
 .winning-card-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5))}
 .winning-card-tag{position:absolute;top:14px;left:14px;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px}
-.winning-card-body{padding:20px}
+.winning-card-body{padding:20px;display:flex;flex-direction:column;flex:1}
 .winning-card-name{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:6px}
-.winning-card-teaser{font-size:13px;color:var(--g500);line-height:1.55;margin-bottom:16px}
+.winning-card-teaser{font-size:13px;color:var(--g500);line-height:1.55;margin-bottom:16px;flex-grow:1}
 .winning-card-stat{display:flex;gap:12px;margin-bottom:16px}
 .winning-stat-box{flex:1;background:var(--g50);border-radius:10px;padding:10px;text-align:center}
 .winning-stat-box span{font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;display:block}
@@ -295,7 +295,7 @@ footer a:hover{color:#fff}
   <div class="hero-right">
     <div class="mock-card">
       <div class="mock-card-img">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" alt="Product"/>
+        <img src="https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=formatphoto-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80fit=cropphoto-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80w=400photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80q=80" alt="Product"/>
         <div class="mock-badge-g">Grade A+</div>
         <div class="mock-badge-s">Strong Opportunity</div>
       </div>
@@ -367,7 +367,7 @@ footer a:hover{color:#fff}
       </div>
     </div>
     <div class="problem-img">
-      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Person working on laptop"/>
+      <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=formatphoto-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80fit=cropphoto-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80w=800photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80q=80" alt="Person working on laptop at desk"/>
       <div class="problem-img-overlay"></div>
       <div class="problem-img-caption">
         <h3>The window is small. Move fast.</h3>
@@ -383,7 +383,7 @@ footer a:hover{color:#fff}
   <p class="lifestyle-sub">The people making real money from dropshipping aren't smarter than you. They just found the right product at the right time.</p>
   <div class="lifestyle-grid">
     <div class="lifestyle-card">
-      <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80" alt="Travel lifestyle"/>
+      <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=formatphoto-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80fit=cropphoto-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80w=600photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80q=80" alt="Person at airport travelling"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text">
         <h3>Work from anywhere</h3>
@@ -391,7 +391,7 @@ footer a:hover{color:#fff}
       </div>
     </div>
     <div class="lifestyle-card">
-      <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" alt="Success lifestyle"/>
+      <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=formatphoto-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80fit=cropphoto-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80w=600photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80q=80" alt="Person celebrating financial freedom"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text">
         <h3>Be first to market</h3>
@@ -399,7 +399,7 @@ footer a:hover{color:#fff}
       </div>
     </div>
     <div class="lifestyle-card">
-      <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80" alt="Laptop on the go"/>
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=formatphoto-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80fit=cropphoto-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80w=600photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&q=80q=80" alt="Young entrepreneur working on laptop"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text">
         <h3>Build real income</h3>
@@ -536,7 +536,7 @@ footer a:hover{color:#fff}
 
     <div class="preview-card">
       <div class="preview-card-img" style="background:linear-gradient(135deg,#dbeafe,#eff6ff)">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" alt="Product"/>
+        <img src="https://images.unsplash.com/photo-1625842268584-8f3296236761?auto=formatphoto-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80fit=cropphoto-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80w=400photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80q=80" alt="Product"/>
         <div class="preview-card-badge-g">Grade A+</div>
         <div class="preview-card-badge-s">Strong Opportunity</div>
       </div>
@@ -564,7 +564,7 @@ footer a:hover{color:#fff}
 
     <div class="preview-card">
       <div class="preview-card-img" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
-        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=80" alt="Kitchen product"/>
+        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=formatphoto-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=80fit=cropphoto-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=80w=400photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&q=80q=80" alt="Kitchen product"/>
         <div class="preview-card-badge-g" style="background:var(--gold);color:var(--navy-dark)">Grade A</div>
         <div class="preview-card-badge-s">Watch List</div>
       </div>
@@ -592,7 +592,7 @@ footer a:hover{color:#fff}
 
     <div class="preview-card">
       <div class="preview-card-img" style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff)">
-        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" alt="Fitness product"/>
+        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=formatphoto-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80fit=cropphoto-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80w=400photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80q=80" alt="Fitness product"/>
         <div class="preview-card-badge-g">Grade A+</div>
         <div class="preview-card-badge-s">Strong Opportunity</div>
       </div>
