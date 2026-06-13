@@ -207,6 +207,21 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .admin-product-grade{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
 
 /* TOAST */
+
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-messages{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
+.status-messages.show{display:block}
+.status-line{font-size:13px;color:var(--g500);padding:3px 0;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .4s}
+.status-line.show{opacity:1}
+.status-line.done{color:var(--green)}
+.status-line.done::before{content:'✓ '}
+.status-line.active::before{content:'→ ';color:var(--navy)}
+.admin-product-toggle{width:40px;height:22px;border-radius:11px;background:var(--g200);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.admin-product-toggle.on{background:var(--green)}
+.admin-product-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.admin-product-toggle.on::after{left:20px}
+
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1}
 
@@ -324,18 +339,32 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="admin-panel" id="admin-panel">
       <div class="admin-card">
         <h2>🤖 Generate weekly product feed</h2>
-        <p>Click to generate fresh emerging products using AI. These are products showing early Google Trends growth signals before they become mainstream on social media. Review them below then publish.</p>
+        <p>Generates fresh emerging products — micro-niche items just starting to trend. Toggle on the ones you want, then hit Publish.</p>
         <button class="admin-generate-btn" id="admin-gen-btn" onclick="adminGenerate()">
-          <span>✨ Generate 20 emerging products</span>
+          <span id="admin-gen-text">✨ Generate emerging products</span>
         </button>
-        <div class="admin-status" id="admin-status"></div>
+        <div class="status-messages" id="status-messages">
+          <div class="status-line" id="sl-1">Connecting to research engine...</div>
+          <div class="status-line" id="sl-2">Scanning for micro-niche emerging products...</div>
+          <div class="status-line" id="sl-3">Analysing market signals and trend data...</div>
+          <div class="status-line" id="sl-4">Calculating saturation and margin scores...</div>
+          <div class="status-line" id="sl-5">Building product intelligence cards...</div>
+          <div class="status-line" id="sl-6">Running second product batch...</div>
+          <div class="status-line" id="sl-7">Combining and deduplicating results...</div>
+          <div class="status-line" id="sl-8">Products ready — review and publish below</div>
+        </div>
       </div>
       <div class="admin-card" id="admin-products-card" style="display:none">
-        <h2>Generated products</h2>
-        <p>Review the products below. Click Publish to make them live for members.</p>
-        <button class="admin-generate-btn" onclick="publishProducts()" style="background:var(--green);margin-bottom:16px">
-          <span>🚀 Publish to members feed</span>
-        </button>
+        <h2>Review generated products</h2>
+        <p>Toggle on the products you want to send to members. Toggle off any you don't want to include. Then hit Publish.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+          <button class="admin-generate-btn" onclick="publishProducts()" style="background:var(--green)">
+            <span>🚀 Publish selected to feed</span>
+          </button>
+          <button onclick="toggleAll(true)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✓ Select all</button>
+          <button onclick="toggleAll(false)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✕ Deselect all</button>
+          <span id="selected-count" style="font-size:13px;color:var(--g400)"></span>
+        </div>
         <div class="admin-products-list" id="admin-products-list"></div>
       </div>
     </div>
@@ -807,11 +836,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function adminGenerate() {
   const btn = document.getElementById('admin-gen-btn');
-  const status = document.getElementById('admin-status');
   btn.disabled = true;
-  btn.querySelector('span').textContent = '✨ Generating products...';
-  status.textContent = 'AI is researching emerging products...';
-  status.className = 'admin-status';
+  document.getElementById('admin-gen-text').innerHTML = '<span class="spinner"></span> Generating...';
+  const statusBox = document.getElementById('status-messages');
+  statusBox.className = 'status-messages show';
+  const lines = ['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
+  lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line'; });
+  let lineIdx = 0;
+  function nextLine() {
+    if(lineIdx > 0) { const prev = document.getElementById(lines[lineIdx-1]); if(prev) prev.className = 'status-line done show'; }
+    if(lineIdx < lines.length) { const curr = document.getElementById(lines[lineIdx]); if(curr) curr.className = 'status-line active show'; lineIdx++; }
+  }
+  nextLine();
+  const statusTimer = setInterval(nextLine, 7000);
 
   try {
     // Call API twice with 10 products each to stay within timeout
@@ -846,37 +883,76 @@ async function adminGenerate() {
     });
 
     pendingProducts = products;
-    status.textContent = `✅ ${products.length} products generated — review below and publish when ready`;
-    status.className = 'admin-status success';
+    clearInterval(statusTimer);
+    // Mark remaining lines as done
+    lines.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.className = 'status-line done show';
+    });
+    
     renderAdminProductsList();
     document.getElementById('admin-products-card').style.display = 'block';
 
   } catch(e) {
-    status.textContent = 'Error generating products: ' + e.message;
-    status.className = 'admin-status error';
+    clearInterval(statusTimer);
+    const errLine = document.createElement('div');
+    errLine.className = 'status-line show';
+    errLine.style.color = 'var(--red)';
+    errLine.textContent = '✕ Error: ' + e.message;
+    document.getElementById('status-messages').appendChild(errLine);
   }
 
   btn.disabled = false;
-  btn.querySelector('span').textContent = '✨ Generate 20 emerging products';
+  document.getElementById('admin-gen-text').textContent = '✨ Generate emerging products';
 }
 
 function renderAdminProductsList() {
   const list = document.getElementById('admin-products-list');
   list.innerHTML = pendingProducts.map((p, i) => `
-    <div class="admin-product-row">
+    <div class="admin-product-row" id="apr-${i}">
       <div class="admin-product-emoji">${p.emoji || '📦'}</div>
       <div class="admin-product-info">
         <div class="admin-product-name">${p.name}</div>
         <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore} · Sat: ${p.saturation} · ${p.margin} margin · ${p.stage}</div>
+        <div style="font-size:12px;color:var(--g500);margin-top:3px;font-style:italic">${p.whyNow || ''}</div>
       </div>
-      <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade}</div>
+      <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)};margin-right:8px">Grade ${p.grade}</div>
+      <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})"></button>
     </div>
   `).join('');
+  updateSelectedCount();
+}
+
+function toggleProduct(i) {
+  const btn = document.getElementById('toggle-' + i);
+  btn.classList.toggle('on');
+  updateSelectedCount();
+}
+
+function toggleAll(on) {
+  pendingProducts.forEach((_, i) => {
+    const btn = document.getElementById('toggle-' + i);
+    if(btn) btn.className = 'admin-product-toggle' + (on ? ' on' : '');
+  });
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  const total = pendingProducts.length;
+  const selected = document.querySelectorAll('.admin-product-toggle.on').length;
+  const el = document.getElementById('selected-count');
+  if(el) el.textContent = selected + ' of ' + total + ' selected';
 }
 
 function publishProducts() {
   if (!pendingProducts.length) { showToast('Generate products first'); return; }
-  allProducts = pendingProducts;
+  // Only include toggled-on products
+  const selected = pendingProducts.filter((_, i) => {
+    const btn = document.getElementById('toggle-' + i);
+    return btn && btn.classList.contains('on');
+  });
+  if (!selected.length) { showToast('Toggle on at least one product first'); return; }
+  allProducts = [...allProducts, ...selected];
   pendingProducts = [];
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-GB', {weekday:'short',day:'numeric',month:'short'});
