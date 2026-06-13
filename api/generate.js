@@ -71,26 +71,24 @@ Using this real trending data, identify 5 emerging ecommerce product opportuniti
 
 Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
 
-Each object must have ALL these fields:
-{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 65-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence connecting this to real trending data","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"broad keyword showing on Google Trends UK","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
+Each object: {"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak","grade":"A+|A|B|C","trendScore":number,"saturation":number,"margin":"XX%","whyNow":"max 15 words","verdict":"max 20 words","whyItCouldWork":["short","short","short"],"risks":["short","short","short"],"creativeAngles":["short","short","short"],"aliSearchTerm":"term","googleTrendsKeyword":"broad term","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
 
-googleTrendsKeyword must be broad enough to show real data — e.g. "ice bath" not "portable collapsible ice bath tub".`
+Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be broad e.g. "ice bath" not "portable collapsible ice bath tub".`
 
       : `You are an expert ecommerce product researcher for UK dropshippers. Find products showing early growth signals in the UK market right now in June 2026.
 
 Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
 
-Each object must have ALL these fields:
-{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 65-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending mid-2026 UK","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"broad keyword that shows real data on Google Trends UK","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
+Each object: {"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak","grade":"A+|A|B|C","trendScore":number,"saturation":number,"margin":"XX%","whyNow":"max 15 words","verdict":"max 20 words","whyItCouldWork":["short","short","short"],"risks":["short","short","short"],"creativeAngles":["short","short","short"],"aliSearchTerm":"term","googleTrendsKeyword":"broad term","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
 
-googleTrendsKeyword must be broad enough to show real data. No yoga mats, resistance bands, water bottles.`;
+Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be broad.`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 3000,
+        max_tokens: 4000,
         system: systemPrompt,
         messages: [{ role: 'user', content: trendingContext
           ? 'Using the real Google Trends UK data, identify 5 emerging ecom product opportunities for UK dropshippers.'
