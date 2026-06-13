@@ -13,11 +13,10 @@ export default async function handler(req, res) {
 
   // ── FETCH PRODUCT IMAGE FROM SERPAPI (with fallback) ─────────────────────
   async function searchImage(query) {
-    const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
+    const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=5&safe=off&gl=gb&hl=en`;
     const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
     if (!r.ok) return '';
     const data = await r.json();
-    // Prefer product images with original URLs
     const results = data?.images_results || [];
     const product = results.find(i => i.original && i.is_product);
     const any = results.find(i => i.original);
@@ -27,19 +26,20 @@ export default async function handler(req, res) {
   async function fetchProductImage(productName) {
     if (!serpApiKey) return '';
     try {
-      // Try exact product name first
+      // Try 1: exact product name
       let img = await searchImage(productName + ' product');
-      if (img) {
-        console.log('[DRH] Image found (exact):', productName);
-        return img;
-      }
-      // Fallback: use shorter keywords from the name
-      const shortName = productName.split(' ').slice(0, 3).join(' ');
-      img = await searchImage(shortName + ' product buy');
-      if (img) {
-        console.log('[DRH] Image found (fallback):', shortName);
-        return img;
-      }
+      if (img) { console.log('[DRH] Image (exact):', productName); return img; }
+
+      // Try 2: first 3 words
+      const short = productName.split(' ').slice(0, 3).join(' ');
+      img = await searchImage(short + ' product');
+      if (img) { console.log('[DRH] Image (short):', short); return img; }
+
+      // Try 3: first 2 words only — very broad
+      const broad = productName.split(' ').slice(0, 2).join(' ');
+      img = await searchImage(broad);
+      if (img) { console.log('[DRH] Image (broad):', broad); return img; }
+
       console.log('[DRH] No image found for:', productName);
       return '';
     } catch (e) {
