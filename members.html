@@ -818,9 +818,9 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        system: `Return ONLY a valid JSON array containing exactly 1 product object. No markdown, no backticks, no explanation. Fields: name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData. growthData is array of 6 objects with label(W1-W6) and value(number).`,
-        messages: [{role:'user',content:'Give me 1 early trending UK ecom product for June 2026 that is not yet viral on social media.'}],
-        max_tokens: 800
+        system: `Return ONLY a valid JSON array of exactly 10 product objects. No markdown, no backticks, no explanation. Each object has: name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData. growthData is array of 6 objects with label(W1-W6) and value(number). Mix different niches.`,
+        messages: [{role:'user',content:'Give me 10 early trending UK ecom products for June 2026 that are not yet viral on social media. Mix niches.'}],
+        max_tokens: 3000
       })
     });
 
