@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DropResearch Hub — Free Trial</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;--gold-dark:#D97706;
+  --bg:#F6F8FC;--line:#E5E7EB;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
+  --green:#16A34A;--green-bg:#DCFCE7;--amber:#D97706;--blue-bg:#EFF6FF;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--g900);background:var(--bg);line-height:1.6;overflow-x:hidden}
+.app{display:flex;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:260px;background:linear-gradient(180deg,#101F33,#142840);color:white;padding:24px 18px;overflow-y:auto;z-index:10}
+.logo{display:flex;gap:10px;align-items:center;color:white;text-decoration:none;margin-bottom:30px}
+.logo-icon{width:40px;height:40px;border-radius:12px;background:white;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:9px 8px}
+.logo-bar{width:5px;border-radius:2px;background:var(--navy)}.logo-bar.g{background:var(--gold)}
+.logo-text{font-size:17px;font-weight:900;letter-spacing:-.4px}.logo-text span{color:var(--gold)}
+.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.42);font-weight:800;margin:22px 10px 8px}
+.nav-btn{width:100%;border:0;background:transparent;color:rgba(255,255,255,.72);font-size:14px;font-weight:700;padding:12px;border-radius:11px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;margin-bottom:5px;transition:.18s}
+.nav-btn:hover{background:rgba(255,255,255,.08);color:white}
+.nav-btn.active{background:white;color:var(--navy)}
+.trial-box{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:18px;padding:16px;margin-top:24px}
+.trial-box b{font-size:14px;color:#fff;display:block;margin-bottom:6px}
+.trial-box p{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:12px;line-height:1.5}
+.trial-box button{width:100%;border:0;border-radius:11px;background:var(--gold);color:var(--navy-dark);font-weight:900;padding:11px;cursor:pointer;font-family:inherit;font-size:13px}
+.main{margin-left:260px;width:calc(100% - 260px);padding:26px 4% 70px}
+
+/* TRIAL BANNER */
+.trial-banner{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:18px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.trial-badge{background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px;white-space:nowrap}
+.trial-banner-text h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px}
+.trial-banner-text p{font-size:13px;color:rgba(255,255,255,.65)}
+.trial-banner-cta{background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap;text-decoration:none;display:inline-block}
+
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+.topbar h1{font-size:26px;letter-spacing:-.8px;font-weight:900}
+.topbar p{font-size:14px;color:var(--g500);margin-top:5px}
+.user-pill{display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:white;border-radius:999px;padding:8px 12px}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--navy-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.user-pill span{font-size:13px;font-weight:800}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat{background:white;border:1px solid var(--line);border-radius:18px;padding:18px}
+.stat small{display:block;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);font-size:11px;font-weight:900;margin-bottom:5px}
+.stat b{font-size:26px;letter-spacing:-1px}
+.stat p{font-size:12px;color:var(--g500);margin-top:2px}
+
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.section-head h2{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.section-head p{font-size:13px;color:var(--g500)}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+
+/* PRODUCT CARD */
+.product{background:white;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 4px 22px rgba(17,24,39,.04);transition:.18s;display:flex;flex-direction:column}
+.product:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(30,58,95,.1)}
+.p-img{height:200px;position:relative;overflow:hidden;background:linear-gradient(135deg,#EEF2FF,#F8FAFF);flex-shrink:0}
+.p-img img{width:100%;height:100%;object-fit:cover}
+.p-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:2}
+.p-grade{background:var(--green);color:white;border-radius:999px;font-size:12px;font-weight:900;padding:6px 10px}
+.p-verdict{background:rgba(255,255,255,.94);color:var(--navy);border-radius:999px;font-size:11px;font-weight:900;padding:6px 10px}
+.p-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.p-title{font-size:17px;font-weight:900;letter-spacing:-.4px;margin-bottom:3px}
+.p-niche{font-size:12px;color:var(--g400);font-weight:700;margin-bottom:12px}
+.p-signals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.signal{background:var(--g50);border:1px solid var(--line);border-radius:11px;padding:9px;text-align:center}
+.signal span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--g400);font-weight:900}
+.signal b{font-size:14px;font-weight:900;margin-top:2px;display:block}
+.p-why{font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 11px;margin-bottom:14px;line-height:1.55;flex:1}
+.p-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.btn{border:1px solid var(--line);background:white;color:var(--navy);border-radius:11px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--navy);background:var(--blue-bg)}
+.btn.primary{background:var(--navy);color:white;border-color:var(--navy)}
+.btn.primary:hover{background:var(--navy-light)}
+
+/* BLURRED LOCKED CARD */
+.locked-card{background:white;border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative;box-shadow:0 4px 22px rgba(17,24,39,.04)}
+.locked-inner{filter:blur(6px);pointer-events:none;user-select:none}
+.locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,.65);backdrop-filter:blur(2px);z-index:10;padding:20px;text-align:center}
+.locked-overlay .lock{font-size:28px}
+.locked-overlay h3{font-size:16px;font-weight:900;color:var(--navy)}
+.locked-overlay p{font-size:12px;color:var(--g500);line-height:1.5;max-width:200px}
+.locked-overlay a{background:var(--gold);color:var(--navy-dark);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:900;text-decoration:none;display:inline-block;margin-top:4px}
+
+/* VALIDATOR */
+.validator-top{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:22px;padding:22px;color:white;margin-bottom:18px}
+.validator-top h2{font-size:24px;font-weight:900;letter-spacing:-.6px;margin-bottom:6px}
+.validator-top p{font-size:13px;color:rgba(255,255,255,.65);margin-bottom:16px}
+.input-wrap{display:flex;gap:10px;background:white;border-radius:14px;padding:6px}
+.v-input{flex:1;border:0;outline:0;padding:11px 10px;font-size:14px;color:#111827;font-family:inherit}
+.v-btn{border:0;background:var(--gold);color:var(--navy-dark);border-radius:10px;padding:0 18px;font-weight:900;cursor:pointer;font-family:inherit;font-size:13px;white-space:nowrap;height:44px}
+.v-btn:disabled{opacity:.6;cursor:not-allowed}
+.uses-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;color:rgba(255,255,255,.8);margin-top:12px}
+.uses-pill span{color:var(--gold);font-weight:900}
+
+.section{display:none}.section.active{display:block}
+.spinner{width:32px;height:32px;border-radius:50%;border:4px solid var(--g200);border-top-color:var(--gold);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{background:white;border:1px solid var(--line);border-radius:22px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--g500);font-size:14px}
+.empty{background:white;border:1px solid var(--line);border-radius:22px;min-height:140px;display:flex;align-items:center;justify-content:center;color:var(--g400);font-size:14px;text-align:center;padding:24px}
+.result-panel{background:white;border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:14px}
+.result-name{font-size:22px;font-weight:900;letter-spacing:-.6px;margin-bottom:10px}
+.score-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.score-box{flex:1;min-width:90px;background:var(--g50);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.score-box span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);font-weight:900}
+.score-box b{font-size:20px;font-weight:900}
+.verdict-box{background:var(--blue-bg);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:13px;color:var(--g700);line-height:1.65;margin-bottom:14px}
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.insight{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}
+.insight h4{font-size:13px;font-weight:900;margin-bottom:8px;color:var(--navy)}
+.insight ul{padding-left:16px;font-size:12px;color:var(--g700);line-height:1.65}
+
+/* WHAT YOU'RE MISSING */
+.missing-section{background:linear-gradient(135deg,#0f1f36,#1E3A5F);border-radius:22px;padding:28px;margin-top:24px;color:#fff;position:relative;overflow:hidden}
+.missing-section::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(245,158,11,.1);border-radius:50%}
+.missing-title{font-size:20px;font-weight:900;margin-bottom:6px}
+.missing-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.missing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.missing-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px}
+.missing-item .mi-icon{font-size:22px;margin-bottom:8px}
+.missing-item h4{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px}
+.missing-item p{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5}
+.missing-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:16px 20px}
+.missing-cta p{font-size:14px;color:#fff;font-weight:700}
+.missing-cta a{background:var(--gold);color:var(--navy-dark);border-radius:11px;padding:12px 24px;font-size:14px;font-weight:900;text-decoration:none;white-space:nowrap}
+
+/* STICKY UPGRADE BAR */
+.sticky-upgrade{position:fixed;bottom:0;left:260px;right:0;background:var(--navy-dark);border-top:2px solid var(--gold);padding:12px 5%;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:50;flex-wrap:wrap}
+.sticky-upgrade p{font-size:14px;color:#fff;font-weight:700}
+.sticky-upgrade span{color:var(--gold)}
+.sticky-upgrade a{background:var(--gold);color:var(--navy-dark);border-radius:10px;padding:10px 22px;font-size:14px;font-weight:900;text-decoration:none;white-space:nowrap}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-inner{background:white;border-radius:24px;padding:40px;max-width:480px;width:100%;text-align:center}
+.modal-inner h2{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:10px}
+.modal-inner p{font-size:14px;color:var(--g500);line-height:1.65;margin-bottom:24px}
+.modal-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.no-products{background:white;border:1px solid var(--line);border-radius:22px;padding:48px;text-align:center;grid-column:1/-1}
+.no-products h3{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.no-products p{font-size:14px;color:var(--g500);line-height:1.6}
+
+@media(max-width:1000px){.feed-grid,.missing-grid,.insight-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:980px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin-left:0;width:100%;padding:20px}.sticky-upgrade{left:0}}
+@media(max-width:620px){.feed-grid,.stats,.p-signals,.missing-grid,.insight-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <a class="logo" href="index.html">
+    <div class="logo-icon">
+      <div class="logo-bar" style="height:11px;opacity:.45"></div>
+      <div class="logo-bar" style="height:17px;opacity:.7"></div>
+      <div class="logo-bar" style="height:24px"></div>
+      <div class="logo-bar g" style="height:19px"></div>
+    </div>
+    <div class="logo-text">Drop<span>Research</span> Hub</div>
+  </a>
+  <div class="nav-label">Trial Area</div>
+  <button class="nav-btn active" onclick="showSection('products',this)">📈 Emerging Products</button>
+  <button class="nav-btn" onclick="showSection('validator',this)">✅ Product Validator</button>
+  <div class="nav-label">Account</div>
+  <button class="nav-btn" onclick="window.location.href='index.html'">← Homepage</button>
+  <div class="trial-box">
+    <b>🎯 Free Trial Active</b>
+    <p>2 of 5 products unlocked. Upgrade to see everything — full analysis, all products, unlimited validation.</p>
+    <button onclick="window.location.href='signup.html'">Upgrade — £24.99/month</button>
+  </div>
+</aside>
+
+<main class="main" style="padding-bottom:80px">
+
+  <div class="trial-banner">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div class="trial-badge">Free Trial</div>
+      <div class="trial-banner-text">
+        <h3>You're on a free trial — upgrade to see everything</h3>
+        <p>2 of 5 products visible · Full analysis locked · 1 validator use per day</p>
+      </div>
+    </div>
+    <a href="signup.html" class="trial-banner-cta">Unlock full access →</a>
+  </div>
+
+  <div class="topbar">
+    <div><h1>Emerging Products</h1><p>Your trial preview — 2 products unlocked, 3 locked</p></div>
+    <div class="user-pill"><div class="avatar">T</div><span>Free Trial</span></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><small>Products visible</small><b style="color:var(--navy)" id="stat-visible">2</b><p>of <span id="stat-total">5</span> this week</p></div>
+    <div class="stat"><small>Full analysis</small><b style="color:var(--amber)">Locked</b><p>upgrade to unlock</p></div>
+    <div class="stat"><small>Validator uses</small><b style="color:var(--green)" id="stat-uses">1</b><p>remaining today</p></div>
+    <div class="stat"><small>Trial status</small><b style="color:var(--green)">Active</b><p>7 days free</p></div>
+  </div>
+
+  <!-- PRODUCTS SECTION -->
+  <section id="products" class="section active">
+    <div class="section-head">
+      <div><h2>This Week's Products</h2><p>2 unlocked on trial — upgrade to see all 5 with full analysis</p></div>
+    </div>
+    <div class="feed-grid" id="trial-feed"></div>
+
+    <!-- WHAT YOU'RE MISSING -->
+    <div class="missing-section">
+      <div class="missing-title">What you're missing as a trial member</div>
+      <div class="missing-sub">Paying members get all of this — every week, for every product</div>
+      <div class="missing-grid">
+        <div class="missing-item"><div class="mi-icon">📊</div><h4>Full scoring breakdown</h4><p>All 6 scoring criteria with detailed explanations and what they mean for your launch</p></div>
+        <div class="missing-item"><div class="mi-icon">🎵</div><h4>TikTok ad angle</h4><p>Exact hook, script structure and creator brief — ready to film or send to a creator</p></div>
+        <div class="missing-item"><div class="mi-icon">📺</div><h4>Meta ad angle</h4><p>Facebook and Instagram ad copy, targeting suggestions and creative direction</p></div>
+        <div class="missing-item"><div class="mi-icon">🎯</div><h4>Target customer profile</h4><p>Exactly who buys this, why they buy it and how to speak to them in your ads</p></div>
+        <div class="missing-item"><div class="mi-icon">📦</div><h4>Bundle ideas & supplier terms</h4><p>How to increase AOV, what to bundle it with and exact AliExpress search terms</p></div>
+        <div class="missing-item"><div class="mi-icon">⚠️</div><h4>Red flags & risk score</h4><p>What to watch out for before you invest — compliance, supplier risks and more</p></div>
+      </div>
+      <div class="missing-cta">
+        <p>All of this is unlocked for <span>£24.99/month</span> — less than a single failed product test</p>
+        <a href="signup.html">Unlock everything →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALIDATOR SECTION -->
+  <section id="validator" class="section">
+    <div class="validator-top">
+      <h2>Product Validator</h2>
+      <p>Enter any product name or idea for a free DropResearch assessment. Trial members get 1 use per day.</p>
+      <div class="input-wrap">
+        <input class="v-input" id="v-input" placeholder="Enter a product name or idea..."/>
+        <button class="v-btn" id="v-btn" onclick="runValidator()">Analyse →</button>
+      </div>
+      <div class="uses-pill">1 use remaining today — <span>upgrade for unlimited</span></div>
+    </div>
+    <div id="v-result"><div class="empty">Enter a product name above to get your free assessment.</div></div>
+  </section>
+
+</main>
+</div>
+
+<!-- STICKY UPGRADE BAR -->
+<div class="sticky-upgrade">
+  <p>Trial active — <span>3 products locked</span> · Full analysis locked · 1 validator use/day</p>
+  <a href="signup.html">Upgrade now — £24.99/month →</a>
+</div>
+
+<!-- LOCKED ANALYSIS MODAL -->
+<div class="modal" id="analysis-modal">
+  <div class="modal-inner">
+    <div style="font-size:44px;margin-bottom:16px">🔒</div>
+    <h2>Full analysis is members only</h2>
+    <p>Upgrade to unlock the complete scoring breakdown, TikTok angle, Meta angle, target customer profile, bundle ideas, supplier terms and ad creative scripts for every product.</p>
+    <div class="modal-btns">
+      <a href="signup.html" style="background:var(--gold);color:var(--navy-dark);border-radius:12px;padding:13px 24px;font-size:14px;font-weight:900;text-decoration:none">Unlock — £24.99/month</a>
+      <button onclick="closeModal('analysis-modal')" style="background:var(--g100);color:var(--g700);border:none;border-radius:12px;padding:13px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let validatorUsesLeft = 1;
+const UNLOCK_COUNT = 2;
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.getElementById('analysis-modal').addEventListener('click', function(e) { if(e.target===this) closeModal('analysis-modal'); });
+
+function gradeColor(g) {
+  if (!g) return '#16A34A';
+  if (g.includes('A')) return '#16A34A';
+  if (g.includes('B')) return '#D97706';
+  return '#DC2626';
+}
+
+function verdictColor(v) {
+  if (!v) return 'var(--green)';
+  if (v === 'Strong Opportunity') return 'var(--green)';
+  if (v === 'Watch List') return 'var(--amber)';
+  return 'var(--red, #DC2626)';
+}
+
+function imgTag(p) {
+  if (p.img) return `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"/>`;
+  return '';
+}
+
+function buildUnlockedCard(p) {
+  return `<div class="product">
+    <div class="p-img">
+      ${imgTag(p)}
+      <div class="p-badges">
+        <div class="p-grade" style="background:${gradeColor(p.grade)}">${p.grade || 'A'}</div>
+        <div class="p-verdict">${p.verdict || 'Opportunity'}</div>
+      </div>
+    </div>
+    <div class="p-body">
+      <div class="p-title">${p.name}</div>
+      <div class="p-niche">${p.niche || ''} ${p.season ? '· ' + p.season : ''}</div>
+      <div class="p-signals">
+        <div class="signal"><span>Trend</span><b style="color:var(--navy)">${p.trendScore || 80}</b></div>
+        <div class="signal"><span>Problem</span><b style="color:var(--green)">${p.problemScore || 78}</b></div>
+        <div class="signal"><span>Sat. Risk</span><b style="color:var(--green);font-size:11px">${p.saturationRisk || 'Low'}</b></div>
+      </div>
+      <div class="p-why">${p.whyEmerging || p.mainAngle || 'Emerging product with strong market signals'}</div>
+      <div class="p-actions">
+        <button class="btn" onclick="window.open('https://trends.google.com/trends/explore?geo=GB&q=${encodeURIComponent(p.googleTrendsKeyword || p.name)}','_blank')">📊 Google Trends</button>
+        <button class="btn primary" onclick="openModal('analysis-modal')">🔒 Full Analysis</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildLockedCard(p, num) {
+  return `<div class="locked-card">
+    <div class="locked-inner">
+      <div style="height:200px;background:linear-gradient(135deg,#EEF2FF,#F0F4FF);position:relative">
+        ${p && p.img ? `<img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.4"/>` : ''}
+        <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between">
+          <div style="background:#16A34A;color:white;border-radius:999px;font-size:12px;font-weight:900;padding:6px 10px">${p ? (p.grade || 'A+') : 'A+'}</div>
+          <div style="background:rgba(255,255,255,.9);color:#1E3A5F;border-radius:999px;font-size:11px;font-weight:900;padding:6px 10px">Opportunity</div>
+        </div>
+      </div>
+      <div style="padding:16px">
+        <div style="font-size:17px;font-weight:900;margin-bottom:3px;filter:blur(5px)">${p ? p.name : 'Hidden Product ' + num}</div>
+        <div style="font-size:12px;color:#9CA3AF;margin-bottom:12px;filter:blur(4px)">${p ? (p.niche || 'Niche') : 'Niche · Category'}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:11px;padding:9px;text-align:center;filter:blur(4px)"><div style="font-size:9px;color:#9CA3AF;font-weight:900">TREND</div><div style="font-size:14px;font-weight:900">${p ? (p.trendScore || '??') : '??'}</div></div>
+          <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:11px;padding:9px;text-align:center;filter:blur(4px)"><div style="font-size:9px;color:#9CA3AF;font-weight:900">PROBLEM</div><div style="font-size:14px;font-weight:900">${p ? (p.problemScore || '??') : '??'}</div></div>
+          <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:11px;padding:9px;text-align:center;filter:blur(4px)"><div style="font-size:9px;color:#9CA3AF;font-weight:900">SAT.</div><div style="font-size:11px;font-weight:900">${p ? (p.saturationRisk || '??') : '??'}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="locked-overlay">
+      <div class="lock">🔒</div>
+      <h3>Product locked</h3>
+      <p>Upgrade to see this product and ${num === 3 ? '2 more' : num === 4 ? '1 more' : ''} with full analysis</p>
+      <a href="signup.html">Unlock — £24.99/month</a>
+    </div>
+  </div>`;
+}
+
+function renderFeed() {
+  const grid = document.getElementById('trial-feed');
+  let products = [];
+  try {
+    const saved = localStorage.getItem('drh_published_products');
+    if (saved) products = JSON.parse(saved);
+  } catch(e) {}
+
+  const total = Math.max(products.length, 5);
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-visible').textContent = Math.min(UNLOCK_COUNT, products.length);
+
+  if (!products.length) {
+    grid.innerHTML = `<div class="no-products"><h3>Products coming soon</h3><p>The admin hasn't published this week's products yet. Check back soon — or upgrade to get notified the moment they drop.</p></div>`;
+    return;
+  }
+
+  let html = '';
+  // First 2 unlocked
+  products.slice(0, UNLOCK_COUNT).forEach(p => { html += buildUnlockedCard(p); });
+  // Rest locked (show up to 5 total)
+  const lockedCount = Math.max(3, products.length - UNLOCK_COUNT);
+  for (let i = UNLOCK_COUNT; i < Math.min(products.length, 5); i++) {
+    html += buildLockedCard(products[i], i + 1);
+  }
+  // Pad to 5 if fewer products
+  for (let i = products.length; i < 5; i++) {
+    html += buildLockedCard(null, i + 1);
+  }
+
+  grid.innerHTML = html;
+}
+
+async function runValidator() {
+  if (validatorUsesLeft <= 0) {
+    document.getElementById('v-result').innerHTML = `
+      <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:36px;text-align:center">
+        <div style="font-size:32px;margin-bottom:12px">⏰</div>
+        <h3 style="font-size:18px;font-weight:900;color:var(--navy);margin-bottom:8px">Daily limit reached</h3>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:20px">Trial members get 1 validator use per day. Upgrade for unlimited validations on any product, anytime.</p>
+        <a href="signup.html" style="background:var(--gold);color:var(--navy-dark);border-radius:12px;padding:12px 24px;font-size:14px;font-weight:900;text-decoration:none;display:inline-block">Upgrade for unlimited access →</a>
+      </div>`;
+    return;
+  }
+
+  const input = document.getElementById('v-input').value.trim();
+  if (!input) return;
+
+  const btn = document.getElementById('v-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analysing...';
+  document.getElementById('v-result').innerHTML = `<div class="loading"><div class="spinner"></div><span>Analysing ${input}...</span></div>`;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({productName: input})
+    });
+    const data = await res.json();
+
+    validatorUsesLeft = 0;
+    document.getElementById('stat-uses').textContent = '0';
+    document.querySelector('.uses-pill').innerHTML = '<span>0 uses remaining today</span> — upgrade for unlimited';
+
+    const score = data.opportunityScore || 'B';
+    const growth = data.growthScore || 68;
+    const competition = data.competitionScore || 55;
+    const margin = data.marginScore || 72;
+    const verdict = data.verdict || 'Research this product further before committing.';
+    const why = data.whyItCouldWork || ['Clear customer problem','Good content potential','Testable with small budget'];
+    const risks = data.risks || ['Check current saturation','Verify supplier quality','Test before scaling'];
+    const angles = data.creativeAngles || ['Problem/solution demo','Before and after','UGC testimonial'];
+    const sc = s => s.includes('A') ? '#16A34A' : s.includes('B') ? '#D97706' : '#DC2626';
+
+    document.getElementById('v-result').innerHTML = `
+      <div class="result-panel">
+        <div class="result-name">${input}</div>
+        <div class="score-row">
+          <div class="score-box"><span>Opportunity</span><b style="color:${sc(score)}">${score}</b></div>
+          <div class="score-box"><span>Growth</span><b>${growth}/100</b></div>
+          <div class="score-box"><span>Competition</span><b>${competition}/100</b></div>
+          <div class="score-box"><span>Margin</span><b>${margin}/100</b></div>
+        </div>
+        <div class="verdict-box"><strong>Verdict:</strong> ${verdict}</div>
+        <div class="insight-grid">
+          <div class="insight"><h4>Why it could work</h4><ul>${why.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="insight"><h4>Risks to check</h4><ul>${risks.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="insight"><h4>Creative angles</h4><ul>${angles.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:16px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="color:#fff">
+          <div style="font-size:15px;font-weight:800;margin-bottom:4px">Want the full deep-dive?</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.65)">Upgrade to unlock TikTok angles, Meta angles, target customer and ad scripts.</div>
+        </div>
+        <a href="signup.html" style="background:var(--gold);color:var(--navy-dark);border-radius:11px;padding:11px 20px;font-size:13px;font-weight:900;text-decoration:none;white-space:nowrap">Unlock full analysis →</a>
+      </div>`;
+  } catch(e) {
+    document.getElementById('v-result').innerHTML = `<div class="empty">Something went wrong. Please try again.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analyse →';
+  }
+}
+
+document.getElementById('v-input').addEventListener('keydown', e => { if(e.key==='Enter') runValidator(); });
+renderFeed();
+</script>
+</body>
+</html>
