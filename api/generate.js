@@ -6,28 +6,26 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  const googleKey = process.env.GOOGLE_SEARCH_KEY;
-  const googleCx = process.env.GOOGLE_SEARCH_CX;
+  const serpApiKey = process.env.SERP_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const body = req.body;
-  console.log('[DRH] Keys present - Google:', !!googleKey, 'CX:', !!googleCx);
 
-  // ── FETCH PRODUCT IMAGE FROM GOOGLE ──────────────────────────────────────
+  // ── FETCH PRODUCT IMAGE FROM SERPAPI ─────────────────────────────────────
   async function fetchProductImage(productName) {
-    if (!googleKey || !googleCx) return '';
+    if (!serpApiKey) return '';
     try {
       const query = encodeURIComponent(productName + ' product');
-      const url = `https://www.googleapis.com/customsearch/v1?key=${googleKey}&cx=${googleCx}&q=${query}&searchType=image&num=1&imgType=photo&imgSize=medium&safe=off`;
-      const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
-      if (!r.ok) return '';
+      const url = `https://serpapi.com/search.json?engine=google_images&q=${query}&api_key=${serpApiKey}&num=1&safe=off&gl=gb&hl=en`;
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (!r.ok) {
+        console.log('[DRH] SerpApi error:', r.status);
+        return '';
+      }
       const data = await r.json();
-      const item = data?.items?.[0];
-        const imgUrl = item?.link || '';
-        if(data?.error) console.log('[DRH] Google API error:', JSON.stringify(data.error));
-        if(!imgUrl && data?.items) console.log('[DRH] Items found but no link:', JSON.stringify(data.items[0]));
-      console.log('[DRH] Image for', productName, ':', imgUrl ? 'found' : 'not found');
-      return imgUrl;
+      const img = data?.images_results?.[0]?.original || data?.images_results?.[0]?.thumbnail || '';
+      console.log('[DRH] Image for', productName, ':', img ? 'found' : 'not found');
+      return img;
     } catch (e) {
       console.log('[DRH] Image fetch failed for', productName, ':', e.message);
       return '';
@@ -121,13 +119,14 @@ Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be br
       return res.status(500).json({ error: 'Parse error: ' + e.message });
     }
 
-    // Fetch real product images for each product in parallel
-    console.log('[DRH] Fetching product images...');
+    // Fetch real product images via SerpApi
+    console.log('[DRH] Fetching product images via SerpApi...');
     const imagePromises = products.map(p => fetchProductImage(p.name));
     const images = await Promise.all(imagePromises);
     products = products.map((p, i) => ({ ...p, img: images[i] || '' }));
 
-    console.log('[DRH] Generated', products.length, 'products with images. Trends used:', !!trendingContext);
+    const imgCount = images.filter(Boolean).length;
+    console.log('[DRH] Generated', products.length, 'products,', imgCount, 'images found. Trends used:', !!trendingContext);
     return res.status(200).json({ content: [{ type: 'text', text: JSON.stringify(products) }] });
   }
 
