@@ -18,16 +18,16 @@ export default async function handler(req, res) {
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 3000,
+        max_tokens: 4000,
         system: `You are an expert ecommerce product researcher for UK dropshippers. Find products JUST starting to emerge — first 1-3 months of a Google Trends growth curve. NOT mainstream, NOT already viral on TikTok or Instagram.
 
-Return ONLY a valid JSON array of exactly 7 product objects. No markdown, no backticks, no text before or after.
+Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
 
 Each object must have ALL these fields:
 {"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 60-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending mid-2026","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"google trends keyword","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":12},{"label":"W2","value":25},{"label":"W3","value":40},{"label":"W4","value":58},{"label":"W5","value":72},{"label":"W6","value":86}]}
 
 RULES: No yoga mats, resistance bands, water bottles, phone cases, fidget toys. Must be SPECIFIC niche products. Max 3 per niche. growthData must show a rising curve.`,
-        messages: [{ role: 'user', content: 'Generate 7 genuinely emerging micro-niche UK ecom products for June 2026. Specific, unusual, problem-solving items not yet found by most dropshippers.' }]
+        messages: [{ role: 'user', content: 'Generate 5 genuinely emerging micro-niche UK ecom products for June 2026. Specific, unusual, problem-solving items not yet found by most dropshippers.' }]
       })
     });
 
