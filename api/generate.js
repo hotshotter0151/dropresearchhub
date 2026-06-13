@@ -36,11 +36,24 @@ export default async function handler(req, res) {
     } catch (e) { return ''; }
   }
 
-  // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
-  if (body.mode === 'emerging') {
-
-    let trendingContext = '';
+  // ── FETCH TRENDING DATA VIA SERPAPI ──────────────────────────────────────
+  async function fetchTrendingData() {
+    const results = [];
     try {
+      // Amazon UK Movers & Shakers
+      const amazonRes = await fetch(
+        `https://serpapi.com/search.json?engine=amazon&amazon_domain=amazon.co.uk&type=movers_and_shakers&api_key=${serpApiKey}`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      if (amazonRes.ok) {
+        const data = await amazonRes.json();
+        const items = (data?.movers_and_shakers || []).slice(0, 10).map(i => i?.title).filter(Boolean);
+        if (items.length) results.push(`Amazon UK Movers & Shakers: ${items.join(', ')}`);
+      }
+    } catch (e) { console.log('[DRH] Amazon trending failed:', e.message); }
+
+    try {
+      // Google Trends UK
       const trendsRes = await fetch(
         'https://trends.google.com/trends/api/dailytrends?hl=en-GB&tz=-60&geo=GB&ns=15',
         {
@@ -53,17 +66,41 @@ export default async function handler(req, res) {
         const cleaned = raw.replace(/^\)\]\}'/, '').trim();
         const json = JSON.parse(cleaned);
         const searches = json?.default?.trendingSearchesDays?.[0]?.trendingSearches || [];
-        const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 20);
-        if (keywords.length > 0) {
-          trendingContext = `UK Google Trends today (${today}): ${keywords.join(', ')}`;
-          console.log('[DRH] Got', keywords.length, 'trending searches');
-        }
+        const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 15);
+        if (keywords.length) results.push(`UK Google Trends today: ${keywords.join(', ')}`);
       }
     } catch (e) { console.log('[DRH] Trends failed:', e.message); }
 
+    try {
+      // TikTok trending products via SerpApi
+      const tiktokRes = await fetch(
+        `https://serpapi.com/search.json?engine=google&q=tiktok+shop+uk+trending+products+${new Date().getFullYear()}&gl=gb&hl=en&api_key=${serpApiKey}&num=5`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      if (tiktokRes.ok) {
+        const data = await tiktokRes.json();
+        const snippets = (data?.organic_results || []).slice(0, 3).map(r => r?.snippet).filter(Boolean);
+        if (snippets.length) results.push(`TikTok Shop UK trends: ${snippets.join(' | ')}`);
+      }
+    } catch (e) { console.log('[DRH] TikTok trending failed:', e.message); }
+
+    return results.join('\n\n');
+  }
+
+  // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
+  if (body.mode === 'emerging') {
+
+    // Fetch all trending data in parallel
+    console.log('[DRH] Fetching trending data...');
+    const trendingContext = await fetchTrendingData();
+    console.log('[DRH] Trending data length:', trendingContext.length);
+
     const systemPrompt = `You are a world-class ecommerce product researcher for DropResearch Hub, a paid platform for UK beginner dropshippers. Today is ${today}.
-${trendingContext ? `\nLive UK Google Trends data: ${trendingContext}\n` : ''}
-Your job is to find exactly 3 GENUINELY EMERGING physical products that subscribers can test on Shopify with Meta and TikTok ads RIGHT NOW.
+
+LIVE MARKET DATA (just fetched):
+${trendingContext || 'Live data unavailable — use knowledge of current UK market trends for mid-2026.'}
+
+Your job is to find exactly 3 GENUINELY EMERGING physical products that UK subscribers can test on Shopify with Meta and TikTok ads RIGHT NOW. Use the live data above to inform your choices.
 
 PRODUCT SELECTION CRITERIA — every product MUST pass ALL of these:
 1. Solves a clear, obvious problem
@@ -76,90 +113,34 @@ PRODUCT SELECTION CRITERIA — every product MUST pass ALL of these:
 8. Supplier cost ideally under 35% of selling price
 9. NOT already a dead/saturated dropshipping product
 
-EMERGING SIGNALS TO LOOK FOR:
-- Just appearing on TikTok Shop UK (not already everywhere)
-- Amazon Movers & Shakers movement (growing reviews, not peak)
-- AliExpress order growth (upward, not already millions)
-- Google Trends showing early upward curve, not peak
-- Not yet in mainstream UK retail (Tesco, Argos, Amazon front page)
-- Low competition on Facebook Ad Library (few UK ads running)
-
 STRICTLY AVOID:
 - Air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers — anything already saturated
-- Products with no wow factor or that need too much explaining
-- Products easily found in local shops
-- Products that look cheap or gimmicky
+- Products easily found in Tesco, Argos, Amazon front page
+- Products with no wow factor
 - Products with compliance/legal issues
 
 For each product apply this scoring:
-- Trend Growth: /25 (is it actually growing NOW?)
-- Problem Solving: /20 (how clearly does it solve a problem?)
-- Video Potential: /15 (how demonstrable on TikTok/Reels?)
-- Profit Margin: /15 (is the margin strong?)
-- Competition Level: /15 (how low is competition right now?)
-- Audience Size: /10 (how big is the target market?)
+- Trend Growth: /25
+- Problem Solving: /20
+- Video Potential: /15
+- Profit Margin: /15
+- Competition Level: /15
+- Audience Size: /10
 - TOTAL: /100
 
 Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, no text before or after.
 
-Each object must have these exact fields:
-{
-  "name": "Product Name",
-  "niche": "Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion",
-  "emoji": "single emoji",
-  "stage": "Emerging",
-  "season": "Evergreen|Summer peak|Winter peak",
-  "grade": "A+|A|B|C",
-  "trendScore": number 0-100,
-  "problemScore": number 0-100,
-  "saturationRisk": "Low|Medium|High",
-  "competitionLevel": "Low|Medium|High",
-  "emergingScore": number 0-100,
-  "supplierCost": "£X–£X",
-  "sellingPrice": "£X–£X",
-  "margin": "XX%",
-  "targetCustomer": "one sentence describing buyer avatar",
-  "whyEmerging": "max 20 words — why this is growing RIGHT NOW",
-  "problemSolved": "max 15 words",
-  "mainAngle": "max 15 words — core selling angle",
-  "tiktokAngle": "max 20 words",
-  "metaAngle": "max 20 words",
-  "verdict": "Strong Opportunity|Watch List|Avoid",
-  "verdictReason": "max 20 words",
-  "whyItCouldWork": ["point 1", "point 2", "point 3"],
-  "risks": ["risk 1", "risk 2", "risk 3"],
-  "bundleIdea": "max 15 words",
-  "redFlags": "max 15 words or None",
-  "aliSearchTerm": "search term for AliExpress",
-  "googleTrendsKeyword": "broad 1-3 word keyword",
-  "scoring": {
-    "trendGrowth": number,
-    "problemSolving": number,
-    "videoPotential": number,
-    "profitMargin": number,
-    "competitionLevel": number,
-    "audienceSize": number
-  },
-  "bgColor": "#EFF6FF",
-  "growthData": [
-    {"label":"W1","value":15},
-    {"label":"W2","value":25},
-    {"label":"W3","value":38},
-    {"label":"W4","value":54},
-    {"label":"W5","value":70},
-    {"label":"W6","value":84}
-  ]
-}`;
+Each object:
+{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak","grade":"A+|A|B|C","trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium|High","competitionLevel":"Low|Medium|High","emergingScore":number,"supplierCost":"£X–£X","sellingPrice":"£X–£X","margin":"XX%","targetCustomer":"one sentence","whyEmerging":"max 20 words","problemSolved":"max 15 words","mainAngle":"max 15 words","tiktokAngle":"max 20 words","metaAngle":"max 20 words","verdict":"Strong Opportunity|Watch List|Avoid","verdictReason":"max 20 words","whyItCouldWork":["point 1","point 2","point 3"],"risks":["risk 1","risk 2","risk 3"],"bundleIdea":"max 15 words","redFlags":"max 15 words or None","aliSearchTerm":"term","googleTrendsKeyword":"broad term","scoring":{"trendGrowth":number,"problemSolving":number,"videoPotential":number,"profitMargin":number,"competitionLevel":number,"audienceSize":number},"bgColor":"#EFF6FF","growthData":[{"label":"W1","value":15},{"label":"W2","value":25},{"label":"W3","value":38},{"label":"W4","value":54},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 5000,
+        max_tokens: 4000,
         system: systemPrompt,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: `Today is ${today}. Search the web for what products are currently trending on TikTok Shop UK, Amazon UK Movers and Shakers, and AliExpress right now. Then use that real data to find 3 genuinely emerging UK dropshipping products. Apply the full scoring framework. Return ONLY the JSON array — no other text.` }]
+        messages: [{ role: 'user', content: `Using the live market data provided, find 3 genuinely emerging UK dropshipping products for ${today}. Apply the full scoring framework. Return ONLY the JSON array.` }]
       })
     });
 
@@ -170,53 +151,10 @@ Each object must have these exact fields:
     }
 
     const aiData = await aiRes.json();
+    const rawText = (aiData.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    console.log('[DRH] AI response length:', rawText.length);
 
-    // Handle multi-turn tool use — extract all text blocks from content
-    const rawText = (aiData.content || [])
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('');
-
-    console.log('[DRH] AI response length:', rawText.length, 'stop_reason:', aiData.stop_reason);
-
-    // If Claude used web search, we need to complete the conversation
-    let finalText = rawText;
-    if (aiData.stop_reason === 'tool_use') {
-      console.log('[DRH] Claude used web search, completing conversation...');
-      const toolUseBlocks = (aiData.content || []).filter(b => b.type === 'tool_use');
-      const toolResults = toolUseBlocks.map(block => ({
-        type: 'tool_result',
-        tool_use_id: block.id,
-        content: block.input?.query ? `Web search completed for: ${block.input.query}` : 'Search complete'
-      }));
-
-      const followUpRes = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 5000,
-          system: systemPrompt,
-          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-          messages: [
-            { role: 'user', content: `Today is ${today}. Search the web for what products are currently trending on TikTok Shop UK, Amazon UK Movers and Shakers, and AliExpress right now. Then use that real data to find 3 genuinely emerging UK dropshipping products. Apply the full scoring framework. Return ONLY the JSON array — no other text.` },
-            { role: 'assistant', content: aiData.content },
-            { role: 'user', content: toolResults }
-          ]
-        })
-      });
-
-      if (followUpRes.ok) {
-        const followUpData = await followUpRes.json();
-        finalText = (followUpData.content || [])
-          .filter(b => b.type === 'text')
-          .map(b => b.text)
-          .join('');
-        console.log('[DRH] Follow-up response length:', finalText.length);
-      }
-    }
-
-    let cleaned = finalText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    let cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
     const start = cleaned.indexOf('[');
     const end = cleaned.lastIndexOf(']');
     if (start === -1 || end === -1) return res.status(500).json({ error: 'No product array found' });
@@ -240,7 +178,6 @@ Each object must have these exact fields:
 
   // ── PRODUCT VALIDATOR ─────────────────────────────────────────────────────
   if (body.productName) {
-    console.log('[DRH] Validator:', body.productName);
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
