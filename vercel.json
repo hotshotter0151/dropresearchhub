@@ -5,5 +5,9 @@
       "memory": 1024,
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/members", "destination": "/members.html" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
 }
