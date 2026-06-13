@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const body = req.body;
+  console.log('[DRH] Keys present - Google:', !!googleKey, 'CX:', !!googleCx);
 
   // ── FETCH PRODUCT IMAGE FROM GOOGLE ──────────────────────────────────────
   async function fetchProductImage(productName) {
