@@ -1031,6 +1031,8 @@ function publishProducts() {
   if (!selected.length) { showToast('Toggle on at least one product first'); return; }
   allProducts = [...allProducts, ...selected];
   pendingProducts = [];
+  // Save to localStorage so trial page can read them
+  try { localStorage.setItem('drh_published_products', JSON.stringify(allProducts)); } catch(e) {}
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-GB', {weekday:'short',day:'numeric',month:'short'});
   document.getElementById('product-count-badge').textContent = `${allProducts.length} products live`;
@@ -1050,6 +1052,18 @@ function showToast(msg) {
 }
 
 renderProductsGrid();
+// Load previously published products from localStorage
+try {
+  const saved = localStorage.getItem("drh_published_products");
+  if (saved) {
+    allProducts = JSON.parse(saved);
+    buildNicheFilters();
+    renderProductsGrid();
+    renderLiveFeed();
+    const badge = document.getElementById("product-count-badge");
+    if (badge) badge.textContent = allProducts.length + " products live";
+  }
+} catch(e) {}
 </script>
 </body>
 </html>
