@@ -2,14 +2,8 @@
   "version": 2,
   "functions": {
     "api/generate.js": {
-      "memory": 512,
+      "memory": 1024,
       "maxDuration": 60
     }
-  },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/members", "dest": "/members.html" },
-    { "src": "/admin", "dest": "/admin.html" },
-    { "src": "/", "dest": "/index.html" }
-  ]
+  }
 }
