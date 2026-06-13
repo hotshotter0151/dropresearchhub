@@ -16,12 +16,15 @@ export default async function handler(req, res) {
   async function fetchProductImage(productName) {
     if (!googleKey || !googleCx) return '';
     try {
-      const query = encodeURIComponent(productName + ' product white background');
+      const query = encodeURIComponent(productName + ' product');
       const url = `https://www.googleapis.com/customsearch/v1?key=${googleKey}&cx=${googleCx}&q=${query}&searchType=image&num=1&imgType=photo&imgSize=medium&safe=off`;
       const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
       if (!r.ok) return '';
       const data = await r.json();
-      const imgUrl = data?.items?.[0]?.link || '';
+      const item = data?.items?.[0];
+        const imgUrl = item?.link || '';
+        if(data?.error) console.log('[DRH] Google API error:', JSON.stringify(data.error));
+        if(!imgUrl && data?.items) console.log('[DRH] Items found but no link:', JSON.stringify(data.items[0]));
       console.log('[DRH] Image for', productName, ':', imgUrl ? 'found' : 'not found');
       return imgUrl;
     } catch (e) {
