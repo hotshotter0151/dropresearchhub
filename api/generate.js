@@ -11,21 +11,37 @@ export default async function handler(req, res) {
 
   const body = req.body;
 
-  // ── FETCH PRODUCT IMAGE FROM SERPAPI ─────────────────────────────────────
+  // ── FETCH PRODUCT IMAGE FROM SERPAPI (with fallback) ─────────────────────
+  async function searchImage(query) {
+    const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) return '';
+    const data = await r.json();
+    // Prefer product images with original URLs
+    const results = data?.images_results || [];
+    const product = results.find(i => i.original && i.is_product);
+    const any = results.find(i => i.original);
+    return (product?.original || any?.original || results[0]?.thumbnail || '');
+  }
+
   async function fetchProductImage(productName) {
     if (!serpApiKey) return '';
     try {
-      const query = encodeURIComponent(productName + ' product');
-      const url = `https://serpapi.com/search.json?engine=google_images&q=${query}&api_key=${serpApiKey}&num=1&safe=off&gl=gb&hl=en`;
-      const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
-      if (!r.ok) {
-        console.log('[DRH] SerpApi error:', r.status);
-        return '';
+      // Try exact product name first
+      let img = await searchImage(productName + ' product');
+      if (img) {
+        console.log('[DRH] Image found (exact):', productName);
+        return img;
       }
-      const data = await r.json();
-      const img = data?.images_results?.[0]?.original || data?.images_results?.[0]?.thumbnail || '';
-      console.log('[DRH] Image for', productName, ':', img ? 'found' : 'not found');
-      return img;
+      // Fallback: use shorter keywords from the name
+      const shortName = productName.split(' ').slice(0, 3).join(' ');
+      img = await searchImage(shortName + ' product buy');
+      if (img) {
+        console.log('[DRH] Image found (fallback):', shortName);
+        return img;
+      }
+      console.log('[DRH] No image found for:', productName);
+      return '';
     } catch (e) {
       console.log('[DRH] Image fetch failed for', productName, ':', e.message);
       return '';
