@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{ 
+:root{
   --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
   --gold:#F59E0B;--gold-light:#FCD34D;
   --white:#fff;--off:#F8FAFF;
@@ -376,6 +376,21 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <script>
 const ADMIN_PW = 'Billy1234.';
+const GOOGLE_KEY = 'AIzaSyCrPYp3mrwwyDWKQoEA-iHkX5cpFQYfE4U';
+const GOOGLE_CX = '548e0bc156c6d4529';
+
+async function fetchProductImage(productName) {
+  try {
+    const query = encodeURIComponent(productName + ' product');
+    const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1&imgType=photo&safe=off`;
+    const r = await fetch(url);
+    const data = await r.json();
+    return data?.items?.[0]?.link || '';
+  } catch(e) {
+    console.log('Image fetch failed:', e.message);
+    return '';
+  }
+}
 let allProducts = [];
 let pendingProducts = [];
 let activeNiche = 'all';
@@ -423,7 +438,7 @@ function renderProductsGrid() {
   grid.innerHTML = list.map((p, i) => `
     <div class="product-card" onclick="openAnalysis(${i})">
       <div class="product-card-img" style="background:${p.bgColor||'#F3F4F6'}">
-        <span>${p.emoji || '📦'}</span>
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${p.emoji||'📦'}</span>` : `<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade || '?'}</div>
         <div class="stage-badge">${p.stage || 'Emerging'}</div>
       </div>
@@ -863,7 +878,16 @@ async function adminGenerate() {
     let c = t.replace(/```json|```/g,'').trim();
     const s = c.indexOf('['), e = c.lastIndexOf(']');
     if (s === -1 || e === -1) throw new Error('No product array found');
-    const products = JSON.parse(c.slice(s, e + 1));
+    let products = JSON.parse(c.slice(s, e + 1));
+
+    // Fetch real product images from Google (client-side)
+    try {
+      const imageResults = await Promise.all(products.map(p => fetchProductImage(p.name)));
+      products = products.map((p, i) => ({ ...p, img: p.img || imageResults[i] || '' }));
+      console.log('Images fetched:', imageResults.filter(Boolean).length, 'of', imageResults.length);
+    } catch(imgErr) {
+      console.log('Image fetching failed:', imgErr.message);
+    }
 
     pendingProducts = products;
     clearInterval(statusTimer);
