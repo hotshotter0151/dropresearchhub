@@ -326,7 +326,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         <h2>🤖 Generate weekly product feed</h2>
         <p>Click to generate fresh emerging products using AI. These are products showing early Google Trends growth signals before they become mainstream on social media. Review them below then publish.</p>
         <button class="admin-generate-btn" id="admin-gen-btn" onclick="adminGenerate()">
-          <span>✨ Generate emerging products</span>
+          <span>✨ Generate 20 emerging products</span>
         </button>
         <div class="admin-status" id="admin-status"></div>
       </div>
@@ -818,9 +818,7 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        system: `Return ONLY a valid JSON array of exactly 7 product objects. No markdown, no backticks, no explanation. Each object has: name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData. growthData is array of 6 objects with label(W1-W6) and value(number). Mix different niches.`,
-        messages: [{role:'user',content:'Give me 7 early trending UK ecom products for June 2026 not yet viral on social media. Mix niches. Keep descriptions concise.'}],
-        max_tokens: 4000
+        mode: 'emerging'
       })
     });
 
@@ -852,7 +850,7 @@ async function adminGenerate() {
   }
 
   btn.disabled = false;
-  btn.querySelector('span').textContent = '✨ Generate emerging products';
+  btn.querySelector('span').textContent = '✨ Generate 20 emerging products';
 }
 
 function renderAdminProductsList() {
