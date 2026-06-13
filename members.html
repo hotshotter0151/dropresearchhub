@@ -324,9 +324,9 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="admin-panel" id="admin-panel">
       <div class="admin-card">
         <h2>🤖 Generate weekly product feed</h2>
-        <p>Click to generate 20 fresh emerging products using AI. These are products showing early Google Trends growth signals before they become mainstream on social media. Review them below then publish.</p>
+        <p>Click to generate fresh emerging products using AI. These are products showing early Google Trends growth signals before they become mainstream on social media. Review them below then publish.</p>
         <button class="admin-generate-btn" id="admin-gen-btn" onclick="adminGenerate()">
-          <span>✨ Generate 8 emerging products</span>
+          <span>✨ Generate emerging products</span>
         </button>
         <div class="admin-status" id="admin-status"></div>
       </div>
@@ -809,7 +809,7 @@ async function adminGenerate() {
   const btn = document.getElementById('admin-gen-btn');
   const status = document.getElementById('admin-status');
   btn.disabled = true;
-  btn.querySelector('span').textContent = '✨ Generating 20 products...';
+  btn.querySelector('span').textContent = '✨ Generating products...';
   status.textContent = 'AI is researching emerging products...';
   status.className = 'admin-status';
 
@@ -818,9 +818,9 @@ async function adminGenerate() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        system: `Return ONLY a JSON array of 5 products. No markdown. Fields: name,niche,emoji,stage("Emerging"),season,grade(A/B/C),trendScore(60-99),saturation(5-45),margin,whyNow,verdict,whyItCouldWork(3 items),risks(3 items),creativeAngles(3 items),aliSearchTerm,googleTrendsKeyword,bgColor,growthData(6 items: label W1-W6, value 10-99). Early Google Trends UK products not yet viral on social.`,
-        messages: [{role:'user',content:'5 early-trend UK ecom products June 2026. Not viral yet.'}],
-        max_tokens: 1500
+        system: `Return ONLY a valid JSON array containing exactly 1 product object. No markdown, no backticks, no explanation. Fields: name,niche,emoji,stage,season,grade,trendScore,saturation,margin,whyNow,verdict,whyItCouldWork,risks,creativeAngles,aliSearchTerm,googleTrendsKeyword,bgColor,growthData. growthData is array of 6 objects with label(W1-W6) and value(number).`,
+        messages: [{role:'user',content:'Give me 1 early trending UK ecom product for June 2026 that is not yet viral on social media.'}],
+        max_tokens: 800
       })
     });
 
@@ -828,9 +828,16 @@ async function adminGenerate() {
     const text = (data.content || []).map(i => i.text || '').join('');
     let products;
     try {
-      products = JSON.parse(text.replace(/```json|```/g,'').trim());
+      // Strip markdown, find the JSON array
+      let cleaned = text.replace(/```json|```/g,'').trim();
+      // Find first [ and last ] to extract just the array
+      const start = cleaned.indexOf('[');
+      const end = cleaned.lastIndexOf(']');
+      if (start === -1 || end === -1) throw new Error('No JSON array found');
+      cleaned = cleaned.slice(start, end + 1);
+      products = JSON.parse(cleaned);
     } catch(e) {
-      throw new Error('Could not parse AI response');
+      throw new Error('Could not parse AI response: ' + e.message);
     }
 
     pendingProducts = products;
@@ -845,7 +852,7 @@ async function adminGenerate() {
   }
 
   btn.disabled = false;
-  btn.querySelector('span').textContent = '✨ Generate 8 emerging products';
+  btn.querySelector('span').textContent = '✨ Generate emerging products';
 }
 
 function renderAdminProductsList() {
