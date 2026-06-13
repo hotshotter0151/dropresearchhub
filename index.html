@@ -17,8 +17,6 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;color:var(--g900);line-height:1.6;overflow-x:hidden}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px}
@@ -29,10 +27,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
 .nav-links a:hover{color:#fff}
 .nav-cta{background:var(--gold);color:var(--navy-dark);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;text-decoration:none}
 .nav-cta:hover{background:var(--gold-light)}
-
-/* HERO */
 .hero{min-height:100vh;background:linear-gradient(135deg,#0a1628 0%,#142840 50%,#1a3558 100%);position:relative;display:flex;align-items:center;padding:100px 5% 80px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;opacity:.1}
+.hero-bg{position:absolute;inset:0;background:url('lifestyle-bg.jpg') center/cover no-repeat;opacity:.08}
 .hero-bg-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.97) 0%,rgba(20,40,64,.92) 60%,rgba(26,53,88,.85) 100%)}
 .hero-content{position:relative;z-index:2;max-width:640px}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;text-transform:uppercase;margin-bottom:28px}
@@ -52,8 +48,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
 .hero-stat-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:600;margin-top:2px}
 .hero-right{position:absolute;right:5%;top:50%;transform:translateY(-50%);z-index:2;width:340px}
 @media(max-width:1100px){.hero-right{display:none}}
-
-/* MOCK CARD */
 .mock-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.45)}
 .mock-card-img{height:190px;position:relative;overflow:hidden;background:#f0f4ff}
 .mock-card-img img{width:100%;height:100%;object-fit:cover}
@@ -74,20 +68,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
 .mock-lock-overlay span{font-size:13px;font-weight:800;color:var(--navy)}
 .mock-lock-overlay small{font-size:11px;color:var(--g500)}
 .mock-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px}
-
-/* PROOF BAR */
 .proof-bar{background:var(--navy-dark);padding:20px 5%;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
 .proof-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:13px;font-weight:700}
 .proof-item span{color:var(--gold);font-weight:900}
-
-/* SECTIONS */
 section{padding:96px 5%}
 .section-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:12px}
 .section-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;line-height:1.1;color:var(--navy);margin-bottom:16px}
 .section-sub{font-size:17px;color:var(--g500);line-height:1.65;max-width:580px}
 .center{text-align:center}.center .section-sub{margin:0 auto}
-
-/* HOW IT WORKS */
 .how{background:#fff}
 .how-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1200px;margin:0 auto}
 .how-steps{display:flex;flex-direction:column;gap:0}
@@ -104,13 +92,11 @@ section{padding:96px 5%}
 .how-signal-label{font-size:13px;font-weight:700;color:#fff}
 .how-signal-sub{font-size:11px;color:rgba(255,255,255,.5)}
 .how-signal-badge{margin-left:auto;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.4);color:#86efac;border-radius:999px;font-size:10px;font-weight:800;padding:4px 8px;white-space:nowrap}
-
-/* LIFESTYLE */
 .lifestyle{background:var(--navy-dark);padding:96px 5%}
 .lifestyle-title{font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-1.2px;color:#fff;text-align:center;margin-bottom:12px}
 .lifestyle-sub{font-size:17px;color:rgba(255,255,255,.6);text-align:center;max-width:560px;margin:0 auto 48px}
 .lifestyle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px;margin:0 auto}
-.lifestyle-card{border-radius:20px;overflow:hidden;position:relative;height:340px}
+.lifestyle-card{border-radius:20px;overflow:hidden;position:relative;height:340px;background:var(--navy)}
 .lifestyle-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
 .lifestyle-card:hover img{transform:scale(1.04)}
 .lifestyle-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,22,40,.88))}
@@ -118,13 +104,11 @@ section{padding:96px 5%}
 .lifestyle-card-text h3{font-size:18px;font-weight:900;margin-bottom:4px}
 .lifestyle-card-text p{font-size:13px;color:rgba(255,255,255,.7)}
 .lifestyle-cta{text-align:center;margin-top:48px}
-
-/* WINNING PRODUCTS */
 .winning{background:var(--off)}
 .winning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;max-width:1200px;margin-left:auto;margin-right:auto}
 .winning-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;transition:all .2s;display:flex;flex-direction:column}
 .winning-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(30,58,95,.1)}
-.winning-card-img{height:200px;position:relative;overflow:hidden;flex-shrink:0}
+.winning-card-img{height:200px;position:relative;overflow:hidden;flex-shrink:0;background:var(--g100)}
 .winning-card-img img{width:100%;height:100%;object-fit:cover}
 .winning-card-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5))}
 .winning-card-tag{position:absolute;top:14px;left:14px;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px}
@@ -142,8 +126,6 @@ section{padding:96px 5%}
 .winning-story p{font-size:13px;color:var(--g700);line-height:1.75;margin-bottom:10px}
 .winning-story .drh-note{background:var(--navy);color:#fff;border-radius:10px;padding:12px 14px;font-size:13px;font-weight:700;margin-top:12px;line-height:1.55}
 .winning-story .drh-note span{color:var(--gold)}
-
-/* PREVIEW */
 .preview{background:var(--navy-dark);padding:96px 5%}
 .preview-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;color:#fff;text-align:center;margin-bottom:12px}
 .preview-sub{font-size:17px;color:rgba(255,255,255,.6);text-align:center;max-width:560px;margin:0 auto 48px}
@@ -169,16 +151,12 @@ section{padding:96px 5%}
 .preview-card-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:auto}
 .preview-cta{text-align:center}
 .preview-cta p{color:rgba(255,255,255,.45);font-size:13px;margin-top:14px}
-
-/* FEATURES */
 .features{background:var(--off)}
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;max-width:1200px;margin-left:auto;margin-right:auto}
 .feature-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:28px}
 .feature-icon{width:52px;height:52px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
 .feature-card h3{font-size:17px;font-weight:900;color:var(--navy);margin-bottom:8px}
 .feature-card p{font-size:14px;color:var(--g500);line-height:1.65}
-
-/* PRICING */
 .pricing{background:#fff}
 .pricing-card{max-width:520px;margin:48px auto 0;background:var(--navy);border-radius:28px;padding:40px;color:#fff;text-align:center;position:relative;overflow:hidden}
 .pricing-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:rgba(245,158,11,.12);border-radius:50%}
@@ -192,8 +170,6 @@ section{padding:96px 5%}
 .pricing-cta{width:100%;background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:14px;text-decoration:none;display:block}
 .pricing-cta:hover{background:var(--gold-light)}
 .pricing-note{font-size:12px;color:rgba(255,255,255,.4)}
-
-/* FAQ */
 .faq{background:var(--off)}
 .faq-list{max-width:720px;margin:48px auto 0;display:flex;flex-direction:column;gap:12px}
 .faq-item{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden}
@@ -201,38 +177,22 @@ section{padding:96px 5%}
 .faq-q span{font-size:20px;color:var(--g400);flex-shrink:0}
 .faq-a{padding:0 22px;font-size:14px;color:var(--g500);line-height:1.7;max-height:0;overflow:hidden;transition:all .3s}
 .faq-a.open{max-height:200px;padding:0 22px 18px}
-
-/* FINAL CTA */
 .final-cta{background:linear-gradient(135deg,var(--navy-dark),var(--navy));padding:96px 5%;text-align:center;position:relative;overflow:hidden}
 .final-cta::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:rgba(245,158,11,.07);border-radius:50%}
 .final-cta h2{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:16px;position:relative}
 .final-cta h2 span{color:var(--gold)}
 .final-cta p{font-size:18px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 36px;position:relative}
 .final-cta-note{font-size:13px;color:rgba(255,255,255,.3);margin-top:16px;position:relative}
-
-/* FOOTER */
 footer{background:var(--navy-dark);padding:32px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 footer p{font-size:13px;color:rgba(255,255,255,.35)}
 footer a{color:rgba(255,255,255,.35);text-decoration:none;font-size:13px}
 footer a:hover{color:#fff}
-
-/* RESPONSIVE */
-@media(max-width:1000px){
-  .how-grid,.lifestyle-grid,.winning-grid,.preview-grid,.features-grid{grid-template-columns:1fr}
-  .hero{padding:120px 5% 80px}
-  .proof-bar{gap:20px}
-  .lifestyle-card{height:260px}
-}
-@media(max-width:600px){
-  .nav-links{display:none}
-  .hero h1{font-size:36px}
-  .winning-card-stat{flex-wrap:wrap}
-}
+@media(max-width:1000px){.how-grid,.lifestyle-grid,.winning-grid,.preview-grid,.features-grid{grid-template-columns:1fr}.hero{padding:120px 5% 80px}.proof-bar{gap:20px}.lifestyle-card{height:260px}}
+@media(max-width:600px){.nav-links{display:none}.hero h1{font-size:36px}.winning-card-stat{flex-wrap:wrap}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">
     <div class="nav-logo-icon">
@@ -252,7 +212,6 @@ footer a:hover{color:#fff}
   <a href="signup.html" class="nav-cta">Start free trial →</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-bg-overlay"></div>
@@ -274,7 +233,7 @@ footer a:hover{color:#fff}
   <div class="hero-right">
     <div class="mock-card">
       <div class="mock-card-img">
-        <img src="https://cdn.pixabay.com/photo/2022/06/29/06/05/neck-blower-7291001_1280.jpg" alt="Cordless neck fan"/>
+        <img src="neck-fan.jpg" alt="Cordless neck fan" onerror="this.parentElement.style.background='linear-gradient(135deg,#dbeafe,#eff6ff)';this.style.display='none'"/>
         <div class="mock-badge-g">Grade A+</div>
         <div class="mock-badge-s">Strong Opportunity</div>
       </div>
@@ -297,7 +256,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- PROOF BAR -->
 <div class="proof-bar">
   <div class="proof-item"><span>✓</span> 12-point product validation</div>
   <div class="proof-item"><span>✓</span> TikTok, Amazon & AliExpress data</div>
@@ -305,7 +263,6 @@ footer a:hover{color:#fff}
   <div class="proof-item"><span>✓</span> UK-focused research</div>
 </div>
 
-<!-- HOW IT WORKS -->
 <section class="how" id="how">
   <div class="how-grid">
     <div>
@@ -315,62 +272,30 @@ footer a:hover{color:#fff}
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">1</div>
-          <div>
-            <h3>We scan the market for you</h3>
-            <p>Every week our engine monitors TikTok Shop UK, Amazon Movers & Shakers, AliExpress order growth and Google Trends — looking for products showing early upward signals before they peak.</p>
-          </div>
+          <div><h3>We scan the market for you</h3><p>Every week our engine monitors TikTok Shop UK, Amazon Movers & Shakers, AliExpress order growth and Google Trends — looking for products showing early upward signals before they peak.</p></div>
         </div>
         <div class="how-step">
           <div class="how-step-num">2</div>
-          <div>
-            <h3>Every product is scored</h3>
-            <p>Each product goes through our 12-point framework — problem-solving ability, video potential, margin strength, saturation risk and more. Only the best 3–5 make it through each week.</p>
-          </div>
+          <div><h3>Every product is scored</h3><p>Each product goes through our 12-point framework — problem-solving ability, video potential, margin strength, saturation risk and more. Only the best 3–5 make it through each week.</p></div>
         </div>
         <div class="how-step">
           <div class="how-step-num">3</div>
-          <div>
-            <h3>You get a full research report</h3>
-            <p>Supplier search terms, TikTok and Meta ad angles, target customer profile, competitor checks and 3 ready-to-use ad script variations. Everything you need to test the product.</p>
-          </div>
+          <div><h3>You get a full research report</h3><p>Supplier search terms, TikTok and Meta ad angles, target customer profile, competitor checks and 3 ready-to-use ad script variations. Everything you need to test the product.</p></div>
         </div>
         <div class="how-step">
           <div class="how-step-num">4</div>
-          <div>
-            <h3>Validate your own ideas too</h3>
-            <p>Found something yourself? Paste any product URL or name into our validator and get a full DropResearch assessment — opportunity score, risks, angles and verdict.</p>
-          </div>
+          <div><h3>Validate your own ideas too</h3><p>Found something yourself? Paste any product URL or name into our validator and get a full DropResearch assessment — opportunity score, risks, angles and verdict.</p></div>
         </div>
       </div>
     </div>
     <div class="how-visual">
       <h3>Live data sources</h3>
       <p>What our engine monitors every week to find emerging products before they peak</p>
-      <div class="how-signal">
-        <div class="how-signal-icon" style="background:rgba(0,0,0,.3)">🎵</div>
-        <div><div class="how-signal-label">TikTok Shop UK</div><div class="how-signal-sub">Trending products & creator activity</div></div>
-        <div class="how-signal-badge">Live</div>
-      </div>
-      <div class="how-signal">
-        <div class="how-signal-icon" style="background:rgba(245,158,11,.2)">📦</div>
-        <div><div class="how-signal-label">Amazon Movers & Shakers</div><div class="how-signal-sub">Products gaining rank fast</div></div>
-        <div class="how-signal-badge">Live</div>
-      </div>
-      <div class="how-signal">
-        <div class="how-signal-icon" style="background:rgba(239,68,68,.2)">🛒</div>
-        <div><div class="how-signal-label">AliExpress Order Growth</div><div class="how-signal-sub">Supplier demand signals</div></div>
-        <div class="how-signal-badge">Live</div>
-      </div>
-      <div class="how-signal">
-        <div class="how-signal-icon" style="background:rgba(59,130,246,.2)">📊</div>
-        <div><div class="how-signal-label">Google Trends UK</div><div class="how-signal-sub">Search demand movements</div></div>
-        <div class="how-signal-badge">Live</div>
-      </div>
-      <div class="how-signal">
-        <div class="how-signal-icon" style="background:rgba(99,102,241,.2)">📺</div>
-        <div><div class="how-signal-label">Meta Ads Library</div><div class="how-signal-sub">Competition level check</div></div>
-        <div class="how-signal-badge">Live</div>
-      </div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(0,0,0,.3)">🎵</div><div><div class="how-signal-label">TikTok Shop UK</div><div class="how-signal-sub">Trending products & creator activity</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(245,158,11,.2)">📦</div><div><div class="how-signal-label">Amazon Movers & Shakers</div><div class="how-signal-sub">Products gaining rank fast</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(239,68,68,.2)">🛒</div><div><div class="how-signal-label">AliExpress Order Growth</div><div class="how-signal-sub">Supplier demand signals</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(59,130,246,.2)">📊</div><div><div class="how-signal-label">Google Trends UK</div><div class="how-signal-sub">Search demand movements</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(99,102,241,.2)">📺</div><div><div class="how-signal-label">Meta Ads Library</div><div class="how-signal-sub">Competition level check</div></div><div class="how-signal-badge">Live</div></div>
       <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px">
         <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px">12-point scoring framework</div>
         <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Problem solving · Video potential · Margin strength · Competition level · Saturation risk · Audience size · and 6 more criteria</div>
@@ -379,33 +304,29 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- LIFESTYLE -->
 <section class="lifestyle">
   <h2 class="lifestyle-title">This is what finding the right product first looks like.</h2>
   <p class="lifestyle-sub">The people making real money from dropshipping aren't smarter than you. They just found the right product at the right time.</p>
   <div class="lifestyle-grid">
     <div class="lifestyle-card">
-      <img src="https://cdn.pixabay.com/photo/2016/11/29/09/16/architecture-1868667_1280.jpg" alt="Person at airport"/>
+      <img src="ChatGPT_Image_Jun_13__2026__06_59_46_PM.png" alt="Work from anywhere" onerror="this.style.display='none'"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text"><h3>Work from anywhere</h3><p>A laptop and the right products. That's all it takes.</p></div>
     </div>
     <div class="lifestyle-card">
-      <img src="https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg" alt="Financial freedom"/>
+      <img src="ChatGPT_Image_Jun_13__2026__07_03_55_PM.png" alt="Success" onerror="this.style.display='none'"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text"><h3>Be first to market</h3><p>Early movers capture the margin. Late movers fight for scraps.</p></div>
     </div>
     <div class="lifestyle-card">
-      <img src="https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593371_1280.jpg" alt="Entrepreneur laptop"/>
+      <img src="ChatGPT_Image_Jun_13__2026__07_05_45_PM.png" alt="Laptop entrepreneur" onerror="this.style.display='none'"/>
       <div class="lifestyle-card-overlay"></div>
       <div class="lifestyle-card-text"><h3>Build real income</h3><p>Not a side hustle. A scalable business with the right intelligence.</p></div>
     </div>
   </div>
-  <div class="lifestyle-cta">
-    <a href="signup.html" class="btn-primary">Start your free 7-day trial →</a>
-  </div>
+  <div class="lifestyle-cta"><a href="signup.html" class="btn-primary">Start your free 7-day trial →</a></div>
 </section>
 
-<!-- WINNING PRODUCTS -->
 <section class="winning" id="products">
   <div class="center">
     <div class="section-label">Real product stories</div>
@@ -416,7 +337,7 @@ footer a:hover{color:#fff}
 
     <div class="winning-card">
       <div class="winning-card-img">
-        <img src="https://cdn.pixabay.com/photo/2017/05/13/19/53/fidget-spinner-2310746_1280.jpg" alt="Fidget spinner toy"/>
+        <img src="ChatGPT_Image_Jun_13__2026__07_07_31_PM.png" alt="Fidget spinner" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
         <div class="winning-card-img-overlay"></div>
         <div class="winning-card-tag">2017 · Viral</div>
       </div>
@@ -431,7 +352,7 @@ footer a:hover{color:#fff}
         <div class="winning-story" id="story-fidget">
           <p>In early 2017, a small number of dropshippers noticed something unusual — a simple spinning toy quietly picking up traction on AliExpress. Orders were creeping up. Reviews were growing. A handful listed it for £12–£18. Cost price: under £1.50.</p>
           <p>Within 6 weeks it had exploded. Every school in the UK had them. Parents were bulk buying. Amazon sold out daily. Sellers who got in early were doing £10,000–£50,000 weeks from a spinner that cost less than a coffee.</p>
-          <p>By week 10 it was everywhere. Margins collapsed. Ads were saturated. The window had closed. The early movers had already made their money and moved on.</p>
+          <p>By week 10 it was everywhere. Margins collapsed. The window had closed. The early movers had already made their money and moved on.</p>
           <div class="drh-note">💡 The sellers who won found the fidget spinner <span>weeks before it went viral</span>. DropResearch Hub didn't exist in 2017. It does now. <span>The next one is already emerging.</span></div>
         </div>
       </div>
@@ -439,7 +360,7 @@ footer a:hover{color:#fff}
 
     <div class="winning-card">
       <div class="winning-card-img">
-        <img src="https://cdn.pixabay.com/photo/2017/01/09/11/30/back-pain-1966509_1280.jpg" alt="Back posture stretching"/>
+        <img src="ChatGPT_Image_Jun_13__2026__07_08_39_PM.png" alt="Posture corrector back" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
         <div class="winning-card-img-overlay"></div>
         <div class="winning-card-tag">2019 · Problem Solver</div>
       </div>
@@ -462,7 +383,7 @@ footer a:hover{color:#fff}
 
     <div class="winning-card">
       <div class="winning-card-img">
-        <img src="https://cdn.pixabay.com/photo/2019/05/23/18/26/paper-straw-4223779_1280.jpg" alt="Eco reusable straws"/>
+        <img src="ChatGPT_Image_Jun_13__2026__07_10_24_PM.png" alt="Reusable metal straws eco" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
         <div class="winning-card-img-overlay"></div>
         <div class="winning-card-tag">2018 · Eco Trend</div>
       </div>
@@ -486,7 +407,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- PREVIEW -->
 <section class="preview">
   <h2 class="preview-title">Inside DropResearch Hub.</h2>
   <p class="preview-sub">This is what members see every week — products scored, validated and ready to research before they blow up.</p>
@@ -494,7 +414,7 @@ footer a:hover{color:#fff}
 
     <div class="preview-card">
       <div class="preview-card-img">
-        <img src="https://cdn.pixabay.com/photo/2022/06/29/06/05/neck-blower-7291001_1280.jpg" alt="Cordless neck fan"/>
+        <img src="neck-fan.jpg" alt="Neck fan portable" onerror="this.parentElement.style.background='linear-gradient(135deg,#dbeafe,#eff6ff)';this.style.display='none'"/>
         <div class="preview-card-badge-g">Grade A+</div>
         <div class="preview-card-badge-s">Strong Opportunity</div>
       </div>
@@ -515,8 +435,8 @@ footer a:hover{color:#fff}
     </div>
 
     <div class="preview-card">
-      <div class="preview-card-img" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
-        <img src="https://cdn.pixabay.com/photo/2016/03/05/22/30/kitchen-1238774_1280.jpg" alt="Silicone food wrap"/>
+      <div class="preview-card-img">
+        <img src="ChatGPT_Image_Jun_13__2026__07_12_28_PM.png" alt="Food storage kitchen" onerror="this.parentElement.style.background='linear-gradient(135deg,#f0fdf4,#dcfce7)';this.style.display='none'"/>
         <div class="preview-card-badge-g" style="background:var(--gold);color:var(--navy-dark)">Grade A</div>
         <div class="preview-card-badge-s">Watch List</div>
       </div>
@@ -537,8 +457,8 @@ footer a:hover{color:#fff}
     </div>
 
     <div class="preview-card">
-      <div class="preview-card-img" style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff)">
-        <img src="https://cdn.pixabay.com/photo/2017/02/13/14/10/hair-2062649_1280.jpg" alt="Scalp massager beauty"/>
+      <div class="preview-card-img">
+        <img src="ChatGPT_Image_Jun_13__2026__07_13_23_PM.png" alt="Scalp hair beauty" onerror="this.parentElement.style.background='linear-gradient(135deg,#fdf4ff,#f3e8ff)';this.style.display='none'"/>
         <div class="preview-card-badge-g">Grade A+</div>
         <div class="preview-card-badge-s">Strong Opportunity</div>
       </div>
@@ -565,7 +485,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- FEATURES -->
 <section class="features">
   <div class="center">
     <div class="section-label">What you get</div>
@@ -581,7 +500,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- PRICING -->
 <section class="pricing" id="pricing">
   <div class="center">
     <div class="section-label">Pricing</div>
@@ -607,7 +525,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- FAQ -->
 <section class="faq" id="faq">
   <div class="center">
     <div class="section-label">FAQ</div>
@@ -623,7 +540,6 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<!-- FINAL CTA -->
 <section class="final-cta">
   <h2>The next winning product<br><span>is already emerging.</span></h2>
   <p>The question is whether you find it in week 1 or week 8. Start your free trial today.</p>
@@ -631,7 +547,6 @@ footer a:hover{color:#fff}
   <div class="final-cta-note">7 days free · Then £24.99/month · Cancel anytime · No commitment</div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <a class="nav-logo" href="#">
     <div class="nav-logo-icon">
@@ -658,13 +573,8 @@ function toggleStory(id, btn) {
   const isOpen = story.classList.contains('open');
   document.querySelectorAll('.winning-story').forEach(s => s.classList.remove('open'));
   document.querySelectorAll('.winning-expand-btn').forEach(b => { b.style.background=''; b.style.color=''; });
-  if (!isOpen) {
-    story.classList.add('open');
-    btn.style.background = 'var(--gold)';
-    btn.style.color = 'var(--navy-dark)';
-  }
+  if (!isOpen) { story.classList.add('open'); btn.style.background='var(--gold)'; btn.style.color='var(--navy-dark)'; }
 }
-
 function toggleFaq(btn) {
   const answer = btn.nextElementSibling;
   const span = btn.querySelector('span');
@@ -673,15 +583,11 @@ function toggleFaq(btn) {
   document.querySelectorAll('.faq-q span').forEach(s => s.textContent = '+');
   if (!isOpen) { answer.classList.add('open'); span.textContent = '×'; }
 }
-
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
 }, { threshold: 0.1 });
-
 document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-step').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(24px)';
-  el.style.transition = 'opacity .5s, transform .5s';
+  el.style.opacity = '0'; el.style.transform = 'translateY(24px)'; el.style.transition = 'opacity .5s, transform .5s';
   observer.observe(el);
 });
 </script>
