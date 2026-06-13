@@ -206,8 +206,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .admin-product-meta{font-size:12px;color:var(--g400)}
 .admin-product-grade{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
 
-/* TOAST */
-
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .status-messages{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
@@ -252,9 +250,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════ -->
 <!-- VIEW 1: EMERGING PRODUCTS -->
-<!-- ═══════════════════════════════════════════════════════ -->
 <div class="view active" id="view-products">
   <div class="page-header">
     <h1>Emerging Products</h1>
@@ -281,9 +277,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- VIEW 2: FULL PRODUCT ANALYSIS (shown when Analyse clicked) -->
-<!-- ═══════════════════════════════════════════════════════ -->
+<!-- VIEW 2: FULL PRODUCT ANALYSIS -->
 <div class="view" id="view-analysis">
   <div class="analysis-header">
     <button class="back-btn" onclick="showView('products',document.querySelector('.nav-tab'))">← Back to products</button>
@@ -292,14 +286,10 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <p id="analysis-product-niche">Loading...</p>
     </div>
   </div>
-  <div class="analysis-body" id="analysis-body">
-    <!-- Populated by JS -->
-  </div>
+  <div class="analysis-body" id="analysis-body"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
 <!-- VIEW 3: PRODUCT VALIDATOR -->
-<!-- ═══════════════════════════════════════════════════════ -->
 <div class="view" id="view-validator">
   <div class="validator-hero">
     <h1>Is it worth building a brand around?</h1>
@@ -323,9 +313,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
 <!-- VIEW 4: ADMIN -->
-<!-- ═══════════════════════════════════════════════════════ -->
 <div class="view" id="view-admin">
   <div class="admin-wrap">
     <div class="admin-lock" id="admin-lock">
@@ -349,8 +337,8 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
           <div class="status-line" id="sl-3">Analysing market signals and trend data...</div>
           <div class="status-line" id="sl-4">Calculating saturation and margin scores...</div>
           <div class="status-line" id="sl-5">Building product intelligence cards...</div>
-          <div class="status-line" id="sl-6">Running second product batch...</div>
-          <div class="status-line" id="sl-7">Combining and deduplicating results...</div>
+          <div class="status-line" id="sl-6">Fetching product images...</div>
+          <div class="status-line" id="sl-7">Combining and finalising results...</div>
           <div class="status-line" id="sl-8">Products ready — review and publish below</div>
         </div>
       </div>
@@ -376,21 +364,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <script>
 const ADMIN_PW = 'Billy1234.';
-const GOOGLE_KEY = 'AIzaSyCrPYp3mrwwyDWKQoEA-iHkX5cpFQYfE4U';
-const GOOGLE_CX = '548e0bc156c6d4529';
 
-async function fetchProductImage(productName) {
-  try {
-    const query = encodeURIComponent(productName + ' product');
-    const url = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1&imgType=photo&safe=off`;
-    const r = await fetch(url);
-    const data = await r.json();
-    return data?.items?.[0]?.link || '';
-  } catch(e) {
-    console.log('Image fetch failed:', e.message);
-    return '';
-  }
-}
 let allProducts = [];
 let pendingProducts = [];
 let activeNiche = 'all';
@@ -427,18 +401,17 @@ function gradeColorBg(g) {
 function renderProductsGrid() {
   const grid = document.getElementById('products-grid');
   const list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche || '').toLowerCase() === activeNiche.toLowerCase());
-
   document.getElementById('toolbar-count').textContent = `${list.length} product${list.length !== 1 ? 's' : ''}`;
-
   if (!list.length) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back Monday when new products drop.</p></div>`;
     return;
   }
-
   grid.innerHTML = list.map((p, i) => `
     <div class="product-card" onclick="openAnalysis(${i})">
       <div class="product-card-img" style="background:${p.bgColor||'#F3F4F6'}">
-        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none">${p.emoji||'📦'}</span>` : `<span>${p.emoji||'📦'}</span>`}
+        ${p.img
+          ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`
+          : `<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade || '?'}</div>
         <div class="stage-badge">${p.stage || 'Emerging'}</div>
       </div>
@@ -503,7 +476,6 @@ function buildAnalysisBody(p) {
   const trendsQ = encodeURIComponent(p.googleTrendsKeyword || p.name);
 
   body.innerHTML = `
-    <!-- SCORES -->
     <div class="score-row">
       <div class="score-card">
         <div class="score-card-label">Opportunity</div>
@@ -527,24 +499,16 @@ function buildAnalysisBody(p) {
       </div>
     </div>
 
-    <!-- TREND GRAPH -->
     <div class="analysis-panel">
-      <div class="analysis-panel-head">
-        <span style="font-size:20px">📈</span>
-        <h2>Growth signal — last 6 weeks</h2>
-      </div>
+      <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth signal — last 6 weeks</h2></div>
       <div class="analysis-panel-body">
         ${growthGraphHtml}
         <div class="graph-note">Indicative growth signal based on search trend data. Verify on Google Trends for live data.</div>
       </div>
     </div>
 
-    <!-- WHY / RISKS / ANGLES -->
     <div class="analysis-panel">
-      <div class="analysis-panel-head">
-        <span style="font-size:20px">🔍</span>
-        <h2>Opportunity breakdown</h2>
-      </div>
+      <div class="analysis-panel-head"><span style="font-size:20px">🔍</span><h2>Opportunity breakdown</h2></div>
       <div class="analysis-panel-body">
         <div class="insight-cols">
           <div class="insight-col green">
@@ -567,14 +531,10 @@ function buildAnalysisBody(p) {
       </div>
     </div>
 
-    <!-- RESEARCH HUB -->
     <div class="analysis-panel">
-      <div class="analysis-panel-head">
-        <span style="font-size:20px">🔗</span>
-        <h2>Research hub</h2>
-      </div>
+      <div class="analysis-panel-head"><span style="font-size:20px">🔗</span><h2>Research hub</h2></div>
       <div class="analysis-panel-body">
-        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Check who's already selling this, what ads are running and how search is trending. Use multiple searches to get the full picture.</p>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Check who's already selling this, what ads are running and how search is trending.</p>
         <div class="research-grid">
           <a class="research-link" href="https://trends.google.com/trends/explore?geo=GB&q=${trendsQ}" target="_blank">
             <div class="research-link-icon" style="background:#e8f0fe">📊</div>
@@ -604,12 +564,8 @@ function buildAnalysisBody(p) {
       </div>
     </div>
 
-    <!-- AD CREATIVE GENERATOR -->
     <div class="analysis-panel">
-      <div class="analysis-panel-head">
-        <span style="font-size:20px">🎬</span>
-        <h2>Ad creative generator — 3 variations</h2>
-      </div>
+      <div class="analysis-panel-head"><span style="font-size:20px">🎬</span><h2>Ad creative generator — 3 variations</h2></div>
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Generate 3 complete video ad scripts with hooks, shot list and a ready-to-send production brief.</p>
         <div class="creative-form">
@@ -676,7 +632,6 @@ async function generateCreative(productName) {
   const angle = document.getElementById('creative-angle').value;
   btn.disabled = true;
   btn.textContent = '✨ Generating 3 variations...';
-
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
@@ -751,29 +706,17 @@ function copyEl(id) {
 async function runValidator() {
   const input = document.getElementById('validator-input').value.trim();
   const resultArea = document.getElementById('validator-result');
-
   if (!input) { showToast('Paste a product URL first'); return; }
-
-  // Extract product name from URL
   let productName = extractProductName(input);
-
   resultArea.innerHTML = `<div class="validator-empty"><h3>Analysing your product...</h3><p>Checking market demand, competition and brand potential for: <strong>${productName}</strong></p></div>`;
-
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        productName: productName,
-        niche: 'General',
-        costPrice: 'Unknown',
-        sellPrice: 'Unknown'
-      })
+      body: JSON.stringify({ productName, niche: 'General', costPrice: 'Unknown', sellPrice: 'Unknown' })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Analysis failed');
-
-    // Build a fake product object and show full analysis
     const p = {
       name: data.productName || productName,
       niche: 'Validator result',
@@ -793,8 +736,6 @@ async function runValidator() {
       bgColor: '#F3F4F6',
       emoji: '🔍'
     };
-
-    // Inject full analysis into validator result area
     const tempBody = document.createElement('div');
     tempBody.id = 'analysis-body';
     tempBody.className = 'analysis-body';
@@ -808,13 +749,9 @@ async function runValidator() {
       </div>
     `;
     resultArea.appendChild(tempBody);
-
-    // Reuse buildAnalysisBody
-    const savedBody = document.getElementById('analysis-body');
     buildAnalysisBody(p);
     const built = document.getElementById('analysis-body');
     resultArea.appendChild(built);
-
   } catch(e) {
     resultArea.innerHTML = `<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;
   }
@@ -822,7 +759,6 @@ async function runValidator() {
 
 function extractProductName(url) {
   try {
-    // Try to get meaningful words from the URL path
     const decoded = decodeURIComponent(url);
     const words = decoded.replace(/[-_+]/g,' ')
       .split(/[\/\?&#]/)
@@ -879,27 +815,11 @@ async function adminGenerate() {
     const s = c.indexOf('['), e = c.lastIndexOf(']');
     if (s === -1 || e === -1) throw new Error('No product array found');
     let products = JSON.parse(c.slice(s, e + 1));
-
-    // Fetch real product images from Google (client-side)
-    try {
-      const imageResults = await Promise.all(products.map(p => fetchProductImage(p.name)));
-      products = products.map((p, i) => ({ ...p, img: p.img || imageResults[i] || '' }));
-      console.log('Images fetched:', imageResults.filter(Boolean).length, 'of', imageResults.length);
-    } catch(imgErr) {
-      console.log('Image fetching failed:', imgErr.message);
-    }
-
     pendingProducts = products;
     clearInterval(statusTimer);
-    // Mark remaining lines as done
-    lines.forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.className = 'status-line done show';
-    });
-    
+    lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line done show'; });
     renderAdminProductsList();
     document.getElementById('admin-products-card').style.display = 'block';
-
   } catch(e) {
     clearInterval(statusTimer);
     const errLine = document.createElement('div');
@@ -908,7 +828,6 @@ async function adminGenerate() {
     errLine.textContent = '✕ Error: ' + e.message;
     document.getElementById('status-messages').appendChild(errLine);
   }
-
   btn.disabled = false;
   document.getElementById('admin-gen-text').textContent = '✨ Generate emerging products';
 }
@@ -922,6 +841,7 @@ function renderAdminProductsList() {
         <div class="admin-product-name">${p.name}</div>
         <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore}/100 · Sat: ${p.saturation}/100 · ${p.margin} margin</div>
         <div style="font-size:12px;color:var(--g500);margin-top:4px;font-style:italic;line-height:1.5">${p.whyNow || ''}</div>
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid var(--g200)" onerror="this.style.display='none'">` : ''}
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
           <a href="https://trends.google.com/trends/explore?geo=GB&q=${encodeURIComponent(p.googleTrendsKeyword||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#e8f0fe;color:#1d4ed8;text-decoration:none;border:1px solid #bfdbfe">📊 Google Trends</a>
           <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #bfdbfe">📺 Meta Ads</a>
@@ -938,17 +858,8 @@ function renderAdminProductsList() {
   updateSelectedCount();
 }
 
-function deletePending(i) {
-  pendingProducts.splice(i, 1);
-  renderAdminProductsList();
-}
-
-function toggleProduct(i) {
-  const btn = document.getElementById('toggle-' + i);
-  btn.classList.toggle('on');
-  updateSelectedCount();
-}
-
+function deletePending(i) { pendingProducts.splice(i, 1); renderAdminProductsList(); }
+function toggleProduct(i) { document.getElementById('toggle-' + i).classList.toggle('on'); updateSelectedCount(); }
 function toggleAll(on) {
   pendingProducts.forEach((_, i) => {
     const btn = document.getElementById('toggle-' + i);
@@ -956,7 +867,6 @@ function toggleAll(on) {
   });
   updateSelectedCount();
 }
-
 function selectGradeA() {
   pendingProducts.forEach((p, i) => {
     const btn = document.getElementById('toggle-' + i);
@@ -966,7 +876,6 @@ function selectGradeA() {
   updateSelectedCount();
   showToast('Grade A and A+ products selected');
 }
-
 function updateSelectedCount() {
   const total = pendingProducts.length;
   const selected = document.querySelectorAll('.admin-product-toggle.on').length;
@@ -976,7 +885,6 @@ function updateSelectedCount() {
 
 function publishProducts() {
   if (!pendingProducts.length) { showToast('Generate products first'); return; }
-  // Only include toggled-on products
   const selected = pendingProducts.filter((_, i) => {
     const btn = document.getElementById('toggle-' + i);
     return btn && btn.classList.contains('on');
@@ -994,7 +902,6 @@ function publishProducts() {
   showView('products', document.querySelector('.nav-tab'));
 }
 
-// ── TOAST ─────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1002,7 +909,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// Init
 renderProductsGrid();
 </script>
 </body>
