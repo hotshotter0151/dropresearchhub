@@ -9,75 +9,25 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const body = req.body;
-  console.log('[DRH] Mode:', body.mode || (body.productName ? 'validator' : body.system ? 'passthrough' : 'unknown'));
 
-  // ── MODE 1: EMERGING PRODUCTS WITH REAL DATA ──────────────────────────────
+  // ── EMERGING PRODUCTS MODE ──
   if (body.mode === 'emerging') {
-    let trendingKeywords = [];
-    let amazonProducts = [];
-
-    // Fetch Google Trends UK daily rising searches
-    try {
-      const trendsRes = await fetch('https://trends.google.com/trends/trendingsearches/daily/rss?geo=GB', {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DropResearchHub/1.0)' }
-      });
-      if (trendsRes.ok) {
-        const xml = await trendsRes.text();
-        const matches = xml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/g) || xml.match(/<title>(.*?)<\/title>/g) || [];
-        trendingKeywords = matches
-          .map(m => m.replace(/<\/?title>|<!\[CDATA\[|\]\]>/g, '').trim())
-          .filter(k => k.length > 3 && !k.includes('Google') && !k.includes('xmlns'))
-          .slice(0, 20);
-        console.log('[DRH] Google Trends keywords:', trendingKeywords.length);
-      }
-    } catch (e) {
-      console.log('[DRH] Google Trends failed:', e.message);
-    }
-
-    // Fetch Amazon UK Movers & Shakers via proxy
-    try {
-      const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.amazon.co.uk/gp/movers-and-shakers/kitchen');
-      const amazonRes = await fetch(proxyUrl);
-      if (amazonRes.ok) {
-        const data = await amazonRes.json();
-        const html = data.contents || '';
-        const titles = html.match(/aria-label="([^"]{10,80})"/g) || [];
-        amazonProducts = titles
-          .map(t => t.replace(/aria-label="|"/g, '').trim())
-          .filter(t => !t.includes('page') && !t.includes('navigation'))
-          .slice(0, 10);
-        console.log('[DRH] Amazon products:', amazonProducts.length);
-      }
-    } catch (e) {
-      console.log('[DRH] Amazon failed:', e.message);
-    }
-
-    const dataContext = [
-      trendingKeywords.length ? `UK Google Trends rising now: ${trendingKeywords.slice(0,15).join(', ')}` : '',
-      amazonProducts.length ? `Amazon UK rising products: ${amazonProducts.slice(0,10).join(', ')}` : ''
-    ].filter(Boolean).join('. ');
-
-    console.log('[DRH] Data context length:', dataContext.length);
-
-    const systemPrompt = `You are an expert ecommerce product researcher for UK dropshippers specialising in finding products JUST starting to emerge — in the first 1-3 months of a Google Trends growth curve. NOT mainstream, NOT already viral.
-
-${dataContext ? `REAL LIVE MARKET DATA: ${dataContext}` : 'No live data available — use your knowledge of emerging micro-trends in mid-2026.'}
-
-Return ONLY a valid JSON array of exactly 20 product objects. No markdown, no backticks, no text before or after the array.
-
-Each object must have ALL these exact fields:
-{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 60-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending in mid-2026 specifically","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"google trends keyword","bgColor":"#EFF6FF or similar subtle hex","growthData":[{"label":"W1","value":12},{"label":"W2","value":24},{"label":"W3","value":38},{"label":"W4","value":55},{"label":"W5","value":71},{"label":"W6","value":84}]}
-
-RULES: No yoga mats, resistance bands, water bottles, phone cases. Must be SPECIFIC niche products. Max 3 per niche. growthData must show rising curve.`;
-
+    console.log('[DRH] Generating 20 emerging products');
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
         max_tokens: 8000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: dataContext ? 'Using the real market data provided, generate 20 emerging UK ecom products for June 2026. Prioritise products aligning with the real trending data shown.' : 'Generate 20 genuinely emerging micro-niche UK ecom products for June 2026.' }]
+        system: `You are an expert ecommerce product researcher for UK dropshippers. Find products JUST starting to emerge — first 1-3 months of a Google Trends growth curve. NOT mainstream, NOT already viral on TikTok or Instagram.
+
+Return ONLY a valid JSON array of exactly 20 product objects. No markdown, no backticks, no text before or after.
+
+Each object must have ALL these fields:
+{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 60-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending mid-2026","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"google trends keyword","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":12},{"label":"W2","value":25},{"label":"W3","value":40},{"label":"W4","value":58},{"label":"W5","value":72},{"label":"W6","value":86}]}
+
+RULES: No yoga mats, resistance bands, water bottles, phone cases, fidget toys. Must be SPECIFIC niche products. Max 3 per niche. growthData must show a rising curve.`,
+        messages: [{ role: 'user', content: 'Generate 20 genuinely emerging micro-niche UK ecom products for June 2026. Specific, unusual, problem-solving items not yet found by most dropshippers.' }]
       })
     });
 
@@ -94,12 +44,12 @@ RULES: No yoga mats, resistance bands, water bottles, phone cases. Must be SPECI
     let cleaned = rawText.replace(/```json/gi,'').replace(/```/g,'').trim();
     const start = cleaned.indexOf('[');
     const end = cleaned.lastIndexOf(']');
-    if (start === -1 || end === -1) return res.status(500).json({ error: 'No product array in response' });
+    if (start === -1 || end === -1) return res.status(500).json({ error: 'No product array found' });
     cleaned = cleaned.slice(start, end + 1);
 
     try {
       const products = JSON.parse(cleaned);
-      console.log('[DRH] Generated', products.length, 'products. Trends used:', trendingKeywords.length > 0, 'Amazon used:', amazonProducts.length > 0);
+      console.log('[DRH] Generated', products.length, 'products');
       return res.status(200).json({ content: [{ type: 'text', text: JSON.stringify(products) }] });
     } catch (e) {
       console.error('[DRH] Parse error:', e.message);
@@ -107,7 +57,7 @@ RULES: No yoga mats, resistance bands, water bottles, phone cases. Must be SPECI
     }
   }
 
-  // ── MODE 2: PRODUCT VALIDATOR ─────────────────────────────────────────────
+  // ── PRODUCT VALIDATOR ──
   if (body.productName) {
     console.log('[DRH] Validator:', body.productName);
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -126,7 +76,7 @@ RULES: No yoga mats, resistance bands, water bottles, phone cases. Must be SPECI
     catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
   }
 
-  // ── MODE 3: PASSTHROUGH (creative gen, AI assistant etc) ──────────────────
+  // ── PASSTHROUGH ──
   if (body.system && body.messages) {
     console.log('[DRH] Passthrough');
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
