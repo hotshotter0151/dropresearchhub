@@ -333,13 +333,13 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
           <span id="admin-gen-text">✨ Generate emerging products</span>
         </button>
         <div class="status-messages" id="status-messages">
-          <div class="status-line" id="sl-1">Connecting to research engine...</div>
-          <div class="status-line" id="sl-2">Scanning for micro-niche emerging products...</div>
-          <div class="status-line" id="sl-3">Analysing market signals and trend data...</div>
-          <div class="status-line" id="sl-4">Calculating saturation and margin scores...</div>
-          <div class="status-line" id="sl-5">Building product intelligence cards...</div>
+          <div class="status-line" id="sl-1">Searching TikTok Shop UK for trending products...</div>
+          <div class="status-line" id="sl-2">Checking Amazon UK Movers & Shakers...</div>
+          <div class="status-line" id="sl-3">Scanning AliExpress for growth signals...</div>
+          <div class="status-line" id="sl-4">Applying 12-point product selection framework...</div>
+          <div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
           <div class="status-line" id="sl-6">Fetching product images...</div>
-          <div class="status-line" id="sl-7">Combining and finalising results...</div>
+          <div class="status-line" id="sl-7">Finalising research reports...</div>
           <div class="status-line" id="sl-8">Products ready — review and publish below</div>
         </div>
       </div>
@@ -356,6 +356,11 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
           <span id="selected-count" style="font-size:13px;color:var(--g400)"></span>
         </div>
         <div class="admin-products-list" id="admin-products-list"></div>
+      </div>
+      <div class="admin-card" id="admin-live-card">
+        <h2>🗂️ Manage live feed</h2>
+        <p>Remove products currently showing in the member feed.</p>
+        <div class="admin-products-list" id="admin-live-list"><div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div></div>
       </div>
     </div>
   </div>
@@ -414,24 +419,24 @@ function renderProductsGrid() {
           ? `<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`
           : `<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade || '?'}</div>
-        <div class="stage-badge">${p.stage || 'Emerging'}</div>
+        <div class="stage-badge">${p.verdict || p.stage || 'Emerging'}</div>
       </div>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
         <div class="product-card-niche">${p.niche} · ${p.season || 'Evergreen'}</div>
-        <div class="product-card-why">${p.whyNow || 'Early growth signal detected.'}</div>
+        <div class="product-card-why">${p.whyEmerging || p.whyNow || 'Early growth signal detected.'}</div>
         <div class="mini-scores">
           <div class="mini-score">
             <div class="mini-score-label">Trend</div>
             <div class="mini-score-val" style="color:var(--navy)">${p.trendScore || '—'}</div>
           </div>
           <div class="mini-score">
-            <div class="mini-score-label">Margin</div>
-            <div class="mini-score-val" style="color:var(--green)">${p.margin || '—'}</div>
+            <div class="mini-score-label">Problem</div>
+            <div class="mini-score-val" style="color:var(--green)">${p.problemScore || '—'}</div>
           </div>
           <div class="mini-score">
-            <div class="mini-score-label">Sat.</div>
-            <div class="mini-score-val" style="color:${parseInt(p.saturation)<40?'var(--green)':parseInt(p.saturation)<60?'var(--amber)':'var(--red)'}">${p.saturation || '—'}</div>
+            <div class="mini-score-label">Sat. Risk</div>
+            <div class="mini-score-val" style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div>
           </div>
         </div>
         <button class="analyse-btn" onclick="event.stopPropagation();openAnalysis(${i})">
@@ -477,37 +482,125 @@ function buildAnalysisBody(p) {
   const trendsQ = encodeURIComponent(p.googleTrendsKeyword || p.name);
 
   body.innerHTML = `
+    <!-- SCORES -->
     <div class="score-row">
       <div class="score-card">
-        <div class="score-card-label">Opportunity</div>
-        <div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.grade || '?'}</div>
-        <div class="score-card-sub">Overall grade</div>
+        <div class="score-card-label">Emerging Score</div>
+        <div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.emergingScore || '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div>
+        <div class="score-card-sub">Overall opportunity</div>
       </div>
       <div class="score-card">
-        <div class="score-card-label">Trend score</div>
+        <div class="score-card-label">Trend Score</div>
         <div class="score-card-value" style="color:var(--navy)">${p.trendScore || '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div>
-        <div class="score-card-sub">Google Trends signal</div>
+        <div class="score-card-sub">Growth signal strength</div>
       </div>
       <div class="score-card">
-        <div class="score-card-label">Saturation</div>
-        <div class="score-card-value" style="color:${parseInt(p.saturation)<40?'var(--green)':parseInt(p.saturation)<60?'var(--amber)':'var(--red)'}">${p.saturation || '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div>
-        <div class="score-card-sub">${parseInt(p.saturation)<40?'Low — good entry':'Medium — competitive'}</div>
+        <div class="score-card-label">Sat. Risk</div>
+        <div class="score-card-value" style="font-size:22px;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div>
+        <div class="score-card-sub">Competition level</div>
       </div>
       <div class="score-card">
-        <div class="score-card-label">Est. margin</div>
+        <div class="score-card-label">Est. Margin</div>
         <div class="score-card-value" style="color:var(--green)">${p.margin || '—'}</div>
-        <div class="score-card-sub">Estimated margin</div>
+        <div class="score-card-sub">${p.supplierCost ? `Cost: ${p.supplierCost}` : 'Estimated margin'}</div>
       </div>
     </div>
 
+    <!-- VERDICT BANNER -->
+    <div style="background:${p.verdict==='Strong Opportunity'?'var(--green-bg)':p.verdict==='Watch List'?'var(--amber-bg)':'var(--red-bg)'};border:1px solid ${p.verdict==='Strong Opportunity'?'#bbf7d0':p.verdict==='Watch List'?'#fde68a':'#fecaca'};border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:28px">${p.verdict==='Strong Opportunity'?'✅':p.verdict==='Watch List'?'👀':'❌'}</div>
+      <div>
+        <div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict || 'Under Review'}</div>
+        <div style="font-size:13px;color:var(--g700);margin-top:3px">${p.verdictReason || p.verdict || ''}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:11px;color:var(--g400);text-transform:uppercase;font-weight:700">Selling Price</div>
+        <div style="font-size:18px;font-weight:900;color:var(--navy)">${p.sellingPrice || p.margin || '—'}</div>
+      </div>
+    </div>
+
+    <!-- SCORING BREAKDOWN -->
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">📊</span><h2>Scoring breakdown</h2></div>
+      <div class="analysis-panel-body">
+        ${[
+          { label: 'Trend Growth', key: 'trendGrowth', max: 25, color: 'var(--navy)' },
+          { label: 'Problem Solving', key: 'problemSolving', max: 20, color: 'var(--green)' },
+          { label: 'Video Potential', key: 'videoPotential', max: 15, color: '#8B5CF6' },
+          { label: 'Profit Margin', key: 'profitMargin', max: 15, color: 'var(--gold)' },
+          { label: 'Competition Level', key: 'competitionLevel', max: 15, color: 'var(--amber)' },
+          { label: 'Audience Size', key: 'audienceSize', max: 10, color: '#06B6D4' },
+        ].map(s => {
+          const val = p.scoring?.[s.key] || 0;
+          const pct = Math.round((val / s.max) * 100);
+          return `
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+                <span style="font-size:13px;font-weight:700;color:var(--g700)">${s.label}</span>
+                <span style="font-size:13px;font-weight:900;color:${s.color}">${val}/${s.max}</span>
+              </div>
+              <div style="background:var(--g100);border-radius:999px;height:8px;overflow:hidden">
+                <div style="height:100%;width:${pct}%;background:${s.color};border-radius:999px;transition:width .6s"></div>
+              </div>
+            </div>`;
+        }).join('')}
+        <div style="border-top:2px solid var(--g200);padding-top:14px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:15px;font-weight:800;color:var(--g900)">Total Score</span>
+          <span style="font-size:24px;font-weight:900;color:${gradeColor(p.grade)}">${p.emergingScore || Object.values(p.scoring||{}).reduce((a,b)=>a+b,0)}/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TREND GRAPH -->
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth signal — last 6 weeks</h2></div>
       <div class="analysis-panel-body">
         ${growthGraphHtml}
-        <div class="graph-note">Indicative growth signal based on search trend data. Verify on Google Trends for live data.</div>
+        <div class="graph-note">Indicative growth signal. Verify on Google Trends before launching.</div>
       </div>
     </div>
 
+    <!-- PRODUCT INTEL -->
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🎯</span><h2>Product intelligence</h2></div>
+      <div class="analysis-panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px">
+            <div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Target Customer</div>
+            <div style="font-size:13px;color:var(--g700);font-weight:500">${p.targetCustomer || '—'}</div>
+          </div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px">
+            <div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Problem Solved</div>
+            <div style="font-size:13px;color:var(--g700);font-weight:500">${p.problemSolved || '—'}</div>
+          </div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px">
+            <div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Main Angle</div>
+            <div style="font-size:13px;color:var(--g700);font-weight:500">${p.mainAngle || '—'}</div>
+          </div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px">
+            <div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Bundle / Upsell</div>
+            <div style="font-size:13px;color:var(--g700);font-weight:500">${p.bundleIdea || '—'}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px">
+            <div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:6px">🎵 TikTok Angle</div>
+            <div style="font-size:13px;color:#1e40af">${p.tiktokAngle || '—'}</div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px">
+            <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px">📘 Meta Angle</div>
+            <div style="font-size:13px;color:#166534">${p.metaAngle || '—'}</div>
+          </div>
+        </div>
+        ${p.redFlags && p.redFlags !== 'None' ? `
+        <div style="background:var(--red-bg);border:1px solid #fecaca;border-radius:12px;padding:14px;margin-top:12px">
+          <div style="font-size:11px;font-weight:800;color:var(--red);margin-bottom:4px">⚠️ Red Flags</div>
+          <div style="font-size:13px;color:#991b1b">${p.redFlags}</div>
+        </div>` : ''}
+      </div>
+    </div>
+
+    <!-- WHY / RISKS / ANGLES -->
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">🔍</span><h2>Opportunity breakdown</h2></div>
       <div class="analysis-panel-body">
@@ -522,20 +615,17 @@ function buildAnalysisBody(p) {
           </div>
           <div class="insight-col blue">
             <h3>🎬 Creative angles</h3>
-            <ul>${(p.creativeAngles || []).map(i => `<li>${i}</li>`).join('') || '<li>Problem → solution demo</li>'}</ul>
+            <ul>${(p.creativeAngles || [p.tiktokAngle, p.metaAngle, p.mainAngle]).filter(Boolean).map(i => `<li>${i}</li>`).join('') || '<li>Problem → solution demo</li>'}</ul>
           </div>
-        </div>
-        <div style="margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px;">
-          <div style="font-size:12px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Verdict</div>
-          <div style="font-size:14px;color:var(--g700);line-height:1.65">${p.verdict || 'Analyse this product further before committing budget.'}</div>
         </div>
       </div>
     </div>
 
+    <!-- RESEARCH HUB -->
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">🔗</span><h2>Research hub</h2></div>
       <div class="analysis-panel-body">
-        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Check who's already selling this, what ads are running and how search is trending.</p>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Verify this product before launching — check trends, ads and suppliers.</p>
         <div class="research-grid">
           <a class="research-link" href="https://trends.google.com/trends/explore?geo=GB&q=${trendsQ}" target="_blank">
             <div class="research-link-icon" style="background:#e8f0fe">📊</div>
@@ -559,12 +649,13 @@ function buildAnalysisBody(p) {
           </a>
           <a class="research-link" href="https://www.google.com/search?tbm=shop&q=${metaQ}" target="_blank">
             <div class="research-link-icon" style="background:#e6ffe6">🏪</div>
-            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">COMPETITOR STORES</div>Who's selling it</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">GOOGLE SHOPPING</div>Competitor stores</div>
           </a>
         </div>
       </div>
     </div>
 
+    <!-- AD CREATIVE GENERATOR -->
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">🎬</span><h2>Ad creative generator — 3 variations</h2></div>
       <div class="analysis-panel-body">
@@ -776,6 +867,7 @@ function unlockAdmin() {
   if (pw === ADMIN_PW) {
     document.getElementById('admin-lock').style.display = 'none';
     document.getElementById('admin-panel').classList.add('visible');
+    renderLiveFeed();
   } else {
     document.getElementById('admin-pw-error').style.display = 'block';
     document.getElementById('admin-pw').value = '';
@@ -861,6 +953,35 @@ function renderAdminProductsList() {
 
 function deletePending(i) { pendingProducts.splice(i, 1); renderAdminProductsList(); }
 function toggleProduct(i) { document.getElementById('toggle-' + i).classList.toggle('on'); updateSelectedCount(); }
+
+function renderLiveFeed() {
+  const list = document.getElementById('admin-live-list');
+  if (!list) return;
+  if (!allProducts.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div>';
+    return;
+  }
+  list.innerHTML = allProducts.map((p, i) => `
+    <div class="admin-product-row" style="flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px" id="live-row-${i}">
+      <div style="font-size:26px;width:36px;text-align:center;flex-shrink:0">${p.emoji || '📦'}</div>
+      <div class="admin-product-info" style="flex:1;min-width:150px">
+        <div class="admin-product-name">${p.name}</div>
+        <div class="admin-product-meta">${p.niche} · Grade ${p.grade}</div>
+      </div>
+      <button onclick="removePublished(${i})" style="background:var(--red-bg);border:1px solid #fecaca;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--red);font-family:inherit;white-space:nowrap">🗑️ Remove</button>
+    </div>
+  `).join('');
+}
+
+function removePublished(i) {
+  const name = allProducts[i]?.name;
+  allProducts.splice(i, 1);
+  buildNicheFilters();
+  renderProductsGrid();
+  renderLiveFeed();
+  document.getElementById('product-count-badge').textContent = `${allProducts.length} products live`;
+  showToast(`Removed: ${name}`);
+}
 function toggleAll(on) {
   pendingProducts.forEach((_, i) => {
     const btn = document.getElementById('toggle-' + i);
@@ -899,6 +1020,7 @@ function publishProducts() {
   document.getElementById('last-updated-badge').textContent = `Updated ${dateStr}`;
   buildNicheFilters();
   renderProductsGrid();
+  renderLiveFeed();
   showToast(`✅ ${allProducts.length} products published to member feed!`);
   showView('products', document.querySelector('.nav-tab'));
 }
