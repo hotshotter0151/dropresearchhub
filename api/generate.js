@@ -10,8 +10,9 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const body = req.body;
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  // ── FETCH PRODUCT IMAGE FROM SERPAPI (with fallback) ─────────────────────
+  // ── IMAGE FETCHING ────────────────────────────────────────────────────────
   async function searchImage(query) {
     try {
       const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
@@ -22,29 +23,21 @@ export default async function handler(req, res) {
       const product = results.find(i => i.original && i.is_product);
       const any = results.find(i => i.original);
       return (product?.original || any?.original || results[0]?.thumbnail || '');
-    } catch (e) {
-      return '';
-    }
+    } catch (e) { return ''; }
   }
 
   async function fetchProductImage(productName) {
     if (!serpApiKey) return '';
     try {
-      // Try 1: exact product name
       let img = await searchImage(productName + ' product');
       if (img) return img;
-      // Try 2: first 2 words only — broad fallback
       const broad = productName.split(' ').slice(0, 2).join(' ');
-      img = await searchImage(broad + ' product');
-      return img;
-    } catch (e) {
-      return '';
-    }
+      return await searchImage(broad + ' product');
+    } catch (e) { return ''; }
   }
 
   // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
   if (body.mode === 'emerging') {
-    console.log('[DRH] Fetching Google Trends UK data...');
 
     let trendingContext = '';
     try {
@@ -62,46 +55,111 @@ export default async function handler(req, res) {
         const searches = json?.default?.trendingSearchesDays?.[0]?.trendingSearches || [];
         const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 20);
         if (keywords.length > 0) {
-          trendingContext = `REAL UK Google Trends data today (${new Date().toLocaleDateString('en-GB')}): ${keywords.join(', ')}`;
-          console.log('[DRH] Got', keywords.length, 'real trending searches');
+          trendingContext = `UK Google Trends today (${today}): ${keywords.join(', ')}`;
+          console.log('[DRH] Got', keywords.length, 'trending searches');
         }
       }
-    } catch (e) {
-      console.log('[DRH] Google Trends failed:', e.message);
-    }
+    } catch (e) { console.log('[DRH] Trends failed:', e.message); }
 
-    const systemPrompt = trendingContext
-      ? `You are an expert ecommerce product researcher for UK dropshippers. You have REAL live Google Trends UK data.
+    const systemPrompt = `You are a world-class ecommerce product researcher for DropResearch Hub, a paid platform for UK beginner dropshippers. Today is ${today}.
+${trendingContext ? `\nLive UK Google Trends data: ${trendingContext}\n` : ''}
+Your job is to find exactly 3 GENUINELY EMERGING physical products that subscribers can test on Shopify with Meta and TikTok ads RIGHT NOW.
 
-${trendingContext}
+PRODUCT SELECTION CRITERIA — every product MUST pass ALL of these:
+1. Solves a clear, obvious problem
+2. Understandable in under 3 seconds
+3. Strong video demonstration potential (before/after, satisfying, visual)
+4. Has an impulse-buy angle (£20–£60 price point)
+5. Lightweight and easy to ship
+6. Not heavily branded or copyrighted
+7. NOT medical, supplements, dangerous, alcohol, nicotine, weapons, fake designer
+8. Supplier cost ideally under 35% of selling price
+9. NOT already a dead/saturated dropshipping product
 
-Using this real trending data, identify 5 emerging ecommerce product opportunities. Focus on physical products with good margins that a UK dropshipper could sell.
+EMERGING SIGNALS TO LOOK FOR:
+- Just appearing on TikTok Shop UK (not already everywhere)
+- Amazon Movers & Shakers movement (growing reviews, not peak)
+- AliExpress order growth (upward, not already millions)
+- Google Trends showing early upward curve, not peak
+- Not yet in mainstream UK retail (Tesco, Argos, Amazon front page)
+- Low competition on Facebook Ad Library (few UK ads running)
 
-Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
+STRICTLY AVOID:
+- Air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers — anything already saturated
+- Products with no wow factor or that need too much explaining
+- Products easily found in local shops
+- Products that look cheap or gimmicky
+- Products with compliance/legal issues
 
-Each object: {"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak","grade":"A+|A|B|C","trendScore":number,"saturation":number,"margin":"XX%","whyNow":"max 15 words","verdict":"max 20 words","whyItCouldWork":["short","short","short"],"risks":["short","short","short"],"creativeAngles":["short","short","short"],"aliSearchTerm":"term","googleTrendsKeyword":"broad term","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
+For each product apply this scoring:
+- Trend Growth: /25 (is it actually growing NOW?)
+- Problem Solving: /20 (how clearly does it solve a problem?)
+- Video Potential: /15 (how demonstrable on TikTok/Reels?)
+- Profit Margin: /15 (is the margin strong?)
+- Competition Level: /15 (how low is competition right now?)
+- Audience Size: /10 (how big is the target market?)
+- TOTAL: /100
 
-Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be broad e.g. "ice bath" not "portable collapsible ice bath tub".`
+Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, no text before or after.
 
-      : `You are an expert ecommerce product researcher for UK dropshippers. Find products showing early growth signals in the UK market right now in June 2026.
-
-Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
-
-Each object: {"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak","grade":"A+|A|B|C","trendScore":number,"saturation":number,"margin":"XX%","whyNow":"max 15 words","verdict":"max 20 words","whyItCouldWork":["short","short","short"],"risks":["short","short","short"],"creativeAngles":["short","short","short"],"aliSearchTerm":"term","googleTrendsKeyword":"broad term","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
-
-Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be broad.`;
+Each object must have these exact fields:
+{
+  "name": "Product Name",
+  "niche": "Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion",
+  "emoji": "single emoji",
+  "stage": "Emerging",
+  "season": "Evergreen|Summer peak|Winter peak",
+  "grade": "A+|A|B|C",
+  "trendScore": number 0-100,
+  "problemScore": number 0-100,
+  "saturationRisk": "Low|Medium|High",
+  "competitionLevel": "Low|Medium|High",
+  "emergingScore": number 0-100,
+  "supplierCost": "£X–£X",
+  "sellingPrice": "£X–£X",
+  "margin": "XX%",
+  "targetCustomer": "one sentence describing buyer avatar",
+  "whyEmerging": "max 20 words — why this is growing RIGHT NOW",
+  "problemSolved": "max 15 words",
+  "mainAngle": "max 15 words — core selling angle",
+  "tiktokAngle": "max 20 words",
+  "metaAngle": "max 20 words",
+  "verdict": "Strong Opportunity|Watch List|Avoid",
+  "verdictReason": "max 20 words",
+  "whyItCouldWork": ["point 1", "point 2", "point 3"],
+  "risks": ["risk 1", "risk 2", "risk 3"],
+  "bundleIdea": "max 15 words",
+  "redFlags": "max 15 words or None",
+  "aliSearchTerm": "search term for AliExpress",
+  "googleTrendsKeyword": "broad 1-3 word keyword",
+  "scoring": {
+    "trendGrowth": number,
+    "problemSolving": number,
+    "videoPotential": number,
+    "profitMargin": number,
+    "competitionLevel": number,
+    "audienceSize": number
+  },
+  "bgColor": "#EFF6FF",
+  "growthData": [
+    {"label":"W1","value":15},
+    {"label":"W2","value":25},
+    {"label":"W3","value":38},
+    {"label":"W4","value":54},
+    {"label":"W5","value":70},
+    {"label":"W6","value":84}
+  ]
+}`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 5000,
         system: systemPrompt,
-        messages: [{ role: 'user', content: trendingContext
-          ? 'Using the real Google Trends UK data, identify 5 emerging ecom product opportunities for UK dropshippers.'
-          : 'Generate 5 genuinely emerging UK ecom products for June 2026.'
-        }]
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: `Today is ${today}. Search the web for what products are currently trending on TikTok Shop UK, Amazon UK Movers and Shakers, and AliExpress right now. Then use that real data to find 3 genuinely emerging UK dropshipping products. Apply the full scoring framework. Return ONLY the JSON array — no other text.` }]
       })
     });
 
@@ -112,10 +170,53 @@ Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be br
     }
 
     const aiData = await aiRes.json();
-    const rawText = (aiData.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    console.log('[DRH] AI response length:', rawText.length);
 
-    let cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    // Handle multi-turn tool use — extract all text blocks from content
+    const rawText = (aiData.content || [])
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('');
+
+    console.log('[DRH] AI response length:', rawText.length, 'stop_reason:', aiData.stop_reason);
+
+    // If Claude used web search, we need to complete the conversation
+    let finalText = rawText;
+    if (aiData.stop_reason === 'tool_use') {
+      console.log('[DRH] Claude used web search, completing conversation...');
+      const toolUseBlocks = (aiData.content || []).filter(b => b.type === 'tool_use');
+      const toolResults = toolUseBlocks.map(block => ({
+        type: 'tool_result',
+        tool_use_id: block.id,
+        content: block.input?.query ? `Web search completed for: ${block.input.query}` : 'Search complete'
+      }));
+
+      const followUpRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 5000,
+          system: systemPrompt,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [
+            { role: 'user', content: `Today is ${today}. Search the web for what products are currently trending on TikTok Shop UK, Amazon UK Movers and Shakers, and AliExpress right now. Then use that real data to find 3 genuinely emerging UK dropshipping products. Apply the full scoring framework. Return ONLY the JSON array — no other text.` },
+            { role: 'assistant', content: aiData.content },
+            { role: 'user', content: toolResults }
+          ]
+        })
+      });
+
+      if (followUpRes.ok) {
+        const followUpData = await followUpRes.json();
+        finalText = (followUpData.content || [])
+          .filter(b => b.type === 'text')
+          .map(b => b.text)
+          .join('');
+        console.log('[DRH] Follow-up response length:', finalText.length);
+      }
+    }
+
+    let cleaned = finalText.replace(/```json/gi, '').replace(/```/g, '').trim();
     const start = cleaned.indexOf('[');
     const end = cleaned.lastIndexOf(']');
     if (start === -1 || end === -1) return res.status(500).json({ error: 'No product array found' });
@@ -129,14 +230,11 @@ Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be br
       return res.status(500).json({ error: 'Parse error: ' + e.message });
     }
 
-    // Fetch real product images via SerpApi
-    console.log('[DRH] Fetching product images via SerpApi...');
-    const imagePromises = products.map(p => fetchProductImage(p.name));
-    const images = await Promise.all(imagePromises);
+    console.log('[DRH] Fetching images for', products.length, 'products...');
+    const images = await Promise.all(products.map(p => fetchProductImage(p.name)));
     products = products.map((p, i) => ({ ...p, img: images[i] || '' }));
 
-    const imgCount = images.filter(Boolean).length;
-    console.log('[DRH] Generated', products.length, 'products,', imgCount, 'images found. Trends used:', !!trendingContext);
+    console.log('[DRH] Done. Images:', images.filter(Boolean).length, '/', products.length);
     return res.status(200).json({ content: [{ type: 'text', text: JSON.stringify(products) }] });
   }
 
@@ -161,7 +259,6 @@ Keep ALL text fields SHORT — max 15 words each. googleTrendsKeyword must be br
 
   // ── PASSTHROUGH ───────────────────────────────────────────────────────────
   if (body.system && body.messages) {
-    console.log('[DRH] Passthrough');
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
