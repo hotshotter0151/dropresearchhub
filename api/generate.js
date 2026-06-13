@@ -12,22 +12,81 @@ export default async function handler(req, res) {
 
   // ── EMERGING PRODUCTS MODE ──
   if (body.mode === 'emerging') {
-    console.log('[DRH] Generating 20 emerging products');
+    console.log('[DRH] Fetching Google Trends UK data...');
+    
+    let trendingContext = '';
+    
+    try {
+      // Google Trends daily trending searches for UK - real live data
+      const trendsRes = await fetch(
+        'https://trends.google.com/trends/api/dailytrends?hl=en-GB&tz=-60&geo=GB&ns=15',
+        { 
+          headers: { 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept': 'application/json'
+          },
+          signal: AbortSignal.timeout(5000) // 5 second timeout max
+        }
+      );
+      
+      if (trendsRes.ok) {
+        const raw = await trendsRes.text();
+        // Google returns )]}' prefix - strip it
+        const cleaned = raw.replace(/^\)\]\}'/, '').trim();
+        const json = JSON.parse(cleaned);
+        
+        // Extract trending search titles
+        const searches = json?.default?.trendingSearchesDays?.[0]?.trendingSearches || [];
+        const keywords = searches
+          .map(s => s?.title?.query)
+          .filter(Boolean)
+          .slice(0, 20);
+        
+        if (keywords.length > 0) {
+          trendingContext = `REAL UK Google Trends data right now (${new Date().toLocaleDateString('en-GB')}): ${keywords.join(', ')}`;
+          console.log('[DRH] Got', keywords.length, 'real trending searches:', keywords.slice(0,5).join(', '));
+        }
+      }
+    } catch (e) {
+      console.log('[DRH] Google Trends fetch failed (using AI knowledge):', e.message);
+    }
+
+    console.log('[DRH] Calling AI with', trendingContext ? 'REAL trend data' : 'AI knowledge only');
+
+    const systemPrompt = trendingContext
+      ? `You are an expert ecommerce product researcher for UK dropshippers. You have access to REAL live Google Trends UK data.
+
+${trendingContext}
+
+Using this real trending data, identify 5 emerging ecommerce product opportunities. Look for products related to or inspired by these real trends that a UK dropshipper could sell. Focus on physical products with good margins.
+
+Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks.
+
+Each object must have ALL these fields:
+{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 65-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence connecting this product to the real trending data","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"broader keyword that shows on Google Trends UK","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
+
+IMPORTANT: googleTrendsKeyword must be a BROAD term that will actually show data on Google Trends UK — not too specific. For example use "ice bath" not "portable collapsible ice bath tub".`
+
+      : `You are an expert ecommerce product researcher for UK dropshippers. Find products showing early growth signals in the UK market right now in June 2026.
+
+Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks.
+
+Each object must have ALL these fields:
+{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 65-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending mid-2026 UK","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"broad keyword that shows real data on Google Trends UK","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":20},{"label":"W2","value":35},{"label":"W3","value":50},{"label":"W4","value":65},{"label":"W5","value":78},{"label":"W6","value":88}]}
+
+IMPORTANT: googleTrendsKeyword must be broad enough to show real data on Google Trends UK. No yoga mats, resistance bands, water bottles. Specific but searchable products.`;
+
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
-        max_tokens: 4000,
-        system: `You are an expert ecommerce product researcher for UK dropshippers. Find products JUST starting to emerge — first 1-3 months of a Google Trends growth curve. NOT mainstream, NOT already viral on TikTok or Instagram.
-
-Return ONLY a valid JSON array of exactly 5 product objects. No markdown, no backticks, no text before or after.
-
-Each object must have ALL these fields:
-{"name":"string","niche":"Pet|Home|Beauty|Fitness|Kitchen|Outdoor|Baby|Office|Tech|Fashion","emoji":"single emoji","stage":"Emerging","season":"Evergreen|Summer peak|Winter peak|Jan peak|Back to school","grade":"A+|A|B|C","trendScore":number 60-95,"saturation":number 5-40,"margin":"XX%","whyNow":"one sentence why trending mid-2026","verdict":"2 sentences for UK dropshipper","whyItCouldWork":["reason1","reason2","reason3"],"risks":["risk1","risk2","risk3"],"creativeAngles":["angle1","angle2","angle3"],"aliSearchTerm":"aliexpress search term","googleTrendsKeyword":"google trends keyword","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":12},{"label":"W2","value":25},{"label":"W3","value":40},{"label":"W4","value":58},{"label":"W5","value":72},{"label":"W6","value":86}]}
-
-RULES: No yoga mats, resistance bands, water bottles, phone cases, fidget toys. Must be SPECIFIC niche products. Max 3 per niche. growthData must show a rising curve.`,
-        messages: [{ role: 'user', content: 'Generate 5 genuinely emerging micro-niche UK ecom products for June 2026. Specific, unusual, problem-solving items not yet found by most dropshippers.' }]
+        max_tokens: 3000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: trendingContext 
+          ? 'Using the real Google Trends UK data provided, identify 5 emerging ecom product opportunities for UK dropshippers.' 
+          : 'Generate 5 genuinely emerging UK ecom products for June 2026 with broad googleTrendsKeyword values that will show real data.' 
+        }]
       })
     });
 
@@ -49,7 +108,7 @@ RULES: No yoga mats, resistance bands, water bottles, phone cases, fidget toys. 
 
     try {
       const products = JSON.parse(cleaned);
-      console.log('[DRH] Generated', products.length, 'products');
+      console.log('[DRH] Generated', products.length, 'products. Real trends used:', !!trendingContext);
       return res.status(200).json({ content: [{ type: 'text', text: JSON.stringify(products) }] });
     } catch (e) {
       console.error('[DRH] Parse error:', e.message);
