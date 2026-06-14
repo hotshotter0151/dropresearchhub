@@ -254,6 +254,61 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .admin-product-toggle.on{background:var(--green)}
 .admin-product-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .admin-product-toggle.on::after{left:20px}
+/* LAUNCH SIMULATOR */
+.sim-store-preview{border-radius:16px;overflow:hidden;margin-bottom:0}
+.sim-store-nav{padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.sim-store-nav-logo{font-size:13px;font-weight:800;color:#fff}
+.sim-store-nav-links{display:flex;gap:14px}
+.sim-store-nav-link{font-size:11px;color:rgba(255,255,255,.5)}
+.sim-store-nav-cart{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;border:none;font-family:inherit}
+.sim-store-hero{display:grid;grid-template-columns:1fr 1fr;min-height:200px}
+.sim-store-hero-text{padding:24px 20px;display:flex;flex-direction:column;justify-content:center}
+.sim-store-hero-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px}
+.sim-store-hero-h1{font-size:20px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:8px}
+.sim-store-hero-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:16px}
+.sim-store-hero-btn{font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit}
+.sim-store-hero-img{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.sim-store-hero-img img{width:100%;height:100%;object-fit:cover}
+.sim-watermark{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px}
+.sim-inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sim-input-field{display:flex;flex-direction:column;gap:5px}
+.sim-input-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.sim-input-wrap{display:flex;align-items:center;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.sim-input-wrap:focus-within{border-color:var(--navy)}
+.sim-input-prefix{padding:10px 8px 10px 14px;font-size:14px;color:var(--g400);font-weight:700;flex-shrink:0}
+.sim-input{border:none;background:transparent;padding:10px 14px 10px 0;font-size:14px;font-family:inherit;color:var(--g900);outline:none;width:100%}
+.sim-select{width:100%;border:1.5px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;background:var(--g50);color:var(--g900);outline:none}
+.sim-select:focus{border-color:var(--navy)}
+.sim-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.sim-btn:hover{background:var(--navy-light)}
+.sim-btn:disabled{background:var(--g300);cursor:not-allowed}
+.sim-progress{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
+.sim-progress.show{display:block}
+.sim-progress-line{font-size:13px;color:var(--g400);padding:4px 0;transition:all .3s}
+.sim-progress-line.active{color:var(--navy);font-weight:600}
+.sim-progress-line.active::before{content:'→ '}
+.sim-progress-line.done{color:var(--green)}
+.sim-progress-line.done::before{content:'✓ '}
+.sim-result{display:none;margin-top:0}
+.sim-result.show{display:block}
+.sim-roadmap{border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.sim-week{padding:14px 16px;border-bottom:1px solid var(--g100)}
+.sim-week:last-child{border-bottom:none}
+.sim-week-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sim-week-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0}
+.sim-week-title{font-size:13px;font-weight:800;color:var(--g900)}
+.sim-week-sub{font-size:11px;color:var(--g400)}
+.sim-week-items{padding-left:36px;display:flex;flex-direction:column;gap:5px}
+.sim-week-item{font-size:12px;color:var(--g700);line-height:1.5;display:flex;gap:6px}
+.sim-week-item::before{content:'·';color:var(--g300);flex-shrink:0}
+.sim-verdict{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.sim-verdict-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:6px}
+.sim-verdict-text{font-size:13px;color:var(--g700);line-height:1.65}
+.sim-cases{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sim-case{padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.5}
+.sim-case.worst{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
+.sim-case.best{background:var(--green-bg);border:1px solid #bbf7d0;color:#166534}
+.sim-case-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1}
 @media(max-width:900px){.score-row{grid-template-columns:repeat(2,1fr)}.insight-cols{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,1fr)}.creative-form{grid-template-columns:1fr}.meta-info-row{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(2,1fr)}.calc-results.show{grid-template-columns:1fr 1fr}.launch-grid{grid-template-columns:1fr}}
@@ -698,6 +753,64 @@ function buildAnalysisBody(p) {
     </div>
 
     <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch Simulator</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your budget and platform — we'll generate your Shopify store preview and a week-by-week launch roadmap specific to this product.</p>
+
+        <!-- STORE PREVIEW -->
+        <div id="sim-store-wrap" style="margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid var(--g200);display:none">
+          <div id="sim-store-inner"></div>
+        </div>
+
+        <!-- INPUTS -->
+        <div id="sim-inputs-wrap">
+          <div class="sim-inputs-grid">
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily ad budget</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix">£</span><input class="sim-input" id="sim-budget" type="number" placeholder="20" value="20"></div>
+            </div>
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily sales target</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix" style="font-size:12px">🎯</span><input class="sim-input" id="sim-target" type="number" placeholder="5" value="5"></div>
+            </div>
+            <div class="sim-input-field" style="grid-column:1/-1">
+              <label class="sim-input-label">Platform</label>
+              <select class="sim-select" id="sim-platform">
+                <option>TikTok + Meta</option>
+                <option>TikTok only</option>
+                <option>Meta only</option>
+              </select>
+            </div>
+          </div>
+          <button class="sim-btn" id="sim-btn" onclick="runSimulator('${p.name.replace(/'/g,"\\'")}')">🚀 Generate my launch plan</button>
+          <div class="sim-progress" id="sim-progress">
+            <div class="sim-progress-line" id="spl-1">Building your Shopify store preview...</div>
+            <div class="sim-progress-line" id="spl-2">Analysing product launch viability...</div>
+            <div class="sim-progress-line" id="spl-3">Calculating ad budget recommendations...</div>
+            <div class="sim-progress-line" id="spl-4">Writing your week-by-week roadmap...</div>
+            <div class="sim-progress-line" id="spl-5">Calculating profit projections...</div>
+            <div class="sim-progress-line" id="spl-6">Launch plan ready</div>
+          </div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="sim-result" id="sim-result">
+          <div style="font-size:13px;font-weight:800;color:var(--g900);margin-bottom:12px">Your 30-day launch roadmap</div>
+          <div class="sim-roadmap" id="sim-roadmap"></div>
+          <div class="sim-verdict">
+            <div class="sim-verdict-label">DropResearch Hub assessment</div>
+            <div class="sim-verdict-text" id="sim-verdict-text"></div>
+          </div>
+          <div class="sim-cases">
+            <div class="sim-case worst"><div class="sim-case-label">⚠️ Worst case</div><div id="sim-worst"></div></div>
+            <div class="sim-case best"><div class="sim-case-label">✅ Best case</div><div id="sim-best"></div></div>
+          </div>
+          <button onclick="resetSimulator()" style="margin-top:12px;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit;width:100%">↺ Run again with different inputs</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">🎬</span><h2>Ad creative generator — 3 variations</h2></div>
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Generate 3 complete video ad scripts with hooks, shot list and a ready-to-send production brief.</p>
@@ -951,7 +1064,122 @@ async function publishProducts(){
   showView('products',document.querySelector('.nav-tab'));
 }
 
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+// ── LAUNCH SIMULATOR ─────────────────────────────────────────────────────
+async function runSimulator(productName) {
+  const p = allProducts.find(p => p.name === productName) || {};
+  const budget = document.getElementById('sim-budget')?.value || 20;
+  const target = document.getElementById('sim-target')?.value || 5;
+  const platform = document.getElementById('sim-platform')?.value || 'TikTok + Meta';
+  const btn = document.getElementById('sim-btn');
+  btn.disabled = true; btn.textContent = '⏳ Generating...';
+
+  const progress = document.getElementById('sim-progress');
+  progress.className = 'sim-progress show';
+  const lines = ['spl-1','spl-2','spl-3','spl-4','spl-5','spl-6'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if(idx>0){const prev=document.getElementById(lines[idx-1]);if(prev)prev.className='sim-progress-line done';}
+    if(idx<lines.length){const curr=document.getElementById(lines[idx]);if(curr)curr.className='sim-progress-line active';idx++;}
+  }
+  nextLine();
+  const timer = setInterval(nextLine, 800);
+
+  try {
+    const res = await fetch('/api/simulate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: productName, niche: p.niche, margin: p.margin,
+        sellingPrice: p.sellingPrice, supplierCost: p.supplierCost,
+        trendScore: p.trendScore, saturationRisk: p.saturationRisk,
+        tiktokAngle: p.tiktokAngle, metaAngle: p.metaAngle, mainAngle: p.mainAngle,
+        img: p.img, adBudget: budget, salesTarget: target, platform
+      })
+    });
+    const data = await res.json();
+    clearInterval(timer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line done'; });
+
+    setTimeout(() => {
+      progress.className = 'sim-progress';
+      renderSimulator(data, p.img);
+    }, 400);
+
+  } catch(e) {
+    clearInterval(timer);
+    showToast('Could not generate launch plan — try again');
+    btn.disabled = false; btn.textContent = '🚀 Generate my launch plan';
+    progress.className = 'sim-progress';
+  }
+}
+
+function renderSimulator(data, productImg) {
+  const cs = data.colorScheme || { bg:'#0f1f36', nav:'#091628', accent:'#F59E0B', text:'#fff', sub:'rgba(255,255,255,0.65)', btn:'#F59E0B', btnText:'#0f1f36' };
+
+  // Build store preview
+  const storeWrap = document.getElementById('sim-store-wrap');
+  const storeInner = document.getElementById('sim-store-inner');
+  storeInner.innerHTML = `
+    <div style="background:${cs.nav};padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:800;color:#fff">${data.storeName || 'My Store'}</div>
+      <div style="display:flex;gap:14px">
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">Home</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">Shop</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">FAQ</span>
+      </div>
+      <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px">Cart (0)</div>
+    </div>
+    <div style="background:${cs.bg};display:grid;grid-template-columns:1fr 1fr;min-height:200px">
+      <div style="padding:24px 20px;display:flex;flex-direction:column;justify-content:center">
+        <div style="background:rgba(255,255,255,.12);color:${cs.accent};font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px">${data.heroTag || 'As seen on TikTok'}</div>
+        <div style="font-size:19px;font-weight:900;color:${cs.text};line-height:1.25;margin-bottom:8px">${data.heroHeadline || ''}</div>
+        <div style="font-size:12px;color:${cs.sub};line-height:1.55;margin-bottom:16px">${data.heroSubheadline || ''}</div>
+        <button style="background:${cs.accent};color:${cs.btnText};font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit">${data.heroCTA || 'Shop now →'}</button>
+      </div>
+      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:200px">
+        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'">` : '<div style="font-size:52px;opacity:.3">📦</div>'}
+        <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px">DropResearch Hub preview</div>
+      </div>
+    </div>`;
+  storeWrap.style.display = 'block';
+
+  // Build roadmap
+  const weekColors = [
+    { bg:'#DCFCE7', color:'#166534' },
+    { bg:'#FEF3C7', color:'#92400E' },
+    { bg:'#DBEAFE', color:'#1E40AF' },
+    { bg:'#E1F5EE', color:'#0F6E56' }
+  ];
+  const roadmap = document.getElementById('sim-roadmap');
+  roadmap.innerHTML = (data.weeks || []).map((w, i) => {
+    const wc = weekColors[i] || weekColors[0];
+    return `<div class="sim-week">
+      <div class="sim-week-header">
+        <div class="sim-week-dot" style="background:${wc.bg};color:${wc.color}">${w.week}</div>
+        <div><div class="sim-week-title">${w.title}</div><div class="sim-week-sub">${w.subtitle}</div></div>
+      </div>
+      <div class="sim-week-items">${(w.items||[]).map(item=>`<div class="sim-week-item">${item}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sim-verdict-text').textContent = data.verdict || '';
+  document.getElementById('sim-worst').textContent = data.worstCase || '';
+  document.getElementById('sim-best').textContent = data.bestCase || '';
+
+  document.getElementById('sim-inputs-wrap').style.display = 'none';
+  document.getElementById('sim-result').className = 'sim-result show';
+}
+
+function resetSimulator() {
+  document.getElementById('sim-store-wrap').style.display = 'none';
+  document.getElementById('sim-inputs-wrap').style.display = 'block';
+  document.getElementById('sim-result').className = 'sim-result';
+  const btn = document.getElementById('sim-btn');
+  if(btn) { btn.disabled = false; btn.textContent = '🚀 Generate my launch plan'; }
+}
+
+const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
 
 function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
 function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
