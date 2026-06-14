@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         'mode': 'subscription',
         'payment_method_types[]': 'card',
         'customer_email': email,
-        'line_items[0][price]': 'price_1Thxa5ISGIe4s9cWu1FYXLbJ',
+        'line_items[0][price]': 'price_1TiCZIISGIe4s9cWPzpWDqRm',
         'line_items[0][quantity]': '1',
         'subscription_data[trial_period_days]': '7',
         'success_url': `${req.headers.origin}/trial.html?signup=success&email=${encodeURIComponent(email)}`,
