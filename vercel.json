@@ -5,7 +5,8 @@
     "api/stripe-checkout.js": { "memory": 512, "maxDuration": 10 },
     "api/auth.js": { "memory": 512, "maxDuration": 10 },
     "api/products.js": { "memory": 512, "maxDuration": 10 },
-    "api/webhook.js": { "memory": 512, "maxDuration": 10 }
+    "api/webhook.js": { "memory": 512, "maxDuration": 10 },
+    "api/analyze.js": { "memory": 512, "maxDuration": 15 }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
