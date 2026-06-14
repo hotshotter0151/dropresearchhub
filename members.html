@@ -120,6 +120,11 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .growth-why{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:12px 14px;margin-top:4px;border-radius:0 10px 10px 0}
 .growth-why-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:4px}
 .growth-why-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65}
+.growth-progress-line{font-size:13px;color:rgba(255,255,255,.3);padding:5px 0;display:flex;align-items:center;gap:10px;transition:all .3s}
+.growth-progress-line.active{color:rgba(255,255,255,.9)}
+.growth-progress-line.active::before{content:'→ ';color:var(--gold)}
+.growth-progress-line.done{color:rgba(255,255,255,.5)}
+.growth-progress-line.done::before{content:'✓ ';color:#1D9E75}
 /* RESEARCH HUB */
 .research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
@@ -475,7 +480,6 @@ function buildAnalysisBody(p) {
   const metaQ=encodeURIComponent(p.name);
   const tiktokQ=encodeURIComponent(p.name);
   const pinterestQ=encodeURIComponent(p.googleTrendsKeyword||p.name);
-  const windowWeek=p.windowClosesWeek||8;
   const launchItems=p.launchReadiness||[
     {check:'Demonstrable in under 10 seconds of video',pass:true},
     {check:'Solves a problem most people recognise instantly',pass:true},
@@ -515,20 +519,59 @@ function buildAnalysisBody(p) {
     </div>
 
     <div class="analysis-panel">
-      <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Projected growth curve — ${p.name} — next 12 weeks</h2></div>
+      <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth projection — ${p.name} — next 12 weeks</h2></div>
       <div class="analysis-panel-body" style="padding:0">
         <div class="growth-panel-inner" style="border-radius:0 0 20px 20px">
-          <div class="growth-header">
-            <div><div class="growth-title">AI-estimated trajectory based on current trend signals</div><div class="growth-sub">Framework assessment — not live market data</div></div>
-            <div class="growth-window-badge">⚠️ Window closes — week ${windowWeek}</div>
+
+          <!-- GENERATE BUTTON STATE -->
+          <div id="growth-generate-state">
+            <div style="text-align:center;padding:40px 20px">
+              <div style="font-size:40px;margin-bottom:16px">📊</div>
+              <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px">Generate Growth Projection</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:24px;line-height:1.6">Our research engine will analyse this product across<br>TikTok, Meta, AliExpress and more to build your projection.</div>
+              <button onclick="generateProjection('${p.name.replace(/'/g,"\\'")}', ${JSON.stringify(p.niche||'').replace(/'/g,"\\'")||"''"}, ${p.trendScore||50}, '${p.saturationRisk||'Medium'}', ${p.emergingScore||60}, '${p.competitionLevel||'Medium'}', ${JSON.stringify(p.scoring||{})})" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">
+                ✨ Generate Growth Projection
+              </button>
+            </div>
           </div>
-          <div class="growth-chart-wrap"><canvas id="growthChart" role="img" aria-label="Projected growth curve for ${p.name}">Projected demand over 12 weeks.</canvas></div>
-          <div class="growth-legend">
-            <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#1D9E75"></div>Entry window — get in now</div>
-            <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#D85A30"></div>Social feeds fill up</div>
-            <div class="growth-legend-item"><div class="growth-legend-dot" style="width:3px;height:12px;border-radius:1px;background:#378ADD"></div>Today</div>
+
+          <!-- LOADING STATE -->
+          <div id="growth-loading-state" style="display:none;padding:28px 0 20px">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px">Analysing your product...</div>
+            <div id="growth-progress-lines">
+              <div class="growth-progress-line" id="gpl-1">Analysing TikTok Shop UK saturation...</div>
+              <div class="growth-progress-line" id="gpl-2">Checking Meta Ads Library activity...</div>
+              <div class="growth-progress-line" id="gpl-3">Assessing AliExpress order velocity...</div>
+              <div class="growth-progress-line" id="gpl-4">Reviewing Amazon UK review growth...</div>
+              <div class="growth-progress-line" id="gpl-5">Checking Pinterest trend signals...</div>
+              <div class="growth-progress-line" id="gpl-6">Calculating your entry window...</div>
+              <div class="growth-progress-line" id="gpl-7">Building growth projection...</div>
+              <div class="growth-progress-line" id="gpl-8">Done — your projection is ready</div>
+            </div>
           </div>
-          <div class="growth-why"><div class="growth-why-label">Why now — AI assessment</div><div class="growth-why-text">${p.whyNowDetailed||p.whyEmerging||p.whyNow||'Early trend signals detected based on product characteristics and market framework assessment.'}</div></div>
+
+          <!-- CHART STATE -->
+          <div id="growth-chart-state" style="display:none">
+            <div class="growth-header">
+              <div>
+                <div class="growth-title">DropResearch Hub estimated projection</div>
+                <div class="growth-sub">Based on market signals and product analysis</div>
+              </div>
+              <div class="growth-window-badge" id="growth-window-label">⚠️ Window closes — week 8</div>
+            </div>
+            <div class="growth-chart-wrap"><canvas id="growthChart" role="img" aria-label="Growth projection chart">Growth projection over 12 weeks.</canvas></div>
+            <div class="growth-legend">
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#1D9E75"></div>Entry window — get in now</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#D85A30"></div>Social feeds fill up</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="width:3px;height:12px;border-radius:1px;background:#378ADD"></div>Today</div>
+            </div>
+            <div class="growth-why">
+              <div class="growth-why-label">DropResearch Hub assessment</div>
+              <div class="growth-why-text" id="growth-why-text">Generating...</div>
+            </div>
+            <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold)"></div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -681,17 +724,80 @@ function buildAnalysisBody(p) {
       </div>
     </div>`;
 
-  setTimeout(() => buildGrowthChart(p), 50);
 }
 
-function buildGrowthChart(p) {
+
+async function generateProjection(name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring) {
+  // Switch to loading state
+  document.getElementById('growth-generate-state').style.display = 'none';
+  document.getElementById('growth-loading-state').style.display = 'block';
+
+  // Animate progress lines
+  const lines = ['gpl-1','gpl-2','gpl-3','gpl-4','gpl-5','gpl-6','gpl-7','gpl-8'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if (idx > 0) { const prev=document.getElementById(lines[idx-1]); if(prev) prev.className='growth-progress-line done'; }
+    if (idx < lines.length) { const curr=document.getElementById(lines[idx]); if(curr) curr.className='growth-progress-line active'; idx++; }
+  }
+  nextLine();
+  const progressTimer = setInterval(nextLine, 800);
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring })
+    });
+    const data = await res.json();
+    clearInterval(progressTimer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line done'; });
+
+    // Small delay then show chart
+    setTimeout(() => {
+      document.getElementById('growth-loading-state').style.display = 'none';
+      document.getElementById('growth-chart-state').style.display = 'block';
+      document.getElementById('growth-why-text').textContent = data.whyNowDetailed || 'Analysis complete.';
+      document.getElementById('growth-window-label').textContent = `⚠️ Window closes — week ${data.windowClosesWeek || 8}`;
+      const summary = document.getElementById('growth-summary');
+      if (data.projectionSummary) { summary.textContent = '💡 ' + data.projectionSummary; summary.style.display='block'; }
+
+      // Update launch readiness if returned
+      if (data.launchReadiness) {
+        const passCount = data.launchReadiness.filter(i=>i.pass).length;
+        const launchPct = Math.round((passCount/data.launchReadiness.length)*100);
+        const launchColor = launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+        const launchVerdict = launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+        const grid = document.querySelector('.launch-grid');
+        if (grid) grid.innerHTML = data.launchReadiness.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('');
+        const bar = document.querySelector('.launch-score-bar');
+        if (bar) bar.innerHTML = `<span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span><span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span><span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>`;
+      }
+
+      // Update supplier terms if returned
+      if (data.supplierSearchTerms) {
+        const wrap = document.querySelector('.supplier-terms');
+        if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
+      }
+
+      // Build the animated chart
+      buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
+    }, 600);
+
+  } catch(e) {
+    clearInterval(progressTimer);
+    document.getElementById('growth-loading-state').style.display = 'none';
+    document.getElementById('growth-generate-state').style.display = 'block';
+    showToast('Could not generate projection — try again');
+  }
+}
+
+function buildGrowthChart(rawCurve, windowClosesWeek) {
   if (activeGrowthChart) { activeGrowthChart.destroy(); activeGrowthChart=null; }
   const canvas=document.getElementById('growthChart');
   if (!canvas) return;
-  const windowWeek=p.windowClosesWeek||8;
-  const rawCurve=p.growthCurve&&p.growthCurve.length===7?p.growthCurve:[12,20,31,45,62,75,83];
   const labels=['Today','2w','4w','6w','8w','10w','12w'];
-  const closeIdx=Math.min(Math.max(Math.round(windowWeek/2),1),6);
+  const closeIdx=Math.min(Math.max(Math.round(windowClosesWeek/2),1),6);
   const greenData=rawCurve.map((v,i)=>i<=closeIdx?v:null);
   const redData=rawCurve.map((v,i)=>i>=closeIdx?v:null);
   const ctx=canvas.getContext('2d');
@@ -701,7 +807,7 @@ function buildGrowthChart(p) {
   redGrad.addColorStop(0,'rgba(216,90,48,0.2)');redGrad.addColorStop(1,'rgba(216,90,48,0)');
   const windowPlugin={id:'wl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(closeIdx);ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#f87171';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,scales.y.top-2);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.setLineDash([]);ctx.restore();}};
   const todayPlugin={id:'tl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(0);ctx.save();ctx.strokeStyle='#378ADD';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,scales.y.top);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.restore();}};
-  activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1000,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
+  activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
 }
 
 function toggleTooltip(btn){const isOpen=btn.classList.contains('open');document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));if(!isOpen)btn.classList.add('open');}
