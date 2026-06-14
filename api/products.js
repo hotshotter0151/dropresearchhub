@@ -31,13 +31,15 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST — publish products
+  // POST — add products to feed (append, don't replace)
   if (req.method === 'POST') {
-    const { products } = req.body;
+    const { products, replace } = req.body;
     if (!products?.length) return res.status(400).json({ error: 'No products provided' });
     try {
-      // Clear existing live products first
-      await sbFetch('/products?is_live=eq.true', 'DELETE');
+      if (replace) {
+        // Only clear if explicitly requested
+        await sbFetch('/products?is_live=eq.true', 'DELETE');
+      }
       // Insert new ones
       const rows = products.map(p => ({ name: p.name, data: p, is_live: true }));
       await sbFetch('/products', 'POST', rows);
