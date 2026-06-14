@@ -1,86 +1,118 @@
-const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const Stripe = require('stripe');
+const { createClient } = require('@supabase/supabase-js');
 
-async function supabase(path, method, body) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  return res.json();
-}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const supabase = createClient(
+  'https://qpkpvtsoxiqcrkztkagn.supabase.co',
+  process.env.SUPABASE_SERVICE_KEY
+);
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const payload = req.body;
-  const event = typeof payload === 'string' ? JSON.parse(payload) : payload;
+  const sig = req.headers['stripe-signature'];
+  let event;
 
   try {
-    switch (event.type) {
+    // Vercel does not auto-parse for webhooks — need raw body
+    const rawBody = await getRawBody(req);
+    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).json({ error: `Webhook error: ${err.message}` });
+  }
 
-      case 'checkout.session.completed': {
-        const session = event.data.object;
-        const email = session.customer_email || session.customer_details?.email;
-        const customerId = session.customer;
-        const subscriptionId = session.subscription;
-        if (email) {
-          // Update user status to trial (they just paid, trial starts)
-          const users = await supabase(`/users?email=eq.${encodeURIComponent(email)}&select=id`, 'GET');
-          if (users.length > 0) {
-            await supabase(`/users?email=eq.${encodeURIComponent(email)}`, 'PATCH', {
-              subscription_status: 'trial',
-              stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId
-            });
-          } else {
-            // Create user if they don't exist yet
-            await supabase('/users', 'POST', {
-              email,
-              name: session.customer_details?.name || '',
-              subscription_status: 'trial',
-              stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId
-            });
-          }
-        }
-        break;
-      }
+  const subscription = event.data.object;
 
-      case 'customer.subscription.updated':
-      case 'invoice.payment_succeeded': {
-        const obj = event.data.object;
-        const customerId = obj.customer;
-        const status = obj.status === 'active' ? 'active' : 'trial';
-        if (customerId) {
-          await supabase(`/users?stripe_customer_id=eq.${customerId}`, 'PATCH', {
-            subscription_status: status
-          });
-        }
-        break;
-      }
+  switch (event.type) {
+    // ── New checkout completed (trial starts) ──────────────────────────
+    case 'checkout.session.completed': {
+      const session = event.data.object;
+      const customerId = session.customer;
+      const subscriptionId = session.subscription;
+      const customerEmail = session.customer_details?.email || session.customer_email;
 
-      case 'customer.subscription.deleted':
-      case 'invoice.payment_failed': {
-        const obj = event.data.object;
-        const customerId = obj.customer;
-        if (customerId) {
-          await supabase(`/users?stripe_customer_id=eq.${customerId}`, 'PATCH', {
-            subscription_status: 'cancelled'
-          });
-        }
-        break;
+      if (customerEmail) {
+        await supabase
+          .from('users')
+          .update({
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            subscription_status: 'trial',
+          })
+          .eq('email', customerEmail);
       }
+      break;
     }
 
-    return res.status(200).json({ received: true });
-  } catch (e) {
-    console.error('[Webhook] Error:', e.message);
-    return res.status(500).json({ error: e.message });
+    // ── Trial converts to paid ─────────────────────────────────────────
+    case 'customer.subscription.updated': {
+      const customerId = subscription.customer;
+      const status = subscription.status; // 'active', 'trialing', 'past_due', etc.
+
+      // Map Stripe statuses → our statuses
+      let appStatus;
+      if (status === 'active') appStatus = 'active';
+      else if (status === 'trialing') appStatus = 'trial';
+      else if (status === 'canceled' || status === 'cancelled') appStatus = 'cancelled';
+      else if (status === 'past_due' || status === 'unpaid') appStatus = 'cancelled';
+      else appStatus = 'trial'; // fallback
+
+      await supabase
+        .from('users')
+        .update({ subscription_status: appStatus })
+        .eq('stripe_customer_id', customerId);
+      break;
+    }
+
+    // ── Subscription cancelled ─────────────────────────────────────────
+    case 'customer.subscription.deleted': {
+      const customerId = subscription.customer;
+      await supabase
+        .from('users')
+        .update({ subscription_status: 'cancelled' })
+        .eq('stripe_customer_id', customerId);
+      break;
+    }
+
+    // ── Invoice paid (covers renewals) ────────────────────────────────
+    case 'invoice.payment_succeeded': {
+      const invoice = event.data.object;
+      const customerId = invoice.customer;
+      // If billing_reason is 'subscription_cycle' or 'subscription_update', mark active
+      if (invoice.billing_reason !== 'subscription_create') {
+        await supabase
+          .from('users')
+          .update({ subscription_status: 'active' })
+          .eq('stripe_customer_id', customerId);
+      }
+      break;
+    }
+
+    // ── Invoice failed ─────────────────────────────────────────────────
+    case 'invoice.payment_failed': {
+      const invoice = event.data.object;
+      const customerId = invoice.customer;
+      await supabase
+        .from('users')
+        .update({ subscription_status: 'cancelled' })
+        .eq('stripe_customer_id', customerId);
+      break;
+    }
+
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
   }
+
+  return res.status(200).json({ received: true });
+};
+
+// ── Helper: get raw body from Vercel request ───────────────────────────────
+function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    req.on('data', chunk => { data += chunk; });
+    req.on('end', () => resolve(data));
+    req.on('error', reject);
+  });
 }
