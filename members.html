@@ -1179,7 +1179,7 @@ function resetSimulator() {
   if(btn) { btn.disabled = false; btn.textContent = '🚀 Generate my launch plan'; }
 }
 
-const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
 
 function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
 function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
