@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         'line_items[0][price]': 'price_1Thxa5ISGIe4s9cWu1FYXLbJ',
         'line_items[0][quantity]': '1',
         'subscription_data[trial_period_days]': '7',
-        'success_url': `${req.headers.origin}/trial.html?session_id={CHECKOUT_SESSION_ID}&signup=success`,
+        'success_url': `${req.headers.origin}/trial.html?signup=success&email=${encodeURIComponent(email)}`,
         'cancel_url': `${req.headers.origin}/signup.html`,
         'allow_promotion_codes': 'true'
       })
