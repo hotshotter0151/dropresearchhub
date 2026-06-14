@@ -188,8 +188,8 @@ select.filter-input{min-width:140px}
     <section id="products" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
-          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">AI scans TikTok, Amazon & AliExpress for trending products. Toggle on the ones you want, then publish.</div></div>
-          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate emerging products</span></button>
+          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 products. Run multiple times to build up a batch, then publish all at once.</div></div>
+          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate 3 products</span></button>
         </div>
         <div class="card-pad">
           <div class="status-messages" id="status-messages">
@@ -200,27 +200,37 @@ select.filter-input{min-width:140px}
             <div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
             <div class="status-line" id="sl-6">Fetching product images...</div>
             <div class="status-line" id="sl-7">Finalising research reports...</div>
-            <div class="status-line" id="sl-8">Products ready — review and publish below</div>
+            <div class="status-line" id="sl-8">Products ready — added to review list below</div>
           </div>
         </div>
       </div>
 
       <div class="card" id="pending-card" style="display:none;margin-bottom:16px">
         <div class="panel-head">
-          <div><div class="panel-title">Review Generated Products</div><div class="panel-sub">Toggle on the products you want to publish to the member feed</div></div>
+          <div>
+            <div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div>
+            <div class="panel-sub">Toggle on what you want to publish. Generate more batches to add to this list.</div>
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn" onclick="toggleAll(true)">✓ Select all</button>
             <button class="btn" onclick="toggleAll(false)">✕ Deselect all</button>
             <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
-            <button class="gen-btn green" onclick="publishProducts()">🚀 Publish to feed</button>
+            <button class="btn danger" onclick="clearPending()">🗑️ Clear all</button>
+            <button class="gen-btn green" onclick="publishSelected()">🚀 Publish selected to feed</button>
           </div>
         </div>
         <div id="pending-list"></div>
       </div>
 
       <div class="card">
-        <div class="panel-head"><div><div class="panel-title">🗂️ Live Feed</div><div class="panel-sub">Products currently showing to members and trial users</div></div><button class="btn" onclick="loadLiveFeed()">↻ Refresh</button></div>
-        <div id="live-list"><div class="table-empty">No products published yet</div></div>
+        <div class="panel-head">
+          <div><div class="panel-title">🗂️ Live Feed</div><div class="panel-sub">All products currently showing to members and trial users</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" onclick="loadLiveFeed()">↻ Refresh</button>
+            <button class="btn danger" onclick="clearAllFromFeed()">🗑️ Clear entire feed</button>
+          </div>
+        </div>
+        <div id="live-list"><div class="table-empty">Loading...</div></div>
       </div>
     </section>
 
@@ -442,12 +452,14 @@ async function adminGenerate() {
     let c = t.replace(/```json|```/g,'').trim();
     const s = c.indexOf('['), e = c.lastIndexOf(']');
     if (s===-1||e===-1) throw new Error('No product array found');
-    pendingProducts = JSON.parse(c.slice(s,e+1));
+    const newProducts = JSON.parse(c.slice(s,e+1));
+    // STACK onto existing pending list
+    pendingProducts = [...pendingProducts, ...newProducts];
     clearInterval(statusTimer);
     lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line done show'; });
     renderPendingList();
     document.getElementById('pending-card').style.display = 'block';
-    document.getElementById('pending-card').scrollIntoView({behavior:'smooth'});
+    toast(`✅ ${newProducts.length} products added to review queue (${pendingProducts.length} total)`, 'success');
   } catch(err) {
     clearInterval(statusTimer);
     const errLine = document.createElement('div');
@@ -457,17 +469,22 @@ async function adminGenerate() {
     statusBox.appendChild(errLine);
   }
   btn.disabled = false;
-  document.getElementById('gen-text').textContent = '✨ Generate emerging products';
+  document.getElementById('gen-text').textContent = '✨ Generate 3 products';
 }
 
 function renderPendingList() {
   const list = document.getElementById('pending-list');
+  document.getElementById('pending-count-badge').textContent = pendingProducts.length;
+  if (!pendingProducts.length) {
+    list.innerHTML = '<div class="table-empty">No products in queue</div>';
+    return;
+  }
   list.innerHTML = pendingProducts.map((p,i) => `
     <div class="product-row">
       <div class="product-emoji">${p.emoji||'📦'}</div>
       <div class="product-info">
         <div class="product-name">${p.name}</div>
-        <div class="product-meta">${p.niche} · Trend: ${p.trendScore}/100 · Margin: ${p.margin} · Sat Risk: ${p.saturationRisk}</div>
+        <div class="product-meta">${p.niche||''} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'} · Sat Risk: ${p.saturationRisk||'—'}</div>
         <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
         ${p.img?`<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
         <div class="product-links">
@@ -478,36 +495,33 @@ function renderPendingList() {
       </div>
       <div class="product-controls">
         <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'B'}</div>
-        <button class="toggle-btn on" id="toggle-${i}" onclick="this.classList.toggle('on');updateCount()"></button>
+        <button class="toggle-btn on" id="toggle-${i}" onclick="this.classList.toggle('on')"></button>
         <button class="btn sm danger" onclick="removePending(${i})">Remove</button>
       </div>
     </div>
   `).join('');
-  updateCount();
 }
 
 function removePending(i) { pendingProducts.splice(i,1); renderPendingList(); }
-function toggleAll(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('toggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); updateCount(); }
-function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('toggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); updateCount(); toast('Grade A and A+ selected'); }
-function updateCount() {
-  const selected = document.querySelectorAll('.toggle-btn.on').length;
-  const total = pendingProducts.length;
-  // update panel-sub
-}
+function clearPending() { if(!confirm('Clear all products from review queue?')) return; pendingProducts=[]; renderPendingList(); document.getElementById('pending-card').style.display='none'; }
+function toggleAll(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('toggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); }
+function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('toggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); toast('Grade A and A+ selected'); }
 
-async function publishProducts() {
+async function publishSelected() {
   const selected = pendingProducts.filter((_,i) => { const b=document.getElementById('toggle-'+i); return b&&b.classList.contains('on'); });
   if (!selected.length) { toast('Toggle on at least one product first'); return; }
   try {
     const r = await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products: selected}) });
     const d = await r.json();
     if (!r.ok) throw new Error(d.error||'Publish failed');
-    toast(`✅ ${selected.length} products published to live feed!`,'success');
-    pendingProducts = [];
-    document.getElementById('pending-card').style.display = 'none';
-    document.getElementById('pending-list').innerHTML = '';
+    // Remove published ones from pending
+    const selectedNames = new Set(selected.map(p=>p.name));
+    pendingProducts = pendingProducts.filter(p => !selectedNames.has(p.name));
+    renderPendingList();
+    if (!pendingProducts.length) document.getElementById('pending-card').style.display = 'none';
+    toast(`✅ ${selected.length} products added to live feed!`, 'success');
     loadLiveFeed();
-  } catch(e) { toast('Publish failed: ' + e.message,'error'); }
+  } catch(e) { toast('Publish failed: ' + e.message, 'error'); }
 }
 
 async function loadLiveFeed() {
@@ -517,26 +531,41 @@ async function loadLiveFeed() {
     const r = await fetch('/api/products');
     const d = await r.json();
     const products = d.products || [];
-    if (!products.length) { list.innerHTML = '<div class="table-empty">No products published yet</div>'; return; }
-    list.innerHTML = products.map((p,i) => `
-      <div class="live-row">
-        <div style="font-size:24px;width:36px;text-align:center">${p.emoji||'📦'}</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:800">${p.name}</div>
-          <div style="font-size:12px;color:var(--g500)">${p.niche||''} · Grade ${p.grade||'—'}</div>
-        </div>
-        <button class="btn sm danger" onclick="removeFromFeed('${esc(p.name)}')">🗑️ Remove</button>
+    if (!products.length) { list.innerHTML = '<div class="table-empty">No products in live feed</div>'; return; }
+    list.innerHTML = `
+      <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500)">
+        ${products.length} product${products.length!==1?'s':''} currently live
       </div>
-    `).join('');
+      ${products.map((p,i) => `
+        <div class="live-row">
+          <div style="font-size:24px;width:36px;text-align:center">${p.emoji||'📦'}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:800">${p.name}</div>
+            <div style="font-size:12px;color:var(--g500)">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100</div>
+          </div>
+          ${p.img?`<img src="${p.img}" style="width:48px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--g200)" onerror="this.style.display='none'">` : ''}
+          <button class="btn sm danger" onclick="removeFromFeed('${esc(p.name)}')">🗑️ Remove</button>
+        </div>
+      `).join('')}
+    `;
   } catch(e) { list.innerHTML = `<div class="table-empty">Error: ${e.message}</div>`; }
 }
 
 async function removeFromFeed(name) {
   try {
     await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name}) });
-    toast('Product removed','success');
+    toast('Product removed', 'success');
     loadLiveFeed();
-  } catch(e) { toast('Remove failed','error'); }
+  } catch(e) { toast('Remove failed', 'error'); }
+}
+
+async function clearAllFromFeed() {
+  if (!confirm('Remove ALL products from the live feed? Members will see no products until you publish again.')) return;
+  try {
+    await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products:[], replace:true}) });
+    toast('Live feed cleared', 'success');
+    loadLiveFeed();
+  } catch(e) { toast('Clear failed', 'error'); }
 }
 
 // Grade colors
