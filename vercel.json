@@ -6,7 +6,8 @@
     "api/auth.js": { "memory": 512, "maxDuration": 10 },
     "api/products.js": { "memory": 512, "maxDuration": 10 },
     "api/webhook.js": { "memory": 512, "maxDuration": 10 },
-    "api/analyze.js": { "memory": 512, "maxDuration": 15 }
+    "api/analyze.js": { "memory": 512, "maxDuration": 15 },
+    "api/simulate.js": { "memory": 512, "maxDuration": 20 }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
