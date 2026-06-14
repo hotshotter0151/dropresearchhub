@@ -1,75 +1,118 @@
-const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcryptjs');
 
-async function supabase(path, method, body) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Prefer': method === 'POST' ? 'return=representation' : ''
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  return res.json();
-}
+const supabase = createClient(
+  'https://qpkpvtsoxiqcrkztkagn.supabase.co',
+  process.env.SUPABASE_SERVICE_KEY
+);
 
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + 'drh_salt_2026');
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
+const ADMIN_PASSWORD = 'Billy1234.';
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { action, email, password, name, stripeCustomerId, stripeSubscriptionId } = req.body;
+  const { action, email, password, name } = req.body;
 
-  // REGISTER
+  // ── Admin shortcut ─────────────────────────────────────────────────────
+  if (action === 'login' && password === ADMIN_PASSWORD) {
+    return res.status(200).json({
+      success: true,
+      role: 'admin',
+      redirect: '/members.html',
+    });
+  }
+
+  // ── Register ───────────────────────────────────────────────────────────
   if (action === 'register') {
-    if (!email || !password || !name) return res.status(400).json({ error: 'Missing fields' });
-    const passwordHash = await hashPassword(password);
-    const existing = await supabase(`/users?email=eq.${encodeURIComponent(email)}&select=id`, 'GET');
-    if (existing.length > 0) return res.status(400).json({ error: 'Email already registered' });
-    const user = await supabase('/users', 'POST', {
-      email, name, password_hash: passwordHash,
-      subscription_status: 'trial',
-      stripe_customer_id: stripeCustomerId || null,
-      stripe_subscription_id: stripeSubscriptionId || null
+    if (!email || !password || !name)
+      return res.status(400).json({ error: 'Name, email and password required' });
+
+    const { data: existing } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single();
+
+    if (existing) return res.status(409).json({ error: 'Email already registered' });
+
+    const password_hash = await bcrypt.hash(password, 10);
+
+    const { data: user, error } = await supabase
+      .from('users')
+      .insert([{
+        email,
+        name,
+        password_hash,
+        subscription_status: 'trial',
+        created_at: new Date().toISOString(),
+      }])
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: 'Registration failed', detail: error.message });
+
+    return res.status(200).json({
+      success: true,
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      subscription_status: user.subscription_status,
     });
-    if (user.error) return res.status(500).json({ error: user.error.message });
-    const u = Array.isArray(user) ? user[0] : user;
-    return res.status(200).json({ success: true, user: { id: u.id, email: u.email, name: u.name, status: u.subscription_status } });
   }
 
-  // LOGIN
+  // ── Login ──────────────────────────────────────────────────────────────
   if (action === 'login') {
-    if (!email || !password) return res.status(400).json({ error: 'Missing fields' });
-    const passwordHash = await hashPassword(password);
-    const users = await supabase(`/users?email=eq.${encodeURIComponent(email)}&select=*`, 'GET');
-    if (!users.length) return res.status(401).json({ error: 'Invalid email or password' });
-    const user = users[0];
-    if (user.password_hash !== passwordHash) return res.status(401).json({ error: 'Invalid email or password' });
-    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, status: user.subscription_status } });
+    if (!email || !password)
+      return res.status(400).json({ error: 'Email and password required' });
+
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('id, email, name, password_hash, subscription_status')
+      .eq('email', email)
+      .single();
+
+    if (error || !user)
+      return res.status(401).json({ error: 'Invalid email or password' });
+
+    const valid = await bcrypt.compare(password, user.password_hash);
+    if (!valid) return res.status(401).json({ error: 'Invalid email or password' });
+
+    // Route based on live subscription status from Supabase
+    const redirect =
+      user.subscription_status === 'active' ? '/members.html' : '/trial.html';
+
+    return res.status(200).json({
+      success: true,
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      subscription_status: user.subscription_status,
+      redirect,
+    });
   }
 
-  // UPDATE STATUS (called by Stripe webhook)
-  if (action === 'updateStatus') {
-    const { userId, status, stripeCustomerId, stripeSubscriptionId } = req.body;
-    if (!userId && !stripeCustomerId) return res.status(400).json({ error: 'Missing user identifier' });
-    const filter = userId ? `id=eq.${userId}` : `stripe_customer_id=eq.${stripeCustomerId}`;
-    await supabase(`/users?${filter}`, 'PATCH', {
-      subscription_status: status,
-      stripe_subscription_id: stripeSubscriptionId || undefined
+  // ── Check status (called on page load to verify session) ──────────────
+  if (action === 'checkStatus') {
+    if (!email) return res.status(400).json({ error: 'Email required' });
+
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('subscription_status')
+      .eq('email', email)
+      .single();
+
+    if (error || !user) return res.status(404).json({ error: 'User not found' });
+
+    return res.status(200).json({
+      success: true,
+      subscription_status: user.subscription_status,
     });
-    return res.status(200).json({ success: true });
   }
 
   return res.status(400).json({ error: 'Invalid action' });
-}
+};
