@@ -1,19 +1,17 @@
 {
+  "version": 2,
+  "functions": {
+    "api/generate.js": { "memory": 1024, "maxDuration": 59 },
+    "api/stripe-checkout.js": { "memory": 512, "maxDuration": 10 },
+    "api/auth.js": { "memory": 512, "maxDuration": 10 },
+    "api/products.js": { "memory": 512, "maxDuration": 10 },
+    "api/webhook.js": { "memory": 512, "maxDuration": 10 }
+  },
   "rewrites": [
-    { "source": "/api/generate",       "destination": "/api/generate.js" },
-    { "source": "/api/auth",           "destination": "/api/auth.js" },
-    { "source": "/api/stripe-checkout","destination": "/api/stripe-checkout.js" },
-    { "source": "/api/stripe-portal",  "destination": "/api/stripe-portal.js" },
-    { "source": "/api/webhook",        "destination": "/api/webhook.js" }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin",  "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
-      ]
-    }
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+    { "source": "/members", "destination": "/members.html" },
+    { "source": "/trial", "destination": "/trial.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/login", "destination": "/login.html" }
   ]
 }
