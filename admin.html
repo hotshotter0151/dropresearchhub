@@ -1,77 +1,646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DropResearchHub — Admin Dashboard</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — DropResearch Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-700:#374151;--gray-900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB}
-body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}.app{display:flex;min-height:100vh}.sidebar{width:260px;background:var(--navy-dark);color:#fff;padding:24px 18px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto}.logo{display:flex;align-items:center;gap:10px;margin-bottom:30px;text-decoration:none;color:#fff}.logo-icon{width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:9px 8px}.logo-bar{width:5px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}.logo-text{font-size:17px;font-weight:800}.logo-text span{color:var(--gold)}.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.42);font-weight:700;margin:20px 10px 8px}.nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,.72);font:inherit;font-size:14px;font-weight:700;padding:12px;border-radius:10px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;margin-bottom:4px}.nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}.nav-btn.active{background:#fff;color:var(--navy)}.admin-warning{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:16px;padding:16px;margin-top:24px}.admin-warning b{display:block;margin-bottom:6px}.admin-warning p{font-size:12px;color:rgba(255,255,255,.72)}.main{margin-left:260px;width:calc(100% - 260px);padding:28px 4% 70px}.topbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}.topbar h1{font-size:30px;line-height:1.1;letter-spacing:-.9px}.topbar p{font-size:14px;color:var(--gray-500);margin-top:5px}.admin-pill{background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:10px}.avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}.section{display:none}.section.active{display:block}.grid{display:grid;gap:16px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.card{background:#fff;border:1px solid var(--gray-200);border-radius:18px;box-shadow:0 3px 20px rgba(17,24,39,.04);overflow:hidden}.card-pad{padding:20px}.kpi-label{font-size:11px;color:var(--gray-400);font-weight:900;text-transform:uppercase;letter-spacing:.8px}.kpi-value{font-size:32px;font-weight:900;color:var(--gray-900);letter-spacing:-1px;margin-top:6px}.kpi-note{font-size:12px;color:var(--gray-500)}.panel-head{padding:18px 20px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.panel-title{font-size:18px;font-weight:900}.panel-sub{font-size:13px;color:var(--gray-500);margin-top:2px}.btn{border:1px solid var(--gray-200);background:#fff;color:var(--navy);border-radius:11px;padding:10px 13px;font-size:13px;font-weight:900;cursor:pointer}.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--gray-100);font-size:13px}th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-400);font-weight:900;background:var(--gray-50)}td{color:var(--gray-700)}.badge{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900}.badge.green{background:#DCFCE7;color:#166534}.badge.gold{background:#FEF3C7;color:#92400E}.badge.red{background:#FEE2E2;color:#991B1B}.badge.blue{background:#DBEAFE;color:#1E40AF}.two-col{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.input,select,textarea{width:100%;border:1px solid var(--gray-200);border-radius:12px;padding:12px 13px;font-family:inherit;font-size:14px;outline:none;background:#fff}.input:focus,select:focus,textarea:focus{border-color:var(--navy)}textarea{min-height:100px;resize:vertical}.mini-list{display:grid;gap:10px}.mini-item{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:14px;padding:12px}.mini-item b{font-size:13px}.mini-item span{font-size:12px;color:var(--gray-500)}.health-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:7px;background:var(--green)}.muted{color:var(--gray-500);font-size:13px}.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(135deg,var(--navy-dark),var(--navy))}.login-card{width:100%;max-width:420px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 25px 70px rgba(0,0,0,.25)}.login-card h1{font-size:28px;letter-spacing:-.9px}.login-card p{color:var(--gray-500);font-size:14px;margin:8px 0 20px}.login-card .btn{width:100%;margin-top:12px;padding:13px}.hidden{display:none!important}@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}@media(max-width:900px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin-left:0;width:100%;padding:20px}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:620px){.kpi-grid{grid-template-columns:1fr}}
+:root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB}
+body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6}
+.app{display:flex;min-height:100vh}
+
+/* ── Sidebar ── */
+.sidebar{width:240px;background:var(--navy-dark);color:#fff;padding:20px 14px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;color:#fff}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px}
+.logo-bar{width:4px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}
+.logo-text{font-size:15px;font-weight:800}.logo-text span{color:var(--gold)}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.38);font-weight:700;margin:18px 8px 6px}
+.nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,.65);font:inherit;font-size:13px;font-weight:600;padding:10px 12px;border-radius:9px;display:flex;align-items:center;gap:9px;cursor:pointer;text-align:left;margin-bottom:2px;transition:all .15s}
+.nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-btn.active{background:#fff;color:var(--navy)}
+.sidebar-footer{margin-top:auto;padding-top:24px}
+.btn-logout-side{width:100%;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.6);font:inherit;font-size:13px;padding:10px 12px;border-radius:9px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:9px;transition:all .15s}
+.btn-logout-side:hover{border-color:var(--red);color:#f87171}
+
+/* ── Main ── */
+.main{margin-left:240px;width:calc(100% - 240px);padding:28px 32px 70px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:16px}
+.topbar h1{font-size:26px;font-weight:900;letter-spacing:-.7px}
+.topbar p{font-size:13px;color:var(--g500);margin-top:3px}
+.admin-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 14px 7px 8px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+
+/* ── Sections ── */
+.section{display:none}.section.active{display:block}
+
+/* ── Cards ── */
+.card{background:#fff;border:1px solid var(--g200);border-radius:16px;box-shadow:0 2px 12px rgba(17,24,39,.04);overflow:hidden}
+.card-pad{padding:20px}
+
+/* ── KPI grid ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px 20px}
+.kpi-label{font-size:11px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.kpi-value{font-size:30px;font-weight:900;letter-spacing:-1px;margin-top:6px;color:var(--g900)}
+.kpi-note{font-size:12px;color:var(--g500);margin-top:2px}
+
+/* ── Panel head ── */
+.panel-head{padding:16px 20px;border-bottom:1px solid var(--g200);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.panel-title{font-size:16px;font-weight:800}
+.panel-sub{font-size:12px;color:var(--g500);margin-top:2px}
+
+/* ── Table ── */
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--g400);font-weight:700;padding:11px 16px;border-bottom:1px solid var(--g100);background:var(--g50);text-align:left}
+td{padding:12px 16px;border-bottom:1px solid var(--g100);font-size:13px;color:var(--g700);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--g50)}
+
+/* ── Badges ── */
+.badge{display:inline-flex;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700}
+.badge.green{background:#DCFCE7;color:#166534}
+.badge.gold{background:#FEF3C7;color:#92400E}
+.badge.red{background:#FEE2E2;color:#991B1B}
+.badge.blue{background:#DBEAFE;color:#1E40AF}
+.badge.gray{background:var(--g100);color:var(--g500)}
+
+/* ── Buttons ── */
+.btn{border:1px solid var(--g200);background:#fff;color:var(--g700);border-radius:9px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:hover{border-color:var(--navy);color:var(--navy)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:var(--navy-light)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy-dark)}
+.btn.danger{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
+.btn.danger:hover{background:var(--red);color:#fff}
+.btn.sm{padding:5px 10px;font-size:11px}
+
+/* ── Two col ── */
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+
+/* ── Search / filter bar ── */
+.filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filter-input{border:1px solid var(--g200);border-radius:9px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;min-width:200px}
+.filter-input:focus{border-color:var(--navy)}
+select.filter-input{min-width:140px}
+
+/* ── Empty / loading ── */
+.table-empty{text-align:center;padding:40px;color:var(--g400);font-size:13px}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Health dots ── */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot.green{background:var(--green)}.dot.gold{background:var(--gold)}.dot.red{background:var(--red)}
+
+/* ── Mini list ── */
+.mini-list{display:grid;gap:10px}
+.mini-item{display:flex;justify-content:space-between;align-items:center;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:12px 14px}
+.mini-item b{font-size:13px}.mini-item span.sub{font-size:12px;color:var(--g500)}
+
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;max-width:440px;width:calc(100% - 40px)}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--g500);margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.form-row{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--g700);margin-bottom:5px}
+.form-input{width:100%;border:1px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none}
+.form-input:focus{border-color:var(--navy)}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--g900);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.success{background:#166534}
+#toast.error{background:var(--red)}
+
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
+@media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
 </style>
 </head>
 <body>
-<div id="login" class="login-screen">
-  <div class="login-card">
-    <div class="logo" style="color:var(--navy);margin-bottom:18px"><div class="logo-icon" style="border:1px solid var(--gray-200)"><div class="logo-bar" style="height:11px;opacity:.45"></div><div class="logo-bar" style="height:17px;opacity:.7"></div><div class="logo-bar" style="height:24px"></div><div class="logo-bar gold" style="height:19px"></div></div><div class="logo-text">Drop<span>Research</span> Hub</div></div>
-    <h1>Admin access</h1>
-    <p>Enter your admin password to open the control panel. This is a temporary front-end lock until full user accounts are added.</p>
-    <input class="input" id="adminPass" type="password" placeholder="Admin password">
-    <button class="btn primary" onclick="loginAdmin()">Open Admin Dashboard</button>
-    <p class="muted" style="margin-bottom:0">Temporary password: <b>dropadmin</b></p>
+
+<div class="app">
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <a class="logo" href="index.html">
+      <div class="logo-icon">
+        <div class="logo-bar" style="height:10px;opacity:.4"></div>
+        <div class="logo-bar" style="height:16px;opacity:.7"></div>
+        <div class="logo-bar" style="height:22px"></div>
+        <div class="logo-bar gold" style="height:17px"></div>
+      </div>
+      <div class="logo-text">Drop<span>Research</span></div>
+    </a>
+
+    <div class="nav-label">Dashboard</div>
+    <button class="nav-btn active" onclick="show('overview',this)">📊 Overview</button>
+    <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
+    <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
+
+    <div class="nav-label">Site</div>
+    <button class="nav-btn" onclick="window.open('members.html','_blank')">→ Members Area</button>
+    <button class="nav-btn" onclick="window.open('trial.html','_blank')">→ Trial Area</button>
+    <button class="nav-btn" onclick="window.open('index.html','_blank')">→ Homepage</button>
+    <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">→ Stripe Dashboard</button>
+    <button class="nav-btn" onclick="window.open('https://supabase.com/dashboard/project/qpkpvtsoxiqcrkztkagn','_blank')">→ Supabase</button>
+
+    <div style="margin-top:auto;padding-top:32px">
+      <button class="btn-logout-side" onclick="logout()">🚪 Log out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="section-title">Overview</h1>
+        <p id="section-sub">Live data from Supabase & Stripe</p>
+      </div>
+      <div class="admin-pill">
+        <div class="avatar">BH</div>
+        Admin
+      </div>
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <section id="overview" class="section active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Users</div>
+          <div class="kpi-value" id="kpi-total">—</div>
+          <div class="kpi-note">registered accounts</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active (Paid)</div>
+          <div class="kpi-value" id="kpi-active" style="color:var(--green)">—</div>
+          <div class="kpi-note">paying subscribers</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">On Trial</div>
+          <div class="kpi-value" id="kpi-trial" style="color:var(--gold)">—</div>
+          <div class="kpi-note">7-day free trial</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Cancelled</div>
+          <div class="kpi-value" id="kpi-cancelled" style="color:var(--red)">—</div>
+          <div class="kpi-note">churned accounts</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- Recent signups -->
+        <div class="card">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Recent Signups</div>
+              <div class="panel-sub">Last 10 registered users</div>
+            </div>
+            <button class="btn" onclick="show('customers', document.querySelector('.nav-btn:nth-child(3)'))">View all →</button>
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead>
+            <tbody id="recent-signups"><tr><td colspan="4" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+
+        <!-- System health -->
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">System Health</div><div class="panel-sub">Service status</div></div><button class="btn" onclick="loadHealth()">↻ Refresh</button></div>
+          <div class="card-pad mini-list" id="health-list">
+            <div class="mini-item"><div><b><span class="dot green"></span>Vercel</b><br><span class="sub">Deployment live</span></div><span class="badge green">Online</span></div>
+            <div class="mini-item"><div><b><span class="dot" id="dot-claude"></span>Claude API</b><br><span class="sub" id="status-claude">Checking…</span></div><span class="badge gray" id="badge-claude">…</span></div>
+            <div class="mini-item"><div><b><span class="dot" id="dot-stripe"></span>Stripe</b><br><span class="sub" id="status-stripe">Checking…</span></div><span class="badge gray" id="badge-stripe">…</span></div>
+            <div class="mini-item"><div><b><span class="dot" id="dot-supabase"></span>Supabase</b><br><span class="sub" id="status-supabase">Checking…</span></div><span class="badge gray" id="badge-supabase">…</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CUSTOMERS ── -->
+    <section id="customers" class="section">
+      <div class="card" style="margin-bottom:16px">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">All Customers</div>
+            <div class="panel-sub" id="customer-count">Loading…</div>
+          </div>
+          <div class="filter-bar">
+            <input class="filter-input" id="search-users" placeholder="Search name or email…" oninput="filterUsers()">
+            <select class="filter-input" id="filter-status" onchange="filterUsers()">
+              <option value="">All statuses</option>
+              <option value="active">Active</option>
+              <option value="trial">Trial</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn" onclick="exportUsersCSV()">↓ Export CSV</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Stripe Customer</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading customers…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── BILLING ── -->
+    <section id="billing" class="section">
+      <div class="kpi-grid" style="margin-bottom:20px">
+        <div class="kpi-card">
+          <div class="kpi-label">MRR</div>
+          <div class="kpi-value" id="bill-mrr" style="color:var(--green)">—</div>
+          <div class="kpi-note">monthly recurring revenue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Plan Price</div>
+          <div class="kpi-value">£100</div>
+          <div class="kpi-note">per month per user</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Churn Rate</div>
+          <div class="kpi-value" id="bill-churn">—</div>
+          <div class="kpi-note">cancelled / total</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Trial → Paid</div>
+          <div class="kpi-value" id="bill-conversion">—</div>
+          <div class="kpi-note">conversion rate</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="panel-head">
+            <div><div class="panel-title">Subscription Breakdown</div><div class="panel-sub">Live from Supabase</div></div>
+          </div>
+          <div class="card-pad" id="billing-breakdown">
+            <div class="table-empty"><span class="spinner"></span>Loading…</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">Quick Links</div><div class="panel-sub">Manage via Stripe</div></div></div>
+          <div class="card-pad mini-list">
+            <div class="mini-item"><div><b>Stripe Dashboard</b><br><span class="sub">Full payment management</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Subscriptions</b><br><span class="sub">View all active subs</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/subscriptions','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Customers</b><br><span class="sub">Stripe customer list</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/customers','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Invoices</b><br><span class="sub">Payment history</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/invoices','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Payouts</b><br><span class="sub">Your earnings</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/balance','_blank')">Open →</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ── Change Status Modal ── -->
+<div class="modal-bg" id="status-modal">
+  <div class="modal">
+    <h2>Change Subscription Status</h2>
+    <p>Manually update this user's access level in Supabase.</p>
+    <div class="form-row">
+      <label class="form-label">User</label>
+      <input class="form-input" id="modal-email" readonly style="background:var(--g50)">
+    </div>
+    <div class="form-row">
+      <label class="form-label">New Status</label>
+      <select class="form-input" id="modal-status">
+        <option value="active">Active (paid)</option>
+        <option value="trial">Trial</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveStatus()">Save Changes</button>
+    </div>
   </div>
 </div>
 
-<div id="adminApp" class="app hidden">
-  <aside class="sidebar">
-    <a class="logo" href="index.html"><div class="logo-icon"><div class="logo-bar" style="height:11px;opacity:.45"></div><div class="logo-bar" style="height:17px;opacity:.7"></div><div class="logo-bar" style="height:24px"></div><div class="logo-bar gold" style="height:19px"></div></div><div class="logo-text">Drop<span>Research</span> Hub</div></a>
-    <div class="nav-label">Admin Area</div>
-    <button class="nav-btn active" onclick="showSection('overview',this)">📊 Overview</button>
-    <button class="nav-btn" onclick="showSection('products',this)">📦 Products</button>
-    <button class="nav-btn" onclick="showSection('searches',this)">🔎 Searches</button>
-    <button class="nav-btn" onclick="showSection('users',this)">👥 Users</button>
-    <button class="nav-btn" onclick="showSection('billing',this)">💳 Billing</button>
-    <button class="nav-btn" onclick="showSection('settings',this)">⚙️ Settings</button>
-    <div class="nav-label">Site</div>
-    <button class="nav-btn" onclick="window.location.href='members.html'">→ Members page</button>
-    <button class="nav-btn" onclick="window.location.href='index.html'">→ Homepage</button>
-    <div class="admin-warning"><b>Admin v1</b><p>This is a front-end admin preview. Real data needs database, Stripe and auth integration.</p></div>
-  </aside>
-  <main class="main">
-    <div class="topbar"><div><h1>Admin Dashboard</h1><p>Control centre for DropResearchHub users, searches, products and revenue.</p></div><div class="admin-pill"><div class="avatar">BH</div><b>Admin</b></div></div>
-    <section id="overview" class="section active">
-      <div class="kpi-grid">
-        <div class="card card-pad"><div class="kpi-label">Total visitors</div><div class="kpi-value">1,284</div><div class="kpi-note">demo metric</div></div>
-        <div class="card card-pad"><div class="kpi-label">Free trials</div><div class="kpi-value" style="color:var(--gold)">42</div><div class="kpi-note">awaiting auth</div></div>
-        <div class="card card-pad"><div class="kpi-label">Paid subscribers</div><div class="kpi-value" style="color:var(--green)">0</div><div class="kpi-note">Stripe not connected</div></div>
-        <div class="card card-pad"><div class="kpi-label">MRR</div><div class="kpi-value">£0</div><div class="kpi-note">monthly recurring revenue</div></div>
-      </div>
-      <div class="two-col">
-        <div class="card"><div class="panel-head"><div><div class="panel-title">Recent activity</div><div class="panel-sub">Latest validations and creative actions.</div></div></div><table><thead><tr><th>User</th><th>Action</th><th>Product</th><th>Status</th></tr></thead><tbody id="activityRows"></tbody></table></div>
-        <div class="card"><div class="panel-head"><div><div class="panel-title">System health</div><div class="panel-sub">Core service status.</div></div></div><div class="card-pad mini-list"><div class="mini-item"><div><b><span class="health-dot"></span>Vercel</b><br><span>Deployment live</span></div><span class="badge green">Online</span></div><div class="mini-item"><div><b><span class="health-dot"></span>Claude API</b><br><span>generate.js route active</span></div><span class="badge gold">Test</span></div><div class="mini-item"><div><b><span class="health-dot" style="background:var(--orange)"></span>Stripe</b><br><span>Not connected yet</span></div><span class="badge gold">Pending</span></div></div></div>
-      </div>
-    </section>
-    <section id="products" class="section">
-      <div class="card"><div class="panel-head"><div><div class="panel-title">Product Manager</div><div class="panel-sub">Add and manage emerging products for the feed.</div></div><button class="btn gold" onclick="addProductDemo()">Add demo product</button></div><div class="card-pad"><div class="form-grid"><input class="input" id="pName" placeholder="Product name"><input class="input" id="pNiche" placeholder="Niche"><select id="pScore"><option>A+</option><option>A</option><option>B</option><option>C</option><option>D</option></select><select id="pStage"><option>Emerging</option><option>Growing</option><option>Mature</option><option>Saturated</option></select><input class="input" id="pGrowth" placeholder="Growth score"><input class="input" id="pCompetition" placeholder="Competition score"></div><textarea id="pNotes" style="margin-top:12px" placeholder="Why is this product worth adding?"></textarea><button class="btn primary" style="margin-top:12px" onclick="addProductDemo()">Save Product</button></div><table><thead><tr><th>Product</th><th>Niche</th><th>Score</th><th>Stage</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div>
-    </section>
-    <section id="searches" class="section"><div class="card"><div class="panel-head"><div><div class="panel-title">User Searches</div><div class="panel-sub">Most searched product ideas. Real tracking needs a database.</div></div><button class="btn" onclick="exportCSV()">Export CSV</button></div><table><thead><tr><th>Product</th><th>Searches</th><th>Last searched</th><th>Signal</th></tr></thead><tbody id="searchRows"></tbody></table></div></section>
-    <section id="users" class="section"><div class="card"><div class="panel-head"><div><div class="panel-title">Users & Subscribers</div><div class="panel-sub">Free trials, paid users and account status.</div></div></div><table><thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Status</th></tr></thead><tbody><tr><td>Billy Houston</td><td>billy_houston@hotmail.co.uk</td><td>Admin</td><td><span class="badge green">Active</span></td></tr><tr><td>Beta User</td><td>user@example.com</td><td>Free Trial</td><td><span class="badge gold">Trial</span></td></tr></tbody></table></div></section>
-    <section id="billing" class="section"><div class="card card-pad"><h2>Billing</h2><p class="muted">Connect Stripe here later to track payments, subscriptions, cancellations, revenue and failed payments.</p><div class="kpi-grid" style="margin-top:18px"><div class="card card-pad"><div class="kpi-label">Revenue</div><div class="kpi-value">£0</div></div><div class="card card-pad"><div class="kpi-label">Churn</div><div class="kpi-value">0%</div></div><div class="card card-pad"><div class="kpi-label">Plan</div><div class="kpi-value">£49</div></div><div class="card card-pad"><div class="kpi-label">After month 1</div><div class="kpi-value">£24</div></div></div></div></section>
-    <section id="settings" class="section"><div class="card card-pad"><h2>Settings & Roadmap</h2><div class="mini-list" style="margin-top:16px"><div class="mini-item"><div><b>Connect database</b><br><span>Save users, searches, products and watchlists.</span></div><span class="badge gold">Next</span></div><div class="mini-item"><div><b>Connect Stripe</b><br><span>Take payments and manage subscriptions.</span></div><span class="badge gold">Next</span></div><div class="mini-item"><div><b>Admin product publishing</b><br><span>Add products without editing code.</span></div><span class="badge blue">Roadmap</span></div></div></div></section>
-  </main>
+<!-- ── Delete Confirm Modal ── -->
+<div class="modal-bg" id="delete-modal">
+  <div class="modal">
+    <h2>Delete User</h2>
+    <p>Are you sure you want to permanently delete <strong id="delete-email"></strong>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn danger" onclick="confirmDelete()">Delete User</button>
+    </div>
+  </div>
 </div>
+
+<div id="toast"></div>
+
 <script>
-const activity=[['Billy','Validated','Dog Harness','Complete'],['Beta User','Generated brief','Portable Ice Bath','Complete'],['Guest','Searched','Pet Hair Remover','Trial'],['Beta User','Opened research','LED Teeth Whitening Kit','Complete']];
-const products=[['Portable Ice Bath','Fitness Recovery','A+','Emerging'],['Dog Harness','Pets','B','Mature'],['Pet Hair Remover','Pets','A','Emerging'],['Electric Cleaning Brush','Home Cleaning','A','Emerging']];
-const searches=[['Dog Harness',18,'Today','Growing'],['Portable Ice Bath',14,'Today','Strong'],['Pet Hair Remover',9,'Yesterday','Emerging'],['LED Teeth Whitening Kit',7,'Yesterday','Watch']];
-function loginAdmin(){const pass=document.getElementById('adminPass').value;if(pass==='dropadmin'){document.getElementById('login').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');localStorage.setItem('drhAdmin','yes')}else alert('Wrong password for now. Try: dropadmin')}
-if(localStorage.getItem('drhAdmin')==='yes'){document.getElementById('login').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden')}
-function showSection(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active')}
-function render(){document.getElementById('activityRows').innerHTML=activity.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="badge green">${r[3]}</span></td></tr>`).join('');document.getElementById('productRows').innerHTML=products.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="badge green">${r[2]}</span></td><td>${r[3]}</td><td><button class="btn">Edit</button></td></tr>`).join('');document.getElementById('searchRows').innerHTML=searches.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="badge blue">${r[3]}</span></td></tr>`).join('')}
-function addProductDemo(){const name=document.getElementById('pName')?.value||'New Product';const niche=document.getElementById('pNiche')?.value||'General';const score=document.getElementById('pScore')?.value||'B';const stage=document.getElementById('pStage')?.value||'Needs Research';products.unshift([name,niche,score,stage]);render();alert('Demo product added on this screen only. Database connection coming next.')}
-function exportCSV(){alert('CSV export demo. Real export needs saved database data.')}
-render();
+// ── Constants ─────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
+const ADMIN_SESSION_KEY = 'drh_admin';
+
+// ── Auth guard ────────────────────────────────────────────────────────────
+if (!localStorage.getItem(ADMIN_SESSION_KEY)) {
+  window.location.href = 'admin-login.html';
+}
+
+function logout() {
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  localStorage.removeItem('drh_session');
+  window.location.href = 'admin-login.html';
+}
+
+// ── Supabase fetch helper ─────────────────────────────────────────────────
+async function sbFetch(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+      ...(options.headers || {})
+    }
+  });
+  if (!res.ok) throw new Error(`Supabase error ${res.status}`);
+  return res.json();
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────
+const sectionTitles = {
+  overview: ['Overview', 'Live data from Supabase & Stripe'],
+  customers: ['Customers', 'All registered users'],
+  billing: ['Billing', 'Revenue and subscription stats']
+};
+
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const [title, sub] = sectionTitles[id] || ['Admin', ''];
+  document.getElementById('section-title').textContent = title;
+  document.getElementById('section-sub').textContent = sub;
+}
+
+// ── Load all users from Supabase ──────────────────────────────────────────
+let allUsers = [];
+
+async function loadUsers() {
+  try {
+    const users = await sbFetch('users?select=id,name,email,subscription_status,stripe_customer_id,created_at&order=created_at.desc');
+    allUsers = users;
+    renderUsersTable(users);
+    renderRecentSignups(users.slice(0, 10));
+    renderKPIs(users);
+    renderBilling(users);
+    document.getElementById('customer-count').textContent = `${users.length} total user${users.length !== 1 ? 's' : ''}`;
+  } catch (err) {
+    document.getElementById('users-table').innerHTML = `<tr><td colspan="6" class="table-empty">⚠️ Could not load users — ${err.message}</td></tr>`;
+    document.getElementById('recent-signups').innerHTML = `<tr><td colspan="4" class="table-empty">⚠️ Could not load data</td></tr>`;
+  }
+}
+
+// ── KPIs ──────────────────────────────────────────────────────────────────
+function renderKPIs(users) {
+  const active = users.filter(u => u.subscription_status === 'active').length;
+  const trial = users.filter(u => u.subscription_status === 'trial').length;
+  const cancelled = users.filter(u => u.subscription_status === 'cancelled').length;
+  document.getElementById('kpi-total').textContent = users.length;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-trial').textContent = trial;
+  document.getElementById('kpi-cancelled').textContent = cancelled;
+}
+
+// ── Recent signups ────────────────────────────────────────────────────────
+function renderRecentSignups(users) {
+  const tbody = document.getElementById('recent-signups');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No users yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><b>${esc(u.name || '—')}</b></td>
+      <td>${esc(u.email)}</td>
+      <td>${statusBadge(u.subscription_status)}</td>
+      <td>${formatDate(u.created_at)}</td>
+    </tr>
+  `).join('');
+}
+
+// ── Users table ───────────────────────────────────────────────────────────
+function renderUsersTable(users) {
+  const tbody = document.getElementById('users-table');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No users found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><b>${esc(u.name || '—')}</b></td>
+      <td>${esc(u.email)}</td>
+      <td>${statusBadge(u.subscription_status)}</td>
+      <td>${u.stripe_customer_id
+        ? `<a href="https://dashboard.stripe.com/customers/${u.stripe_customer_id}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none">${u.stripe_customer_id.slice(0,18)}… ↗</a>`
+        : '<span style="color:var(--g400)">—</span>'
+      }</td>
+      <td>${formatDate(u.created_at)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn sm" onclick="openStatusModal('${esc(u.email)}','${u.subscription_status}')">Edit</button>
+        <button class="btn sm danger" onclick="openDeleteModal('${esc(u.email)}','${esc(u.id)}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── Filter users ──────────────────────────────────────────────────────────
+function filterUsers() {
+  const q = document.getElementById('search-users').value.toLowerCase();
+  const status = document.getElementById('filter-status').value;
+  const filtered = allUsers.filter(u => {
+    const matchQ = !q || u.email.toLowerCase().includes(q) || (u.name || '').toLowerCase().includes(q);
+    const matchS = !status || u.subscription_status === status;
+    return matchQ && matchS;
+  });
+  renderUsersTable(filtered);
+  document.getElementById('customer-count').textContent = `${filtered.length} of ${allUsers.length} users`;
+}
+
+// ── Export CSV ────────────────────────────────────────────────────────────
+function exportUsersCSV() {
+  const rows = [['Name','Email','Status','Stripe ID','Joined']];
+  allUsers.forEach(u => rows.push([u.name||'',u.email,u.subscription_status,u.stripe_customer_id||'',u.created_at]));
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `drh-customers-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV downloaded', 'success');
+}
+
+// ── Billing ───────────────────────────────────────────────────────────────
+function renderBilling(users) {
+  const active = users.filter(u => u.subscription_status === 'active').length;
+  const trial = users.filter(u => u.subscription_status === 'trial').length;
+  const cancelled = users.filter(u => u.subscription_status === 'cancelled').length;
+  const mrr = active * 100;
+  const churn = users.length ? Math.round((cancelled / users.length) * 100) : 0;
+  const conversion = (trial + active) ? Math.round((active / (trial + active)) * 100) : 0;
+
+  document.getElementById('bill-mrr').textContent = `£${mrr.toLocaleString()}`;
+  document.getElementById('bill-churn').textContent = `${churn}%`;
+  document.getElementById('bill-conversion').textContent = `${conversion}%`;
+
+  document.getElementById('billing-breakdown').innerHTML = `
+    <div class="mini-list">
+      <div class="mini-item"><div><b>Active (Paid)</b><br><span class="sub">${active} subscribers × £100/mo</span></div><span class="badge green">£${(active*100).toLocaleString()}/mo</span></div>
+      <div class="mini-item"><div><b>On Trial</b><br><span class="sub">${trial} users in 7-day trial</span></div><span class="badge gold">${trial} users</span></div>
+      <div class="mini-item"><div><b>Cancelled</b><br><span class="sub">${cancelled} churned accounts</span></div><span class="badge red">${cancelled} users</span></div>
+      <div class="mini-item"><div><b>Total Registered</b><br><span class="sub">All accounts ever created</span></div><span class="badge blue">${users.length} users</span></div>
+    </div>
+  `;
+}
+
+// ── Status modal ──────────────────────────────────────────────────────────
+let modalEmail = '';
+
+function openStatusModal(email, currentStatus) {
+  modalEmail = email;
+  document.getElementById('modal-email').value = email;
+  document.getElementById('modal-status').value = currentStatus || 'trial';
+  document.getElementById('status-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('status-modal').classList.remove('open');
+}
+
+async function saveStatus() {
+  const newStatus = document.getElementById('modal-status').value;
+  try {
+    await sbFetch(`users?email=eq.${encodeURIComponent(modalEmail)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ subscription_status: newStatus })
+    });
+    toast('Status updated', 'success');
+    closeModal();
+    loadUsers();
+  } catch (err) {
+    toast('Failed to update: ' + err.message, 'error');
+  }
+}
+
+// ── Delete modal ──────────────────────────────────────────────────────────
+let deleteEmail = '', deleteId = '';
+
+function openDeleteModal(email, id) {
+  deleteEmail = email;
+  deleteId = id;
+  document.getElementById('delete-email').textContent = email;
+  document.getElementById('delete-modal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+}
+
+async function confirmDelete() {
+  try {
+    await sbFetch(`users?id=eq.${deleteId}`, { method: 'DELETE' });
+    toast('User deleted', 'success');
+    closeDeleteModal();
+    loadUsers();
+  } catch (err) {
+    toast('Failed to delete: ' + err.message, 'error');
+  }
+}
+
+// ── Health check ──────────────────────────────────────────────────────────
+async function loadHealth() {
+  // Supabase
+  try {
+    await sbFetch('users?select=id&limit=1');
+    setHealth('supabase', 'green', 'Connected', 'Online');
+  } catch {
+    setHealth('supabase', 'red', 'Connection failed', 'Error');
+  }
+
+  // Claude API (ping generate with empty body)
+  try {
+    const r = await fetch('/api/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({niche:'test',_ping:true}) });
+    setHealth('claude', r.status < 500 ? 'green' : 'gold', r.status < 500 ? 'Route active' : 'Route error', r.status < 500 ? 'Online' : 'Warning');
+  } catch {
+    setHealth('claude', 'gold', 'Could not reach', 'Unknown');
+  }
+
+  // Stripe portal ping
+  try {
+    const r = await fetch('/api/stripe-portal', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email:'health@check.com'}) });
+    setHealth('stripe', r.status !== 500 ? 'green' : 'red', r.status !== 500 ? 'API reachable' : 'API error', r.status !== 500 ? 'Online' : 'Error');
+  } catch {
+    setHealth('stripe', 'red', 'Could not reach', 'Error');
+  }
+}
+
+function setHealth(key, color, sub, badge) {
+  const dot = document.getElementById(`dot-${key}`);
+  const subEl = document.getElementById(`status-${key}`);
+  const badgeEl = document.getElementById(`badge-${key}`);
+  if (dot) { dot.className = `dot ${color}`; }
+  if (subEl) subEl.textContent = sub;
+  if (badgeEl) {
+    badgeEl.textContent = badge;
+    badgeEl.className = `badge ${color === 'green' ? 'green' : color === 'red' ? 'red' : 'gold'}`;
+  }
+}
+
+// ── Close modals on backdrop click ────────────────────────────────────────
+['status-modal','delete-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.classList.remove('open');
+    }
+  });
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function statusBadge(s) {
+  const map = { active: 'green', trial: 'gold', cancelled: 'red' };
+  return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`;
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = '', 3000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadUsers();
+loadHealth();
 </script>
 </body>
 </html>
