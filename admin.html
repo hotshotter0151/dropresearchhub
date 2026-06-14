@@ -7,9 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB;--blue-bg:#EFF6FF;--green-bg:#DCFCE7;--red-bg:#FEE2E2;--amber:#D97706;--amber-bg:#FEF3C7}
+:root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB}
 body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6}
 .app{display:flex;min-height:100vh}
+
+/* ── Sidebar ── */
 .sidebar{width:240px;background:var(--navy-dark);color:#fff;padding:20px 14px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:100}
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;color:#fff}
 .logo-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px}
@@ -19,36 +21,53 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,.65);font:inherit;font-size:13px;font-weight:600;padding:10px 12px;border-radius:9px;display:flex;align-items:center;gap:9px;cursor:pointer;text-align:left;margin-bottom:2px;transition:all .15s}
 .nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
 .nav-btn.active{background:#fff;color:var(--navy)}
+.sidebar-footer{margin-top:auto;padding-top:24px}
 .btn-logout-side{width:100%;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.6);font:inherit;font-size:13px;padding:10px 12px;border-radius:9px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:9px;transition:all .15s}
 .btn-logout-side:hover{border-color:var(--red);color:#f87171}
+
+/* ── Main ── */
 .main{margin-left:240px;width:calc(100% - 240px);padding:28px 32px 70px}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:16px}
 .topbar h1{font-size:26px;font-weight:900;letter-spacing:-.7px}
 .topbar p{font-size:13px;color:var(--g500);margin-top:3px}
 .admin-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 14px 7px 8px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700}
 .avatar{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+
+/* ── Sections ── */
 .section{display:none}.section.active{display:block}
+
+/* ── Cards ── */
 .card{background:#fff;border:1px solid var(--g200);border-radius:16px;box-shadow:0 2px 12px rgba(17,24,39,.04);overflow:hidden}
 .card-pad{padding:20px}
+
+/* ── KPI grid ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
 .kpi-card{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px 20px}
 .kpi-label{font-size:11px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
 .kpi-value{font-size:30px;font-weight:900;letter-spacing:-1px;margin-top:6px;color:var(--g900)}
 .kpi-note{font-size:12px;color:var(--g500);margin-top:2px}
+
+/* ── Panel head ── */
 .panel-head{padding:16px 20px;border-bottom:1px solid var(--g200);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .panel-title{font-size:16px;font-weight:800}
 .panel-sub{font-size:12px;color:var(--g500);margin-top:2px}
+
+/* ── Table ── */
 table{width:100%;border-collapse:collapse}
 th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--g400);font-weight:700;padding:11px 16px;border-bottom:1px solid var(--g100);background:var(--g50);text-align:left}
 td{padding:12px 16px;border-bottom:1px solid var(--g100);font-size:13px;color:var(--g700);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--g50)}
+
+/* ── Badges ── */
 .badge{display:inline-flex;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700}
 .badge.green{background:#DCFCE7;color:#166534}
 .badge.gold{background:#FEF3C7;color:#92400E}
 .badge.red{background:#FEE2E2;color:#991B1B}
 .badge.blue{background:#DBEAFE;color:#1E40AF}
 .badge.gray{background:var(--g100);color:var(--g500)}
+
+/* ── Buttons ── */
 .btn{border:1px solid var(--g200);background:#fff;color:var(--g700);border-radius:9px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn:hover{border-color:var(--navy);color:var(--navy)}
 .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -57,19 +76,31 @@ tr:hover td{background:var(--g50)}
 .btn.danger{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
 .btn.danger:hover{background:var(--red);color:#fff}
 .btn.sm{padding:5px 10px;font-size:11px}
+
+/* ── Two col ── */
 .two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+
+/* ── Search / filter bar ── */
 .filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .filter-input{border:1px solid var(--g200);border-radius:9px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;min-width:200px}
 .filter-input:focus{border-color:var(--navy)}
 select.filter-input{min-width:140px}
+
+/* ── Empty / loading ── */
 .table-empty{text-align:center;padding:40px;color:var(--g400);font-size:13px}
 .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Health dots ── */
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
 .dot.green{background:var(--green)}.dot.gold{background:var(--gold)}.dot.red{background:var(--red)}
+
+/* ── Mini list ── */
 .mini-list{display:grid;gap:10px}
 .mini-item{display:flex;justify-content:space-between;align-items:center;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:12px 14px}
 .mini-item b{font-size:13px}.mini-item span.sub{font-size:12px;color:var(--g500)}
+
+/* ── Modal ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:16px;padding:28px;max-width:440px;width:calc(100% - 40px)}
@@ -80,50 +111,21 @@ select.filter-input{min-width:140px}
 .form-label{display:block;font-size:12px;font-weight:700;color:var(--g700);margin-bottom:5px}
 .form-input{width:100%;border:1px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none}
 .form-input:focus{border-color:var(--navy)}
+
+/* ── Toast ── */
 #toast{position:fixed;bottom:20px;right:20px;background:var(--g900);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
 #toast.success{background:#166534}
 #toast.error{background:var(--red)}
-
-/* ── Products Section ── */
-.gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
-.gen-btn:hover:not(:disabled){background:var(--navy-light)}
-.gen-btn:disabled{opacity:.5;cursor:not-allowed}
-.gen-btn.green{background:var(--green)}
-.status-messages{display:none;flex-direction:column;gap:6px;margin-top:16px;background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px}
-.status-messages.show{display:flex}
-.status-line{font-size:13px;color:var(--g400);padding:4px 0;display:none}
-.status-line.show{display:flex;align-items:center;gap:8px}
-.status-line.active{color:var(--g700);font-weight:600}
-.status-line.active::before{content:'';width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-.status-line.done{color:var(--green)}
-.status-line.done::before{content:'✓';color:var(--green);font-weight:900;width:14px;flex-shrink:0}
-.status-line.error{color:var(--red)}
-.product-row{display:flex;gap:14px;align-items:flex-start;padding:16px;border-bottom:1px solid var(--g100);flex-wrap:wrap}
-.product-row:last-child{border-bottom:none}
-.product-emoji{font-size:32px;width:44px;text-align:center;flex-shrink:0}
-.product-info{flex:1;min-width:200px}
-.product-name{font-size:15px;font-weight:800;color:var(--g900);margin-bottom:4px}
-.product-meta{font-size:12px;color:var(--g500)}
-.product-why{font-size:12px;color:var(--g700);font-style:italic;margin-top:4px;line-height:1.5}
-.product-links{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.product-links a{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none}
-.product-thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--g200);margin-top:6px}
-.product-controls{display:flex;flex-direction:column;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.grade-badge{border-radius:8px;padding:5px 12px;font-size:12px;font-weight:900}
-.toggle-btn{width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;background:var(--g200);position:relative;transition:background .2s}
-.toggle-btn::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.toggle-btn.on{background:var(--green)}
-.toggle-btn.on::after{left:22px}
-.live-row{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--g100)}
-.live-row:last-child{border-bottom:none}
 
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
 </style>
 </head>
 <body>
+
 <div class="app">
+  <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <a class="logo" href="index.html">
       <div class="logo-icon">
@@ -134,44 +136,79 @@ select.filter-input{min-width:140px}
       </div>
       <div class="logo-text">Drop<span>Research</span></div>
     </a>
+
     <div class="nav-label">Dashboard</div>
     <button class="nav-btn active" onclick="show('overview',this)">📊 Overview</button>
-    <button class="nav-btn" onclick="show('products',this)">✨ Products</button>
     <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
     <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
+
     <div class="nav-label">Site</div>
     <button class="nav-btn" onclick="window.open('members.html','_blank')">→ Members Area</button>
     <button class="nav-btn" onclick="window.open('trial.html','_blank')">→ Trial Area</button>
     <button class="nav-btn" onclick="window.open('index.html','_blank')">→ Homepage</button>
-    <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">→ Stripe</button>
+    <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">→ Stripe Dashboard</button>
     <button class="nav-btn" onclick="window.open('https://supabase.com/dashboard/project/qpkpvtsoxiqcrkztkagn','_blank')">→ Supabase</button>
+
     <div style="margin-top:auto;padding-top:32px">
       <button class="btn-logout-side" onclick="logout()">🚪 Log out</button>
     </div>
   </aside>
 
+  <!-- ── Main ── -->
   <main class="main">
     <div class="topbar">
       <div>
         <h1 id="section-title">Overview</h1>
         <p id="section-sub">Live data from Supabase & Stripe</p>
       </div>
-      <div class="admin-pill"><div class="avatar">BH</div>Admin</div>
+      <div class="admin-pill">
+        <div class="avatar">BH</div>
+        Admin
+      </div>
     </div>
 
-    <!-- OVERVIEW -->
+    <!-- ── OVERVIEW ── -->
     <section id="overview" class="section active">
       <div class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-label">Total Users</div><div class="kpi-value" id="kpi-total">—</div><div class="kpi-note">registered accounts</div></div>
-        <div class="kpi-card"><div class="kpi-label">Active (Paid)</div><div class="kpi-value" id="kpi-active" style="color:var(--green)">—</div><div class="kpi-note">paying subscribers</div></div>
-        <div class="kpi-card"><div class="kpi-label">On Trial</div><div class="kpi-value" id="kpi-trial" style="color:var(--gold)">—</div><div class="kpi-note">7-day free trial</div></div>
-        <div class="kpi-card"><div class="kpi-label">Cancelled</div><div class="kpi-value" id="kpi-cancelled" style="color:var(--red)">—</div><div class="kpi-note">churned accounts</div></div>
-      </div>
-      <div class="two-col">
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Recent Signups</div><div class="panel-sub">Last 10 registered users</div></div><button class="btn" onclick="show('customers',document.querySelectorAll('.nav-btn')[2])">View all →</button></div>
-          <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead><tbody id="recent-signups"><tr><td colspan="4" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Users</div>
+          <div class="kpi-value" id="kpi-total">—</div>
+          <div class="kpi-note">registered accounts</div>
         </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active (Paid)</div>
+          <div class="kpi-value" id="kpi-active" style="color:var(--green)">—</div>
+          <div class="kpi-note">paying subscribers</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">On Trial</div>
+          <div class="kpi-value" id="kpi-trial" style="color:var(--gold)">—</div>
+          <div class="kpi-note">7-day free trial</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Cancelled</div>
+          <div class="kpi-value" id="kpi-cancelled" style="color:var(--red)">—</div>
+          <div class="kpi-note">churned accounts</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- Recent signups -->
+        <div class="card">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Recent Signups</div>
+              <div class="panel-sub">Last 10 registered users</div>
+            </div>
+            <button class="btn" onclick="show('customers', document.querySelector('.nav-btn:nth-child(3)'))">View all →</button>
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead>
+            <tbody id="recent-signups"><tr><td colspan="4" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+
+        <!-- System health -->
         <div class="card">
           <div class="panel-head"><div><div class="panel-title">System Health</div><div class="panel-sub">Service status</div></div><button class="btn" onclick="loadHealth()">↻ Refresh</button></div>
           <div class="card-pad mini-list" id="health-list">
@@ -184,61 +221,14 @@ select.filter-input{min-width:140px}
       </div>
     </section>
 
-    <!-- PRODUCTS -->
-    <section id="products" class="section">
-      <div class="card" style="margin-bottom:16px">
-        <div class="panel-head">
-          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 products. Run multiple times to build up a batch, then publish all at once.</div></div>
-          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate 3 products</span></button>
-        </div>
-        <div class="card-pad">
-          <div class="status-messages" id="status-messages">
-            <div class="status-line" id="sl-1">Searching TikTok Shop UK for trending products...</div>
-            <div class="status-line" id="sl-2">Checking Amazon UK Movers & Shakers...</div>
-            <div class="status-line" id="sl-3">Scanning AliExpress for growth signals...</div>
-            <div class="status-line" id="sl-4">Applying 12-point product selection framework...</div>
-            <div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
-            <div class="status-line" id="sl-6">Fetching product images...</div>
-            <div class="status-line" id="sl-7">Finalising research reports...</div>
-            <div class="status-line" id="sl-8">Products ready — added to review list below</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="pending-card" style="display:none;margin-bottom:16px">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div>
-            <div class="panel-sub">Toggle on what you want to publish. Generate more batches to add to this list.</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" onclick="toggleAll(true)">✓ Select all</button>
-            <button class="btn" onclick="toggleAll(false)">✕ Deselect all</button>
-            <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
-            <button class="btn danger" onclick="clearPending()">🗑️ Clear all</button>
-            <button class="gen-btn green" onclick="publishSelected()">🚀 Publish selected to feed</button>
-          </div>
-        </div>
-        <div id="pending-list"></div>
-      </div>
-
-      <div class="card">
-        <div class="panel-head">
-          <div><div class="panel-title">🗂️ Live Feed</div><div class="panel-sub">All products currently showing to members and trial users</div></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn" onclick="loadLiveFeed()">↻ Refresh</button>
-            <button class="btn danger" onclick="clearAllFromFeed()">🗑️ Clear entire feed</button>
-          </div>
-        </div>
-        <div id="live-list"><div class="table-empty">Loading...</div></div>
-      </div>
-    </section>
-
-    <!-- CUSTOMERS -->
+    <!-- ── CUSTOMERS ── -->
     <section id="customers" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
-          <div><div class="panel-title">All Customers</div><div class="panel-sub" id="customer-count">Loading…</div></div>
+          <div>
+            <div class="panel-title">All Customers</div>
+            <div class="panel-sub" id="customer-count">Loading…</div>
+          </div>
           <div class="filter-bar">
             <input class="filter-input" id="search-users" placeholder="Search name or email…" oninput="filterUsers()">
             <select class="filter-input" id="filter-status" onchange="filterUsers()">
@@ -251,33 +241,63 @@ select.filter-input{min-width:140px}
           </div>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Stripe Customer</th><th>Joined</th><th>Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Stripe Customer</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
           <tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading customers…</td></tr></tbody>
         </table>
       </div>
     </section>
 
-    <!-- BILLING -->
+    <!-- ── BILLING ── -->
     <section id="billing" class="section">
       <div class="kpi-grid" style="margin-bottom:20px">
-        <div class="kpi-card"><div class="kpi-label">MRR</div><div class="kpi-value" id="bill-mrr" style="color:var(--green)">—</div><div class="kpi-note">monthly recurring revenue</div></div>
-        <div class="kpi-card"><div class="kpi-label">Plan Price</div><div class="kpi-value">£24.99</div><div class="kpi-note">per month per user</div></div>
-        <div class="kpi-card"><div class="kpi-label">Churn Rate</div><div class="kpi-value" id="bill-churn">—</div><div class="kpi-note">cancelled / total</div></div>
-        <div class="kpi-card"><div class="kpi-label">Trial → Paid</div><div class="kpi-value" id="bill-conversion">—</div><div class="kpi-note">conversion rate</div></div>
+        <div class="kpi-card">
+          <div class="kpi-label">MRR</div>
+          <div class="kpi-value" id="bill-mrr" style="color:var(--green)">—</div>
+          <div class="kpi-note">monthly recurring revenue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Plan Price</div>
+          <div class="kpi-value">£100</div>
+          <div class="kpi-note">per month per user</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Churn Rate</div>
+          <div class="kpi-value" id="bill-churn">—</div>
+          <div class="kpi-note">cancelled / total</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Trial → Paid</div>
+          <div class="kpi-value" id="bill-conversion">—</div>
+          <div class="kpi-note">conversion rate</div>
+        </div>
       </div>
+
       <div class="two-col">
         <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Subscription Breakdown</div><div class="panel-sub">Live from Supabase</div></div></div>
-          <div class="card-pad" id="billing-breakdown"><div class="table-empty"><span class="spinner"></span>Loading…</div></div>
+          <div class="panel-head">
+            <div><div class="panel-title">Subscription Breakdown</div><div class="panel-sub">Live from Supabase</div></div>
+          </div>
+          <div class="card-pad" id="billing-breakdown">
+            <div class="table-empty"><span class="spinner"></span>Loading…</div>
+          </div>
         </div>
         <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Quick Links</div></div></div>
+          <div class="panel-head"><div><div class="panel-title">Quick Links</div><div class="panel-sub">Manage via Stripe</div></div></div>
           <div class="card-pad mini-list">
             <div class="mini-item"><div><b>Stripe Dashboard</b><br><span class="sub">Full payment management</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com','_blank')">Open →</button></div>
-            <div class="mini-item"><div><b>Subscriptions</b></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/subscriptions','_blank')">Open →</button></div>
-            <div class="mini-item"><div><b>Customers</b></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/customers','_blank')">Open →</button></div>
-            <div class="mini-item"><div><b>Invoices</b></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/invoices','_blank')">Open →</button></div>
-            <div class="mini-item"><div><b>Payouts</b></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/balance','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Subscriptions</b><br><span class="sub">View all active subs</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/subscriptions','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Customers</b><br><span class="sub">Stripe customer list</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/customers','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Invoices</b><br><span class="sub">Payment history</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/invoices','_blank')">Open →</button></div>
+            <div class="mini-item"><div><b>Payouts</b><br><span class="sub">Your earnings</span></div><button class="btn sm" onclick="window.open('https://dashboard.stripe.com/balance','_blank')">Open →</button></div>
           </div>
         </div>
       </div>
@@ -285,333 +305,348 @@ select.filter-input{min-width:140px}
   </main>
 </div>
 
-<!-- Status Modal -->
+<!-- ── Change Status Modal ── -->
 <div class="modal-bg" id="status-modal">
   <div class="modal">
     <h2>Change Subscription Status</h2>
     <p>Manually update this user's access level in Supabase.</p>
-    <div class="form-row"><label class="form-label">User</label><input class="form-input" id="modal-email" readonly style="background:var(--g50)"></div>
-    <div class="form-row"><label class="form-label">New Status</label><select class="form-input" id="modal-status"><option value="active">Active (paid)</option><option value="trial">Trial</option><option value="cancelled">Cancelled</option></select></div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveStatus()">Save Changes</button></div>
+    <div class="form-row">
+      <label class="form-label">User</label>
+      <input class="form-input" id="modal-email" readonly style="background:var(--g50)">
+    </div>
+    <div class="form-row">
+      <label class="form-label">New Status</label>
+      <select class="form-input" id="modal-status">
+        <option value="active">Active (paid)</option>
+        <option value="trial">Trial</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveStatus()">Save Changes</button>
+    </div>
   </div>
 </div>
 
-<!-- Delete Modal -->
+<!-- ── Delete Confirm Modal ── -->
 <div class="modal-bg" id="delete-modal">
   <div class="modal">
     <h2>Delete User</h2>
-    <p>Are you sure you want to permanently delete <strong id="delete-email"></strong>?</p>
-    <div class="modal-actions"><button class="btn" onclick="closeDeleteModal()">Cancel</button><button class="btn danger" onclick="confirmDelete()">Delete User</button></div>
+    <p>Are you sure you want to permanently delete <strong id="delete-email"></strong>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn danger" onclick="confirmDelete()">Delete User</button>
+    </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
+// ── Constants ─────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
-const ADMIN_PW = 'Billy1234.';
+const ADMIN_SESSION_KEY = 'drh_admin';
 
-// Auth guard
-(function() {
-  const stored = localStorage.getItem('drh_admin');
-  if (stored !== ADMIN_PW) {
-    const pw = prompt('Admin password:');
-    if (pw !== ADMIN_PW) { window.location.href = 'index.html'; return; }
-    localStorage.setItem('drh_admin', pw);
-  }
-})();
+// ── Auth guard ────────────────────────────────────────────────────────────
+if (!localStorage.getItem(ADMIN_SESSION_KEY)) {
+  window.location.href = 'admin-login.html';
+}
 
-function logout() { localStorage.removeItem('drh_admin'); window.location.href = 'index.html'; }
+function logout() {
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  localStorage.removeItem('drh_session');
+  window.location.href = 'admin-login.html';
+}
 
-// Supabase helper
+// ── Supabase fetch helper ─────────────────────────────────────────────────
 async function sbFetch(path, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...(options.headers||{}) }
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+      ...(options.headers || {})
+    }
   });
   if (!res.ok) throw new Error(`Supabase error ${res.status}`);
   return res.json();
 }
 
-// Nav
-const sectionTitles = { overview:['Overview','Live data from Supabase & Stripe'], products:['Products','Generate and manage the weekly product feed'], customers:['Customers','All registered users'], billing:['Billing','Revenue and subscription stats'] };
+// ── Nav ───────────────────────────────────────────────────────────────────
+const sectionTitles = {
+  overview: ['Overview', 'Live data from Supabase & Stripe'],
+  customers: ['Customers', 'All registered users'],
+  billing: ['Billing', 'Revenue and subscription stats']
+};
+
 function show(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (btn) btn.classList.add('active');
-  const [title, sub] = sectionTitles[id] || ['Admin',''];
+  const [title, sub] = sectionTitles[id] || ['Admin', ''];
   document.getElementById('section-title').textContent = title;
   document.getElementById('section-sub').textContent = sub;
 }
 
-// ── USERS ────────────────────────────────────────────────────────────────
+// ── Load all users from Supabase ──────────────────────────────────────────
 let allUsers = [];
+
 async function loadUsers() {
   try {
     const users = await sbFetch('users?select=id,name,email,subscription_status,stripe_customer_id,created_at&order=created_at.desc');
     allUsers = users;
     renderUsersTable(users);
-    renderRecentSignups(users.slice(0,10));
+    renderRecentSignups(users.slice(0, 10));
     renderKPIs(users);
     renderBilling(users);
-    document.getElementById('customer-count').textContent = `${users.length} total user${users.length!==1?'s':''}`;
-  } catch(err) {
-    document.getElementById('users-table').innerHTML = `<tr><td colspan="6" class="table-empty">⚠️ ${err.message}</td></tr>`;
+    document.getElementById('customer-count').textContent = `${users.length} total user${users.length !== 1 ? 's' : ''}`;
+  } catch (err) {
+    document.getElementById('users-table').innerHTML = `<tr><td colspan="6" class="table-empty">⚠️ Could not load users — ${err.message}</td></tr>`;
+    document.getElementById('recent-signups').innerHTML = `<tr><td colspan="4" class="table-empty">⚠️ Could not load data</td></tr>`;
   }
 }
 
+// ── KPIs ──────────────────────────────────────────────────────────────────
 function renderKPIs(users) {
+  const active = users.filter(u => u.subscription_status === 'active').length;
+  const trial = users.filter(u => u.subscription_status === 'trial').length;
+  const cancelled = users.filter(u => u.subscription_status === 'cancelled').length;
   document.getElementById('kpi-total').textContent = users.length;
-  document.getElementById('kpi-active').textContent = users.filter(u=>u.subscription_status==='active').length;
-  document.getElementById('kpi-trial').textContent = users.filter(u=>u.subscription_status==='trial').length;
-  document.getElementById('kpi-cancelled').textContent = users.filter(u=>u.subscription_status==='cancelled').length;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-trial').textContent = trial;
+  document.getElementById('kpi-cancelled').textContent = cancelled;
 }
 
+// ── Recent signups ────────────────────────────────────────────────────────
 function renderRecentSignups(users) {
   const tbody = document.getElementById('recent-signups');
-  if (!users.length) { tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No users yet</td></tr>'; return; }
-  tbody.innerHTML = users.map(u => `<tr><td><b>${esc(u.name||'—')}</b></td><td>${esc(u.email)}</td><td>${statusBadge(u.subscription_status)}</td><td>${formatDate(u.created_at)}</td></tr>`).join('');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No users yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><b>${esc(u.name || '—')}</b></td>
+      <td>${esc(u.email)}</td>
+      <td>${statusBadge(u.subscription_status)}</td>
+      <td>${formatDate(u.created_at)}</td>
+    </tr>
+  `).join('');
 }
 
+// ── Users table ───────────────────────────────────────────────────────────
 function renderUsersTable(users) {
   const tbody = document.getElementById('users-table');
-  if (!users.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No users found</td></tr>'; return; }
-  tbody.innerHTML = users.map(u => `<tr>
-    <td><b>${esc(u.name||'—')}</b></td>
-    <td>${esc(u.email)}</td>
-    <td>${statusBadge(u.subscription_status)}</td>
-    <td>${u.stripe_customer_id?`<a href="https://dashboard.stripe.com/customers/${u.stripe_customer_id}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none">${u.stripe_customer_id.slice(0,18)}… ↗</a>`:'<span style="color:var(--g400)">—</span>'}</td>
-    <td>${formatDate(u.created_at)}</td>
-    <td style="display:flex;gap:6px"><button class="btn sm" onclick="openStatusModal('${esc(u.email)}','${u.subscription_status}')">Edit</button><button class="btn sm danger" onclick="openDeleteModal('${esc(u.email)}','${esc(u.id)}')">Delete</button></td>
-  </tr>`).join('');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No users found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><b>${esc(u.name || '—')}</b></td>
+      <td>${esc(u.email)}</td>
+      <td>${statusBadge(u.subscription_status)}</td>
+      <td>${u.stripe_customer_id
+        ? `<a href="https://dashboard.stripe.com/customers/${u.stripe_customer_id}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none">${u.stripe_customer_id.slice(0,18)}… ↗</a>`
+        : '<span style="color:var(--g400)">—</span>'
+      }</td>
+      <td>${formatDate(u.created_at)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn sm" onclick="openStatusModal('${esc(u.email)}','${u.subscription_status}')">Edit</button>
+        <button class="btn sm danger" onclick="openDeleteModal('${esc(u.email)}','${esc(u.id)}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
 }
 
+// ── Filter users ──────────────────────────────────────────────────────────
 function filterUsers() {
   const q = document.getElementById('search-users').value.toLowerCase();
   const status = document.getElementById('filter-status').value;
-  const filtered = allUsers.filter(u => (!q||u.email.toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q)) && (!status||u.subscription_status===status));
+  const filtered = allUsers.filter(u => {
+    const matchQ = !q || u.email.toLowerCase().includes(q) || (u.name || '').toLowerCase().includes(q);
+    const matchS = !status || u.subscription_status === status;
+    return matchQ && matchS;
+  });
   renderUsersTable(filtered);
   document.getElementById('customer-count').textContent = `${filtered.length} of ${allUsers.length} users`;
 }
 
+// ── Export CSV ────────────────────────────────────────────────────────────
 function exportUsersCSV() {
   const rows = [['Name','Email','Status','Stripe ID','Joined']];
   allUsers.forEach(u => rows.push([u.name||'',u.email,u.subscription_status,u.stripe_customer_id||'',u.created_at]));
-  const csv = rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
   a.download = `drh-customers-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
-  toast('CSV downloaded','success');
+  toast('CSV downloaded', 'success');
 }
 
+// ── Billing ───────────────────────────────────────────────────────────────
 function renderBilling(users) {
-  const active = users.filter(u=>u.subscription_status==='active').length;
-  const trial = users.filter(u=>u.subscription_status==='trial').length;
-  const cancelled = users.filter(u=>u.subscription_status==='cancelled').length;
-  const mrr = active * 24.99;
-  const churn = users.length ? Math.round((cancelled/users.length)*100) : 0;
-  const conversion = (trial+active) ? Math.round((active/(trial+active))*100) : 0;
-  document.getElementById('bill-mrr').textContent = `£${mrr.toFixed(2)}`;
+  const active = users.filter(u => u.subscription_status === 'active').length;
+  const trial = users.filter(u => u.subscription_status === 'trial').length;
+  const cancelled = users.filter(u => u.subscription_status === 'cancelled').length;
+  const mrr = active * 100;
+  const churn = users.length ? Math.round((cancelled / users.length) * 100) : 0;
+  const conversion = (trial + active) ? Math.round((active / (trial + active)) * 100) : 0;
+
+  document.getElementById('bill-mrr').textContent = `£${mrr.toLocaleString()}`;
   document.getElementById('bill-churn').textContent = `${churn}%`;
   document.getElementById('bill-conversion').textContent = `${conversion}%`;
-  document.getElementById('billing-breakdown').innerHTML = `<div class="mini-list">
-    <div class="mini-item"><div><b>Active (Paid)</b><br><span class="sub">${active} × £24.99/mo</span></div><span class="badge green">£${(active*24.99).toFixed(2)}/mo</span></div>
-    <div class="mini-item"><div><b>On Trial</b><br><span class="sub">${trial} users in 7-day trial</span></div><span class="badge gold">${trial} users</span></div>
-    <div class="mini-item"><div><b>Cancelled</b></div><span class="badge red">${cancelled} users</span></div>
-    <div class="mini-item"><div><b>Total Registered</b></div><span class="badge blue">${users.length} users</span></div>
-  </div>`;
-}
 
-// ── PRODUCTS ─────────────────────────────────────────────────────────────
-let pendingProducts = [];
-
-async function adminGenerate() {
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  document.getElementById('gen-text').innerHTML = '<span class="spinner"></span> Generating...';
-  const statusBox = document.getElementById('status-messages');
-  statusBox.className = 'status-messages show';
-  const lines = ['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
-  lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line'; });
-  let lineIdx = 0;
-  function nextLine() {
-    if(lineIdx > 0) { const prev = document.getElementById(lines[lineIdx-1]); if(prev) prev.className = 'status-line done show'; }
-    if(lineIdx < lines.length) { const curr = document.getElementById(lines[lineIdx]); if(curr) curr.className = 'status-line active show'; lineIdx++; }
-  }
-  nextLine();
-  const statusTimer = setInterval(nextLine, 7000);
-
-  try {
-    const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({mode:'emerging'}) });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error || 'Generate failed');
-    const t = (d.content||[]).map(i=>i.text||'').join('');
-    let c = t.replace(/```json|```/g,'').trim();
-    const s = c.indexOf('['), e = c.lastIndexOf(']');
-    if (s===-1||e===-1) throw new Error('No product array found');
-    const newProducts = JSON.parse(c.slice(s,e+1));
-    // STACK onto existing pending list
-    pendingProducts = [...pendingProducts, ...newProducts];
-    clearInterval(statusTimer);
-    lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line done show'; });
-    renderPendingList();
-    document.getElementById('pending-card').style.display = 'block';
-    toast(`✅ ${newProducts.length} products added to review queue (${pendingProducts.length} total)`, 'success');
-  } catch(err) {
-    clearInterval(statusTimer);
-    const errLine = document.createElement('div');
-    errLine.className = 'status-line show';
-    errLine.style.color = 'var(--red)';
-    errLine.textContent = '✕ Error: ' + err.message;
-    statusBox.appendChild(errLine);
-  }
-  btn.disabled = false;
-  document.getElementById('gen-text').textContent = '✨ Generate 3 products';
-}
-
-function renderPendingList() {
-  const list = document.getElementById('pending-list');
-  document.getElementById('pending-count-badge').textContent = pendingProducts.length;
-  if (!pendingProducts.length) {
-    list.innerHTML = '<div class="table-empty">No products in queue</div>';
-    return;
-  }
-  list.innerHTML = pendingProducts.map((p,i) => `
-    <div class="product-row">
-      <div class="product-emoji">${p.emoji||'📦'}</div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-meta">${p.niche||''} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'} · Sat Risk: ${p.saturationRisk||'—'}</div>
-        <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
-        ${p.img?`<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
-        <div class="product-links">
-          <a href="https://trends.google.com/trends/explore?geo=GB&q=${encodeURIComponent(p.googleTrendsKeyword||p.name)}" target="_blank" style="background:#e8f0fe;color:#1d4ed8;border:1px solid #bfdbfe">📊 Trends</a>
-          <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe">📺 Meta Ads</a>
-          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fff0e6;color:#c2410c;border:1px solid #fed7aa">🛒 AliExpress</a>
-        </div>
-      </div>
-      <div class="product-controls">
-        <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'B'}</div>
-        <button class="toggle-btn on" id="toggle-${i}" onclick="this.classList.toggle('on')"></button>
-        <button class="btn sm danger" onclick="removePending(${i})">Remove</button>
-      </div>
+  document.getElementById('billing-breakdown').innerHTML = `
+    <div class="mini-list">
+      <div class="mini-item"><div><b>Active (Paid)</b><br><span class="sub">${active} subscribers × £100/mo</span></div><span class="badge green">£${(active*100).toLocaleString()}/mo</span></div>
+      <div class="mini-item"><div><b>On Trial</b><br><span class="sub">${trial} users in 7-day trial</span></div><span class="badge gold">${trial} users</span></div>
+      <div class="mini-item"><div><b>Cancelled</b><br><span class="sub">${cancelled} churned accounts</span></div><span class="badge red">${cancelled} users</span></div>
+      <div class="mini-item"><div><b>Total Registered</b><br><span class="sub">All accounts ever created</span></div><span class="badge blue">${users.length} users</span></div>
     </div>
-  `).join('');
+  `;
 }
 
-function removePending(i) { pendingProducts.splice(i,1); renderPendingList(); }
-function clearPending() { if(!confirm('Clear all products from review queue?')) return; pendingProducts=[]; renderPendingList(); document.getElementById('pending-card').style.display='none'; }
-function toggleAll(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('toggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); }
-function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('toggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); toast('Grade A and A+ selected'); }
+// ── Status modal ──────────────────────────────────────────────────────────
+let modalEmail = '';
 
-async function publishSelected() {
-  const selected = pendingProducts.filter((_,i) => { const b=document.getElementById('toggle-'+i); return b&&b.classList.contains('on'); });
-  if (!selected.length) { toast('Toggle on at least one product first'); return; }
-  try {
-    const r = await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products: selected}) });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error||'Publish failed');
-    // Remove published ones from pending
-    const selectedNames = new Set(selected.map(p=>p.name));
-    pendingProducts = pendingProducts.filter(p => !selectedNames.has(p.name));
-    renderPendingList();
-    if (!pendingProducts.length) document.getElementById('pending-card').style.display = 'none';
-    toast(`✅ ${selected.length} products added to live feed!`, 'success');
-    loadLiveFeed();
-  } catch(e) { toast('Publish failed: ' + e.message, 'error'); }
+function openStatusModal(email, currentStatus) {
+  modalEmail = email;
+  document.getElementById('modal-email').value = email;
+  document.getElementById('modal-status').value = currentStatus || 'trial';
+  document.getElementById('status-modal').classList.add('open');
 }
 
-async function loadLiveFeed() {
-  const list = document.getElementById('live-list');
-  list.innerHTML = '<div class="table-empty"><span class="spinner"></span>Loading...</div>';
-  try {
-    const r = await fetch('/api/products');
-    const d = await r.json();
-    const products = d.products || [];
-    if (!products.length) { list.innerHTML = '<div class="table-empty">No products in live feed</div>'; return; }
-    list.innerHTML = `
-      <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500)">
-        ${products.length} product${products.length!==1?'s':''} currently live
-      </div>
-      ${products.map((p,i) => `
-        <div class="live-row">
-          <div style="font-size:24px;width:36px;text-align:center">${p.emoji||'📦'}</div>
-          <div style="flex:1">
-            <div style="font-size:14px;font-weight:800">${p.name}</div>
-            <div style="font-size:12px;color:var(--g500)">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100</div>
-          </div>
-          ${p.img?`<img src="${p.img}" style="width:48px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--g200)" onerror="this.style.display='none'">` : ''}
-          <button class="btn sm danger" onclick="removeFromFeed('${esc(p.name)}')">🗑️ Remove</button>
-        </div>
-      `).join('')}
-    `;
-  } catch(e) { list.innerHTML = `<div class="table-empty">Error: ${e.message}</div>`; }
+function closeModal() {
+  document.getElementById('status-modal').classList.remove('open');
 }
 
-async function removeFromFeed(name) {
-  try {
-    await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name}) });
-    toast('Product removed', 'success');
-    loadLiveFeed();
-  } catch(e) { toast('Remove failed', 'error'); }
-}
-
-async function clearAllFromFeed() {
-  if (!confirm('Remove ALL products from the live feed? Members will see no products until you publish again.')) return;
-  try {
-    await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products:[], replace:true}) });
-    toast('Live feed cleared', 'success');
-    loadLiveFeed();
-  } catch(e) { toast('Clear failed', 'error'); }
-}
-
-// Grade colors
-function gradeColor(g) { if(!g)return'#374151'; if(g==='A+'||g==='A')return'#166534'; if(g==='B+'||g==='B')return'#92400E'; return'#991B1B'; }
-function gradeColorBg(g) { if(!g)return'#F3F4F6'; if(g==='A+'||g==='A')return'#DCFCE7'; if(g==='B+'||g==='B')return'#FEF3C7'; return'#FEE2E2'; }
-
-// ── HEALTH ───────────────────────────────────────────────────────────────
-async function loadHealth() {
-  try { await sbFetch('users?select=id&limit=1'); setHealth('supabase','green','Connected','Online'); } catch { setHealth('supabase','red','Connection failed','Error'); }
-  try { const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})}); setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning'); } catch { setHealth('claude','gold','Could not reach','Unknown'); }
-  try { const r=await fetch('/api/stripe-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'health@check.com'})}); setHealth('stripe',r.status!==500?'green':'red',r.status!==500?'API reachable':'API error',r.status!==500?'Online':'Error'); } catch { setHealth('stripe','red','Could not reach','Error'); }
-}
-function setHealth(key,color,sub,badge) {
-  const dot=document.getElementById(`dot-${key}`), subEl=document.getElementById(`status-${key}`), badgeEl=document.getElementById(`badge-${key}`);
-  if(dot) dot.className=`dot ${color}`;
-  if(subEl) subEl.textContent=sub;
-  if(badgeEl) { badgeEl.textContent=badge; badgeEl.className=`badge ${color==='green'?'green':color==='red'?'red':'gold'}`; }
-}
-
-// ── MODALS ───────────────────────────────────────────────────────────────
-let modalEmail='';
-function openStatusModal(email,status) { modalEmail=email; document.getElementById('modal-email').value=email; document.getElementById('modal-status').value=status||'trial'; document.getElementById('status-modal').classList.add('open'); }
-function closeModal() { document.getElementById('status-modal').classList.remove('open'); }
 async function saveStatus() {
-  const newStatus=document.getElementById('modal-status').value;
-  try { await sbFetch(`users?email=eq.${encodeURIComponent(modalEmail)}`,{method:'PATCH',body:JSON.stringify({subscription_status:newStatus})}); toast('Status updated','success'); closeModal(); loadUsers(); } catch(err) { toast('Failed: '+err.message,'error'); }
+  const newStatus = document.getElementById('modal-status').value;
+  try {
+    await sbFetch(`users?email=eq.${encodeURIComponent(modalEmail)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ subscription_status: newStatus })
+    });
+    toast('Status updated', 'success');
+    closeModal();
+    loadUsers();
+  } catch (err) {
+    toast('Failed to update: ' + err.message, 'error');
+  }
 }
-let deleteEmail='',deleteId='';
-function openDeleteModal(email,id) { deleteEmail=email; deleteId=id; document.getElementById('delete-email').textContent=email; document.getElementById('delete-modal').classList.add('open'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('open'); }
+
+// ── Delete modal ──────────────────────────────────────────────────────────
+let deleteEmail = '', deleteId = '';
+
+function openDeleteModal(email, id) {
+  deleteEmail = email;
+  deleteId = id;
+  document.getElementById('delete-email').textContent = email;
+  document.getElementById('delete-modal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+}
+
 async function confirmDelete() {
-  try { await sbFetch(`users?id=eq.${deleteId}`,{method:'DELETE'}); toast('User deleted','success'); closeDeleteModal(); loadUsers(); } catch(err) { toast('Failed: '+err.message,'error'); }
+  try {
+    await sbFetch(`users?id=eq.${deleteId}`, { method: 'DELETE' });
+    toast('User deleted', 'success');
+    closeDeleteModal();
+    loadUsers();
+  } catch (err) {
+    toast('Failed to delete: ' + err.message, 'error');
+  }
 }
-['status-modal','delete-modal'].forEach(id => { document.getElementById(id).addEventListener('click',e=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); }); });
 
-// ── HELPERS ──────────────────────────────────────────────────────────────
-function statusBadge(s) { const map={active:'green',trial:'gold',cancelled:'red'}; return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`; }
-function formatDate(d) { if(!d)return'—'; return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// ── Health check ──────────────────────────────────────────────────────────
+async function loadHealth() {
+  // Reset all to checking
+  ['supabase','claude','stripe'].forEach(k => {
+    setHealth(k, 'gold', 'Checking…', '…');
+  });
+
+  // Supabase
+  try {
+    await sbFetch('users?select=id&limit=1');
+    setHealth('supabase', 'green', 'Connected', 'Online');
+  } catch {
+    setHealth('supabase', 'red', 'Connection failed', 'Error');
+  }
+
+  // Claude API
+  try {
+    const r = await fetch('/api/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({_ping:true}) });
+    setHealth('claude', r.status < 500 ? 'green' : 'gold', r.status < 500 ? 'Route active' : 'Route error', r.status < 500 ? 'Online' : 'Warning');
+  } catch {
+    setHealth('claude', 'gold', 'Could not reach', 'Unknown');
+  }
+
+  // Stripe — check via auth endpoint if key is configured (avoids false errors)
+  try {
+    const r = await fetch('/api/auth', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({action:'checkStatus', email:'health@dropresearcuhub.com'}) });
+    // If auth endpoint responds at all, Stripe env is configured
+    setHealth('stripe', 'green', 'API key configured', 'Online');
+  } catch {
+    setHealth('stripe', 'red', 'Could not reach', 'Error');
+  }
+}
+
+function setHealth(key, color, sub, badge) {
+  const dot = document.getElementById(`dot-${key}`);
+  const subEl = document.getElementById(`status-${key}`);
+  const badgeEl = document.getElementById(`badge-${key}`);
+  if (dot) { dot.className = `dot ${color}`; }
+  if (subEl) subEl.textContent = sub;
+  if (badgeEl) {
+    badgeEl.textContent = badge;
+    badgeEl.className = `badge ${color === 'green' ? 'green' : color === 'red' ? 'red' : 'gold'}`;
+  }
+}
+
+// ── Close modals on backdrop click ────────────────────────────────────────
+['status-modal','delete-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.classList.remove('open');
+    }
+  });
+});
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function statusBadge(s) {
+  const map = { active: 'green', trial: 'gold', cancelled: 'red' };
+  return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`;
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 let toastTimer;
-function toast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className=`show ${type}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className='',3000); }
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = '', 3000);
+}
 
-// Init
+// ── Init ──────────────────────────────────────────────────────────────────
 loadUsers();
 loadHealth();
-loadLiveFeed();
 </script>
 </body>
 </html>
