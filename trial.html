@@ -247,7 +247,7 @@ body{font-family:'Inter',sans-serif;color:var(--g900);background:var(--bg);line-
 
 <!-- STICKY UPGRADE BAR -->
 <div class="sticky-upgrade">
-  <p>Trial active — <span>3 products locked</span> · Full analysis locked · 1 validator use/day</p>
+  <p>Trial active — <span id="locked-count-bar">products locked</span> · Full analysis locked · 1 validator use/day</p>
   <a href="signup.html">Upgrade now — £24.99/month →</a>
 </div>
 
@@ -373,8 +373,11 @@ async function renderFeed() {
   }
 
   const total = Math.max(products.length, 5);
-  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-total').textContent = products.length;
   document.getElementById('stat-visible').textContent = Math.min(UNLOCK_COUNT, products.length);
+  const lockedNum = Math.max(0, products.length - UNLOCK_COUNT);
+  const lockedBar = document.getElementById('locked-count-bar');
+  if (lockedBar) lockedBar.textContent = lockedNum + ' product' + (lockedNum !== 1 ? 's' : '') + ' locked';
 
   if (!products.length) {
     grid.innerHTML = `<div class="no-products"><h3>Products coming soon</h3><p>The admin hasn't published this week's products yet. Check back soon — or upgrade to get notified the moment they drop.</p></div>`;
@@ -382,16 +385,11 @@ async function renderFeed() {
   }
 
   let html = '';
-  // First 2 unlocked
+  // First 2 fully unlocked
   products.slice(0, UNLOCK_COUNT).forEach(p => { html += buildUnlockedCard(p); });
-  // Rest locked (show up to 5 total)
-  const lockedCount = Math.max(3, products.length - UNLOCK_COUNT);
-  for (let i = UNLOCK_COUNT; i < Math.min(products.length, 5); i++) {
+  // ALL remaining products blurred — matches exactly what's in the feed
+  for (let i = UNLOCK_COUNT; i < products.length; i++) {
     html += buildLockedCard(products[i], i + 1);
-  }
-  // Pad to 5 if fewer products
-  for (let i = products.length; i < 5; i++) {
-    html += buildLockedCard(null, i + 1);
   }
 
   grid.innerHTML = html;
