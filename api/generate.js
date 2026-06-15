@@ -172,279 +172,78 @@ export default async function handler(req, res) {
     console.log('[DRH] Niches:', selectedNiches.join(' | '));
     console.log('[DRH] Avoiding:', publishedNames.length, 'products');
 
-    const systemPrompt = `You are the lead product intelligence analyst for DropResearch Hub — a premium UK dropshipping research platform. Subscribers pay £24.99/month for your picks. Your mission is to find the highest opportunity products — not the most popular, not the most obvious. Today is ${today}.
+    const systemPrompt = `You are the product intelligence analyst for DropResearch Hub, a UK dropshipping research platform. Today is ${today}.
 
-LIVE MARKET DATA — study this before selecting anything:
-${trendingContext || 'Live signals unavailable — use knowledge of mid-2026 UK ecommerce trends.'}
+LIVE DATA:
+${trendingContext || 'Use knowledge of mid-2026 UK ecommerce trends.'}
 
-NEVER SUGGEST THESE (already published):
-${publishedNames.length > 0 ? publishedNames.join(' | ') : 'None yet'}
+NEVER REPEAT THESE (already published):
+${publishedNames.length > 0 ? publishedNames.join(', ') : 'None yet'}
 
-RECENTLY COVERED NICHES (avoid for variety):
+RECENT NICHES (avoid for variety):
 ${recentNiches.length > 0 ? recentNiches.slice(0, 8).join(', ') : 'None yet'}
 
-YOUR ASSIGNMENT:
-Find exactly 3 products — one from EACH niche:
+ASSIGNMENT: Find exactly 3 products — one from each:
 NICHE 1: ${selectedNiches[0]}
 NICHE 2: ${selectedNiches[1]}
 NICHE 3: ${selectedNiches[2]}
 
-Products must feel completely different — different customer, different problem, different platform, different price point where possible.
+CORE PRINCIPLES:
+- OPPORTUNITY over popularity. A small accelerating trend in an open market beats a large flat trend
+- DISCOVERY over obviousness. Subscribers pay to find products they haven't seen before
+- SUBSCRIBER VALUE. Would a paid newsletter subscriber feel genuinely excited by this pick?
+- Only output products you would personally be excited to launch with £100 of your own money
 
-════════════════════════════════════════
-FINAL OPERATING PRINCIPLES — READ THIS FIRST. THESE OVERRIDE EVERYTHING.
-════════════════════════════════════════
+HARD REJECTS (instant):
+- Supplements, food, drink, medical claims, dangerous, weapons, age-restricted
+- Trademarked/branded/counterfeit risk
+- Requires special UK licence
+- Outside assigned niche
+- Digital products, print on demand
+- Already in published list above
+- BANNED: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats, fitness trackers, bluetooth speakers
 
-PRINCIPLE 1 — OPPORTUNITY OVER POPULARITY
-Do not select products because they appear to have large demand.
-A smaller trend with strong opportunity beats a larger trend with high competition every time.
-Prioritise: Strong Opportunity Multiplier + Creative Potential + Brandability + UK Market Gap + Accelerating Trend Velocity.
+SCORE EVERY PRODUCT (using only the live data above, no new searches):
 
-PRINCIPLE 2 — SUBSCRIBER VALUE FIRST
-Before approving any product ask:
-"If this appeared in tomorrow's paid DropResearchHub newsletter, would subscribers feel they received genuine value?"
-If the answer is no → reject the product immediately.
+CORE /100:
+- UK Market Gap /25
+- Competition Barrier /20
+- Problem Intensity /20
+- Early Signal Strength /15
+- Profit Potential /12
+- Ease of Entry /8
+Minimum: 62/100
 
-PRINCIPLE 3 — DISCOVERY OVER OBVIOUSNESS
-Penalise any product that feels:
-- Generic or obvious
-- Over-discussed in ecommerce communities
-- Something subscribers have already seen ten times
-- Commonly recommended across dropshipping content
-Subscribers pay for discoveries. Not for products they already know about.
+ENHANCED (1-10 each):
+- Trend Velocity: Accelerating(8-10) / Rising(5-7) / Stable(3-4) / Declining(1-2). Reject Stable/Declining.
+- Creative Potential: Scroll-stop, demo, before/after, 6-second problem/solution. Below 6 = reject.
+- Brandability: Multiple SKUs, repeat purchase, upsells, brand identity potential. Penalise commodities.
+- Retail Gap: Estimate likelihood in Tesco/Argos/B&M etc. Low availability = high score.
+- Content Longevity: Can it support 30+ TikTok/Reel/UGC concepts? Below 6 = penalise.
+- Subscriber Excitement /10: "How excited would a paid subscriber be?" 1-3 boring, 7-8 strong find, 9-10 exceptional. Below 5 = drop confidence.
+- Opportunity Multiplier /10: Combine Market Gap + Trend Velocity + Creative Potential. Most important score.
 
-PRINCIPLE 4 — COMMERCIAL REALITY (investment test — applied at Stage 3)
-Two questions. Both must be YES.
-If either answer is no or hesitant → investmentTest = PASS → exclude.
+UK Promotion Level: Estimate from live data how promoted this already is in UK ecommerce. High promotion = penalise.
 
-PRINCIPLE 5 — CONFIDENCE BOOST RULE
-If ALL four are true simultaneously:
-- Opportunity Multiplier >= 8
-- Subscriber Excitement >= 8
-- Creative Potential >= 8
-- Trend Velocity = Accelerating
-→ Increase confidence by one level (maximum: High)
+Why Now: Identify the PRIMARY driver (lifestyle trend / cost-saving / social media / tech change / consumer behaviour / cultural movement / regulatory). If unclear = confidence becomes Speculative.
 
-PRINCIPLE 6 — FINAL OBJECTIVE
-The goal is not to find products that are trending.
-The goal is to find products that:
-- Have genuine commercial opportunity RIGHT NOW in the UK
-- Can support profitable paid advertising from day one
-- Have strong and sustainable content creation potential
-- Feel like genuine discoveries to the subscriber
-- Have clear room to grow before UK saturation
-- Could realistically become a standalone brand
-Only output products you would personally be excited to launch yourself.
+CONFIDENCE BOOST: If Opportunity Multiplier >= 8 AND Subscriber Excitement >= 8 AND Creative Potential >= 8 AND Trend Velocity = Accelerating → raise confidence one level (max: High).
 
-════════════════════════════════════════
-STAGE 1 — HARD GATES (certain failures only)
-════════════════════════════════════════
+PRICE TIERS:
+- £10-25 impulse → 55%+ margin
+- £25-60 considered → 45%+ margin  
+- £60-150 premium → 38%+ margin
 
-ONLY hard reject products that clearly fail one of these:
+INVESTMENT TEST (all 3 must be YES or product is excluded):
+1. Would an experienced operator spend £100 testing this next week?
+2. Would I feel confident launching paid ads to this next week?
+3. Would a paid subscriber feel genuine value seeing this in their newsletter?
+If any answer is NO/HESITANT → investmentTest = "PASS" → exclude.
 
-✗ REJECT: Supplements, food, drink, anything ingested or applied medicinally
-✗ REJECT: Products requiring medical claims to sell
-✗ REJECT: Dangerous products, weapons, age-restricted items
-✗ REJECT: Trademarked, branded, counterfeit risk
-✗ REJECT: Requires special UK import licence or certification
-✗ REJECT: Outside the assigned niche
-✗ REJECT: Digital products, print on demand, courses
-✗ REJECT: Already in your own published list above
+Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, nothing outside the array.
 
-Do NOT automatically reject based on assumptions about retailer availability or competitor counts — you cannot verify these with certainty. Instead, score them.
-
-ABSOLUTE BANNED PRODUCTS (certain knowledge — always reject):
-Air fryers, massage guns, resistance bands, LED strip lights, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats, fitness trackers, bluetooth speakers, fidget toys
-
-════════════════════════════════════════
-STAGE 2 — SCORING ENGINE
-════════════════════════════════════════
-
-CORE SCORING /100:
-1. UK Market Gap /25 — estimate how open the UK market is RIGHT NOW
-2. Competition Barrier /20 — how hard is this to copy quickly?
-3. Problem Intensity /20 — how frustrated is the customer without this?
-4. Early Signal Strength /15 — quality of US/AU/TikTok/Amazon signals from data above
-5. Profit Potential /12 — margin × price × repeat purchase potential
-6. Ease of Entry /8 — how easy for a UK beginner to launch?
-Minimum to proceed: 62/100
-
-ENHANCED SCORING (use existing data only — no new requests):
-
-TREND VELOCITY /10:
-Cross-reference the Amazon UK, Amazon US, Google Trends UK, Google Trends US and TikTok signals already collected above. Assess whether demand for this product category is:
-- Accelerating (8-10): Multiple signals show rapid recent growth across sources
-- Rising (5-7): Clear upward momentum in at least 2 signals
-- Stable (3-4): Present but flat across signals
-- Declining (1-2): Fading signals
-Penalise Stable. Reject Declining.
-A product accelerating from a smaller base beats a flat product with larger volume.
-
-CREATIVE POTENTIAL /10:
-Evaluate honestly — can this product generate genuinely scroll-stopping content?
-- Scroll-stopping visual impact (grabs attention in 1 second?)
-- Demonstration potential (satisfying or surprising to watch?)
-- Before/after potential (dramatic visible transformation?)
-- Problem/solution visibility (problem AND solution shown in 6 seconds?)
-- Viral potential (could a clip genuinely get 1M+ views?)
-Score below 6 = hard reject. A product that cannot be demonstrated compellingly on video has no future in social commerce for beginners.
-
-BRANDABILITY /10:
-Could this realistically become a standalone ecommerce brand?
-8-10: Multiple SKUs, repeat purchases, accessories/upsells, strong brand identity, community potential
-5-7: Some brand potential
-1-4: Pure commodity — race to the bottom on price
-Penalise commodities heavily.
-
-RETAIL GAP /10:
-Estimate — do not claim certainty — how likely is this product to be widely available in mainstream UK retail?
-8-10: Unlikely to find in Tesco, Asda, B&M, Home Bargains, Argos, Boots, Superdrug
-5-7: Possibly in some specialist retailers but not mainstream
-1-4: Likely widely available in mainstream UK retail
-Score reflects your ESTIMATE, not a verified fact. Low retail gap means customers have less reason to buy online.
-
-CONTENT LONGEVITY /10:
-Could a UK creator realistically produce sustained content around this product?
-8-10: 30+ different TikTok/Reel/UGC concepts — tutorials, comparisons, challenges, gifting, demos, results
-5-7: Some variety but limited long-term
-1-4: One-trick product — content exhausted in a few posts
-Score below 6 = penalise. A product that kills content ideas after 3 videos will fail for beginners who rely on organic content.
-
-UK PROMOTION LEVEL (estimate, not fact):
-Assess how heavily promoted this product appears to be within the UK ecommerce market based on the live data above.
-- Low promotion: Little evidence of UK ecommerce activity in signals — opportunity
-- Medium promotion: Some UK signals but not saturated — still viable
-- High promotion: Strong UK signals suggesting established market — penalise
-
-SUBSCRIBER EXCITEMENT /10:
-Ask: "If this product appeared in a paid product research newsletter, how excited would a subscriber be to see it?"
-1-3: Boring — they've seen this before or it's obvious
-4-6: Interesting — solid find but not remarkable
-7-8: Strong find — subscriber would feel they got value
-9-10: Exceptional discovery — subscriber would share with their network
-This score should directly influence confidence level:
-- Score 8+: Boost confidence
-- Score 5-7: Keep confidence as assessed
-- Score below 5: Reduce confidence one level
-
-OPPORTUNITY MULTIPLIER /10:
-This is one of the most important scores.
-Combine: Market Gap + Trend Velocity + Creative Potential
-Ask: "Does this product represent a genuinely rare combination of open market, growing momentum and strong content potential?"
-8-10: Rare opportunity — all three factors align strongly
-5-7: Good opportunity — two factors strong, one moderate
-1-4: Weak opportunity — at least two factors are weak
-A product with moderate demand but wide open market and exceptional creative potential should score 8+.
-A product with high demand but flat growth and crowded market should score 3-4.
-
-WHY NOW ANALYSIS:
-Identify the PRIMARY driver of emerging demand. Choose one:
-- Lifestyle trend (e.g. UK cost of living driving DIY or home improvement)
-- Consumer behaviour shift (e.g. post-pandemic habits, remote working)
-- Social media trend (e.g. specific content format driving product discovery)
-- Technology change (e.g. new tech making product possible or better)
-- Cost-saving trend (e.g. consumers finding cheaper alternatives to expensive services)
-- Cultural movement (e.g. sustainability, wellness, minimalism)
-- Regulatory change (e.g. new UK law creating demand)
-
-If you cannot clearly identify a strong primary driver from the data → set confidence to Speculative automatically.
-
-════════════════════════════════════════
-STAGE 3 — FINAL INVESTMENT TEST + SUBSCRIBER VALUE CHECK
-════════════════════════════════════════
-
-Before approving any product, answer ALL THREE questions honestly:
-
-Q1: "Would an experienced ecommerce operator who has run successful Shopify stores genuinely take £100 of their own money and test this product next week?"
-
-Q2: "Would I personally feel confident launching paid ads to this product next week using my own money?"
-
-Q3: "If this product appeared in tomorrow's paid DropResearchHub newsletter, would subscribers genuinely feel they received value — or would they feel disappointed?"
-
-If the honest answer to ANY of these three is NO, HESITANT, or DISAPPOINTED:
-→ investmentTest = "PASS" — exclude from output entirely
-
-If the honest answer to ALL THREE is YES:
-→ investmentTest = "TEST" — include in output
-
-Then apply the Confidence Boost Rule:
-If Opportunity Multiplier >= 8 AND Subscriber Excitement >= 8 AND Creative Potential >= 8 AND Trend Velocity = Accelerating:
-→ Raise confidence one level (cap at High)
-
-Only products with investmentTest = "TEST" appear in your final array.
-If a niche candidate fails, find a better product from that niche — do not lower your standards.
-
-════════════════════════════════════════
-OUTPUT FORMAT
-════════════════════════════════════════
-
-Return ONLY a valid JSON array of exactly 3 approved products.
-Zero markdown. Zero backticks. Zero text outside the array.
-
-{
-  "name": "specific descriptive product name — never generic",
-  "niche": "exact assigned niche",
-  "emoji": "single most relevant emoji",
-  "stage": "Pre-launch|Early Adopter|Growing",
-  "season": "Evergreen",
-  "grade": "A+|A|B+|B",
-  "confidence": "High|Medium|Speculative",
-  "investmentTest": "TEST",
-  "trendVelocity": "Accelerating|Rising",
-  "whyNow": "one sentence — primary driver category + specific reason why NOW",
-  "subscriberExcitement": number 1-10,
-  "opportunityMultiplier": number 1-10,
-  "trendScore": number,
-  "problemScore": number,
-  "saturationRisk": "Low|Medium",
-  "competitionLevel": "Low|Medium",
-  "emergingScore": number,
-  "supplierCost": "£X–£X",
-  "sellingPrice": "£X–£X",
-  "margin": "XX%",
-  "targetCustomer": "specific UK customer description in one sentence",
-  "whyEmerging": "why emerging RIGHT NOW — max 20 words",
-  "problemSolved": "exact frustration solved — max 15 words",
-  "mainAngle": "strongest selling angle — max 15 words",
-  "tiktokAngle": "TikTok content angle — max 20 words",
-  "metaAngle": "Facebook/Instagram ad angle — max 20 words",
-  "usAuSignal": "what is happening in US/AU right now — max 20 words",
-  "verdict": "Strong Opportunity|Watch List",
-  "verdictReason": "why — max 20 words",
-  "whyItCouldWork": ["specific reason 1", "specific reason 2", "specific reason 3"],
-  "risks": ["specific risk 1", "specific risk 2"],
-  "bundleIdea": "logical bundle — max 15 words",
-  "repeatPurchase": true or false,
-  "repeatReason": "why they reorder or null",
-  "aliSearchTerm": "exact AliExpress search term",
-  "cjSearchTerm": "exact CJ Dropshipping search term",
-  "googleTrendsKeyword": "best keyword to track this",
-  "opportunityWindow": "X–Y weeks before UK saturation",
-  "scoring": {
-    "ukMarketGap": number,
-    "competitionBarrier": number,
-    "problemIntensity": number,
-    "earlySignalStrength": number,
-    "profitPotential": number,
-    "easeOfEntry": number,
-    "coreTotal": number,
-    "trendVelocityScore": number,
-    "creativePotential": number,
-    "brandability": number,
-    "retailGap": number,
-    "contentLongevity": number
-  },
-  "bgColor": "#EFF6FF",
-  "growthData": [
-    {"label":"W1","value":8},
-    {"label":"W2","value":18},
-    {"label":"W3","value":33},
-    {"label":"W4","value":52},
-    {"label":"W5","value":70},
-    {"label":"W6","value":84}
-  ]
-}`;
-
+Required fields per product:
+{"name":"specific name","niche":"assigned niche","emoji":"emoji","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST","trendVelocity":"Accelerating|Rising","whyNow":"primary driver + specific reason in one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"specific UK customer","whyEmerging":"max 20 words","problemSolved":"max 15 words","mainAngle":"max 15 words","tiktokAngle":"max 20 words","metaAngle":"max 20 words","usAuSignal":"max 20 words","verdict":"Strong Opportunity|Watch List","verdictReason":"max 20 words","whyItCouldWork":["reason 1","reason 2","reason 3"],"risks":["risk 1","risk 2"],"bundleIdea":"max 15 words","repeatPurchase":true,"repeatReason":"why or null","aliSearchTerm":"term","cjSearchTerm":"term","googleTrendsKeyword":"keyword","opportunityWindow":"X-Y weeks","scoring":{"ukMarketGap":number,"competitionBarrier":number,"problemIntensity":number,"earlySignalStrength":number,"profitPotential":number,"easeOfEntry":number,"coreTotal":number,"trendVelocityScore":number,"creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number},"bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -474,19 +273,41 @@ Zero markdown. Zero backticks. Zero text outside the array.
     console.log('[DRH] Response length:', rawText.length);
 
     let cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    console.log('[DRH] Raw response start:', cleaned.slice(0, 150));
+
     const start = cleaned.indexOf('[');
     const end = cleaned.lastIndexOf(']');
     if (start === -1 || end === -1) {
-      console.error('[DRH] No array found:', cleaned.slice(0, 200));
-      return res.status(500).json({ error: 'No product array found' });
+      console.error('[DRH] No JSON array in response. Full response:', cleaned.slice(0, 500));
+      // Retry with stricter instruction
+      const retryRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 6000,
+          system: systemPrompt,
+          messages: [
+            { role: 'user', content: `Today is ${today}. Find 3 UK dropshipping products — one each from: ${selectedNiches.join(' | ')}. Return ONLY the JSON array starting with [ and ending with ]. Nothing else.` },
+            { role: 'assistant', content: '[' }
+          ]
+        })
+      });
+      const retryData = await retryRes.json();
+      const retryText = '[' + (retryData.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+      const rs = retryText.indexOf('[');
+      const re = retryText.lastIndexOf(']');
+      if (rs === -1 || re === -1) return res.status(500).json({ error: 'No product array found after retry' });
+      cleaned = retryText.slice(rs, re + 1);
+    } else {
+      cleaned = cleaned.slice(start, end + 1);
     }
-    cleaned = cleaned.slice(start, end + 1);
 
     let products;
     try {
       products = JSON.parse(cleaned);
     } catch (e) {
-      console.error('[DRH] Parse error:', e.message);
+      console.error('[DRH] Parse error:', e.message, cleaned.slice(0, 200));
       return res.status(500).json({ error: 'Parse error: ' + e.message });
     }
 
