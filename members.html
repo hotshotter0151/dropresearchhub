@@ -312,10 +312,9 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1}
 /* SAVED PRODUCTS */
-.compare-slot{background:var(--g50);border:2px dashed var(--g200);border-radius:14px;padding:16px;min-height:100px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
-.compare-slot.drag-over{border-color:var(--gold);background:#fffbeb}
-.compare-slot.filled{border-style:solid;border-color:var(--g200);background:#fff;align-items:flex-start;padding:12px}
-.compare-slot-empty{font-size:13px;color:var(--g400);text-align:center;font-weight:500}
+.compare-slot{background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:16px;min-height:90px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
+.compare-slot.filled{border-style:solid;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);align-items:flex-start;padding:12px}
+.compare-slot-empty{font-size:12px;color:rgba(255,255,255,.4);text-align:center;font-weight:500}
 .compare-slot-product{width:100%}
 .compare-slot-name{font-size:13px;font-weight:800;color:var(--g900);margin-bottom:4px}
 .compare-slot-meta{font-size:11px;color:var(--g400)}
@@ -391,46 +390,48 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 </div>
 
 <div class="view" id="view-saved">
-  <div class="page-header" style="padding:20px 3%">
-    <h1 style="font-size:24px">💛 Saved Products Hub</h1>
-    <div class="header-meta" style="margin-top:8px">
-      <div class="header-badge" id="saved-count-badge">Loading...</div>
-      <div class="header-badge">Drag products into left panel to compare</div>
+  <div class="page-header">
+    <h1>💛 Saved Products Hub</h1>
+    <p>Save products you like and compare them side by side to find your best opportunity.</p>
+    <div class="header-meta">
+      <div class="header-badge green" id="saved-count-badge">Loading...</div>
+      <div class="header-badge">Drag cards into the compare zone to compare</div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:340px 1fr;gap:0;min-height:calc(100vh - 62px)">
+  <div style="padding:28px 3%">
 
-    <!-- LEFT: STICKY COMPARE ZONE -->
-    <div style="background:#fff;border-right:1px solid var(--g200);padding:24px;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;flex-shrink:0">
-      <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:4px">⚖️ Compare Products</div>
-      <div style="font-size:12px;color:var(--g500);margin-bottom:18px;line-height:1.5">Drag products from the right into a slot below to compare them side by side</div>
+    <!-- COMPARE ZONE - always at top -->
+    <div style="background:var(--navy-dark);border-radius:20px;padding:24px;margin-bottom:28px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:17px;font-weight:800;color:#fff">⚖️ Compare Products</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:3px">Drag up to 3 products from below into a slot — comparison table appears instantly</div>
+        </div>
+        <button onclick="clearCompare()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit">✕ Clear</button>
+      </div>
 
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px" id="compare-slots">
-        <div class="compare-slot" id="slot-0" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor=''" ondrop="dropIntoSlot(event,0);this.style.borderColor=''">
-          <div class="compare-slot-empty">📦 Drop product 1 here</div>
+      <!-- 3 drop slots side by side -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" id="compare-slots">
+        <div class="compare-slot" id="slot-0" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,0);this.style.borderColor='rgba(255,255,255,.2)'">
+          <div class="compare-slot-empty">Drop product 1 here</div>
         </div>
-        <div class="compare-slot" id="slot-1" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor=''" ondrop="dropIntoSlot(event,1);this.style.borderColor=''">
-          <div class="compare-slot-empty">📦 Drop product 2 here</div>
+        <div class="compare-slot" id="slot-1" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,1);this.style.borderColor='rgba(255,255,255,.2)'">
+          <div class="compare-slot-empty">Drop product 2 here</div>
         </div>
-        <div class="compare-slot" id="slot-2" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor=''" ondrop="dropIntoSlot(event,2);this.style.borderColor=''">
-          <div class="compare-slot-empty">📦 Drop product 3 here</div>
+        <div class="compare-slot" id="slot-2" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,2);this.style.borderColor='rgba(255,255,255,.2)'">
+          <div class="compare-slot-empty">Drop product 3 here</div>
         </div>
       </div>
 
-      <button onclick="clearCompare()" style="width:100%;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit;margin-bottom:16px">✕ Clear all slots</button>
-
+      <!-- Comparison table appears here -->
       <div id="compare-table"></div>
     </div>
 
-    <!-- RIGHT: SAVED PRODUCTS GRID -->
-    <div style="padding:24px;overflow-y:auto">
-      <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:4px">💛 Saved Products</div>
-      <div style="font-size:12px;color:var(--g500);margin-bottom:18px">Drag any product to the left panel to compare. Click Analyse to open full analysis.</div>
-      <div id="saved-grid">
-        <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>
-      </div>
+    <!-- SAVED PRODUCTS GRID -->
+    <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
+    <div id="saved-grid">
+      <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>
     </div>
-
   </div>
 </div>
 
@@ -1312,7 +1313,7 @@ function renderSavedGrid(saved) {
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
         </div>
         <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;margin-bottom:12px">${p.whyEmerging || p.mainAngle || ''}</div>
-        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🔍 Analyse</button>
+        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">🔍 Analyse</button>
       </div>
     </div>`).join('');
 
@@ -1380,11 +1381,11 @@ function renderSlot(idx) {
   }
   slot.className = 'compare-slot filled';
   slot.innerHTML = `
-    <div class="compare-slot-product">
-      <button class="compare-slot-remove" onclick="removeFromSlot(${idx})">✕</button>
-      <div style="font-size:20px;margin-bottom:6px">${p.emoji || '📦'}</div>
-      <div class="compare-slot-name">${p.name}</div>
-      <div class="compare-slot-meta">${p.niche || ''} · Grade ${p.grade || '?'}</div>
+    <div class="compare-slot-product" style="width:100%">
+      <button class="compare-slot-remove" onclick="removeFromSlot(${idx})" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,.2);border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;color:#fff;display:flex;align-items:center;justify-content:center">✕</button>
+      <div style="font-size:18px;margin-bottom:4px">${p.emoji || '📦'}</div>
+      <div style="font-size:12px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:2px">${p.name}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">${p.niche || ''} · Grade ${p.grade || '?'}</div>
     </div>`;
 }
 
@@ -1434,20 +1435,28 @@ function updateCompareTable() {
   }).join('');
 
   tableEl.style.display = 'block';
-  // Compact card-style comparison for narrow panel
-  const metrics = [
-    {label:'Score', vals: filled.map(p=>p.emergingScore||'—'), higher:true},
-    {label:'Trend', vals: filled.map(p=>p.trendScore||'—'), higher:true},
-    {label:'Margin', vals: filled.map(p=>p.margin||'—'), higher:true},
-    {label:'Sat. Risk', vals: filled.map(p=>p.saturationRisk||'—'), higher:false},
-    {label:'Verdict', vals: filled.map(p=>p.verdict||'—'), higher:false},
+  const rows = [
+    { label: 'Emerging Score', fn: p => p.emergingScore||'—', higher: true },
+    { label: 'Trend Score', fn: p => p.trendScore||'—', higher: true },
+    { label: 'Margin', fn: p => p.margin||'—', higher: true },
+    { label: 'Sat. Risk', fn: p => p.saturationRisk||'—', higher: false },
+    { label: 'Selling Price', fn: p => p.sellingPrice||'—', higher: false },
+    { label: 'Verdict', fn: p => p.verdict||'—', higher: false },
+    { label: 'TikTok Angle', fn: p => p.tiktokAngle||'—', higher: false },
   ];
-  const cards = filled.map((p,i) => `
-    <div style="background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px;margin-bottom:8px">
-      <div style="font-size:11px;font-weight:800;color:var(--navy);margin-bottom:8px">${p.emoji||'📦'} ${p.name}</div>
-      ${metrics.map(m => `<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--g100)"><span style="color:var(--g500)">${m.label}</span><span style="font-weight:700;color:var(--g900)">${m.vals[i]}</span></div>`).join('')}
-    </div>`).join('');
-  tableEl.innerHTML = `<div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Comparison</div>${cards}`;
+  const numVal = v => parseFloat(String(v).replace(/[^0-9.]/g,'')) || 0;
+  const tableRows = rows.map(row => {
+    const vals = filled.map(row.fn);
+    const nums = vals.map(numVal);
+    const best = row.higher ? Math.max(...nums) : Math.min(...nums.filter(n=>n>0));
+    const cells = vals.map((v,i) => {
+      const isWinner = nums[i] > 0 && nums[i] === best && filled.length > 1;
+      return `<td style="padding:9px 12px;text-align:center;font-size:12px;font-weight:${isWinner?'800':'500'};color:${isWinner?'#4ade80':'rgba(255,255,255,.75)'};border-bottom:1px solid rgba(255,255,255,.08)">${v}${isWinner?' ✓':''}</td>`;
+    }).join('');
+    return `<tr><td style="padding:9px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap">${row.label}</td>${cells}</tr>`;
+  }).join('');
+  const headers = filled.map(p => `<th style="padding:10px 12px;text-align:center;font-size:12px;font-weight:800;color:#fff;border-bottom:1px solid rgba(255,255,255,.15)">${p.emoji||'📦'} ${p.name.length>20?p.name.slice(0,20)+'...':p.name}</th>`).join('');
+  tableEl.innerHTML = `<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px;margin-top:4px"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="padding:10px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</th>${headers}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
 }
 
 async function loadPublishedProducts(){
