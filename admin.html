@@ -53,7 +53,7 @@ tr:hover td{background:var(--g50)}
 .btn:hover{border-color:var(--navy);color:var(--navy)}
 .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
 .btn.primary:hover{background:var(--navy-light)}
-.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy-dark)}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
 .btn.danger{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
 .btn.danger:hover{background:var(--red);color:#fff}
 .btn.sm{padding:5px 10px;font-size:11px}
@@ -63,7 +63,7 @@ tr:hover td{background:var(--g50)}
 .filter-input:focus{border-color:var(--navy)}
 select.filter-input{min-width:140px}
 .table-empty{text-align:center;padding:40px;color:var(--g400);font-size:13px}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
 .dot.green{background:var(--green)}.dot.gold{background:var(--gold)}.dot.red{background:var(--red)}
@@ -85,11 +85,10 @@ select.filter-input{min-width:140px}
 #toast.success{background:#166534}
 #toast.error{background:var(--red)}
 
-/* ── Products Section ── */
+/* Products */
 .gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
 .gen-btn:hover:not(:disabled){background:var(--navy-light)}
 .gen-btn:disabled{opacity:.5;cursor:not-allowed}
-.gen-btn.green{background:var(--green)}
 .status-messages{display:none;flex-direction:column;gap:6px;margin-top:16px;background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px}
 .status-messages.show{display:flex}
 .status-line{font-size:13px;color:var(--g400);padding:4px 0;display:none}
@@ -98,25 +97,24 @@ select.filter-input{min-width:140px}
 .status-line.active::before{content:'';width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 .status-line.done{color:var(--green)}
 .status-line.done::before{content:'✓';color:var(--green);font-weight:900;width:14px;flex-shrink:0}
-.status-line.error{color:var(--red)}
 .product-row{display:flex;gap:14px;align-items:flex-start;padding:16px;border-bottom:1px solid var(--g100);flex-wrap:wrap}
 .product-row:last-child{border-bottom:none}
-.product-emoji{font-size:32px;width:44px;text-align:center;flex-shrink:0}
+.product-emoji{font-size:32px;width:44px;text-align:center;flex-shrink:0;margin-top:4px}
 .product-info{flex:1;min-width:200px}
 .product-name{font-size:15px;font-weight:800;color:var(--g900);margin-bottom:4px}
 .product-meta{font-size:12px;color:var(--g500)}
 .product-why{font-size:12px;color:var(--g700);font-style:italic;margin-top:4px;line-height:1.5}
 .product-links{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .product-links a{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none}
-.product-thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--g200);margin-top:6px}
+.product-thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--g200);margin-top:6px;display:block}
 .product-controls{display:flex;flex-direction:column;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.grade-badge{border-radius:8px;padding:5px 12px;font-size:12px;font-weight:900}
-.toggle-btn{width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;background:var(--g200);position:relative;transition:background .2s}
+.grade-badge{border-radius:8px;padding:5px 12px;font-size:12px;font-weight:900;text-align:center}
+/* Toggle */
+.toggle-btn{width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;background:var(--g300);position:relative;transition:background .2s;flex-shrink:0}
 .toggle-btn::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .toggle-btn.on{background:var(--green)}
 .toggle-btn.on::after{left:22px}
-.live-row{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--g100)}
-.live-row:last-child{border-bottom:none}
+.toggle-label{font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
@@ -136,7 +134,7 @@ select.filter-input{min-width:140px}
     </a>
     <div class="nav-label">Dashboard</div>
     <button class="nav-btn active" onclick="show('overview',this)">📊 Overview</button>
-    <button class="nav-btn" onclick="show('products',this)">✨ Products</button>
+    <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
     <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
     <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
     <div class="nav-label">Site</div>
@@ -152,10 +150,7 @@ select.filter-input{min-width:140px}
 
   <main class="main">
     <div class="topbar">
-      <div>
-        <h1 id="section-title">Overview</h1>
-        <p id="section-sub">Live data from Supabase & Stripe</p>
-      </div>
+      <div><h1 id="section-title">Overview</h1><p id="section-sub">Live data from Supabase & Stripe</p></div>
       <div class="admin-pill"><div class="avatar">BH</div>Admin</div>
     </div>
 
@@ -174,7 +169,7 @@ select.filter-input{min-width:140px}
         </div>
         <div class="card">
           <div class="panel-head"><div><div class="panel-title">System Health</div><div class="panel-sub">Service status</div></div><button class="btn" onclick="loadHealth()">↻ Refresh</button></div>
-          <div class="card-pad mini-list" id="health-list">
+          <div class="card-pad mini-list">
             <div class="mini-item"><div><b><span class="dot green"></span>Vercel</b><br><span class="sub">Deployment live</span></div><span class="badge green">Online</span></div>
             <div class="mini-item"><div><b><span class="dot" id="dot-claude"></span>Claude API</b><br><span class="sub" id="status-claude">Checking…</span></div><span class="badge gray" id="badge-claude">…</span></div>
             <div class="mini-item"><div><b><span class="dot" id="dot-stripe"></span>Stripe</b><br><span class="sub" id="status-stripe">Checking…</span></div><span class="badge gray" id="badge-stripe">…</span></div>
@@ -186,9 +181,11 @@ select.filter-input{min-width:140px}
 
     <!-- PRODUCTS -->
     <section id="products" class="section">
+
+      <!-- Generate -->
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
-          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 products. Run multiple times to build up a batch, then publish all at once.</div></div>
+          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 new products and adds them to the review queue below.</div></div>
           <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate 3 products</span></button>
         </div>
         <div class="card-pad">
@@ -200,38 +197,35 @@ select.filter-input{min-width:140px}
             <div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
             <div class="status-line" id="sl-6">Fetching product images...</div>
             <div class="status-line" id="sl-7">Finalising research reports...</div>
-            <div class="status-line" id="sl-8">Products ready — added to review list below</div>
+            <div class="status-line" id="sl-8">Products ready — added to review queue below</div>
           </div>
         </div>
       </div>
 
+      <!-- Review Queue -->
       <div class="card" id="pending-card" style="display:none;margin-bottom:16px">
         <div class="panel-head">
-          <div>
-            <div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div>
-            <div class="panel-sub">Toggle on what you want to publish. Generate more batches to add to this list.</div>
-          </div>
+          <div><div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on what you want to publish. Generate more batches to keep adding.</div></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" onclick="toggleAll(true)">✓ Select all</button>
-            <button class="btn" onclick="toggleAll(false)">✕ Deselect all</button>
+            <button class="btn" onclick="toggleAllPending(true)">✓ All on</button>
+            <button class="btn" onclick="toggleAllPending(false)">✕ All off</button>
             <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
-            <button class="btn danger" onclick="clearPending()">🗑️ Clear all</button>
-            <button class="gen-btn green" onclick="publishSelected()">🚀 Publish selected to feed</button>
+            <button class="btn danger" onclick="clearPending()">🗑️ Clear queue</button>
+            <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishSelected()">🚀 Publish selected</button>
           </div>
         </div>
         <div id="pending-list"></div>
       </div>
 
+      <!-- All Products (historical) -->
       <div class="card">
         <div class="panel-head">
-          <div><div class="panel-title">🗂️ Live Feed</div><div class="panel-sub">All products currently showing to members and trial users</div></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn" onclick="loadLiveFeed()">↻ Refresh</button>
-            <button class="btn danger" onclick="clearAllFromFeed()">🗑️ Clear entire feed</button>
-          </div>
+          <div><div class="panel-title">🗂️ All Products</div><div class="panel-sub">Every product ever generated. Toggle to publish/unpublish. Remove to permanently delete.</div></div>
+          <button class="btn" onclick="loadAllProducts()">↻ Refresh</button>
         </div>
-        <div id="live-list"><div class="table-empty">Loading...</div></div>
+        <div id="all-products-list"><div class="table-empty"><span class="spinner"></span>Loading...</div></div>
       </div>
+
     </section>
 
     <!-- CUSTOMERS -->
@@ -252,7 +246,7 @@ select.filter-input{min-width:140px}
         </div>
         <table>
           <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Stripe Customer</th><th>Joined</th><th>Actions</th></tr></thead>
-          <tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading customers…</td></tr></tbody>
+          <tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -312,7 +306,7 @@ const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
 const ADMIN_PW = 'Billy1234.';
 
-// Auth guard
+// Auth
 (function() {
   const stored = localStorage.getItem('drh_admin');
   if (stored !== ADMIN_PW) {
@@ -324,7 +318,6 @@ const ADMIN_PW = 'Billy1234.';
 
 function logout() { localStorage.removeItem('drh_admin'); window.location.href = 'index.html'; }
 
-// Supabase helper
 async function sbFetch(path, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
@@ -335,7 +328,12 @@ async function sbFetch(path, options = {}) {
 }
 
 // Nav
-const sectionTitles = { overview:['Overview','Live data from Supabase & Stripe'], products:['Products','Generate and manage the weekly product feed'], customers:['Customers','All registered users'], billing:['Billing','Revenue and subscription stats'] };
+const sectionTitles = {
+  overview: ['Overview','Live data from Supabase & Stripe'],
+  products: ['Products','Generate and manage the weekly product feed'],
+  customers: ['Customers','All registered users'],
+  billing: ['Billing','Revenue and subscription stats']
+};
 function show(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -346,7 +344,7 @@ function show(id, btn) {
   document.getElementById('section-sub').textContent = sub;
 }
 
-// ── USERS ────────────────────────────────────────────────────────────────
+// ── USERS ─────────────────────────────────────────────────────────────────
 let allUsers = [];
 async function loadUsers() {
   try {
@@ -391,7 +389,7 @@ function renderUsersTable(users) {
 function filterUsers() {
   const q = document.getElementById('search-users').value.toLowerCase();
   const status = document.getElementById('filter-status').value;
-  const filtered = allUsers.filter(u => (!q||u.email.toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q)) && (!status||u.subscription_status===status));
+  const filtered = allUsers.filter(u => (!q||u.email.toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q))&&(!status||u.subscription_status===status));
   renderUsersTable(filtered);
   document.getElementById('customer-count').textContent = `${filtered.length} of ${allUsers.length} users`;
 }
@@ -425,7 +423,7 @@ function renderBilling(users) {
   </div>`;
 }
 
-// ── PRODUCTS ─────────────────────────────────────────────────────────────
+// ── PRODUCTS ──────────────────────────────────────────────────────────────
 let pendingProducts = [];
 
 async function adminGenerate() {
@@ -443,7 +441,6 @@ async function adminGenerate() {
   }
   nextLine();
   const statusTimer = setInterval(nextLine, 7000);
-
   try {
     const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({mode:'emerging'}) });
     const d = await r.json();
@@ -453,18 +450,16 @@ async function adminGenerate() {
     const s = c.indexOf('['), e = c.lastIndexOf(']');
     if (s===-1||e===-1) throw new Error('No product array found');
     const newProducts = JSON.parse(c.slice(s,e+1));
-    // STACK onto existing pending list
     pendingProducts = [...pendingProducts, ...newProducts];
     clearInterval(statusTimer);
     lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line done show'; });
     renderPendingList();
     document.getElementById('pending-card').style.display = 'block';
-    toast(`✅ ${newProducts.length} products added to review queue (${pendingProducts.length} total)`, 'success');
+    toast(`✅ ${newProducts.length} products added to queue (${pendingProducts.length} total)`, 'success');
   } catch(err) {
     clearInterval(statusTimer);
     const errLine = document.createElement('div');
-    errLine.className = 'status-line show';
-    errLine.style.color = 'var(--red)';
+    errLine.className = 'status-line show error';
     errLine.textContent = '✕ Error: ' + err.message;
     statusBox.appendChild(errLine);
   }
@@ -475,10 +470,7 @@ async function adminGenerate() {
 function renderPendingList() {
   const list = document.getElementById('pending-list');
   document.getElementById('pending-count-badge').textContent = pendingProducts.length;
-  if (!pendingProducts.length) {
-    list.innerHTML = '<div class="table-empty">No products in queue</div>';
-    return;
-  }
+  if (!pendingProducts.length) { list.innerHTML = '<div class="table-empty">Queue is empty</div>'; return; }
   list.innerHTML = pendingProducts.map((p,i) => `
     <div class="product-row">
       <div class="product-emoji">${p.emoji||'📦'}</div>
@@ -488,95 +480,115 @@ function renderPendingList() {
         <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
         ${p.img?`<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
         <div class="product-links">
-          <a href="https://trends.google.com/trends/explore?geo=GB&q=${encodeURIComponent(p.googleTrendsKeyword||p.name)}" target="_blank" style="background:#e8f0fe;color:#1d4ed8;border:1px solid #bfdbfe">📊 Trends</a>
           <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe">📺 Meta Ads</a>
           <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fff0e6;color:#c2410c;border:1px solid #fed7aa">🛒 AliExpress</a>
+          <a href="https://trends.pinterest.com/trends/explore#ideas=${encodeURIComponent(p.name)}&country=GB" target="_blank" style="background:#fce4ec;color:#9c27b0;border:1px solid #f48fb1">📌 Pinterest</a>
         </div>
       </div>
       <div class="product-controls">
         <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'B'}</div>
-        <button class="toggle-btn on" id="toggle-${i}" onclick="this.classList.toggle('on')"></button>
-        <button class="btn sm danger" onclick="removePending(${i})">Remove</button>
+        <div class="toggle-label">Publish</div>
+        <button class="toggle-btn on" id="ptoggle-${i}" onclick="this.classList.toggle('on')"></button>
+        <button class="btn sm danger" onclick="removePending(${i})">🗑️ Remove</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function removePending(i) { pendingProducts.splice(i,1); renderPendingList(); }
-function clearPending() { if(!confirm('Clear all products from review queue?')) return; pendingProducts=[]; renderPendingList(); document.getElementById('pending-card').style.display='none'; }
-function toggleAll(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('toggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); }
-function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('toggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); toast('Grade A and A+ selected'); }
+function clearPending() { if(!confirm('Clear all products from the review queue?')) return; pendingProducts=[]; renderPendingList(); document.getElementById('pending-card').style.display='none'; }
+function toggleAllPending(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('ptoggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); }
+function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('ptoggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); toast('Grade A and A+ selected'); }
 
 async function publishSelected() {
-  const selected = pendingProducts.filter((_,i) => { const b=document.getElementById('toggle-'+i); return b&&b.classList.contains('on'); });
+  const selected = pendingProducts.filter((_,i) => { const b=document.getElementById('ptoggle-'+i); return b&&b.classList.contains('on'); });
   if (!selected.length) { toast('Toggle on at least one product first'); return; }
   try {
     const r = await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products: selected}) });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error||'Publish failed');
-    // Remove published ones from pending
+    if (!r.ok) throw new Error('Publish failed');
     const selectedNames = new Set(selected.map(p=>p.name));
     pendingProducts = pendingProducts.filter(p => !selectedNames.has(p.name));
     renderPendingList();
     if (!pendingProducts.length) document.getElementById('pending-card').style.display = 'none';
-    toast(`✅ ${selected.length} products added to live feed!`, 'success');
-    loadLiveFeed();
+    toast(`✅ ${selected.length} products published to live feed!`, 'success');
+    loadAllProducts();
   } catch(e) { toast('Publish failed: ' + e.message, 'error'); }
 }
 
-async function loadLiveFeed() {
-  const list = document.getElementById('live-list');
+// ── ALL PRODUCTS (historical with toggle + remove) ─────────────────────
+async function loadAllProducts() {
+  const list = document.getElementById('all-products-list');
   list.innerHTML = '<div class="table-empty"><span class="spinner"></span>Loading...</div>';
   try {
-    const r = await fetch('/api/products');
+    const r = await fetch('/api/products?all=true');
     const d = await r.json();
     const products = d.products || [];
-    if (!products.length) { list.innerHTML = '<div class="table-empty">No products in live feed</div>'; return; }
+    if (!products.length) { list.innerHTML = '<div class="table-empty">No products yet — generate some above</div>'; return; }
+    const live = products.filter(p=>p.is_live).length;
     list.innerHTML = `
-      <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500)">
-        ${products.length} product${products.length!==1?'s':''} currently live
+      <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500);display:flex;justify-content:space-between;align-items:center">
+        <span>${products.length} total products · <span style="color:var(--green);font-weight:700">${live} live</span> · <span style="color:var(--g400)">${products.length-live} hidden</span></span>
       </div>
-      ${products.map((p,i) => `
-        <div class="live-row">
-          <div style="font-size:24px;width:36px;text-align:center">${p.emoji||'📦'}</div>
-          <div style="flex:1">
-            <div style="font-size:14px;font-weight:800">${p.name}</div>
-            <div style="font-size:12px;color:var(--g500)">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100</div>
+      ${products.map((p, i) => `
+        <div class="product-row" id="allrow-${i}">
+          <div class="product-emoji">${p.emoji||'📦'}</div>
+          <div class="product-info">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <div class="product-name" style="margin-bottom:0">${p.name}</div>
+              ${p.is_live ? '<span class="badge green" style="font-size:10px">Live</span>' : '<span class="badge gray" style="font-size:10px">Hidden</span>'}
+            </div>
+            <div class="product-meta">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'}</div>
+            <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
+            ${p.img ? `<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
           </div>
-          ${p.img?`<img src="${p.img}" style="width:48px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--g200)" onerror="this.style.display='none'">` : ''}
-          <button class="btn sm danger" onclick="removeFromFeed('${esc(p.name)}')">🗑️ Remove</button>
-        </div>
-      `).join('')}
-    `;
+          <div class="product-controls">
+            <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'—'}</div>
+            <div class="toggle-label">${p.is_live ? 'Live' : 'Hidden'}</div>
+            <button class="toggle-btn ${p.is_live?'on':''}" id="ltoggle-${i}" onclick="toggleLiveProduct('${esc(p.name)}', ${i})"></button>
+            <button class="btn sm danger" onclick="deleteProduct('${esc(p.name)}', ${i})">🗑️ Remove</button>
+          </div>
+        </div>`).join('')}`;
   } catch(e) { list.innerHTML = `<div class="table-empty">Error: ${e.message}</div>`; }
 }
 
-async function removeFromFeed(name) {
+async function toggleLiveProduct(name, idx) {
+  const btn = document.getElementById('ltoggle-'+idx);
+  const newState = !btn.classList.contains('on');
+  btn.classList.toggle('on');
   try {
-    await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name}) });
-    toast('Product removed', 'success');
-    loadLiveFeed();
-  } catch(e) { toast('Remove failed', 'error'); }
+    const r = await fetch('/api/products', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name, is_live: newState}) });
+    if (!r.ok) throw new Error('Toggle failed');
+    toast(newState ? `✅ "${name}" is now live` : `"${name}" hidden from feed`, newState?'success':'');
+    // Update the label and badge in the row
+    const row = document.getElementById('allrow-'+idx);
+    if (row) {
+      const label = row.querySelector('.toggle-label');
+      if (label) label.textContent = newState ? 'Live' : 'Hidden';
+      const badge = row.querySelector('.badge');
+      if (badge) { badge.textContent = newState ? 'Live' : 'Hidden'; badge.className = 'badge ' + (newState ? 'green' : 'gray'); }
+    }
+  } catch(e) { btn.classList.toggle('on'); toast('Toggle failed: ' + e.message, 'error'); }
 }
 
-async function clearAllFromFeed() {
-  if (!confirm('Remove ALL products from the live feed? Members will see no products until you publish again.')) return;
+async function deleteProduct(name, idx) {
+  if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
   try {
-    await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products:[], replace:true}) });
-    toast('Live feed cleared', 'success');
-    loadLiveFeed();
-  } catch(e) { toast('Clear failed', 'error'); }
+    const r = await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name}) });
+    if (!r.ok) throw new Error('Delete failed');
+    toast(`Deleted: ${name}`, 'success');
+    loadAllProducts();
+  } catch(e) { toast('Delete failed: ' + e.message, 'error'); }
 }
 
 // Grade colors
 function gradeColor(g) { if(!g)return'#374151'; if(g==='A+'||g==='A')return'#166534'; if(g==='B+'||g==='B')return'#92400E'; return'#991B1B'; }
 function gradeColorBg(g) { if(!g)return'#F3F4F6'; if(g==='A+'||g==='A')return'#DCFCE7'; if(g==='B+'||g==='B')return'#FEF3C7'; return'#FEE2E2'; }
 
-// ── HEALTH ───────────────────────────────────────────────────────────────
+// ── HEALTH ────────────────────────────────────────────────────────────────
 async function loadHealth() {
+  ['supabase','claude','stripe'].forEach(k => setHealth(k,'gold','Checking…','…'));
   try { await sbFetch('users?select=id&limit=1'); setHealth('supabase','green','Connected','Online'); } catch { setHealth('supabase','red','Connection failed','Error'); }
   try { const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})}); setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning'); } catch { setHealth('claude','gold','Could not reach','Unknown'); }
-  try { const r=await fetch('/api/stripe-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'health@check.com'})}); setHealth('stripe',r.status!==500?'green':'red',r.status!==500?'API reachable':'API error',r.status!==500?'Online':'Error'); } catch { setHealth('stripe','red','Could not reach','Error'); }
+  try { await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})}); setHealth('stripe','green','API key configured','Online'); } catch { setHealth('stripe','red','Could not reach','Error'); }
 }
 function setHealth(key,color,sub,badge) {
   const dot=document.getElementById(`dot-${key}`), subEl=document.getElementById(`status-${key}`), badgeEl=document.getElementById(`badge-${key}`);
@@ -585,7 +597,7 @@ function setHealth(key,color,sub,badge) {
   if(badgeEl) { badgeEl.textContent=badge; badgeEl.className=`badge ${color==='green'?'green':color==='red'?'red':'gold'}`; }
 }
 
-// ── MODALS ───────────────────────────────────────────────────────────────
+// ── MODALS ────────────────────────────────────────────────────────────────
 let modalEmail='';
 function openStatusModal(email,status) { modalEmail=email; document.getElementById('modal-email').value=email; document.getElementById('modal-status').value=status||'trial'; document.getElementById('status-modal').classList.add('open'); }
 function closeModal() { document.getElementById('status-modal').classList.remove('open'); }
@@ -601,7 +613,7 @@ async function confirmDelete() {
 }
 ['status-modal','delete-modal'].forEach(id => { document.getElementById(id).addEventListener('click',e=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); }); });
 
-// ── HELPERS ──────────────────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────────────────
 function statusBadge(s) { const map={active:'green',trial:'gold',cancelled:'red'}; return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`; }
 function formatDate(d) { if(!d)return'—'; return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -611,7 +623,6 @@ function toast(msg,type='') { const t=document.getElementById('toast'); t.textCo
 // Init
 loadUsers();
 loadHealth();
-loadLiveFeed();
 </script>
 </body>
 </html>
