@@ -137,6 +137,7 @@ select.filter-input{min-width:140px}
     <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
     <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
     <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
+    <button class="nav-btn" onclick="show('validator',this)">✅ Validator</button>
     <div class="nav-label">Site</div>
     <button class="nav-btn" onclick="window.open('members.html','_blank')">→ Members Area</button>
     <button class="nav-btn" onclick="window.open('trial.html','_blank')">→ Trial Area</button>
@@ -221,11 +222,34 @@ select.filter-input{min-width:140px}
       <div class="card">
         <div class="panel-head">
           <div><div class="panel-title">🗂️ All Products</div><div class="panel-sub">Every product ever generated. Toggle to publish/unpublish. Remove to permanently delete.</div></div>
-          <button class="btn" onclick="loadAllProducts()">↻ Refresh</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" onclick="selectAllProducts(true)">✓ All live</button>
+            <button class="btn" onclick="selectAllProducts(false)">✕ All hidden</button>
+            <button class="btn danger" onclick="massDeleteProducts()">🗑️ Delete selected</button>
+            <button class="btn" onclick="loadAllProducts()">↻ Refresh</button>
+          </div>
         </div>
         <div id="all-products-list"><div class="table-empty"><span class="spinner"></span>Loading...</div></div>
       </div>
 
+    </section>
+
+    <!-- VALIDATOR -->
+    <section id="validator" class="section">
+      <div class="card">
+        <div class="panel-head">
+          <div><div class="panel-title">✅ Product Validator</div><div class="panel-sub">Enter any product name to get a full market assessment</div></div>
+        </div>
+        <div class="card-pad">
+          <div style="display:flex;gap:0;background:var(--g50);border:1px solid var(--g200);border-radius:12px;overflow:hidden;margin-bottom:16px">
+            <input id="admin-validator-input" placeholder="Enter a product name e.g. Portable Neck Fan..." style="flex:1;border:none;outline:none;padding:12px 16px;font-size:14px;font-family:inherit;background:transparent;color:var(--g900)" onkeydown="if(event.key==='Enter')runAdminValidator()">
+            <button onclick="runAdminValidator()" style="background:var(--navy);color:#fff;border:none;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">Analyse →</button>
+          </div>
+          <div id="admin-validator-result" style="min-height:80px">
+            <div style="text-align:center;padding:40px;color:var(--g400);font-size:13px">Enter a product name above to get started</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- CUSTOMERS -->
@@ -331,6 +355,7 @@ async function sbFetch(path, options = {}) {
 const sectionTitles = {
   overview: ['Overview','Live data from Supabase & Stripe'],
   products: ['Products','Generate and manage the weekly product feed'],
+  validator: ['Product Validator','Check any product for market potential'],
   customers: ['Customers','All registered users'],
   billing: ['Billing','Revenue and subscription stats']
 };
@@ -530,6 +555,7 @@ async function loadAllProducts() {
       </div>
       ${products.map((p, i) => `
         <div class="product-row" id="allrow-${i}">
+          <div style="display:flex;align-items:flex-start;padding-top:4px"><input type="checkbox" class="product-checkbox" id="pcheck-${i}" data-name="${p.name}" style="width:16px;height:16px;cursor:pointer;accent-color:var(--navy);flex-shrink:0"></div>
           <div class="product-emoji">${p.emoji||'📦'}</div>
           <div class="product-info">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
@@ -579,9 +605,62 @@ async function deleteProduct(name, idx) {
   } catch(e) { toast('Delete failed: ' + e.message, 'error'); }
 }
 
+// ── ADMIN VALIDATOR ──────────────────────────────────────────────────────
+async function runAdminValidator() {
+  const input = document.getElementById('admin-validator-input').value.trim();
+  const result = document.getElementById('admin-validator-result');
+  if (!input) { toast('Enter a product name first'); return; }
+  result.innerHTML = '<div style="text-align:center;padding:30px;color:var(--g500)"><span class="spinner"></span> Analysing ' + input + '...</div>';
+  try {
+    const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: input}) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    const score = data.opportunityScore || 'B';
+    const sc = s => s.includes('A') ? '#166534' : s.includes('B') ? '#92400E' : '#991B1B';
+    const scBg = s => s.includes('A') ? '#DCFCE7' : s.includes('B') ? '#FEF3C7' : '#FEE2E2';
+    result.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;margin-bottom:14px">
+        <div style="flex:1"><div style="font-size:16px;font-weight:800;color:var(--g900)">${input}</div><div style="font-size:13px;color:var(--g500);margin-top:3px">${data.verdict||'Assessment complete'}</div></div>
+        <div style="background:${scBg(score)};color:${sc(score)};border-radius:10px;padding:8px 18px;font-size:22px;font-weight:900">${score}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Growth Score</div><div style="font-size:20px;font-weight:900">${data.growthScore||'—'}/100</div></div>
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Competition</div><div style="font-size:20px;font-weight:900">${data.competitionScore||'—'}/100</div></div>
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:10px;padding:12px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Sat. Risk</div><div style="font-size:16px;font-weight:900">${data.saturationRisk||'—'}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:#DCFCE7;border:1px solid #bbf7d0;border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px">✅ Why it could work</div><ul style="padding-left:14px;font-size:12px;color:#166534;line-height:1.7">${(data.whyItCouldWork||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
+        <div style="background:#FEE2E2;border:1px solid #fecaca;border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:800;color:#b91c1c;margin-bottom:6px">⚠️ Risks</div><ul style="padding-left:14px;font-size:12px;color:#991b1b;line-height:1.7">${(data.risks||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
+        <div style="background:#EFF6FF;border:1px solid #bfdbfe;border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:6px">🎬 Creative angles</div><ul style="padding-left:14px;font-size:12px;color:#1e40af;line-height:1.7">${(data.creativeAngles||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
+      </div>`;
+  } catch(e) {
+    result.innerHTML = `<div style="text-align:center;padding:30px;color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+}
+
 // Grade colors
 function gradeColor(g) { if(!g)return'#374151'; if(g==='A+'||g==='A')return'#166534'; if(g==='B+'||g==='B')return'#92400E'; return'#991B1B'; }
 function gradeColorBg(g) { if(!g)return'#F3F4F6'; if(g==='A+'||g==='A')return'#DCFCE7'; if(g==='B+'||g==='B')return'#FEF3C7'; return'#FEE2E2'; }
+
+// ── MASS SELECT/DELETE ───────────────────────────────────────────────────
+function selectAllProducts(check) {
+  document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = check);
+}
+
+async function massDeleteProducts() {
+  const checked = [...document.querySelectorAll('.product-checkbox:checked')];
+  if (!checked.length) { toast('Select at least one product first'); return; }
+  if (!confirm(`Permanently delete ${checked.length} product${checked.length!==1?'s':''}? This cannot be undone.`)) return;
+  let deleted = 0;
+  for (const cb of checked) {
+    try {
+      const r = await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: cb.dataset.name}) });
+      if (r.ok) deleted++;
+    } catch(e) {}
+  }
+  toast(`Deleted ${deleted} product${deleted!==1?'s':''}`, 'success');
+  loadAllProducts();
+}
 
 // ── HEALTH ────────────────────────────────────────────────────────────────
 async function loadHealth() {
