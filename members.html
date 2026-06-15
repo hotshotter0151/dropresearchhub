@@ -392,45 +392,33 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 <div class="view" id="view-saved">
   <div class="page-header">
     <h1>💛 Saved Products Hub</h1>
-    <p>Save products you like and compare them side by side to find your best opportunity.</p>
+    <p>Your saved products — compare any two side by side to find your best opportunity.</p>
     <div class="header-meta">
       <div class="header-badge green" id="saved-count-badge">Loading...</div>
-      <div class="header-badge">Drag cards into the compare zone to compare</div>
     </div>
   </div>
   <div style="padding:28px 3%">
 
-    <!-- COMPARE ZONE - always at top -->
+    <!-- COMPARE BOX -->
     <div style="background:var(--navy-dark);border-radius:20px;padding:24px;margin-bottom:28px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
-        <div>
-          <div style="font-size:17px;font-weight:800;color:#fff">⚖️ Compare Products</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:3px">Drag up to 3 products from below into a slot — comparison table appears instantly</div>
-        </div>
-        <button onclick="clearCompare()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;color:#fff;font-family:inherit">✕ Clear</button>
+      <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:4px">⚖️ Compare Two Products</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px">Select two saved products to compare them side by side</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:20px">
+        <select id="compare-select-a" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product A...</option>
+        </select>
+        <div style="font-size:20px;color:rgba(255,255,255,.4);font-weight:700;text-align:center">vs</div>
+        <select id="compare-select-b" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product B...</option>
+        </select>
       </div>
-
-      <!-- 3 drop slots side by side -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" id="compare-slots">
-        <div class="compare-slot" id="slot-0" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,0);this.style.borderColor='rgba(255,255,255,.2)'">
-          <div class="compare-slot-empty">Drop product 1 here</div>
-        </div>
-        <div class="compare-slot" id="slot-1" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,1);this.style.borderColor='rgba(255,255,255,.2)'">
-          <div class="compare-slot-empty">Drop product 2 here</div>
-        </div>
-        <div class="compare-slot" id="slot-2" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='rgba(255,255,255,.2)'" ondrop="dropIntoSlot(event,2);this.style.borderColor='rgba(255,255,255,.2)'">
-          <div class="compare-slot-empty">Drop product 3 here</div>
-        </div>
-      </div>
-
-      <!-- Comparison table appears here -->
       <div id="compare-table"></div>
     </div>
 
     <!-- SAVED PRODUCTS GRID -->
     <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
     <div id="saved-grid">
-      <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>
+      <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product card to save it here.</p></div>
     </div>
   </div>
 </div>
@@ -523,12 +511,12 @@ function renderProductsGrid() {
           <div class="mini-score"><div class="mini-score-label">Problem</div><div class="mini-score-val" style="color:var(--green)">${p.problemScore||'—'}</div></div>
           <div class="mini-score"><div class="mini-score-label">Sat. Risk</div><div class="mini-score-val" style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div></div>
         </div>
-        <div style="display:flex;gap:8px;align-items:stretch">
-          <button class="analyse-btn" style="flex:1;margin-top:0" onclick="event.stopPropagation();openAnalysis(${i})">
+        <div style="display:grid;grid-template-columns:1fr 48px;gap:8px;height:48px">
+          <button class="analyse-btn" style="height:48px;margin:0" onclick="event.stopPropagation();openAnalysis(${i})">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Analyse
           </button>
-          <button onclick="event.stopPropagation();toggleSaveProduct(${i},this)" class="save-heart-btn" id="save-btn-${i}" title="Save to Saved Products Hub" style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:0 14px;font-size:20px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;min-width:52px">🤍</button>
+          <button onclick="event.stopPropagation();toggleSaveProduct(${i},this)" id="save-btn-${i}" title="Save to Saved Products Hub" style="height:48px;width:48px;background:#fff;border:1px solid var(--g200);border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">🤍</button>
         </div>
       </div>
     </div>`).join('');
@@ -1219,8 +1207,7 @@ renderProductsGrid();
 
 // ── SAVED PRODUCTS ────────────────────────────────────────────────────────
 let savedProductNames = new Set();
-let compareSlots = [null, null, null];
-let draggedProduct = null;
+
 
 function getUserEmail() {
   const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
@@ -1293,12 +1280,9 @@ function renderSavedGrid(saved) {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
     return;
   }
-  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px';
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
   grid.innerHTML = saved.map((p, i) => `
-    <div class="saved-card" draggable="true" id="saved-card-${i}"
-      ondragstart="dragStart(event, ${i})"
-      ondragend="dragEnd(event)">
-      <div class="saved-card-drag-hint">⠿ Drag to compare</div>
+    <div class="saved-card" id="saved-card-${i}">
       <button class="unsave-btn" onclick="unsaveProduct('${p.name.replace(/'/g,"\'")}', ${i})">✕ Remove</button>
       <div style="height:140px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:42px;border-bottom:1px solid var(--g100);position:relative">
         ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:136px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : (p.emoji || '📦')}
@@ -1313,12 +1297,13 @@ function renderSavedGrid(saved) {
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
         </div>
         <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;margin-bottom:12px">${p.whyEmerging || p.mainAngle || ''}</div>
-        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">🔍 Analyse</button>
+        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px">🔍 Analyse</button>
       </div>
     </div>`).join('');
 
   // Store saved products for analysis
   window._savedProducts = saved;
+  populateCompareDropdowns();
 }
 
 function openAnalysisFromSaved(idx) {
@@ -1343,92 +1328,78 @@ async function unsaveProduct(name, idx) {
   } catch(e) { showToast('Could not remove — try again'); }
 }
 
-// ── DRAG AND DROP ─────────────────────────────────────────────────────────
-function dragStart(event, idx) {
-  draggedProduct = window._savedProducts[idx];
-  event.dataTransfer.effectAllowed = 'copy';
-  event.target.style.opacity = '0.5';
-  document.querySelectorAll('.compare-slot').forEach(s => s.classList.add('drag-over'));
+// ── COMPARE (DROPDOWN) ───────────────────────────────────────────────────
+function populateCompareDropdowns() {
+  const saved = window._savedProducts || [];
+  ['compare-select-a', 'compare-select-b'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="" style="background:#142840;color:#fff">Select a product...</option>` +
+      saved.map((p,i) => `<option value="${i}" style="background:#142840;color:#fff">${p.emoji||'📦'} ${p.name}</option>`).join('');
+    if (current) sel.value = current;
+  });
 }
 
-function dragEnd(event) {
-  event.target.style.opacity = '1';
-  document.querySelectorAll('.compare-slot').forEach(s => s.classList.remove('drag-over'));
-}
-
-function dropIntoSlot(event, slotIdx) {
-  event.preventDefault();
-  if (!draggedProduct) return;
-  // Check not already in another slot
-  const alreadyIn = compareSlots.findIndex(s => s && s.name === draggedProduct.name);
-  if (alreadyIn !== -1 && alreadyIn !== slotIdx) {
-    compareSlots[alreadyIn] = null;
-    renderSlot(alreadyIn);
-  }
-  compareSlots[slotIdx] = draggedProduct;
-  renderSlot(slotIdx);
-  draggedProduct = null;
-  updateCompareTable();
-}
-
-function renderSlot(idx) {
-  const slot = document.getElementById('slot-' + idx);
-  const p = compareSlots[idx];
-  if (!p) {
-    slot.className = 'compare-slot';
-    slot.innerHTML = '<div class="compare-slot-empty">Drop a product here</div>';
+function runCompare() {
+  const saved = window._savedProducts || [];
+  const idxA = document.getElementById('compare-select-a')?.value;
+  const idxB = document.getElementById('compare-select-b')?.value;
+  const tableEl = document.getElementById('compare-table');
+  if (!tableEl) return;
+  if (idxA === '' || idxB === '' || idxA === idxB) {
+    tableEl.innerHTML = idxA === idxB && idxA !== '' ? '<div style="text-align:center;color:rgba(255,255,255,.5);font-size:13px;padding:8px">Select two different products</div>' : '';
     return;
   }
-  slot.className = 'compare-slot filled';
-  slot.innerHTML = `
-    <div class="compare-slot-product" style="width:100%">
-      <button class="compare-slot-remove" onclick="removeFromSlot(${idx})" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,.2);border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;color:#fff;display:flex;align-items:center;justify-content:center">✕</button>
-      <div style="font-size:18px;margin-bottom:4px">${p.emoji || '📦'}</div>
-      <div style="font-size:12px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:2px">${p.name}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">${p.niche || ''} · Grade ${p.grade || '?'}</div>
-    </div>`;
-}
+  const a = saved[parseInt(idxA)];
+  const b = saved[parseInt(idxB)];
+  if (!a || !b) return;
 
-function removeFromSlot(idx) {
-  compareSlots[idx] = null;
-  renderSlot(idx);
-  updateCompareTable();
-}
-
-function clearCompare() {
-  compareSlots = [null, null, null];
-  [0,1,2].forEach(i => renderSlot(i));
-  updateCompareTable();
-}
-
-function updateCompareTable() {
-  const filled = compareSlots.filter(Boolean);
-  const tableEl = document.getElementById('compare-table');
-  if (filled.length < 2) { tableEl.innerHTML = ''; return; }
-
-    tableEl.style.display = 'block';
-  const rows = [
-    { label: 'Emerging Score', fn: p => p.emergingScore||'—', higher: true },
-    { label: 'Trend Score', fn: p => p.trendScore||'—', higher: true },
-    { label: 'Margin', fn: p => p.margin||'—', higher: true },
-    { label: 'Sat. Risk', fn: p => p.saturationRisk||'—', higher: false },
-    { label: 'Selling Price', fn: p => p.sellingPrice||'—', higher: false },
-    { label: 'Verdict', fn: p => p.verdict||'—', higher: false },
-    { label: 'TikTok Angle', fn: p => p.tiktokAngle||'—', higher: false },
+  const metrics = [
+    { label: 'Emerging Score', fn: p => p.emergingScore || '—', higher: true },
+    { label: 'Trend Score', fn: p => p.trendScore || '—', higher: true },
+    { label: 'Problem Score', fn: p => p.problemScore || '—', higher: true },
+    { label: 'Est. Margin', fn: p => p.margin || '—', higher: true },
+    { label: 'Saturation Risk', fn: p => p.saturationRisk || '—', higher: false, manual: (av, bv) => ({Low:0,Medium:1,High:2}[av]||1) < ({Low:0,Medium:1,High:2}[bv]||1) ? 'a' : 'b' },
+    { label: 'Selling Price', fn: p => p.sellingPrice || '—', higher: false },
+    { label: 'Verdict', fn: p => p.verdict || '—', higher: false },
+    { label: 'TikTok Angle', fn: p => p.tiktokAngle || '—', higher: false },
+    { label: 'Target Customer', fn: p => p.targetCustomer || '—', higher: false },
   ];
+
   const numVal = v => parseFloat(String(v).replace(/[^0-9.]/g,'')) || 0;
-  const tableRows = rows.map(row => {
-    const vals = filled.map(row.fn);
-    const nums = vals.map(numVal);
-    const best = row.higher ? Math.max(...nums) : Math.min(...nums.filter(n=>n>0));
-    const cells = vals.map((v,i) => {
-      const isWinner = nums[i] > 0 && nums[i] === best && filled.length > 1;
-      return `<td style="padding:9px 12px;text-align:center;font-size:12px;font-weight:${isWinner?'800':'500'};color:${isWinner?'#4ade80':'rgba(255,255,255,.75)'};border-bottom:1px solid rgba(255,255,255,.08)">${v}${isWinner?' ✓':''}</td>`;
-    }).join('');
-    return `<tr><td style="padding:9px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap">${row.label}</td>${cells}</tr>`;
+
+  const rows = metrics.map(m => {
+    const av = m.fn(a), bv = m.fn(b);
+    let winA = false, winB = false;
+    if (m.manual) {
+      const w = m.manual(av, bv);
+      winA = w === 'a'; winB = w === 'b';
+    } else if (m.higher) {
+      winA = numVal(av) > numVal(bv) && numVal(av) > 0;
+      winB = numVal(bv) > numVal(av) && numVal(bv) > 0;
+    }
+    const cellStyle = (win) => `padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:${win?'800':'400'};color:${win?'#4ade80':'rgba(255,255,255,.75)'};text-align:center`;
+    return `<tr>
+      <td style="padding:10px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap">${m.label}</td>
+      <td style="${cellStyle(winA)}">${av}${winA?' ✓':''}</td>
+      <td style="${cellStyle(winB)}">${bv}${winB?' ✓':''}</td>
+    </tr>`;
   }).join('');
-  const headers = filled.map(p => `<th style="padding:10px 12px;text-align:center;font-size:12px;font-weight:800;color:#fff;border-bottom:1px solid rgba(255,255,255,.15)">${p.emoji||'📦'} ${p.name.length>20?p.name.slice(0,20)+'...':p.name}</th>`).join('');
-  tableEl.innerHTML = `<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px;margin-top:4px"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="padding:10px 12px;text-align:left;font-size:11px;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</th>${headers}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
+
+  tableEl.innerHTML = `
+    <div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr>
+            <th style="padding:10px 14px;text-align:left;font-size:11px;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</th>
+            <th style="padding:10px 14px;text-align:center;font-size:13px;font-weight:800;color:#fff;border-bottom:1px solid rgba(255,255,255,.15)">${a.emoji||'📦'} ${a.name.length>22?a.name.slice(0,22)+'...':a.name}</th>
+            <th style="padding:10px 14px;text-align:center;font-size:13px;font-weight:800;color:#fff;border-bottom:1px solid rgba(255,255,255,.15)">${b.emoji||'📦'} ${b.name.length>22?b.name.slice(0,22)+'...':b.name}</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 }
 
 async function loadPublishedProducts(){
