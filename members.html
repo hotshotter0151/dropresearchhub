@@ -1280,40 +1280,29 @@ function renderSavedGrid(saved) {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
     return;
   }
-  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:stretch';
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
   grid.innerHTML = saved.map((p, i) => `
-    <div class="saved-card" id="saved-card-${i}">
-      <button class="unsave-btn" onclick="unsaveProduct('${p.name.replace(/'/g,"\'")}', ${i})">✕ Remove</button>
-      <div style="height:140px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:42px;border-bottom:1px solid var(--g100);position:relative">
-        ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:136px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : (p.emoji || '📦')}
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
+      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\'")}', ${i})" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+      <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
+        ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
         <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
       </div>
-      <div style="padding:14px">
-        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:3px">${p.name}</div>
+      <div style="padding:14px;display:flex;flex-direction:column;flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
         <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche || ''} · ${p.season || 'Evergreen'}</div>
-        <div style="display:flex;gap:6px;margin-bottom:12px">
-          <div style="flex:1;background:var(--g50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
-          <div style="flex:1;background:var(--g50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
-          <div style="flex:1;background:var(--g50);border-radius:8px;padding:7px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;flex-shrink:0">
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
         </div>
-        <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;flex:1;min-height:50px">${p.whyEmerging || p.mainAngle || ''}</div>
-        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;flex-shrink:0">🔍 Analyse</button>
+        <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
+        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
       </div>
     </div>`).join('');
 
-  // Store saved products for analysis
   window._savedProducts = saved;
   populateCompareDropdowns();
-}
-
-function openAnalysisFromSaved(idx) {
-  const p = window._savedProducts[idx];
-  if (!p) return;
-  // Push to allProducts if not there and open analysis
-  if (!allProducts.find(ap => ap.name === p.name)) allProducts.unshift(p);
-  const realIdx = allProducts.findIndex(ap => ap.name === p.name);
-  showView('products', document.querySelector('.nav-tab'));
-  openAnalysis(realIdx);
 }
 
 async function unsaveProduct(name, idx) {
