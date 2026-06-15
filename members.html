@@ -1219,7 +1219,11 @@ let draggedProduct = null;
 
 function getUserEmail() {
   const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  return s?.email || null;
+  if (s?.email) return s.email;
+  // Admin bypass — use a placeholder admin email
+  const auth = sessionStorage.getItem('drh_auth');
+  if (auth === 'member') return 'admin@dropresearchhub.com';
+  return null;
 }
 
 async function loadSavedProducts() {
