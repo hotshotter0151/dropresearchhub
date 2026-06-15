@@ -1331,125 +1331,93 @@ function populateCompareDropdowns() {
 }
 
 function runCompare() {
-  const saved = window._savedProducts || [];
-  const idxA = document.getElementById('compare-select-a')?.value;
-  const idxB = document.getElementById('compare-select-b')?.value;
-  const tableEl = document.getElementById('compare-table');
-  if (!tableEl) return;
+  var saved = window._savedProducts || [];
+  var selA = document.getElementById('compare-select-a');
+  var selB = document.getElementById('compare-select-b');
+  var tableEl = document.getElementById('compare-table');
+  if (!tableEl || !selA || !selB) return;
+  var idxA = selA.value, idxB = selB.value;
   if (idxA === '' || idxB === '' || idxA === idxB) {
-    tableEl.innerHTML = (idxA === idxB && idxA !== '') ? '<div style="text-align:center;color:rgba(255,255,255,.5);font-size:13px;padding:8px">Select two different products</div>' : '';
+    tableEl.innerHTML = '';
     return;
   }
-  const a = saved[parseInt(idxA)];
-  const b = saved[parseInt(idxB)];
+  var a = saved[parseInt(idxA)];
+  var b = saved[parseInt(idxB)];
   if (!a || !b) return;
 
-  const numVal = v => parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0;
-
-  const getLaunch = p => {
+  function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
+  function getLaunch(p) {
     if (!p.launchReadiness) return '—';
-    return Math.round((p.launchReadiness.filter(i=>i.pass).length / p.launchReadiness.length)*100) + '%';
-  };
+    return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%';
+  }
 
-  const metrics = [
-    { label: 'Emerging Score', getA: () => a.emergingScore||'—', getB: () => b.emergingScore||'—', higher: true },
-    { label: 'Trend Score', getA: () => a.trendScore||'—', getB: () => b.trendScore||'—', higher: true },
-    { label: 'Problem Score', getA: () => a.problemScore||'—', getB: () => b.problemScore||'—', higher: true },
-    { label: 'Est. Margin', getA: () => a.margin||'—', getB: () => b.margin||'—', higher: true },
-    { label: 'Supplier Cost', getA: () => a.supplierCost||'—', getB: () => b.supplierCost||'—', higher: false },
-    { label: 'Selling Price', getA: () => a.sellingPrice||'—', getB: () => b.sellingPrice||'—', higher: false },
-    { label: 'Saturation Risk', getA: () => a.saturationRisk||'—', getB: () => b.saturationRisk||'—', higher: false,
-      winFn: (av,bv) => { const m={Low:0,Medium:1,High:2}; return m[av]<m[bv]?'a':m[bv]<m[av]?'b':''; } },
-    { label: 'Launch Readiness', getA: () => getLaunch(a), getB: () => getLaunch(b), higher: true },
-    { label: 'Window Closes', getA: () => a.windowClosesWeek?'Week '+a.windowClosesWeek:'—', getB: () => b.windowClosesWeek?'Week '+b.windowClosesWeek:'—', higher: false,
-      winFn: (av,bv) => { const na=numVal(av),nb=numVal(bv); return na>nb&&na>0?'a':nb>na&&nb>0?'b':''; } },
-    { label: 'Verdict', getA: () => a.verdict||'—', getB: () => b.verdict||'—', higher: false },
-    { label: 'TikTok Angle', getA: () => a.tiktokAngle||'—', getB: () => b.tiktokAngle||'—', higher: false },
-    { label: 'Target Customer', getA: () => a.targetCustomer||'—', getB: () => b.targetCustomer||'—', higher: false },
+  var metrics = [
+    { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
+    { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
+    { label: 'Problem Score', av: a.problemScore||'—', bv: b.problemScore||'—', higher: true },
+    { label: 'Est. Margin', av: a.margin||'—', bv: b.margin||'—', higher: true },
+    { label: 'Supplier Cost', av: a.supplierCost||'—', bv: b.supplierCost||'—', higher: false },
+    { label: 'Selling Price', av: a.sellingPrice||'—', bv: b.sellingPrice||'—', higher: false },
+    { label: 'Saturation Risk', av: a.saturationRisk||'—', bv: b.saturationRisk||'—', higher: false,
+      winFn: function(av,bv){ var m={Low:0,Medium:1,High:2}; return (m[av]||1)<(m[bv]||1)?'a':(m[bv]||1)<(m[av]||1)?'b':''; } },
+    { label: 'Launch Readiness', av: getLaunch(a), bv: getLaunch(b), higher: true },
+    { label: 'Window Closes', av: a.windowClosesWeek?'Week '+a.windowClosesWeek:'—', bv: b.windowClosesWeek?'Week '+b.windowClosesWeek:'—', higher: false },
+    { label: 'Verdict', av: a.verdict||'—', bv: b.verdict||'—', higher: false },
+    { label: 'TikTok Angle', av: a.tiktokAngle||'—', bv: b.tiktokAngle||'—', higher: false },
+    { label: 'Target Customer', av: a.targetCustomer||'—', bv: b.targetCustomer||'—', higher: false },
   ];
 
-  let aWins = 0, bWins = 0;
-  const results = metrics.map(m => {
-    const av = m.getA(), bv = m.getB();
-    let winA = false, winB = false;
+  var aWins = 0, bWins = 0;
+  metrics.forEach(function(m) {
     if (m.winFn) {
-      const w = m.winFn(av,bv);
-      winA = w==='a'; winB = w==='b';
+      var w = m.winFn(m.av, m.bv);
+      m.winA = w==='a'; m.winB = w==='b';
     } else if (m.higher) {
-      const na = numVal(av), nb = numVal(bv);
-      winA = na>nb && na>0; winB = nb>na && nb>0;
+      var na = numVal(m.av), nb = numVal(m.bv);
+      m.winA = na>nb && na>0; m.winB = nb>na && nb>0;
+    } else {
+      m.winA = false; m.winB = false;
     }
-    if (winA) aWins++;
-    if (winB) bWins++;
-    return { label: m.label, av, bv, winA, winB };
+    if (m.winA) aWins++;
+    if (m.winB) bWins++;
   });
 
-  const winner = aWins > bWins ? a : bWins > aWins ? b : null;
-  const winnerName = winner ? winner.name : null;
-  const aWinCount = aWins, bWinCount = bWins;
+  var winner = aWins > bWins ? a : bWins > aWins ? b : null;
+  var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
+  var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
 
-  const summaryBg = winnerName ? 'rgba(74,222,128,.12)' : 'rgba(255,255,255,.06)';
-  const summaryText = winnerName
-    ? '🏆 <strong>' + (winnerName.length>35?winnerName.slice(0,35)+'...':winnerName) + '</strong> wins on ' + Math.max(aWinCount,bWinCount) + ' of ' + (aWinCount+bWinCount) + ' comparable metrics'
+  var summaryText = winner
+    ? '🏆 ' + (winner===a?aName:bName) + ' wins on ' + Math.max(aWins,bWins) + ' of ' + (aWins+bWins) + ' comparable metrics'
     : '🤝 Both products are evenly matched across all metrics';
 
-  const recReason = winnerName
-    ? 'Based on the data, <strong>' + (winnerName.length>25?winnerName.slice(0,25)+'...':winnerName) + '</strong> has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.')
-    : 'Both products are closely matched. Consider which one you can source most easily or which angle you feel most confident creating content for.';
+  var recReason = winner
+    ? 'Based on the scores, ' + (winner===a?aName:bName) + ' has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.')
+    : 'Both products are closely matched. Go with whichever you can source most easily or feel most confident creating content for.';
 
-  const aName = a.name.length>20 ? a.name.slice(0,20)+'...' : a.name;
-  const bName = b.name.length>20 ? b.name.slice(0,20)+'...' : b.name;
+  var aWinnerBadge = aWins > bWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
+  var bWinnerBadge = bWins > aWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
 
-  // Build row HTML as string — avoid nested template literals
-  let labelRows = '', aRows = '', bRows = '';
-  results.forEach(r => {
-    const cellStyle = 'padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.08);min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;';
-    labelRows += '<div style="' + cellStyle + 'justify-content:flex-start;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">' + r.label + '</div>';
-    aRows += '<div style="' + cellStyle + 'font-weight:' + (r.winA?'800':'400') + ';color:' + (r.winA?'#4ade80':'rgba(255,255,255,.8)') + '">' + r.av + (r.winA?' ✓':'') + '</div>';
-    bRows += '<div style="' + cellStyle + 'font-weight:' + (r.winB?'800':'400') + ';color:' + (r.winB?'#4ade80':'rgba(255,255,255,.8)') + '">' + r.bv + (r.winB?' ✓':'') + '</div>';
+  var labelHTML = '', aHTML = '', bHTML = '';
+  var cs = 'padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);min-height:42px;display:flex;align-items:center;';
+  metrics.forEach(function(m) {
+    labelHTML += '<div style="' + cs + 'font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">' + m.label + '</div>';
+    aHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winA?'800':'400') + ';color:' + (m.winA?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.av + (m.winA?' ✓':'') + '</div>';
+    bHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winB?'800':'400') + ';color:' + (m.winB?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.bv + (m.winB?' ✓':'') + '</div>';
   });
 
-  const aScoreBadge = aWinCount > bWinCount ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:800;margin-left:4px">WINNER</span>' : '';
-  const bScoreBadge = bWinCount > aWinCount ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:800;margin-left:4px">WINNER</span>' : '';
+  var html = '';
+  html += '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">';
+  html += '<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:700;color:#fff">' + summaryText + '</div>';
+  html += '<div style="display:grid;grid-template-columns:150px 1fr 1fr;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);margin-bottom:16px">';
+  html += '<div><div style="padding:10px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</div>' + labelHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (a.emoji||'📦') + ' ' + aName + aWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxA + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + aHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (b.emoji||'📦') + ' ' + bName + bWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxB + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + bHTML + '</div>';
+  html += '</div>';
+  html += '<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:14px 16px"><div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">DropResearch Hub Recommendation</div><div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.65">' + recReason + '</div></div>';
+  html += '</div>';
 
-  tableEl.innerHTML =
-    '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">' +
-
-    // Winner banner
-    '<div style="background:' + summaryBg + ';border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;color:#fff;line-height:1.5">' + summaryText + '</div>' +
-
-    // Table
-    '<div style="display:grid;grid-template-columns:150px 1fr 1fr;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);margin-bottom:16px">' +
-
-    // Label col
-    '<div>' +
-    '<div style="padding:11px 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</div>' +
-    labelRows +
-    '</div>' +
-
-    // Product A col
-    '<div style="border-left:1px solid rgba(255,255,255,.08)">' +
-    '<div style="padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.15)">' +
-    '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">' + (a.emoji||'📦') + ' ' + aName + aScoreBadge + '</div>' +
-    '<button onclick="openAnalysisFromSaved(' + idxA + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis →</button>' +
-    '</div>' +
-    aRows +
-    '</div>' +
-
-    // Product B col
-    '<div style="border-left:1px solid rgba(255,255,255,.08)">' +
-    '<div style="padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.15)">' +
-    '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">' + (b.emoji||'📦') + ' ' + bName + bScoreBadge + '</div>' +
-    '<button onclick="openAnalysisFromSaved(' + idxB + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis →</button>' +
-    '</div>' +
-    bRows +
-    '</div>' +
-    '</div>' +
-
-    // Recommendation
-    '<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px;padding:14px 16px">' +
-    '<div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">DropResearch Hub Recommendation</div>' +
-    '<div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.65">' + recReason + '</div>' +
-    '</div>' +
-    '</div>';
+  tableEl.innerHTML = html;
 }
+</script>
+</body>
+</html>
