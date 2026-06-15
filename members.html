@@ -1404,37 +1404,9 @@ function clearCompare() {
 function updateCompareTable() {
   const filled = compareSlots.filter(Boolean);
   const tableEl = document.getElementById('compare-table');
-  if (filled.length < 2) { tableEl.style.display = 'none'; tableEl.innerHTML = ''; return; }
+  if (filled.length < 2) { tableEl.innerHTML = ''; return; }
 
-  const rows = [
-    { label: 'Emerging Score', key: 'emergingScore', higher: true, suffix: '/100' },
-    { label: 'Trend Score', key: 'trendScore', higher: true, suffix: '/100' },
-    { label: 'Saturation Risk', key: 'saturationRisk', higher: false, compare: (a,b) => ({Low:0,Medium:1,High:2}[a]||1) < ({Low:0,Medium:1,High:2}[b]||1) },
-    { label: 'Est. Margin', key: 'margin', higher: true },
-    { label: 'Selling Price', key: 'sellingPrice', higher: false },
-    { label: 'Supplier Cost', key: 'supplierCost', higher: false },
-    { label: 'Verdict', key: 'verdict', higher: false },
-    { label: 'TikTok Angle', key: 'tiktokAngle', higher: false },
-    { label: 'Target Customer', key: 'targetCustomer', higher: false },
-  ];
-
-  const headers = filled.map(p => `<th style="text-align:center">${p.emoji||'📦'} ${p.name}</th>`).join('');
-
-  const bodyRows = rows.map(row => {
-    const vals = filled.map(p => p[row.key] || '—');
-    const numVals = vals.map(v => parseFloat(String(v).replace(/[^0-9.]/g,'')) || 0);
-    const maxVal = Math.max(...numVals);
-    const minVal = Math.min(...numVals);
-    const cells = vals.map((v, i) => {
-      let isWinner = false;
-      if (row.higher && numVals[i] === maxVal && maxVal > 0) isWinner = true;
-      if (!row.higher && row.compare) isWinner = row.compare(v, vals.filter((_,j)=>j!==i)[0]);
-      return `<td class="${isWinner ? 'winner' : ''}" style="text-align:center">${v}${isWinner ? ' ✓' : ''}</td>`;
-    }).join('');
-    return `<tr><td style="font-weight:700;color:var(--g700);font-size:12px">${row.label}</td>${cells}</tr>`;
-  }).join('');
-
-  tableEl.style.display = 'block';
+    tableEl.style.display = 'block';
   const rows = [
     { label: 'Emerging Score', fn: p => p.emergingScore||'—', higher: true },
     { label: 'Trend Score', fn: p => p.trendScore||'—', higher: true },
