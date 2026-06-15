@@ -11,33 +11,33 @@ const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
 const _auth = sessionStorage.getItem('drh_auth');
 if (_auth === 'member' && !_session?.email) {
 } else if (!_auth && !_session?.email) {
-window.location.href = 'login.html';
+  window.location.href = 'login.html';
 } else if (_auth === 'trial') {
-window.location.href = 'trial.html';
+  window.location.href = 'trial.html';
 }
 async function verifyMemberAccess() {
-const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-if (!session?.email) return;
-try {
-const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
-const data = await res.json();
-if (!data.success) { sessionStorage.clear(); window.location.href = 'login.html'; return; }
-if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
-} catch(e) {}
+  const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  if (!session?.email) return;
+  try {
+    const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
+    const data = await res.json();
+    if (!data.success) { sessionStorage.clear(); window.location.href = 'login.html'; return; }
+    if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
+  } catch(e) {}
 }
 verifyMemberAccess();
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
---navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
---gold:#F59E0B;--gold-light:#FCD34D;
---white:#fff;--off:#F8FAFF;
---g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
---g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
---green:#16A34A;--green-bg:#DCFCE7;
---red:#DC2626;--red-bg:#FEE2E2;
---amber:#D97706;--amber-bg:#FEF3C7;
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;
+  --white:#fff;--off:#F8FAFF;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
+  --green:#16A34A;--green-bg:#DCFCE7;
+  --red:#DC2626;--red-bg:#FEE2E2;
+  --amber:#D97706;--amber-bg:#FEF3C7;
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6;overflow-x:hidden}
@@ -107,6 +107,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-panel-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
 .analysis-panel-head h2{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
 .analysis-panel-body{padding:20px 22px}
+/* GROWTH CHART */
 .growth-panel-inner{background:var(--navy-dark);border-radius:16px;padding:20px 22px 16px;position:relative;overflow:hidden}
 .growth-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .growth-title{font-size:14px;font-weight:800;color:#fff}
@@ -124,6 +125,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .growth-progress-line.active::before{content:'→ ';color:var(--gold)}
 .growth-progress-line.done{color:rgba(255,255,255,.5)}
 .growth-progress-line.done::before{content:'✓ ';color:#1D9E75}
+/* RESEARCH HUB */
 .research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
 .research-link:hover{background:var(--off);border-color:var(--navy);transform:translateY(-1px)}
@@ -133,10 +135,12 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .research-tooltip{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:230px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
 .research-tooltip::after{content:'';position:absolute;bottom:-5px;right:10px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
 .research-info-btn.open + .research-tooltip{display:block}
+/* LAUNCH READINESS */
 .launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
 .launch-item.pass{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .launch-item.fail{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
+/* PROFIT CALCULATOR */
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .calc-field{display:flex;flex-direction:column;gap:5px}
 .calc-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
@@ -157,12 +161,14 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .calc-verdict.good{background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
 .calc-verdict.tight{background:var(--amber-bg);color:#92400e;border:1px solid #fde68a}
 .calc-verdict.bad{background:var(--red-bg);color:#991b1b;border:1px solid #fecaca}
+/* SUPPLIER TERMS */
 .supplier-terms{display:flex;flex-direction:column;gap:8px}
 .supplier-term{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px 14px}
 .supplier-term-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .supplier-term-text{font-size:13px;font-weight:600;color:var(--g700);flex:1}
 .supplier-term-link{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
 .supplier-term-link:hover{background:var(--navy-light)}
+/* INSIGHT COLS */
 .insight-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .insight-col{border-radius:14px;padding:16px}
 .insight-col.green{background:var(--green-bg);border:1px solid #bbf7d0}
@@ -248,9 +254,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .admin-product-toggle.on{background:var(--green)}
 .admin-product-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .admin-product-toggle.on::after{left:20px}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
-.toast.show{opacity:1}
 /* LAUNCH SIMULATOR */
+.sim-store-preview{border-radius:16px;overflow:hidden;margin-bottom:0}
+.sim-store-nav{padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.sim-store-nav-logo{font-size:13px;font-weight:800;color:#fff}
+.sim-store-nav-links{display:flex;gap:14px}
+.sim-store-nav-link{font-size:11px;color:rgba(255,255,255,.5)}
+.sim-store-nav-cart{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;border:none;font-family:inherit}
+.sim-store-hero{display:grid;grid-template-columns:1fr 1fr;min-height:200px}
+.sim-store-hero-text{padding:24px 20px;display:flex;flex-direction:column;justify-content:center}
+.sim-store-hero-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px}
+.sim-store-hero-h1{font-size:20px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:8px}
+.sim-store-hero-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:16px}
+.sim-store-hero-btn{font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit}
+.sim-store-hero-img{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.sim-store-hero-img img{width:100%;height:100%;object-fit:cover}
+.sim-watermark{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px}
 .sim-inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .sim-input-field{display:flex;flex-direction:column;gap:5px}
 .sim-input-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
@@ -290,144 +309,99 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sim-case.worst{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
 .sim-case.best{background:var(--green-bg);border:1px solid #bbf7d0;color:#166534}
 .sim-case-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
 @media(max-width:900px){.score-row{grid-template-columns:repeat(2,1fr)}.insight-cols{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,1fr)}.creative-form{grid-template-columns:1fr}.meta-info-row{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(2,1fr)}.calc-results.show{grid-template-columns:1fr 1fr}.launch-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.products-grid{grid-template-columns:1fr}.score-row{grid-template-columns:repeat(2,1fr)}.research-grid{grid-template-columns:1fr}.nav-tabs{display:none}.analysis-header{flex-direction:column}.calc-results.show{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <nav class="topnav">
-<a class="nav-logo" href="index.html">
-<div class="nav-logo-icon">
-<div class="nav-logo-bar" style="height:10px;opacity:.4"></div>
-<div class="nav-logo-bar" style="height:16px;opacity:.7"></div>
-<div class="nav-logo-bar" style="height:22px"></div>
-<div class="nav-logo-bar g" style="height:17px"></div>
-</div>
-<div class="nav-logo-text">Drop<span>Research</span> Hub</div>
-</a>
-<div class="nav-tabs">
-<button class="nav-tab active" onclick="showView('products',this)">📈 Emerging Products</button>
-<button class="nav-tab" onclick="showView('validator',this)">✅ Product Validator</button>
-<button class="nav-tab" onclick="showView('admin',this)">⚙️ Admin</button>
-</div>
-<div class="nav-right">
-<div class="nav-user">👋 Members</div>
-<button class="nav-user" style="cursor:pointer" onclick="openManageModal()">⚙️ Manage</button>
-<button class="nav-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out</button>
-</div>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">
+      <div class="nav-logo-bar" style="height:10px;opacity:.4"></div>
+      <div class="nav-logo-bar" style="height:16px;opacity:.7"></div>
+      <div class="nav-logo-bar" style="height:22px"></div>
+      <div class="nav-logo-bar g" style="height:17px"></div>
+    </div>
+    <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
+  </a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('products',this)">📈 Emerging Products</button>
+    <button class="nav-tab" onclick="showView('validator',this)">✅ Product Validator</button>
+
+  </div>
+  <div class="nav-right">
+    <div class="nav-user">👋 Members</div>
+    <button class="nav-user" style="cursor:pointer" onclick="openManageModal()">⚙️ Manage</button>
+    <button class="nav-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out</button>
+  </div>
 </nav>
 
 <div class="view active" id="view-products">
-<div class="page-header">
-<h1>Emerging Products</h1>
-<p>Products showing early growth signals — find them first, move fast.</p>
-<div class="header-meta">
-<div class="header-badge green">🟢 Feed live</div>
-<div class="header-badge" id="product-count-badge">Loading products...</div>
-<div class="header-badge" id="last-updated-badge">Updated by admin</div>
-</div>
-</div>
-<div class="products-section">
-<div class="products-toolbar">
-<div class="toolbar-left" id="niche-filters"><button class="filter-btn active" onclick="setNicheFilter('all',this)">All niches</button></div>
-<div class="toolbar-right" id="toolbar-count"></div>
-</div>
-<div class="products-grid" id="products-grid">
-<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
-</div>
-</div>
+  <div class="page-header">
+    <h1>Emerging Products</h1>
+    <p>Products showing early growth signals — find them first, move fast.</p>
+    <div class="header-meta">
+      <div class="header-badge green">🟢 Feed live</div>
+      <div class="header-badge" id="product-count-badge">Loading products...</div>
+      <div class="header-badge" id="last-updated-badge">Updated by admin</div>
+    </div>
+  </div>
+  <div class="products-section">
+    <div class="products-toolbar">
+      <div class="toolbar-left" id="niche-filters"><button class="filter-btn active" onclick="setNicheFilter('all',this)">All niches</button></div>
+      <div class="toolbar-right" id="toolbar-count"></div>
+    </div>
+    <div class="products-grid" id="products-grid">
+      <div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
+    </div>
+  </div>
 </div>
 
 <div class="view" id="view-analysis">
-<div class="analysis-header">
-<button class="back-btn" onclick="showView('products',document.querySelector('.nav-tab'))">← Back to products</button>
-<div class="analysis-header-info">
-<h1 id="analysis-product-name">Product Analysis</h1>
-<p id="analysis-product-niche">Loading...</p>
-</div>
-</div>
-<div class="analysis-body" id="analysis-body"></div>
+  <div class="analysis-header">
+    <button class="back-btn" onclick="showView('products',document.querySelector('.nav-tab'))">← Back to products</button>
+    <div class="analysis-header-info">
+      <h1 id="analysis-product-name">Product Analysis</h1>
+      <p id="analysis-product-niche">Loading...</p>
+    </div>
+  </div>
+  <div class="analysis-body" id="analysis-body"></div>
 </div>
 
 <div class="view" id="view-validator">
-<div class="validator-hero">
-<h1>Is it worth building a brand around?</h1>
-<p>Paste the link below and we'll tell you whether it's worth your time and money.</p>
-<div class="validator-input-wrap">
-<input class="validator-input" id="validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL...">
-<button class="validator-submit" onclick="runValidator()">Analyse →</button>
-</div>
-<div class="validator-hint">We extract the product details from your link and give you a full brand-readiness assessment</div>
-<div class="validator-supported">
-<span class="supported-tag">AliExpress</span>
-<span class="supported-tag">Temu</span>
-<span class="supported-tag">Alibaba</span>
-</div>
-</div>
-<div class="validator-result-area" id="validator-result">
-<div class="validator-empty"><h3>Paste a product URL above to get started</h3><p>We'll analyse market demand, competition level, brand potential and give you a clear verdict.</p></div>
-</div>
+  <div class="validator-hero">
+    <h1>Is it worth building a brand around?</h1>
+    <p>Paste the link below and we'll tell you whether it's worth your time and money.</p>
+    <div class="validator-input-wrap">
+      <input class="validator-input" id="validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL...">
+      <button class="validator-submit" onclick="runValidator()">Analyse →</button>
+    </div>
+    <div class="validator-hint">We extract the product details from your link and give you a full brand-readiness assessment</div>
+    <div class="validator-supported">
+      <span class="supported-tag">AliExpress</span>
+      <span class="supported-tag">Temu</span>
+      <span class="supported-tag">Alibaba</span>
+    </div>
+  </div>
+  <div class="validator-result-area" id="validator-result">
+    <div class="validator-empty"><h3>Paste a product URL above to get started</h3><p>We'll analyse market demand, competition level, brand potential and give you a clear verdict.</p></div>
+  </div>
 </div>
 
-<div class="view" id="view-admin">
-<div class="admin-wrap">
-<div class="admin-lock" id="admin-lock">
-<div style="font-size:40px;margin-bottom:16px">🔒</div>
-<h2>Admin access only</h2>
-<p>Enter your password to continue.</p>
-<input class="admin-pw-input" type="password" id="admin-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlockAdmin()">
-<button class="admin-unlock-btn" onclick="unlockAdmin()">Unlock</button>
-<div class="admin-pw-error" id="admin-pw-error">Incorrect password. Try again.</div>
-</div>
-<div class="admin-panel" id="admin-panel">
-<div class="admin-card">
-<h2>🤖 Generate weekly product feed</h2>
-<p>Generates fresh emerging products. Toggle on the ones you want, then hit Publish.</p>
-<button class="admin-generate-btn" id="admin-gen-btn" onclick="adminGenerate()">
-<span id="admin-gen-text">✨ Generate emerging products</span>
-</button>
-<div class="status-messages" id="status-messages">
-<div class="status-line" id="sl-1">Searching TikTok Shop UK for trending products...</div>
-<div class="status-line" id="sl-2">Checking Amazon UK Movers & Shakers...</div>
-<div class="status-line" id="sl-3">Scanning AliExpress for growth signals...</div>
-<div class="status-line" id="sl-4">Applying 12-point product selection framework...</div>
-<div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
-<div class="status-line" id="sl-6">Fetching product images...</div>
-<div class="status-line" id="sl-7">Finalising research reports...</div>
-<div class="status-line" id="sl-8">Products ready — review and publish below</div>
-</div>
-</div>
-<div class="admin-card" id="admin-products-card" style="display:none">
-<h2>Review generated products</h2>
-<p>Toggle on the products you want to send to members. Then hit Publish.</p>
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-<button class="admin-generate-btn" onclick="publishProducts()" style="background:var(--green)"><span>🚀 Publish selected to feed</span></button>
-<button onclick="toggleAll(true)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✓ Select all</button>
-<button onclick="toggleAll(false)" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--g700)">✕ Deselect all</button>
-<button onclick="selectGradeA()" style="background:var(--green-bg);border:1px solid #bbf7d0;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--green)">⭐ Select Grade A only</button>
-<span id="selected-count" style="font-size:13px;color:var(--g400)"></span>
-</div>
-<div class="admin-products-list" id="admin-products-list"></div>
-</div>
-<div class="admin-card" id="admin-live-card">
-<h2>🗂️ Manage live feed</h2>
-<p>Remove products currently showing in the member feed.</p>
-<div class="admin-products-list" id="admin-live-list"><div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div></div>
-</div>
-</div>
-</div>
-</div>
+
 
 <div class="toast" id="toast"></div>
 <div id="manage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center">
-<div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
-<h2 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px">Manage Subscription</h2>
-<p style="font-size:14px;color:var(--g500);margin-bottom:24px;line-height:1.6">You'll be taken to the Stripe customer portal where you can update your payment method, view invoices or cancel your subscription.</p>
-<div style="display:flex;gap:10px;justify-content:flex-end">
-<button onclick="closeManageModal()" style="border:1px solid var(--g200);background:#fff;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>
-<button id="portal-btn" onclick="goToPortal()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Open Portal →</button>
-</div>
-</div>
+  <div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
+    <h2 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px">Manage Subscription</h2>
+    <p style="font-size:14px;color:var(--g500);margin-bottom:24px;line-height:1.6">You'll be taken to the Stripe customer portal where you can update your payment method, view invoices or cancel your subscription.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="closeManageModal()" style="border:1px solid var(--g200);background:#fff;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>
+      <button id="portal-btn" onclick="goToPortal()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Open Portal →</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -529,8 +503,6 @@ function buildAnalysisBody(p) {
   const launchColor=launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
   const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
   const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
-  const pData = encodeURIComponent(JSON.stringify({name:p.name,niche:p.niche||'',trendScore:p.trendScore||50,saturationRisk:p.saturationRisk||'Medium',emergingScore:p.emergingScore||60,competitionLevel:p.competitionLevel||'Medium',scoring:p.scoring||{}}));
-  const pSim = encodeURIComponent(JSON.stringify({name:p.name,niche:p.niche,margin:p.margin,sellingPrice:p.sellingPrice,supplierCost:p.supplierCost,trendScore:p.trendScore,saturationRisk:p.saturationRisk,tiktokAngle:p.tiktokAngle,metaAngle:p.metaAngle,mainAngle:p.mainAngle,img:p.img}));
 
   body.innerHTML=`
     <div class="score-row">
@@ -558,14 +530,20 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth projection — ${p.name} — next 12 weeks</h2></div>
       <div class="analysis-panel-body" style="padding:0">
         <div class="growth-panel-inner" style="border-radius:0 0 20px 20px">
+
+          <!-- GENERATE BUTTON STATE -->
           <div id="growth-generate-state">
             <div style="text-align:center;padding:40px 20px">
               <div style="font-size:40px;margin-bottom:16px">📊</div>
               <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px">Generate Growth Projection</div>
-              <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:24px;line-height:1.6">Our research engine will analyse this product across TikTok, Meta, AliExpress and more to build your projection.</div>
-              <button id="growth-gen-btn" data-product="${pData}" onclick="generateProjection(this)" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">✨ Generate Growth Projection</button>
+              <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:24px;line-height:1.6">Our research engine will analyse this product across<br>TikTok, Meta, AliExpress and more to build your projection.</div>
+              <button id="growth-gen-btn" data-product="${encodeURIComponent(JSON.stringify({name:p.name,niche:p.niche||'',trendScore:p.trendScore||50,saturationRisk:p.saturationRisk||'Medium',emergingScore:p.emergingScore||60,competitionLevel:p.competitionLevel||'Medium',scoring:p.scoring||{}}))}" onclick="generateProjection(this)" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">
+                ✨ Generate Growth Projection
+              </button>
             </div>
           </div>
+
+          <!-- LOADING STATE -->
           <div id="growth-loading-state" style="display:none;padding:28px 0 20px">
             <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px">Analysing your product...</div>
             <div id="growth-progress-lines">
@@ -579,9 +557,14 @@ function buildAnalysisBody(p) {
               <div class="growth-progress-line" id="gpl-8">Done — your projection is ready</div>
             </div>
           </div>
+
+          <!-- CHART STATE -->
           <div id="growth-chart-state" style="display:none">
             <div class="growth-header">
-              <div><div class="growth-title">DropResearch Hub estimated projection</div><div class="growth-sub">Based on market signals and product analysis</div></div>
+              <div>
+                <div class="growth-title">DropResearch Hub estimated projection</div>
+                <div class="growth-sub">Based on market signals and product analysis</div>
+              </div>
               <div class="growth-window-badge" id="growth-window-label">⚠️ Window closes — week 8</div>
             </div>
             <div class="growth-chart-wrap"><canvas id="growthChart" role="img" aria-label="Growth projection chart">Growth projection over 12 weeks.</canvas></div>
@@ -594,8 +577,9 @@ function buildAnalysisBody(p) {
               <div class="growth-why-label">DropResearch Hub assessment</div>
               <div class="growth-why-text" id="growth-why-text">Generating...</div>
             </div>
-            <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold);display:none"></div>
+            <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold)"></div>
           </div>
+
         </div>
       </div>
     </div>
@@ -604,7 +588,7 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch readiness checklist</h2></div>
       <div class="analysis-panel-body">
         <div class="launch-grid">${launchItems.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('')}</div>
-        <div style="display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;background:var(--g50);border-radius:10px;border:1px solid var(--g200)" class="launch-score-bar">
+        <div style="display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;background:var(--g50);border-radius:10px;border:1px solid var(--g200)">
           <span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span>
           <span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span>
           <span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>
@@ -645,8 +629,8 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your real numbers to see if this product is worth launching at your budget.</p>
         <div class="calc-grid">
-          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99"></div></div>
-          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50"></div></div>
+          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}"></div></div>
+          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}"></div></div>
           <div class="calc-field"><label class="calc-label">Shipping cost per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50"></div></div>
           <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20"></div></div>
         </div>
@@ -658,6 +642,7 @@ function buildAnalysisBody(p) {
         </div>
         <div class="calc-verdict-row" id="calc-verdict-row">
           <div class="calc-verdict" id="calc-verdict"></div>
+          <div style="font-size:12px;color:var(--g400);margin-top:8px;text-align:center">Based on 2× break even sales daily · ROAS needed: <span id="calc-roas" style="font-weight:700;color:var(--g700)">—</span></div>
         </div>
       </div>
     </div>
@@ -669,21 +654,53 @@ function buildAnalysisBody(p) {
         <div class="supplier-terms">
           ${supplierTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('')}
         </div>
-        <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.</div>
+        <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">
+          💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.
+        </div>
       </div>
     </div>
 
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">🔗</span><h2>Research hub — verify it yourself</h2></div>
       <div class="analysis-panel-body">
-        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Use these tools to verify with live data before you commit your ad budget.</p>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Our analysis is AI-powered — use these tools to verify with live data before you commit your ad budget.</p>
         <div class="research-grid">
-          <a class="research-link" href="https://trends.pinterest.com/trends/explore#ideas=${pinterestQ}&country=GB" target="_blank"><div class="research-link-icon" style="background:#fce4ec">📌</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">PINTEREST TRENDS</div>Early lifestyle demand</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">See if the lifestyle audience is already searching for this. Rising saves on Pinterest is one of the earliest signals a product is about to go mainstream — often 2-3 months before TikTok picks it up.</div></a>
-          <a class="research-link" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${metaQ}" target="_blank"><div class="research-link-icon" style="background:#e7f3ff">📺</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">META ADS LIBRARY</div>Who's running ads</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">Spy on brands already running ads on this product. A few ads = validated but not crowded. Hundreds of ads = you're late. Look for ads running longer than 2 weeks — that means they're converting.</div></a>
-          <a class="research-link" href="https://www.tiktok.com/shop/search?q=${tiktokQ}" target="_blank"><div class="research-link-icon" style="background:#f3e8ff">🛍️</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">Shows what's actually selling on TikTok Shop right now. Low seller count with sales = your entry window. High seller count = already crowded.</div></a>
-          <a class="research-link" href="https://www.aliexpress.com/wholesale?SearchText=${aliQ}" target="_blank"><div class="research-link-icon" style="background:#fff0e6">🛒</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">Find your supplier here. Filter by 4★ minimum and 100+ orders. Check shipping times — anything over 3 weeks will hurt your reviews.</div></a>
-          <a class="research-link" href="https://www.amazon.co.uk/s?k=${aliQ}" target="_blank"><div class="research-link-icon" style="background:#fff8e6">📦</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">AMAZON UK</div>Demand & reviews</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">Check real buyer demand and pricing. Under 200 reviews on the top listing means the market is still early.</div></a>
-          <a class="research-link" href="https://www.etsy.com/search?q=${tiktokQ}" target="_blank"><div class="research-link-icon" style="background:#fff0e6">🧶</div><div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ETSY</div>Handmade going mainstream</div><button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button><div class="research-tooltip">If a product is already selling handmade on Etsy, it's typically 3-6 months away from hitting AliExpress at scale.</div></a>
+          <a class="research-link" href="https://trends.pinterest.com/trends/explore#ideas=${pinterestQ}&country=GB" target="_blank">
+            <div class="research-link-icon" style="background:#fce4ec">📌</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">PINTEREST TRENDS</div>Early lifestyle demand</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">See if the lifestyle audience is already searching for this. Rising saves on Pinterest is one of the earliest signals a product is about to go mainstream — often 2-3 months before TikTok picks it up.</div>
+          </a>
+          <a class="research-link" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${metaQ}" target="_blank">
+            <div class="research-link-icon" style="background:#e7f3ff">📺</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">META ADS LIBRARY</div>Who's running ads</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Spy on brands already running ads on this product. A few ads = validated but not crowded. Hundreds of ads = you're late. Look for ads running longer than 2 weeks — that means they're converting.</div>
+          </a>
+          <a class="research-link" href="https://www.tiktok.com/shop/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Shows what's actually selling on TikTok Shop right now — not just what has views. Low seller count with sales = your entry window. High seller count = already crowded.</div>
+          </a>
+          <a class="research-link" href="https://www.aliexpress.com/wholesale?SearchText=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🛒</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Find your supplier here. Filter by 4★ minimum and 100+ orders. Check shipping times — anything over 3 weeks will hurt your reviews. Read negative reviews to find quality issues to fix in your brand.</div>
+          </a>
+          <a class="research-link" href="https://www.amazon.co.uk/s?k=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff8e6">📦</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">AMAZON UK</div>Demand & reviews</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Check real buyer demand and pricing. Under 200 reviews on the top listing means the market is still early. Read the 3★ reviews — they tell you exactly what to improve in your brand version.</div>
+          </a>
+          <a class="research-link" href="https://www.etsy.com/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🧶</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ETSY</div>Handmade going mainstream</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">If a product is already selling handmade on Etsy, it's typically 3-6 months away from hitting AliExpress at scale. Etsy demand signals what lifestyle buyers want before mass market catches up.</div>
+          </a>
         </div>
       </div>
     </div>
@@ -692,14 +709,33 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch Simulator</h2></div>
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your budget and platform — we'll generate your Shopify store preview and a week-by-week launch roadmap specific to this product.</p>
-        <div id="sim-store-wrap" style="margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid var(--g200);display:none"><div id="sim-store-inner"></div></div>
+
+        <!-- STORE PREVIEW -->
+        <div id="sim-store-wrap" style="margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid var(--g200);display:none">
+          <div id="sim-store-inner"></div>
+        </div>
+
+        <!-- INPUTS -->
         <div id="sim-inputs-wrap">
           <div class="sim-inputs-grid">
-            <div class="sim-input-field"><label class="sim-input-label">Daily ad budget</label><div class="sim-input-wrap"><span class="sim-input-prefix">£</span><input class="sim-input" id="sim-budget" type="number" placeholder="20" value="20"></div></div>
-            <div class="sim-input-field"><label class="sim-input-label">Daily sales target</label><div class="sim-input-wrap"><span class="sim-input-prefix" style="font-size:12px">🎯</span><input class="sim-input" id="sim-target" type="number" placeholder="5" value="5"></div></div>
-            <div class="sim-input-field" style="grid-column:1/-1"><label class="sim-input-label">Platform</label><select class="sim-select" id="sim-platform"><option>TikTok + Meta</option><option>TikTok only</option><option>Meta only</option></select></div>
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily ad budget</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix">£</span><input class="sim-input" id="sim-budget" type="number" placeholder="20" value="20"></div>
+            </div>
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily sales target</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix" style="font-size:12px">🎯</span><input class="sim-input" id="sim-target" type="number" placeholder="5" value="5"></div>
+            </div>
+            <div class="sim-input-field" style="grid-column:1/-1">
+              <label class="sim-input-label">Platform</label>
+              <select class="sim-select" id="sim-platform">
+                <option>TikTok + Meta</option>
+                <option>TikTok only</option>
+                <option>Meta only</option>
+              </select>
+            </div>
           </div>
-          <button class="sim-btn" id="sim-btn" data-sim="${pSim}" onclick="runSimulator(this)">🚀 Generate my launch plan</button>
+          <button class="sim-btn" id="sim-btn" onclick="runSimulator('${p.name.replace(/'/g,"\\'")}')">🚀 Generate my launch plan</button>
           <div class="sim-progress" id="sim-progress">
             <div class="sim-progress-line" id="spl-1">Building your Shopify store preview...</div>
             <div class="sim-progress-line" id="spl-2">Analysing product launch viability...</div>
@@ -709,10 +745,15 @@ function buildAnalysisBody(p) {
             <div class="sim-progress-line" id="spl-6">Launch plan ready</div>
           </div>
         </div>
+
+        <!-- RESULT -->
         <div class="sim-result" id="sim-result">
           <div style="font-size:13px;font-weight:800;color:var(--g900);margin-bottom:12px">Your 30-day launch roadmap</div>
           <div class="sim-roadmap" id="sim-roadmap"></div>
-          <div class="sim-verdict"><div class="sim-verdict-label">DropResearch Hub assessment</div><div class="sim-verdict-text" id="sim-verdict-text"></div></div>
+          <div class="sim-verdict">
+            <div class="sim-verdict-label">DropResearch Hub assessment</div>
+            <div class="sim-verdict-text" id="sim-verdict-text"></div>
+          </div>
           <div class="sim-cases">
             <div class="sim-case worst"><div class="sim-case-label">⚠️ Worst case</div><div id="sim-worst"></div></div>
             <div class="sim-case best"><div class="sim-case-label">✅ Best case</div><div id="sim-best"></div></div>
@@ -730,7 +771,7 @@ function buildAnalysisBody(p) {
           <div><label class="creative-label">Platform</label><select class="creative-select" id="creative-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
           <div><label class="creative-label">Primary angle</label><select class="creative-select" id="creative-angle"><option>Problem → Solution</option><option>Curiosity / Pattern interrupt</option><option>Social proof / Testimonial</option><option>Lifestyle / Aspirational</option><option>Before & After</option></select></div>
         </div>
-        <button class="generate-creative-btn" id="creative-gen-btn" data-name="${p.name.replace(/"/g,'&quot;')}" onclick="generateCreative(this.dataset.name)">✨ Generate 3 creative variations</button>
+        <button class="generate-creative-btn" id="creative-gen-btn" onclick="generateCreative('${p.name.replace(/'/g,"\\'")}')">✨ Generate 3 creative variations</button>
         <div class="creative-output" id="creative-output">
           <div class="variation-tabs" id="variation-tabs"></div>
           <div class="script-tabs">
@@ -739,4 +780,393 @@ function buildAnalysisBody(p) {
             <button class="script-tab" onclick="setScriptTab('brief',this)">Brief to send</button>
           </div>
           <div id="tab-script"><div class="script-box" id="script-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('script-content')">📋 Copy script</button></div></div>
-          <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy
+          <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy hooks</button></div></div>
+          <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy brief</button></div></div>
+          <div class="meta-info-row">
+            <div class="meta-info-card"><div class="meta-info-card-label">🎵 TikTok music vibe</div><div class="meta-info-card-val" id="music-val">—</div></div>
+            <div class="meta-info-card"><div class="meta-info-card-label">🎯 Meta target audience</div><div class="meta-info-card-val" id="audience-val">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+}
+
+
+async function generateProjection(btn) {
+  const p = JSON.parse(decodeURIComponent(btn.dataset.product));
+  const { name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring } = p;
+  // Switch to loading state
+  document.getElementById('growth-generate-state').style.display = 'none';
+  document.getElementById('growth-loading-state').style.display = 'block';
+
+  // Animate progress lines
+  const lines = ['gpl-1','gpl-2','gpl-3','gpl-4','gpl-5','gpl-6','gpl-7','gpl-8'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if (idx > 0) { const prev=document.getElementById(lines[idx-1]); if(prev) prev.className='growth-progress-line done'; }
+    if (idx < lines.length) { const curr=document.getElementById(lines[idx]); if(curr) curr.className='growth-progress-line active'; idx++; }
+  }
+  nextLine();
+  const progressTimer = setInterval(nextLine, 800);
+
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring })
+    });
+    const data = await res.json();
+    clearInterval(progressTimer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line done'; });
+
+    // Small delay then show chart
+    setTimeout(() => {
+      document.getElementById('growth-loading-state').style.display = 'none';
+      document.getElementById('growth-chart-state').style.display = 'block';
+      document.getElementById('growth-why-text').textContent = data.whyNowDetailed || 'Analysis complete.';
+      document.getElementById('growth-window-label').textContent = `⚠️ Window closes — week ${data.windowClosesWeek || 8}`;
+      const summary = document.getElementById('growth-summary');
+      if (data.projectionSummary) { summary.textContent = '💡 ' + data.projectionSummary; summary.style.display='block'; }
+
+      // Update launch readiness if returned
+      if (data.launchReadiness) {
+        const passCount = data.launchReadiness.filter(i=>i.pass).length;
+        const launchPct = Math.round((passCount/data.launchReadiness.length)*100);
+        const launchColor = launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+        const launchVerdict = launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+        const grid = document.querySelector('.launch-grid');
+        if (grid) grid.innerHTML = data.launchReadiness.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('');
+        const bar = document.querySelector('.launch-score-bar');
+        if (bar) bar.innerHTML = `<span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span><span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span><span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>`;
+      }
+
+      // Update supplier terms if returned
+      if (data.supplierSearchTerms) {
+        const wrap = document.querySelector('.supplier-terms');
+        if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
+      }
+
+      // Build the animated chart
+      buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
+    }, 600);
+
+  } catch(e) {
+    clearInterval(progressTimer);
+    document.getElementById('growth-loading-state').style.display = 'none';
+    document.getElementById('growth-generate-state').style.display = 'block';
+    showToast('Could not generate projection — try again');
+  }
+}
+
+function buildGrowthChart(rawCurve, windowClosesWeek) {
+  if (activeGrowthChart) { activeGrowthChart.destroy(); activeGrowthChart=null; }
+  const canvas=document.getElementById('growthChart');
+  if (!canvas) return;
+  const labels=['Today','2w','4w','6w','8w','10w','12w'];
+  const closeIdx=Math.min(Math.max(Math.round(windowClosesWeek/2),1),6);
+  const greenData=rawCurve.map((v,i)=>i<=closeIdx?v:null);
+  const redData=rawCurve.map((v,i)=>i>=closeIdx?v:null);
+  const ctx=canvas.getContext('2d');
+  const greenGrad=ctx.createLinearGradient(0,0,0,180);
+  greenGrad.addColorStop(0,'rgba(29,158,117,0.3)');greenGrad.addColorStop(1,'rgba(29,158,117,0)');
+  const redGrad=ctx.createLinearGradient(0,0,0,180);
+  redGrad.addColorStop(0,'rgba(216,90,48,0.2)');redGrad.addColorStop(1,'rgba(216,90,48,0)');
+  const windowPlugin={id:'wl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(closeIdx);ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#f87171';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,scales.y.top-2);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.setLineDash([]);ctx.restore();}};
+  const todayPlugin={id:'tl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(0);ctx.save();ctx.strokeStyle='#378ADD';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,scales.y.top);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.restore();}};
+  activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
+}
+
+function toggleTooltip(btn){const isOpen=btn.classList.contains('open');document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));if(!isOpen)btn.classList.add('open');}
+document.addEventListener('click',e=>{if(!e.target.classList.contains('research-info-btn'))document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));});
+
+function runCalc(){
+  const sell=parseFloat(document.getElementById('calc-sell').value)||0;
+  const supplier=parseFloat(document.getElementById('calc-supplier').value)||0;
+  const shipping=parseFloat(document.getElementById('calc-shipping').value)||0;
+  const ads=parseFloat(document.getElementById('calc-ads').value)||0;
+  if(!sell||!supplier){showToast('Enter at least selling price and supplier cost');return;}
+  const profitPerUnit=sell-supplier-shipping;
+  const breakevenUnits=ads>0&&profitPerUnit>0?Math.ceil(ads/profitPerUnit):0;
+  const monthlyProfit=profitPerUnit>0?Math.round((breakevenUnits*2*profitPerUnit-ads)*30):0;
+  const roas=sell>0&&ads>0&&breakevenUnits>0?((breakevenUnits*sell)/ads).toFixed(2):'—';
+  document.getElementById('calc-profit-unit').textContent=profitPerUnit>=0?`£${profitPerUnit.toFixed(2)}`:`-£${Math.abs(profitPerUnit).toFixed(2)}`;
+  document.getElementById('calc-breakeven').textContent=breakevenUnits>0?`${breakevenUnits} sales`:'—';
+  document.getElementById('calc-monthly').textContent=monthlyProfit>0?`£${monthlyProfit.toLocaleString()}`:profitPerUnit<=0?'Loss':'—';
+  document.getElementById('calc-roas').textContent=roas;
+  document.getElementById('calc-results').classList.add('show');
+  document.getElementById('calc-verdict-row').classList.add('show');
+  const verdict=document.getElementById('calc-verdict');
+  const marginPct=sell>0?(profitPerUnit/sell)*100:0;
+  if(profitPerUnit<=0){verdict.className='calc-verdict bad';verdict.textContent='❌ Not profitable at these numbers — reduce supplier cost or increase selling price';}
+  else if(marginPct<40){verdict.className='calc-verdict tight';verdict.textContent=`⚠️ Tight margin (${Math.round(marginPct)}%) — workable but leaves little room for ad testing.`;}
+  else{verdict.className='calc-verdict good';verdict.textContent=`✅ Strong margin (${Math.round(marginPct)}%) — good foundation for paid ads. Hit ${breakevenUnits} sales/day to break even.`;}
+}
+
+async function generateCreative(productName){
+  const btn=document.getElementById('creative-gen-btn');
+  const platform=document.getElementById('creative-platform').value;
+  const angle=document.getElementById('creative-angle').value;
+  btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
+    const data=await res.json();
+    const text=(data.content||[]).map(i=>i.text||'').join('');
+    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
+    creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
+  }catch(e){showToast('Could not generate creatives — try again');}
+  btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
+}
+function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
+function setVariation(idx,btn){currentVariation=idx;document.querySelectorAll('.var-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadVariation(idx);setScriptTab('script',document.querySelector('.script-tab'));}
+function loadVariation(idx){const v=creativeVariations[idx];if(!v)return;document.getElementById('script-content').textContent=v.script||'';document.getElementById('hooks-content').textContent=v.hooks||'';document.getElementById('brief-content').textContent=v.brief||'';document.getElementById('music-val').textContent=v.music||'—';document.getElementById('audience-val').textContent=v.audience||'—';}
+function setScriptTab(tab,btn){document.querySelectorAll('.script-tab').forEach(b=>b.classList.remove('active'));['tab-script','tab-hooks','tab-brief'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});if(btn)btn.classList.add('active');const el=document.getElementById('tab-'+tab);if(el)el.style.display='block';}
+function copyEl(id){const text=document.getElementById(id)?.textContent||'';navigator.clipboard.writeText(text).then(()=>showToast('Copied ✓'));}
+
+async function runValidator(){
+  const input=document.getElementById('validator-input').value.trim();
+  const resultArea=document.getElementById('validator-result');
+  if(!input){showToast('Paste a product URL first');return;}
+  let productName=extractProductName(input);
+  resultArea.innerHTML=`<div class="validator-empty"><h3>Analysing your product...</h3><p>Checking market demand, competition and brand potential for: <strong>${productName}</strong></p></div>`;
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
+    const p={name:data.productName||productName,niche:'Validator result',stage:'Assessed',season:'Assessed',grade:data.opportunityScore||'B',trendScore:data.growthScore||50,saturationRisk:'Medium',margin:data.marginScore?data.marginScore+'%':'—',verdict:data.verdict||'',verdictReason:data.verdictReason||'',whyItCouldWork:data.whyItCouldWork||[],risks:data.risks||[],creativeAngles:data.creativeAngles||[],aliSearchTerm:productName,googleTrendsKeyword:productName,emoji:'🔍'};
+    resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
+    const tempBody=document.createElement('div');tempBody.id='validator-analysis-body';tempBody.className='analysis-body';resultArea.appendChild(tempBody);
+    const origBody=document.getElementById('analysis-body');
+    document.getElementById('analysis-body').id='analysis-body-bak';
+    tempBody.id='analysis-body';
+    buildAnalysisBody(p);
+    tempBody.id='validator-analysis-body';
+    if(origBody)origBody.id='analysis-body';
+  }catch(e){resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+}
+function extractProductName(url){try{const decoded=decodeURIComponent(url);const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>3&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);}catch(e){}return url.slice(0,60);}
+
+// Admin functions removed - use admin.html
+
+async function adminGenerate(){
+  const btn=document.getElementById('admin-gen-btn');btn.disabled=true;
+  document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Generating...';
+  const statusBox=document.getElementById('status-messages');statusBox.className='status-messages show';
+  const lines=['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
+  lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line';});
+  let lineIdx=0;
+  function nextLine(){if(lineIdx>0){const prev=document.getElementById(lines[lineIdx-1]);if(prev)prev.className='status-line done show';}if(lineIdx<lines.length){const curr=document.getElementById(lines[lineIdx]);if(curr)curr.className='status-line active show';lineIdx++;}}
+  nextLine();const statusTimer=setInterval(nextLine,7000);
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging'})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error||'Generate failed');
+    const t=(d.content||[]).map(i=>i.text||'').join('');
+    let c=t.replace(/```json|```/g,'').trim();const s=c.indexOf('['),e=c.lastIndexOf(']');
+    if(s===-1||e===-1)throw new Error('No product array found');
+    let products=JSON.parse(c.slice(s,e+1));
+    pendingProducts=[...pendingProducts,...products];
+    clearInterval(statusTimer);lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line done show';});
+    renderAdminProductsList();document.getElementById('admin-products-card').style.display='block';
+  }catch(e){
+    clearInterval(statusTimer);const errLine=document.createElement('div');errLine.className='status-line show';errLine.style.color='var(--red)';errLine.textContent='✕ Error: '+e.message;document.getElementById('status-messages').appendChild(errLine);
+  }
+  btn.disabled=false;document.getElementById('admin-gen-text').textContent='✨ Generate emerging products';
+}
+
+function renderAdminProductsList(){
+  const list=document.getElementById('admin-products-list');
+  list.innerHTML=pendingProducts.map((p,i)=>`
+    <div class="admin-product-row" id="apr-${i}" style="flex-wrap:wrap;gap:10px;align-items:flex-start;padding:14px 16px">
+      <div style="font-size:32px;width:44px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div>
+      <div class="admin-product-info" style="min-width:200px">
+        <div class="admin-product-name">${p.name}</div>
+        <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore}/100 · ${p.margin} margin</div>
+        <div style="font-size:12px;color:var(--g500);margin-top:4px;font-style:italic;line-height:1.5">${p.whyNow||''}</div>
+        ${p.img?`<img src="${p.img}" alt="${p.name}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid var(--g200)" onerror="this.style.display='none'">`:''}
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #bfdbfe">📺 Meta Ads</a>
+          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fff0e6;color:#c2410c;text-decoration:none;border:1px solid #fed7aa">🛒 AliExpress</a>
+          <a href="https://trends.pinterest.com/trends/explore#ideas=${encodeURIComponent(p.name)}&country=GB" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fce4ec;color:#9c27b0;text-decoration:none;border:1px solid #f48fb1">📌 Pinterest</a>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-left:auto">
+        <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade}</div>
+        <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})" title="Toggle product"></button>
+        <button onclick="deletePending(${i})" style="background:none;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--g400);cursor:pointer;font-family:inherit" title="Remove">🗑️ Remove</button>
+      </div>
+    </div>`).join('');
+  updateSelectedCount();
+}
+
+function deletePending(i){pendingProducts.splice(i,1);renderAdminProductsList();}
+function toggleProduct(i){document.getElementById('toggle-'+i).classList.toggle('on');updateSelectedCount();}
+function renderLiveFeed(){const list=document.getElementById('admin-live-list');if(!list)return;if(!allProducts.length){list.innerHTML='<div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div>';return;}list.innerHTML=allProducts.map((p,i)=>`<div class="admin-product-row" style="flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px"><div style="font-size:26px;width:36px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div><div class="admin-product-info" style="flex:1;min-width:150px"><div class="admin-product-name">${p.name}</div><div class="admin-product-meta">${p.niche} · Grade ${p.grade}</div></div><button onclick="removePublished(${i})" style="background:var(--red-bg);border:1px solid #fecaca;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--red);font-family:inherit;white-space:nowrap">🗑️ Remove</button></div>`).join('');}
+function removePublished(i){const name=allProducts[i]?.name;allProducts.splice(i,1);buildNicheFilters();renderProductsGrid();renderLiveFeed();document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;showToast(`Removed: ${name}`);}
+function toggleAll(on){pendingProducts.forEach((_,i)=>{const btn=document.getElementById('toggle-'+i);if(btn)btn.className='admin-product-toggle'+(on?' on':'');});updateSelectedCount();}
+function selectGradeA(){pendingProducts.forEach((p,i)=>{const btn=document.getElementById('toggle-'+i);const isA=p.grade&&(p.grade==='A+'||p.grade==='A');if(btn)btn.className='admin-product-toggle'+(isA?' on':'');});updateSelectedCount();showToast('Grade A and A+ products selected');}
+function updateSelectedCount(){const total=pendingProducts.length;const selected=document.querySelectorAll('.admin-product-toggle.on').length;const el=document.getElementById('selected-count');if(el)el.textContent=selected+' of '+total+' selected';}
+
+async function publishProducts(){
+  if(!pendingProducts.length){showToast('Generate products first');return;}
+  const selected=pendingProducts.filter((_,i)=>{const btn=document.getElementById('toggle-'+i);return btn&&btn.classList.contains('on');});
+  if(!selected.length){showToast('Toggle on at least one product first');return;}
+  allProducts=[...allProducts,...selected];pendingProducts=[];
+  try{localStorage.setItem('drh_published_products',JSON.stringify(allProducts));}catch(e){}
+  try{await fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:allProducts})});}catch(e){console.log('Supabase save failed:',e.message);}
+  const now=new Date();const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;
+  document.getElementById('last-updated-badge').textContent=`Updated ${dateStr}`;
+  buildNicheFilters();renderProductsGrid();renderLiveFeed();
+  showToast(`✅ ${allProducts.length} products published to member feed!`);
+  showView('products',document.querySelector('.nav-tab'));
+}
+
+// ── LAUNCH SIMULATOR ─────────────────────────────────────────────────────
+async function runSimulator(productName) {
+  const p = allProducts.find(p => p.name === productName) || {};
+  const budget = document.getElementById('sim-budget')?.value || 20;
+  const target = document.getElementById('sim-target')?.value || 5;
+  const platform = document.getElementById('sim-platform')?.value || 'TikTok + Meta';
+  const btn = document.getElementById('sim-btn');
+  btn.disabled = true; btn.textContent = '⏳ Generating...';
+
+  const progress = document.getElementById('sim-progress');
+  progress.className = 'sim-progress show';
+  const lines = ['spl-1','spl-2','spl-3','spl-4','spl-5','spl-6'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if(idx>0){const prev=document.getElementById(lines[idx-1]);if(prev)prev.className='sim-progress-line done';}
+    if(idx<lines.length){const curr=document.getElementById(lines[idx]);if(curr)curr.className='sim-progress-line active';idx++;}
+  }
+  nextLine();
+  const timer = setInterval(nextLine, 800);
+
+  try {
+    const res = await fetch('/api/simulate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: productName, niche: p.niche, margin: p.margin,
+        sellingPrice: p.sellingPrice, supplierCost: p.supplierCost,
+        trendScore: p.trendScore, saturationRisk: p.saturationRisk,
+        tiktokAngle: p.tiktokAngle, metaAngle: p.metaAngle, mainAngle: p.mainAngle,
+        img: p.img, adBudget: budget, salesTarget: target, platform
+      })
+    });
+    const data = await res.json();
+    clearInterval(timer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line done'; });
+
+    setTimeout(() => {
+      progress.className = 'sim-progress';
+      renderSimulator(data, p.img);
+    }, 400);
+
+  } catch(e) {
+    clearInterval(timer);
+    showToast('Could not generate launch plan — try again');
+    btn.disabled = false; btn.textContent = '🚀 Generate my launch plan';
+    progress.className = 'sim-progress';
+  }
+}
+
+function renderSimulator(data, productImg) {
+  const cs = data.colorScheme || { bg:'#0f1f36', nav:'#091628', accent:'#F59E0B', text:'#fff', sub:'rgba(255,255,255,0.65)', btn:'#F59E0B', btnText:'#0f1f36' };
+
+  // Build store preview
+  const storeWrap = document.getElementById('sim-store-wrap');
+  const storeInner = document.getElementById('sim-store-inner');
+  storeInner.innerHTML = `
+    <div style="background:${cs.nav};padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:800;color:#fff">${data.storeName || 'My Store'}</div>
+      <div style="display:flex;gap:14px">
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">Home</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">Shop</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.45)">FAQ</span>
+      </div>
+      <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px">Cart (0)</div>
+    </div>
+    <div style="background:${cs.bg};display:grid;grid-template-columns:1fr 1fr;min-height:200px">
+      <div style="padding:24px 20px;display:flex;flex-direction:column;justify-content:center">
+        <div style="background:rgba(255,255,255,.12);color:${cs.accent};font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px">${data.heroTag || 'As seen on TikTok'}</div>
+        <div style="font-size:19px;font-weight:900;color:${cs.text};line-height:1.25;margin-bottom:8px">${data.heroHeadline || ''}</div>
+        <div style="font-size:12px;color:${cs.sub};line-height:1.55;margin-bottom:16px">${data.heroSubheadline || ''}</div>
+        <button style="background:${cs.accent};color:${cs.btnText};font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit">${data.heroCTA || 'Shop now →'}</button>
+      </div>
+      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:200px">
+        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'">` : '<div style="font-size:52px;opacity:.3">📦</div>'}
+        <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px">DropResearch Hub preview</div>
+      </div>
+    </div>`;
+  storeWrap.style.display = 'block';
+
+  // Build roadmap
+  const weekColors = [
+    { bg:'#DCFCE7', color:'#166534' },
+    { bg:'#FEF3C7', color:'#92400E' },
+    { bg:'#DBEAFE', color:'#1E40AF' },
+    { bg:'#E1F5EE', color:'#0F6E56' }
+  ];
+  const roadmap = document.getElementById('sim-roadmap');
+  roadmap.innerHTML = (data.weeks || []).map((w, i) => {
+    const wc = weekColors[i] || weekColors[0];
+    return `<div class="sim-week">
+      <div class="sim-week-header">
+        <div class="sim-week-dot" style="background:${wc.bg};color:${wc.color}">${w.week}</div>
+        <div><div class="sim-week-title">${w.title}</div><div class="sim-week-sub">${w.subtitle}</div></div>
+      </div>
+      <div class="sim-week-items">${(w.items||[]).map(item=>`<div class="sim-week-item">${item}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sim-verdict-text').textContent = data.verdict || '';
+  document.getElementById('sim-worst').textContent = data.worstCase || '';
+  document.getElementById('sim-best').textContent = data.bestCase || '';
+
+  document.getElementById('sim-inputs-wrap').style.display = 'none';
+  document.getElementById('sim-result').className = 'sim-result show';
+}
+
+function resetSimulator() {
+  document.getElementById('sim-store-wrap').style.display = 'none';
+  document.getElementById('sim-inputs-wrap').style.display = 'block';
+  document.getElementById('sim-result').className = 'sim-result';
+  const btn = document.getElementById('sim-btn');
+  if(btn) { btn.disabled = false; btn.textContent = '🚀 Generate my launch plan'; }
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+
+function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
+function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
+async function goToPortal(){
+  const session=JSON.parse(sessionStorage.getItem('drh_session')||'null');if(!session?.email){closeManageModal();return;}
+  const btn=document.getElementById('portal-btn');btn.disabled=true;btn.textContent='Opening...';
+  try{const res=await fetch('/api/stripe-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:session.email})});const data=await res.json();if(data.url)window.location.href=data.url;else showToast('Could not open portal. Please try again.');}catch(e){showToast('Network error. Please try again.');}
+  finally{btn.disabled=false;btn.textContent='Open Portal →';closeManageModal();}
+}
+
+renderProductsGrid();
+async function loadPublishedProducts(){
+  try{
+    const res=await fetch('/api/products');
+    const data=await res.json();
+    if(data.products&&data.products.length){
+      allProducts=data.products;
+      buildNicheFilters();
+      renderProductsGrid();
+      const badge=document.getElementById('product-count-badge');
+      if(badge)badge.textContent=allProducts.length+' products live';
+    } else {
+      renderProductsGrid();
+    }
+  }catch(e){
+    console.error('Failed to load products:',e);
+    renderProductsGrid();
+  }
+}
+loadPublishedProducts();
+</script>
+</body>
+</html>
