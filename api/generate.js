@@ -186,7 +186,7 @@ export default async function handler(req, res) {
     const recentSet = new Set(recentNiches);
     const fresh = NICHE_POOL.filter(n => !recentSet.has(n));
     const pool = fresh.length >= 3 ? fresh : NICHE_POOL;
-    return [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 4);
   }
 
   // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
@@ -202,7 +202,7 @@ export default async function handler(req, res) {
     const { names: publishedNames, recentNiches } = history;
     const selectedNiches = pickNiches(recentNiches);
 
-    console.log('[DRH] 5 Niches:', selectedNiches.join(' | '));
+    console.log('[DRH] 4 Niches:', selectedNiches.join(' | '));
     console.log('[DRH] Avoiding:', publishedNames.length, 'products');
 
     const systemPrompt = `You are the product intelligence analyst for DropResearch Hub, a UK dropshipping research platform. Today is ${today}.
@@ -216,12 +216,11 @@ ${publishedNames.length > 0 ? publishedNames.join(', ') : 'None yet'}
 RECENT NICHES (avoid for variety):
 ${recentNiches.length > 0 ? recentNiches.slice(0, 8).join(', ') : 'None yet'}
 
-ASSIGNMENT: Find exactly 5 products — one from each:
+ASSIGNMENT: Find exactly 4 products — one from each:
 NICHE 1: ${selectedNiches[0]}
 NICHE 2: ${selectedNiches[1]}
 NICHE 3: ${selectedNiches[2]}
 NICHE 4: ${selectedNiches[3]}
-NICHE 5: ${selectedNiches[4]}
 
 CORE PRINCIPLES:
 - OPPORTUNITY over popularity. A small accelerating trend in an open market beats a large flat trend
@@ -249,33 +248,21 @@ CORE /100:
 - Ease of Entry /8
 Minimum: 62/100
 
-ENHANCED (1-10 each):
-- Trend Velocity: Accelerating(8-10) / Rising(5-7) / Stable(3-4) / Declining(1-2). Reject Stable/Declining.
-- Creative Potential: Scroll-stop, demo, before/after, 6-second problem/solution. Below 6 = reject.
-- Brandability: Multiple SKUs, repeat purchase, upsells, brand identity potential. Penalise commodities.
-- Retail Gap: Estimate likelihood in Tesco/Argos/B&M etc. Low availability = high score.
-- Content Longevity: Can it support 30+ TikTok/Reel/UGC concepts? Below 6 = penalise.
-- Subscriber Excitement /10: "How excited would a paid subscriber be?" 1-3 boring, 7-8 strong find, 9-10 exceptional. Below 5 = drop confidence.
-- Opportunity Multiplier /10: Combine Market Gap + Trend Velocity + Creative Potential. Most important score.
+ENHANCED SCORES (1-10 each, use live data only):
+- Trend Velocity: Accelerating(8-10)/Rising(5-7)/Stable(3-4)/Declining(1-2). Reject Stable/Declining.
+- Creative Potential: scroll-stop, demo, before/after potential. Below 6 = reject.
+- Brandability: SKU range, repeat purchase, upsells. Penalise commodities.
+- Retail Gap: hard to find in Tesco/Argos/B&M = high score.
+- Content Longevity: 30+ TikTok/UGC concepts possible? Below 6 = penalise.
+- Subscriber Excitement /10: how excited would a paid subscriber be? Below 5 = drop confidence.
+- Opportunity Multiplier /10: Market Gap + Trend Velocity + Creative Potential combined. Most important.
 
-UK Promotion Level: Estimate from live data how promoted this already is in UK ecommerce. High promotion = penalise.
+Why Now: identify PRIMARY driver (lifestyle/cost-saving/social media/tech/behaviour/cultural/regulatory). If unclear → confidence = Speculative.
+Confidence Boost: if Multiplier>=8 AND Excitement>=8 AND Creative>=8 AND Velocity=Accelerating → raise confidence one level.
+Price: £10-25 impulse(55%+ margin) / £25-60 considered(45%+) / £60-150 premium(38%+).
+Investment Test — all 3 YES required or exclude: 1) operator spend £100 next week? 2) confident launching ads? 3) subscriber feels genuine value?
 
-Why Now: Identify the PRIMARY driver (lifestyle trend / cost-saving / social media / tech change / consumer behaviour / cultural movement / regulatory). If unclear = confidence becomes Speculative.
-
-CONFIDENCE BOOST: If Opportunity Multiplier >= 8 AND Subscriber Excitement >= 8 AND Creative Potential >= 8 AND Trend Velocity = Accelerating → raise confidence one level (max: High).
-
-PRICE TIERS:
-- £10-25 impulse → 55%+ margin
-- £25-60 considered → 45%+ margin  
-- £60-150 premium → 38%+ margin
-
-INVESTMENT TEST (all 3 must be YES or product is excluded):
-1. Would an experienced operator spend £100 testing this next week?
-2. Would I feel confident launching paid ads to this next week?
-3. Would a paid subscriber feel genuine value seeing this in their newsletter?
-If any answer is NO/HESITANT → investmentTest = "PASS" → exclude.
-
-Return ONLY a valid JSON array of exactly 5 objects. No markdown, no backticks, nothing outside the array.
+Return ONLY a valid JSON array of exactly 4 objects. No markdown, no backticks, nothing outside the array.
 
 Required fields per product:
 {"name":"specific name","niche":"assigned niche","emoji":"emoji","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST","trendVelocity":"Accelerating|Rising","whyNow":"primary driver + specific reason in one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"specific UK customer","whyEmerging":"max 20 words","problemSolved":"max 15 words","mainAngle":"max 15 words","tiktokAngle":"max 20 words","metaAngle":"max 20 words","usAuSignal":"max 20 words","verdict":"Strong Opportunity|Watch List","verdictReason":"max 20 words","whyItCouldWork":["reason 1","reason 2","reason 3"],"risks":["risk 1","risk 2"],"bundleIdea":"max 15 words","repeatPurchase":true,"repeatReason":"why or null","aliSearchTerm":"term","cjSearchTerm":"term","googleTrendsKeyword":"keyword","opportunityWindow":"X-Y weeks","scoring":{"ukMarketGap":number,"competitionBarrier":number,"problemIntensity":number,"earlySignalStrength":number,"profitPotential":number,"easeOfEntry":number,"coreTotal":number,"trendVelocityScore":number,"creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number},"bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
@@ -288,11 +275,11 @@ Required fields per product:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 8000,
+        max_tokens: 6000,
         system: systemPrompt,
         messages: [{
           role: 'user',
-          content: `Today is ${today}. Using the live market data above, find 5 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array of exactly 5 products.`
+          content: `Today is ${today}. Using the live market data above, find 4 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array of exactly 4 products.`
         }]
       })
     });
