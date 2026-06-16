@@ -388,6 +388,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <div class="toolbar-left" id="niche-filters"><button class="filter-btn active" onclick="setNicheFilter('all',this)">All niches</button></div>
       <div class="toolbar-right" id="toolbar-count"></div>
     </div>
+    <div id="members-hub-area" class="hub-loading" style="display:none;grid-column:1/-1"></div>
     <div class="products-grid" id="products-grid">
       <div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
     </div>
@@ -981,8 +982,7 @@ async function generateCreative(productName){
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
   btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
-  const creativeResultEl = document.getElementById('creative-result') || btn.closest('.card-pad');
-  if(creativeResultEl) { createHubLoader('creative-result', 'Hub is crafting your ad angles...'); startHubMessages('creative-result'); }
+  createHubLoader('creative-output', 'Hub is crafting your ad angles...'); startHubMessages('creative-output');
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
     const data=await res.json();
@@ -990,7 +990,7 @@ async function generateCreative(productName){
     let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
     creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
   }catch(e){showToast('Could not generate creatives — try again');}
-  stopHubMessages();removeHubLoader('creative-result');
+  stopHubMessages();removeHubLoader('creative-output');
   btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
 }
 function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
@@ -1028,8 +1028,8 @@ function extractProductName(url){try{const decoded=decodeURIComponent(url);const
 async function adminGenerate(){
   const btn=document.getElementById('admin-gen-btn');btn.disabled=true;
   document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Searching...';
-  const epContainer = document.getElementById('emerging-products-container') || document.getElementById('products-grid');
-  if(epContainer) { createHubLoader(epContainer.id, 'Hub is searching for emerging products...'); startHubMessages(epContainer.id); }
+  const hubArea = document.getElementById('members-hub-area');
+  if(hubArea) { hubArea.style.display='flex'; createHubLoader('members-hub-area', 'Hub is searching for emerging products...'); startHubMessages('members-hub-area'); }
   const statusBox=document.getElementById('status-messages');statusBox.className='status-messages show';
   const lines=['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
   lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line';});
@@ -1049,7 +1049,7 @@ async function adminGenerate(){
   }catch(e){
     clearInterval(statusTimer);const errLine=document.createElement('div');errLine.className='status-line show';errLine.style.color='var(--red)';errLine.textContent='✕ Error: '+e.message;document.getElementById('status-messages').appendChild(errLine);
   }
-  stopHubMessages();
+  stopHubMessages();removeHubLoader('members-hub-area');const hubA=document.getElementById('members-hub-area');if(hubA)hubA.style.display='none';
   btn.disabled=false;document.getElementById('admin-gen-text').textContent='✨ Generate emerging products';
 }
 
@@ -1488,7 +1488,7 @@ function createHubLoader(containerId, message) {
   div.id = containerId + '-hub';
   div.innerHTML = `
     <div class="hub-img-wrap">
-      <img src="${HUB_IMG}" alt="Hub is researching" onerror="this.style.display='none'">
+      <img src="${HUB_IMG}" alt="Hub is researching" onerror="this.outerHTML='<div style=\'font-size:72px\'>🤖</div>'">
       <div class="hub-dots">
         <div class="hub-dot"></div>
         <div class="hub-dot"></div>
