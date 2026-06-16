@@ -331,6 +331,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .unsave-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3}
 @media(max-width:900px){.score-row{grid-template-columns:repeat(2,1fr)}.insight-cols{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,1fr)}.creative-form{grid-template-columns:1fr}.meta-info-row{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(2,1fr)}.calc-results.show{grid-template-columns:1fr 1fr}.launch-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.products-grid{grid-template-columns:1fr}.score-row{grid-template-columns:repeat(2,1fr)}.research-grid{grid-template-columns:1fr}.nav-tabs{display:none}.analysis-header{flex-direction:column}.calc-results.show{grid-template-columns:1fr}}
+
+/* ── HUB MASCOT LOADING STATE ─────────────────────────────────── */
+.hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
+.hub-loading.active{display:flex}
+.hub-img-wrap{position:relative;width:140px;height:140px}
+.hub-img-wrap img{width:140px;height:140px;object-fit:contain;animation:hubFloat 3s ease-in-out infinite}
+.hub-pen{position:absolute;bottom:18px;right:8px;width:20px;height:20px;animation:hubWrite 1.2s ease-in-out infinite}
+.hub-dots{position:absolute;top:-10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.hub-dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#F59E0B);animation:hubDot 1.4s ease-in-out infinite}
+.hub-dot:nth-child(2){animation-delay:.2s;background:#3B82F6}
+.hub-dot:nth-child(3){animation-delay:.4s;background:#10B981}
+.hub-msg{font-size:14px;font-weight:600;color:var(--g600,#4B5563);animation:hubPulse 2s ease-in-out infinite}
+@keyframes hubFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+@keyframes hubWrite{0%,100%{transform:rotate(-10deg) translate(0,0)}50%{transform:rotate(5deg) translate(-2px,-3px)}}
+@keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+@keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
 </style>
 </head>
 <body>
@@ -577,7 +593,7 @@ function buildAnalysisBody(p) {
     <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">📊</span><h2>Scoring breakdown</h2></div>
       <div class="analysis-panel-body">
-        ${[{label:'Trend Growth',key:'trendGrowth',max:25,color:'var(--navy)'},{label:'Problem Solving',key:'problemSolving',max:20,color:'var(--green)'},{label:'Video Potential',key:'videoPotential',max:15,color:'#8B5CF6'},{label:'Profit Margin',key:'profitMargin',max:15,color:'var(--gold)'},{label:'Competition Level',key:'competitionLevel',max:15,color:'var(--amber)'},{label:'Audience Size',key:'audienceSize',max:10,color:'#06B6D4'}].map(s=>{const val=p.scoring?.[s.key]||0;const pct=Math.round((val/s.max)*100);return`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:700;color:var(--g700)">${s.label}</span><span style="font-size:13px;font-weight:900;color:${s.color}">${val}/${s.max}</span></div><div style="background:var(--g100);border-radius:999px;height:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${s.color};border-radius:999px;transition:width .6s"></div></div></div>`;}).join('')}
+        ${[{label:'UK Market Gap',key:'ukMarketGap',max:25,color:'var(--navy)'},{label:'Problem Intensity',key:'problemIntensity',max:20,color:'var(--green)'},{label:'Creative Potential',key:'creativePotential',max:10,color:'#8B5CF6'},{label:'Profit Potential',key:'profitPotential',max:12,color:'var(--gold)'},{label:'Competition Barrier',key:'competitionBarrier',max:20,color:'var(--amber)'},{label:'Ease of Entry',key:'easeOfEntry',max:8,color:'#06B6D4'},{label:'Signal Strength',key:'earlySignalStrength',max:15,color:'#10B981'}].map(s=>{const val=p.scoring?.[s.key]||0;const pct=Math.round((val/s.max)*100);return`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:700;color:var(--g700)">${s.label}</span><span style="font-size:13px;font-weight:900;color:${s.color}">${val}/${s.max}</span></div><div style="background:var(--g100);border-radius:999px;height:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${s.color};border-radius:999px;transition:width .6s"></div></div></div>`;}).join('')}
         <div style="border-top:2px solid var(--g200);padding-top:14px;margin-top:4px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;font-weight:800;color:var(--g900)">Total Score</span><span style="font-size:24px;font-weight:900;color:${gradeColor(p.grade)}">${p.emergingScore||Object.values(p.scoring||{}).reduce((a,b)=>a+b,0)}/100</span></div>
       </div>
     </div>
@@ -965,6 +981,8 @@ async function generateCreative(productName){
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
   btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
+  const creativeResultEl = document.getElementById('creative-result') || btn.closest('.card-pad');
+  if(creativeResultEl) { createHubLoader('creative-result', 'Hub is crafting your ad angles...'); startHubMessages('creative-result'); }
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
     const data=await res.json();
@@ -972,6 +990,7 @@ async function generateCreative(productName){
     let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
     creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
   }catch(e){showToast('Could not generate creatives — try again');}
+  stopHubMessages();removeHubLoader('creative-result');
   btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
 }
 function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
@@ -985,10 +1004,12 @@ async function runValidator(){
   const resultArea=document.getElementById('validator-result');
   if(!input){showToast('Paste a product URL first');return;}
   let productName=extractProductName(input);
-  resultArea.innerHTML=`<div class="validator-empty"><h3>Analysing your product...</h3><p>Checking market demand, competition and brand potential for: <strong>${productName}</strong></p></div>`;
+  createHubLoader('validator-result', 'Hub is analysing your product...');
+  startHubMessages('validator-result');
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
+    stopHubMessages();removeHubLoader('validator-result');
     const p={name:data.productName||productName,niche:'Validator result',stage:'Assessed',season:'Assessed',grade:data.opportunityScore||'B',trendScore:data.growthScore||50,saturationRisk:'Medium',margin:data.marginScore?data.marginScore+'%':'—',verdict:data.verdict||'',verdictReason:data.verdictReason||'',whyItCouldWork:data.whyItCouldWork||[],risks:data.risks||[],creativeAngles:data.creativeAngles||[],aliSearchTerm:productName,googleTrendsKeyword:productName,emoji:'🔍'};
     resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
     const tempBody=document.createElement('div');tempBody.id='validator-analysis-body';tempBody.className='analysis-body';resultArea.appendChild(tempBody);
@@ -998,7 +1019,7 @@ async function runValidator(){
     buildAnalysisBody(p);
     tempBody.id='validator-analysis-body';
     if(origBody)origBody.id='analysis-body';
-  }catch(e){resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+  }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
 }
 function extractProductName(url){try{const decoded=decodeURIComponent(url);const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>3&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);}catch(e){}return url.slice(0,60);}
 
@@ -1006,7 +1027,9 @@ function extractProductName(url){try{const decoded=decodeURIComponent(url);const
 
 async function adminGenerate(){
   const btn=document.getElementById('admin-gen-btn');btn.disabled=true;
-  document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Generating...';
+  document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Searching...';
+  const epContainer = document.getElementById('emerging-products-container') || document.getElementById('products-grid');
+  if(epContainer) { createHubLoader(epContainer.id, 'Hub is searching for emerging products...'); startHubMessages(epContainer.id); }
   const statusBox=document.getElementById('status-messages');statusBox.className='status-messages show';
   const lines=['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
   lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line';});
@@ -1026,6 +1049,7 @@ async function adminGenerate(){
   }catch(e){
     clearInterval(statusTimer);const errLine=document.createElement('div');errLine.className='status-line show';errLine.style.color='var(--red)';errLine.textContent='✕ Error: '+e.message;document.getElementById('status-messages').appendChild(errLine);
   }
+  stopHubMessages();
   btn.disabled=false;document.getElementById('admin-gen-text').textContent='✨ Generate emerging products';
 }
 
@@ -1440,6 +1464,60 @@ async function loadPublishedProducts() {
 renderProductsGrid();
 loadPublishedProducts();
 loadSavedProducts();
+</script>
+
+<!-- Hub Mascot Component -->
+<script>
+const HUB_MESSAGES = [
+  "Hub is researching the market...",
+  "Hub is checking supplier signals...",
+  "Hub is reviewing opportunity data...",
+  "Hub is writing up your results...",
+  "Hub is scanning trend data...",
+  "Hub is crunching the numbers..."
+];
+
+const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+
+function createHubLoader(containerId, message) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const msg = message || HUB_MESSAGES[Math.floor(Math.random() * HUB_MESSAGES.length)];
+  const div = document.createElement('div');
+  div.className = 'hub-loading active';
+  div.id = containerId + '-hub';
+  div.innerHTML = `
+    <div class="hub-img-wrap">
+      <img src="${HUB_IMG}" alt="Hub is researching" onerror="this.style.display='none'">
+      <div class="hub-dots">
+        <div class="hub-dot"></div>
+        <div class="hub-dot"></div>
+        <div class="hub-dot"></div>
+      </div>
+    </div>
+    <div class="hub-msg">${msg}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+}
+
+function removeHubLoader(containerId) {
+  const hub = document.getElementById(containerId + '-hub');
+  if (hub) hub.remove();
+}
+
+let hubMsgInterval = null;
+function startHubMessages(containerId) {
+  let i = 0;
+  hubMsgInterval = setInterval(() => {
+    i = (i + 1) % HUB_MESSAGES.length;
+    const msgEl = document.querySelector('#' + containerId + '-hub .hub-msg');
+    if (msgEl) msgEl.textContent = HUB_MESSAGES[i];
+  }, 3500);
+}
+function stopHubMessages() {
+  if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; }
+}
 </script>
 </body>
 </html>
