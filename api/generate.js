@@ -84,7 +84,7 @@ export default async function handler(req, res) {
         const items = (data?.movers_and_shakers || []).slice(0, 15).map(i => i?.title).filter(Boolean);
         if (items.length) results.push(`AMAZON UK MOVERS & SHAKERS:\n${items.join('\n')}`);
       }
-    } catch (e) { // Amazon UK silent fail }
+    } catch (e) {} // Amazon UK silent fail
 
     try {
       const r = await fetch(
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
         const items = (data?.movers_and_shakers || []).slice(0, 15).map(i => i?.title).filter(Boolean);
         if (items.length) results.push(`AMAZON US MOVERS & SHAKERS (early UK mover intel):\n${items.join('\n')}`);
       }
-    } catch (e) { // Amazon US silent fail }
+    } catch (e) {} // Amazon US silent fail
 
     try {
       const r = await fetch(
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
         const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 15);
         if (keywords.length) results.push(`UK GOOGLE TRENDS TODAY:\n${keywords.join(', ')}`);
       }
-    } catch (e) { // UK Trends silent fail }
+    } catch (e) {} // UK Trends silent fail
 
     try {
       const r = await fetch(
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
         const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 10);
         if (keywords.length) results.push(`US GOOGLE TRENDS TODAY:\n${keywords.join(', ')}`);
       }
-    } catch (e) { // US Trends silent fail }
+    } catch (e) {} // US Trends silent fail
 
     try {
       const r = await fetch(
@@ -136,7 +136,7 @@ export default async function handler(req, res) {
         const snippets = (data?.organic_results || []).slice(0, 3).map(r => r?.snippet).filter(Boolean);
         if (snippets.length) results.push(`TIKTOK SHOP UK SIGNALS:\n${snippets.join('\n')}`);
       }
-    } catch (e) { // TikTok silent fail }
+    } catch (e) {} // TikTok silent fail
 
     return results.join('\n\n');
   }
