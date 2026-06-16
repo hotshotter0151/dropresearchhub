@@ -65,7 +65,7 @@ export default async function handler(req, res) {
         aliTitle: first.title || null
       };
     } catch (e) {
-      console.log('[DRH] AliExpress enrichment failed:', e.message);
+      // AliExpress silent fail
       return null;
     }
   }
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
         const items = (data?.movers_and_shakers || []).slice(0, 15).map(i => i?.title).filter(Boolean);
         if (items.length) results.push(`AMAZON UK MOVERS & SHAKERS:\n${items.join('\n')}`);
       }
-    } catch (e) { console.log('[DRH] Amazon UK failed'); }
+    } catch (e) { // Amazon UK silent fail }
 
     try {
       const r = await fetch(
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
         const items = (data?.movers_and_shakers || []).slice(0, 15).map(i => i?.title).filter(Boolean);
         if (items.length) results.push(`AMAZON US MOVERS & SHAKERS (early UK mover intel):\n${items.join('\n')}`);
       }
-    } catch (e) { console.log('[DRH] Amazon US failed'); }
+    } catch (e) { // Amazon US silent fail }
 
     try {
       const r = await fetch(
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
         const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 15);
         if (keywords.length) results.push(`UK GOOGLE TRENDS TODAY:\n${keywords.join(', ')}`);
       }
-    } catch (e) { console.log('[DRH] UK Trends failed'); }
+    } catch (e) { // UK Trends silent fail }
 
     try {
       const r = await fetch(
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
         const keywords = searches.map(s => s?.title?.query).filter(Boolean).slice(0, 10);
         if (keywords.length) results.push(`US GOOGLE TRENDS TODAY:\n${keywords.join(', ')}`);
       }
-    } catch (e) { console.log('[DRH] US Trends failed'); }
+    } catch (e) { // US Trends silent fail }
 
     try {
       const r = await fetch(
@@ -136,7 +136,7 @@ export default async function handler(req, res) {
         const snippets = (data?.organic_results || []).slice(0, 3).map(r => r?.snippet).filter(Boolean);
         if (snippets.length) results.push(`TIKTOK SHOP UK SIGNALS:\n${snippets.join('\n')}`);
       }
-    } catch (e) { console.log('[DRH] TikTok failed'); }
+    } catch (e) { // TikTok silent fail }
 
     return results.join('\n\n');
   }
@@ -236,7 +236,7 @@ HARD REJECTS (instant):
 - Already in published list above
 - BANNED: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats, fitness trackers, bluetooth speakers
 
-SCORE EVERY PRODUCT (using only the live data above, no new searches):
+SCORE EVERY PRODUCT (using live data above + AliExpress enrichment will be applied after — so prioritise products you know are sourceable on AliExpress with real demand signals):
 
 CORE /100:
 - UK Market Gap /25
@@ -245,7 +245,7 @@ CORE /100:
 - Early Signal Strength /15
 - Profit Potential /12
 - Ease of Entry /8
-Minimum: 62/100
+Minimum: 70/100
 
 ENHANCED SCORES (1-10 each, use live data only):
 - Trend Velocity: Accelerating(8-10)/Rising(5-7)/Stable(3-4)/Declining(1-2). Reject Stable/Declining.
@@ -253,13 +253,16 @@ ENHANCED SCORES (1-10 each, use live data only):
 - Brandability: SKU range, repeat purchase, upsells. Penalise commodities.
 - Retail Gap: hard to find in Tesco/Argos/B&M = high score.
 - Content Longevity: 30+ TikTok/UGC concepts possible? Below 6 = penalise.
-- Subscriber Excitement /10: how excited would a paid subscriber be? Below 5 = drop confidence.
-- Opportunity Multiplier /10: Market Gap + Trend Velocity + Creative Potential combined. Most important.
+- Subscriber Excitement /10: how excited would a paid subscriber be? Below 6 = drop confidence one level AND cap at Medium (never High). A score of 8+ with Accelerating velocity = boost confidence.
+- Opportunity Multiplier /10: Market Gap + Trend Velocity + Creative Potential combined. THE single most important score. When ranking final 3 products, always prioritise: Opportunity Multiplier first, then Creative Potential, then UK Market Gap, then Brandability. Never prioritise raw popularity or search volume over these.
 
 Why Now: identify PRIMARY driver (lifestyle/cost-saving/social media/tech/behaviour/cultural/regulatory). If unclear → confidence = Speculative.
 Confidence Boost: if Multiplier>=8 AND Excitement>=8 AND Creative>=8 AND Velocity=Accelerating → raise confidence one level.
 Price: £10-25 impulse(55%+ margin) / £25-60 considered(45%+) / £60-150 premium(38%+).
-Investment Test — all 3 YES required or exclude: 1) operator spend £100 next week? 2) confident launching ads? 3) subscriber feels genuine value?
+Investment Test — set investmentTest field:
+- "TEST" if ALL YES: experienced operator spends £100 next week, confident launching ads, subscriber genuinely excited
+- "PASS" if hesitant on any question
+Always return the product regardless — investmentTest is a signal, not a filter. Never omit a product.
 
 Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, nothing outside the array.
 
@@ -332,8 +335,26 @@ Required fields per product:
       return res.status(500).json({ error: 'Parse error: ' + e.message });
     }
 
-    // Safety filter — strip any PASS products
-    products = products.filter(p => p.investmentTest !== 'PASS');
+    console.log('[DRH] Raw products:', products.length, '— investment results:', products.map(p => p.name + ':' + p.investmentTest).join(' | '));
+
+    // PASS products: keep visible but enforce honest confidence + never Strong Opportunity
+    products = products.map(p => {
+      if (p.investmentTest === 'PASS') {
+        return {
+          ...p,
+          verdict: 'Watch List',
+          confidence: 'Speculative',
+          verdictReason: 'Interesting signal — research further before committing ad spend'
+        };
+      }
+      return p;
+    });
+
+    if (products.length === 0) {
+      return res.status(500).json({ error: 'No products returned — try generating again' });
+    }
+
+    console.log('[DRH] Final:', products.map(p => p.name + ' [' + (p.investmentTest||'?') + '] [' + p.confidence + ']').join(' | '));
 
     // Run AliExpress enrichment + SerpAPI fallback in parallel
     console.log('[DRH] Enriching from AliExpress...');
