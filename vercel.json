@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/generate.js": { "memory": 1024, "maxDuration": 59 },
-    "api/stripe-checkout.js": { "memory": 512, "maxDuration": 10 },
+    "api/stripe-checkout.mjs": { "memory": 512, "maxDuration": 10 },
     "api/auth.js": { "memory": 512, "maxDuration": 10 },
     "api/products.js": { "memory": 512, "maxDuration": 10 },
     "api/webhook.js": { "memory": 512, "maxDuration": 10 },
