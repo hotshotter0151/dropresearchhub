@@ -17,13 +17,13 @@ export default async function handler(req, res) {
   async function searchImage(query) {
     try {
       const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
-      const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
+      const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
       if (!r.ok) return '';
       const data = await r.json();
       const results = data?.images_results || [];
       const product = results.find(i => i.original && i.is_product);
       const any = results.find(i => i.original);
-      return (product?.original || any?.original || results[0]?.thumbnail || '');
+      return (product?.original || any?.original || results[0]?.original || results[0]?.thumbnail || '');
     } catch (e) { return ''; }
   }
 
@@ -49,9 +49,10 @@ export default async function handler(req, res) {
       const data = await r.json();
       const items = data?.result?.resultList || data?.data?.products || [];
       const first = items[0]?.item || items[0];
-      if (!first) return null;
+      if (!first) { console.log('[ALI] No items for:', aliSearchTerm, JSON.stringify(Object.keys(data||{}))); return null; }
+      console.log('[ALI] Keys:', JSON.stringify(Object.keys(first).slice(0,15)));
       return {
-        img: first.image || first.productImage || first.img || null,
+        img: first.image || first.productImage || first.img || first.imageUrl || first.mainImage || first.picUrl || null,
         supplierPrice: first.salePrice || first.price?.current || null,
         orderCount: first.tradeCount || first.soldCount || first.orders || null,
         rating: first.starRating || first.averageStar || null,
@@ -159,7 +160,7 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
 
     console.log('[DRH] Got', products.length, 'products, enriching...');
     const enrichments = await Promise.all(products.map(p => enrichFromAliExpress(p.aliSearchTerm)));
-    const serpImages = await Promise.all(products.map((p,i) => enrichments[i]?.img ? Promise.resolve('') : fetchProductImage(p.name)));
+    const serpImages = await Promise.all(products.map((p,i) => (enrichments[i]?.img) ? Promise.resolve('') : fetchProductImage(p.name)));
 
     products = products.map((p,i) => {
       const ali = enrichments[i];
