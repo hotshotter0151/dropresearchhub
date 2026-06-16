@@ -48,7 +48,7 @@ export default async function handler(req, res) {
           'x-rapidapi-host': 'aliexpress-api2.p.rapidapi.com',
           'x-rapidapi-key': rapidApiKey
         },
-        signal: AbortSignal.timeout(5000)
+        signal: AbortSignal.timeout(4000)
       });
       if (!r.ok) return null;
       const data = await r.json();
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `https://serpapi.com/search.json?engine=amazon&amazon_domain=amazon.co.uk&type=movers_and_shakers&api_key=${serpApiKey}`,
-        { signal: AbortSignal.timeout(5000) }
+        { signal: AbortSignal.timeout(3000) }
       );
       if (r.ok) {
         const data = await r.json();
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `https://serpapi.com/search.json?engine=amazon&amazon_domain=amazon.com&type=movers_and_shakers&api_key=${serpApiKey}`,
-        { signal: AbortSignal.timeout(5000) }
+        { signal: AbortSignal.timeout(3000) }
       );
       if (r.ok) {
         const data = await r.json();
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         'https://trends.google.com/trends/api/dailytrends?hl=en-GB&tz=-60&geo=GB&ns=15',
-        { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(5000) }
+        { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(3000) }
       );
       if (r.ok) {
         const raw = await r.text();
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=300&geo=US&ns=15',
-        { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(5000) }
+        { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(3000) }
       );
       if (r.ok) {
         const raw = await r.text();
@@ -129,7 +129,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `https://serpapi.com/search.json?engine=google&q=tiktok+shop+uk+trending+products+${new Date().getFullYear()}&gl=gb&hl=en&api_key=${serpApiKey}&num=5`,
-        { signal: AbortSignal.timeout(5000) }
+        { signal: AbortSignal.timeout(3000) }
       );
       if (r.ok) {
         const data = await r.json();
@@ -147,7 +147,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `${supabaseUrl}/rest/v1/products?select=name,data&order=published_at.desc&limit=40`,
-        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }, signal: AbortSignal.timeout(4000) }
       );
       if (!r.ok) return { names: [], recentNiches: [] };
       const data = await r.json();
