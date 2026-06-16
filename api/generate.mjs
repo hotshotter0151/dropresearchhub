@@ -129,7 +129,7 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
     });
 
     if (!aiRes.ok) {
@@ -182,7 +182,7 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 1500,
+        model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
         system: `UK ecommerce product analyst. Return ONLY valid JSON object, no markdown.\nFields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketStage":"string","growthScore":number,"competitionScore":number,"saturationRisk":"Low|Medium|High|Very High","verdict":"string","sellingPrice":"£X-£X","supplierCost":"£X-£X","margin":"XX%","opportunityWindow":"X-Y weeks","ukMarketNotes":"string","confidence":"High|Medium|Speculative","trendVelocity":"Accelerating|Rising|Stable|Declining","creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number,"subscriberExcitement":number,"opportunityMultiplier":number,"whyNow":"string","investmentTest":"TEST|PASS","whyItCouldWork":["s","s","s"],"risks":["s","s","s"],"creativeAngles":["s","s","s"],"growthGraph":[{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]}`,
         messages: [{ role: 'user', content: `Analyse for UK dropshipping 2026: ${body.productName}` }]
       })
@@ -197,7 +197,7 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: body.max_tokens||2000, system: body.system, messages: body.messages })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: body.max_tokens||2000, system: body.system, messages: body.messages })
     });
     const aiData = await aiRes.json();
     const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
