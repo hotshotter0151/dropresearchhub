@@ -288,13 +288,20 @@ Required fields per product:
 
     if (!aiRes.ok) {
       const err = await aiRes.text();
-      console.error('[DRH] AI error:', aiRes.status, err.slice(0, 200));
-      return res.status(500).json({ error: 'AI error ' + aiRes.status });
+      console.error('[DRH] AI error:', aiRes.status, err.slice(0, 300));
+      return res.status(500).json({ error: 'AI API error: ' + aiRes.status + ' — ' + err.slice(0, 100) });
     }
 
+    // Check for Anthropic overload errors inside 200 response
     const aiData = await aiRes.json();
+    if (aiData.type === 'error') {
+      console.error('[DRH] Anthropic error:', JSON.stringify(aiData.error));
+      return res.status(500).json({ error: 'Anthropic: ' + (aiData.error?.message || 'unknown error') });
+    }
+
     const rawText = (aiData.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
     console.log('[DRH] Response length:', rawText.length);
+    console.log('[DRH] Response preview:', rawText.slice(0, 200));
 
     let cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
     console.log('[DRH] Raw response start:', cleaned.slice(0, 150));
