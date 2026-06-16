@@ -1158,26 +1158,42 @@ function renderSimulator(data, productImg) {
   const storeWrap = document.getElementById('sim-store-wrap');
   const storeInner = document.getElementById('sim-store-inner');
   storeInner.innerHTML = `
-    <div style="background:${cs.nav};padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:13px;font-weight:800;color:#fff">${data.storeName || 'My Store'}</div>
-      <div style="display:flex;gap:14px">
-        <span style="font-size:11px;color:rgba(255,255,255,.45)">Home</span>
-        <span style="font-size:11px;color:rgba(255,255,255,.45)">Shop</span>
-        <span style="font-size:11px;color:rgba(255,255,255,.45)">FAQ</span>
+    <!-- NAV -->
+    <div style="background:${cs.nav};padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px">${data.storeName || 'My Store'}</div>
+      <div style="display:flex;gap:24px;align-items:center">
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Home</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Shop</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">FAQ</span>
+        <div style="background:${cs.accent};color:${cs.btnText};font-size:12px;font-weight:800;padding:7px 16px;border-radius:8px">Cart (0)</div>
       </div>
-      <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px">Cart (0)</div>
     </div>
-    <div style="background:${cs.bg};display:grid;grid-template-columns:1fr 1fr;min-height:200px">
-      <div style="padding:24px 20px;display:flex;flex-direction:column;justify-content:center">
-        <div style="background:rgba(255,255,255,.12);color:${cs.accent};font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px">${data.heroTag || 'As seen on TikTok'}</div>
-        <div style="font-size:19px;font-weight:900;color:${cs.text};line-height:1.25;margin-bottom:8px">${data.heroHeadline || ''}</div>
-        <div style="font-size:12px;color:${cs.sub};line-height:1.55;margin-bottom:16px">${data.heroSubheadline || ''}</div>
-        <button style="background:${cs.accent};color:${cs.btnText};font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit">${data.heroCTA || 'Shop now →'}</button>
+    <!-- HERO -->
+    <div style="background:${cs.bg};display:grid;grid-template-columns:55% 45%;min-height:320px">
+      <div style="padding:48px 40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;width:fit-content;margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase">${data.heroTag || 'As seen on TikTok'}</div>
+        <div style="font-size:28px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:14px;letter-spacing:-.5px">${data.heroHeadline || ''}</div>
+        <div style="font-size:14px;color:${cs.sub};line-height:1.65;margin-bottom:28px;max-width:380px">${data.heroSubheadline || ''}</div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <button style="background:${cs.accent};color:${cs.btnText};font-size:15px;font-weight:900;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px">${data.heroCTA || 'Shop now →'}</button>
+          <div style="font-size:12px;color:rgba(255,255,255,.4)">⭐⭐⭐⭐⭐ 4.9 (2,847 reviews)</div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:20px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Free UK shipping over £40</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> 30-day returns</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Delivered in 3-5 days</div>
+        </div>
       </div>
-      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:200px">
-        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.85" onerror="this.style.display='none'">` : '<div style="font-size:52px;opacity:.3">📦</div>'}
-        <div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px">DropResearch Hub preview</div>
+      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:contain;padding:24px;max-height:320px" onerror="this.style.opacity='.1'">` : '<div style="font-size:80px;opacity:.15">📦</div>'}
+        <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.5px">DropResearch Hub preview</div>
       </div>
+    </div>
+    <!-- TRUST BAR -->
+    <div style="background:${cs.accent};padding:10px 28px;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap">
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔥 8,400+ sold this month</div>
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">📦 Ships from UK warehouse</div>
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔒 Secure checkout</div>
     </div>`;
   storeWrap.style.display = 'block';
 
