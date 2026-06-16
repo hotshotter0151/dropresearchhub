@@ -186,7 +186,7 @@ export default async function handler(req, res) {
     const recentSet = new Set(recentNiches);
     const fresh = NICHE_POOL.filter(n => !recentSet.has(n));
     const pool = fresh.length >= 3 ? fresh : NICHE_POOL;
-    return [...pool].sort(() => Math.random() - 0.5).slice(0, 4);
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   }
 
   // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
@@ -202,7 +202,7 @@ export default async function handler(req, res) {
     const { names: publishedNames, recentNiches } = history;
     const selectedNiches = pickNiches(recentNiches);
 
-    console.log('[DRH] 4 Niches:', selectedNiches.join(' | '));
+    console.log('[DRH] 3 Niches:', selectedNiches.join(' | '));
     console.log('[DRH] Avoiding:', publishedNames.length, 'products');
 
     const systemPrompt = `You are the product intelligence analyst for DropResearch Hub, a UK dropshipping research platform. Today is ${today}.
@@ -216,11 +216,10 @@ ${publishedNames.length > 0 ? publishedNames.join(', ') : 'None yet'}
 RECENT NICHES (avoid for variety):
 ${recentNiches.length > 0 ? recentNiches.slice(0, 8).join(', ') : 'None yet'}
 
-ASSIGNMENT: Find exactly 4 products — one from each:
+ASSIGNMENT: Find exactly 3 products — one from each:
 NICHE 1: ${selectedNiches[0]}
 NICHE 2: ${selectedNiches[1]}
 NICHE 3: ${selectedNiches[2]}
-NICHE 4: ${selectedNiches[3]}
 
 CORE PRINCIPLES:
 - OPPORTUNITY over popularity. A small accelerating trend in an open market beats a large flat trend
@@ -262,7 +261,7 @@ Confidence Boost: if Multiplier>=8 AND Excitement>=8 AND Creative>=8 AND Velocit
 Price: £10-25 impulse(55%+ margin) / £25-60 considered(45%+) / £60-150 premium(38%+).
 Investment Test — all 3 YES required or exclude: 1) operator spend £100 next week? 2) confident launching ads? 3) subscriber feels genuine value?
 
-Return ONLY a valid JSON array of exactly 4 objects. No markdown, no backticks, nothing outside the array.
+Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, nothing outside the array.
 
 Required fields per product:
 {"name":"specific name","niche":"assigned niche","emoji":"emoji","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST","trendVelocity":"Accelerating|Rising","whyNow":"primary driver + specific reason in one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"specific UK customer","whyEmerging":"max 20 words","problemSolved":"max 15 words","mainAngle":"max 15 words","tiktokAngle":"max 20 words","metaAngle":"max 20 words","usAuSignal":"max 20 words","verdict":"Strong Opportunity|Watch List","verdictReason":"max 20 words","whyItCouldWork":["reason 1","reason 2","reason 3"],"risks":["risk 1","risk 2"],"bundleIdea":"max 15 words","repeatPurchase":true,"repeatReason":"why or null","aliSearchTerm":"term","cjSearchTerm":"term","googleTrendsKeyword":"keyword","opportunityWindow":"X-Y weeks","scoring":{"ukMarketGap":number,"competitionBarrier":number,"problemIntensity":number,"earlySignalStrength":number,"profitPotential":number,"easeOfEntry":number,"coreTotal":number,"trendVelocityScore":number,"creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number},"bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
@@ -279,7 +278,7 @@ Required fields per product:
         system: systemPrompt,
         messages: [{
           role: 'user',
-          content: `Today is ${today}. Using the live market data above, find 4 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array of exactly 4 products.`
+          content: `Today is ${today}. Using the live market data above, find 3 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array of exactly 3 products.`
         }]
       })
     });
