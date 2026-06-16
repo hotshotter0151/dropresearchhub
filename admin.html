@@ -85,6 +85,20 @@ select.filter-input{min-width:140px}
 #toast.success{background:#166534}
 #toast.error{background:var(--red)}
 
+/* Stage progress */
+.stage-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;transition:all .3s;opacity:.4}
+.stage-row.active{opacity:1;background:#fff;border-color:var(--navy);box-shadow:0 2px 12px rgba(30,58,95,.08)}
+.stage-row.done{opacity:1;background:#f0fdf4;border-color:#bbf7d0}
+.stage-row.done .stage-icon{display:none}
+.stage-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.stage-content{flex:1}
+.stage-title{font-size:14px;font-weight:700;color:var(--g900)}
+.stage-sub{font-size:12px;color:var(--g500);margin-top:2px}
+.stage-status{font-size:12px;font-weight:700;flex-shrink:0}
+.stage-row.active .stage-status::before{content:'';display:inline-block;width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+.stage-row.done .stage-status{color:var(--green)}
+.stage-row.done .stage-status::before{content:'✓ ';font-size:14px}
+
 /* Products */
 .gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
 .gen-btn:hover:not(:disabled){background:var(--navy-light)}
@@ -187,18 +201,49 @@ select.filter-input{min-width:140px}
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
           <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 new products and adds them to the review queue below.</div></div>
-          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate 3 products</span></button>
+          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">🔍 Search for 4 products</span></button>
         </div>
         <div class="card-pad">
           <div class="status-messages" id="status-messages">
-            <div class="status-line" id="sl-1">Searching TikTok Shop UK for trending products...</div>
-            <div class="status-line" id="sl-2">Checking Amazon UK Movers & Shakers...</div>
-            <div class="status-line" id="sl-3">Scanning AliExpress for growth signals...</div>
-            <div class="status-line" id="sl-4">Applying 12-point product selection framework...</div>
-            <div class="status-line" id="sl-5">Scoring each product across 6 criteria...</div>
-            <div class="status-line" id="sl-6">Fetching product images...</div>
-            <div class="status-line" id="sl-7">Finalising research reports...</div>
-            <div class="status-line" id="sl-8">Products ready — added to review queue below</div>
+            <div style="display:flex;flex-direction:column;gap:12px" id="stage-list">
+
+              <div class="stage-row" id="stage-1">
+                <div class="stage-icon" id="stage-1-icon">⠿</div>
+                <div class="stage-content">
+                  <div class="stage-title">Gathering live market signals</div>
+                  <div class="stage-sub">Amazon UK &amp; US · Google Trends UK &amp; US · TikTok Shop UK</div>
+                </div>
+                <div class="stage-status" id="stage-1-status"></div>
+              </div>
+
+              <div class="stage-row" id="stage-2">
+                <div class="stage-icon" id="stage-2-icon">🧠</div>
+                <div class="stage-content">
+                  <div class="stage-title">Researching 4 emerging products</div>
+                  <div class="stage-sub">Applying scoring framework · Investment test · Niche rotation</div>
+                </div>
+                <div class="stage-status" id="stage-2-status"></div>
+              </div>
+
+              <div class="stage-row" id="stage-3">
+                <div class="stage-icon" id="stage-3-icon">🛒</div>
+                <div class="stage-content">
+                  <div class="stage-title">Enriching with live AliExpress data</div>
+                  <div class="stage-sub">Real supplier prices · Order counts · Ratings · Product images</div>
+                </div>
+                <div class="stage-status" id="stage-3-status"></div>
+              </div>
+
+              <div class="stage-row" id="stage-4">
+                <div class="stage-icon" id="stage-4-icon">✅</div>
+                <div class="stage-content">
+                  <div class="stage-title">Products ready</div>
+                  <div class="stage-sub">Added to your review queue below</div>
+                </div>
+                <div class="stage-status" id="stage-4-status"></div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
@@ -454,18 +499,28 @@ let pendingProducts = [];
 async function adminGenerate() {
   const btn = document.getElementById('gen-btn');
   btn.disabled = true;
-  document.getElementById('gen-text').innerHTML = '<span class="spinner"></span> Generating...';
+  document.getElementById('gen-text').innerHTML = '<span class="spinner"></span> Searching...';
   const statusBox = document.getElementById('status-messages');
   statusBox.className = 'status-messages show';
-  const lines = ['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
-  lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line'; });
-  let lineIdx = 0;
-  function nextLine() {
-    if(lineIdx > 0) { const prev = document.getElementById(lines[lineIdx-1]); if(prev) prev.className = 'status-line done show'; }
-    if(lineIdx < lines.length) { const curr = document.getElementById(lines[lineIdx]); if(curr) curr.className = 'status-line active show'; lineIdx++; }
+
+  function setStage(n, state) {
+    for(let i=1;i<=4;i++) {
+      const row = document.getElementById('stage-'+i);
+      const status = document.getElementById('stage-'+i+'-status');
+      if(!row) continue;
+      if(i < n) { row.className='stage-row done'; if(status) status.textContent='Done'; }
+      else if(i === n) { row.className='stage-row active'; if(status) status.textContent=''; }
+      else { row.className='stage-row'; if(status) status.textContent=''; }
+    }
   }
-  nextLine();
-  const statusTimer = setInterval(nextLine, 7000);
+
+  // Stage 1 — signals (runs for ~5s then Claude kicks in)
+  setStage(1);
+  const stage2Timer = setTimeout(() => setStage(2), 5500);
+  // Stage 2 — Claude researching (runs for ~20s)
+  const stage3Timer = setTimeout(() => setStage(3), 26000);
+  // Stage 3 — AliExpress enrichment (~4s)
+  const allTimers = [stage2Timer, stage3Timer];
   try {
     const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({mode:'emerging'}) });
     const d = await r.json();
@@ -476,20 +531,27 @@ async function adminGenerate() {
     if (s===-1||e===-1) throw new Error('No product array found');
     const newProducts = JSON.parse(c.slice(s,e+1));
     pendingProducts = [...pendingProducts, ...newProducts];
-    clearInterval(statusTimer);
-    lines.forEach(id => { const el = document.getElementById(id); if(el) el.className = 'status-line done show'; });
+    allTimers.forEach(t => clearTimeout(t));
+    setStage(4);
+    setTimeout(() => {
+      const s4 = document.getElementById('stage-4');
+      const s4status = document.getElementById('stage-4-status');
+      if(s4) s4.className='stage-row done';
+      if(s4status) s4status.textContent='Done';
+    }, 400);
     renderPendingList();
     document.getElementById('pending-card').style.display = 'block';
     toast(`✅ ${newProducts.length} products added to queue (${pendingProducts.length} total)`, 'success');
   } catch(err) {
-    clearInterval(statusTimer);
+    allTimers.forEach(t => clearTimeout(t));
+    for(let i=1;i<=4;i++) { const row=document.getElementById('stage-'+i); if(row&&row.classList.contains('active')){row.style.borderColor='var(--red)';row.style.background='#fef2f2';} }
     const errLine = document.createElement('div');
-    errLine.className = 'status-line show error';
+    errLine.style.cssText='color:var(--red);font-size:13px;font-weight:700;padding:10px 0';
     errLine.textContent = '✕ Error: ' + err.message;
     statusBox.appendChild(errLine);
   }
   btn.disabled = false;
-  document.getElementById('gen-text').textContent = '✨ Generate 3 products';
+  document.getElementById('gen-text').textContent = '🔍 Search for 4 products';
 }
 
 function renderPendingList() {
