@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const bcrypt = require('bcryptjs');
+import { createClient } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
 
 const supabase = createClient(
   'https://qpkpvtsoxiqcrkztkagn.supabase.co',
@@ -8,7 +8,7 @@ const supabase = createClient(
 
 const ADMIN_PASSWORD = 'Billy1234.';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -82,7 +82,6 @@ module.exports = async (req, res) => {
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid email or password' });
 
-    // Route based on live subscription status from Supabase
     const redirect =
       user.subscription_status === 'active' ? '/members.html' : '/trial.html';
 
@@ -96,7 +95,7 @@ module.exports = async (req, res) => {
     });
   }
 
-  // ── Check status (called on page load to verify session) ──────────────
+  // ── Check status ───────────────────────────────────────────────────────
   if (action === 'checkStatus') {
     if (!email) return res.status(400).json({ error: 'Email required' });
 
@@ -115,4 +114,4 @@ module.exports = async (req, res) => {
   }
 
   return res.status(400).json({ error: 'Invalid action' });
-};
+}
