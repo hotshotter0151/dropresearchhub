@@ -89,7 +89,7 @@ select.filter-input{min-width:140px}
 .stage-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;transition:all .3s;opacity:.4}
 .stage-row.active{opacity:1;background:#fff;border-color:var(--navy);box-shadow:0 2px 12px rgba(30,58,95,.08)}
 .stage-row.done{opacity:1;background:#f0fdf4;border-color:#bbf7d0}
-.stage-row.done .stage-icon{display:none}
+.stage-row.done .stage-icon{font-size:18px}
 .stage-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
 .stage-content{flex:1}
 .stage-title{font-size:14px;font-weight:700;color:var(--g900)}
@@ -97,7 +97,7 @@ select.filter-input{min-width:140px}
 .stage-status{font-size:12px;font-weight:700;flex-shrink:0}
 .stage-row.active .stage-status::before{content:'';display:inline-block;width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 .stage-row.done .stage-status{color:var(--green)}
-.stage-row.done .stage-status::before{content:'✓ ';font-size:14px}
+.stage-row.done .stage-status{color:var(--green);font-weight:800}.stage-row.done .stage-status::after{content:' ✓';font-size:14px;color:var(--green)}
 
 /* Products */
 .gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
@@ -201,7 +201,7 @@ select.filter-input{min-width:140px}
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
           <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Each click generates 3 new products and adds them to the review queue below.</div></div>
-          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">🔍 Search for 4 products</span></button>
+          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">🔍 Search for 3 products</span></button>
         </div>
         <div class="card-pad">
           <div class="status-messages" id="status-messages">
@@ -219,7 +219,7 @@ select.filter-input{min-width:140px}
               <div class="stage-row" id="stage-2">
                 <div class="stage-icon" id="stage-2-icon">🧠</div>
                 <div class="stage-content">
-                  <div class="stage-title">Researching 4 emerging products</div>
+                  <div class="stage-title">Researching 3 emerging products</div>
                   <div class="stage-sub">Applying scoring framework · Investment test · Niche rotation</div>
                 </div>
                 <div class="stage-status" id="stage-2-status"></div>
@@ -518,7 +518,7 @@ async function adminGenerate() {
   setStage(1);
   const stage2Timer = setTimeout(() => setStage(2), 5500);
   // Stage 2 — Claude researching (runs for ~20s)
-  const stage3Timer = setTimeout(() => setStage(3), 26000);
+  const stage3Timer = setTimeout(() => setStage(3), 22000);
   // Stage 3 — AliExpress enrichment (~4s)
   const allTimers = [stage2Timer, stage3Timer];
   try {
@@ -551,7 +551,7 @@ async function adminGenerate() {
     statusBox.appendChild(errLine);
   }
   btn.disabled = false;
-  document.getElementById('gen-text').textContent = '🔍 Search for 4 products';
+  document.getElementById('gen-text').textContent = '🔍 Search for 3 products';
 }
 
 function renderPendingList() {
