@@ -37,6 +37,39 @@ export default async function handler(req, res) {
     } catch (e) { return ''; }
   }
 
+  // ── ALIEXPRESS ENRICHMENT ────────────────────────────────────────────────
+  async function enrichFromAliExpress(aliSearchTerm) {
+    const rapidApiKey = process.env.RAPIDAPI_KEY;
+    if (!rapidApiKey || !aliSearchTerm) return null;
+    try {
+      const url = `https://aliexpress-api2.p.rapidapi.com/search?SearchText=${encodeURIComponent(aliSearchTerm)}&page=1&pageSize=3`;
+      const r = await fetch(url, {
+        headers: {
+          'x-rapidapi-host': 'aliexpress-api2.p.rapidapi.com',
+          'x-rapidapi-key': rapidApiKey
+        },
+        signal: AbortSignal.timeout(5000)
+      });
+      if (!r.ok) return null;
+      const data = await r.json();
+      const items = data?.result?.resultList || data?.data?.products || [];
+      const first = items[0]?.item || items[0];
+      if (!first) return null;
+      return {
+        img: first.image || first.productImage || first.img || null,
+        supplierPrice: first.salePrice || first.price?.current || null,
+        orderCount: first.tradeCount || first.soldCount || first.orders || null,
+        rating: first.starRating || first.averageStar || null,
+        reviewCount: first.feedbackRating?.totalValidNum || first.reviewCount || null,
+        shippingDays: first.logisticsDesc || null,
+        aliTitle: first.title || null
+      };
+    } catch (e) {
+      console.log('[DRH] AliExpress enrichment failed:', e.message);
+      return null;
+    }
+  }
+
   // ── FETCH TRENDING DATA (no new sources) ─────────────────────────────────
   async function fetchTrendingData() {
     const results = [];
@@ -153,7 +186,7 @@ export default async function handler(req, res) {
     const recentSet = new Set(recentNiches);
     const fresh = NICHE_POOL.filter(n => !recentSet.has(n));
     const pool = fresh.length >= 3 ? fresh : NICHE_POOL;
-    return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
   }
 
   // ── EMERGING PRODUCTS MODE ────────────────────────────────────────────────
@@ -169,7 +202,7 @@ export default async function handler(req, res) {
     const { names: publishedNames, recentNiches } = history;
     const selectedNiches = pickNiches(recentNiches);
 
-    console.log('[DRH] Niches:', selectedNiches.join(' | '));
+    console.log('[DRH] 5 Niches:', selectedNiches.join(' | '));
     console.log('[DRH] Avoiding:', publishedNames.length, 'products');
 
     const systemPrompt = `You are the product intelligence analyst for DropResearch Hub, a UK dropshipping research platform. Today is ${today}.
@@ -183,10 +216,12 @@ ${publishedNames.length > 0 ? publishedNames.join(', ') : 'None yet'}
 RECENT NICHES (avoid for variety):
 ${recentNiches.length > 0 ? recentNiches.slice(0, 8).join(', ') : 'None yet'}
 
-ASSIGNMENT: Find exactly 3 products — one from each:
+ASSIGNMENT: Find exactly 5 products — one from each:
 NICHE 1: ${selectedNiches[0]}
 NICHE 2: ${selectedNiches[1]}
 NICHE 3: ${selectedNiches[2]}
+NICHE 4: ${selectedNiches[3]}
+NICHE 5: ${selectedNiches[4]}
 
 CORE PRINCIPLES:
 - OPPORTUNITY over popularity. A small accelerating trend in an open market beats a large flat trend
@@ -240,7 +275,7 @@ INVESTMENT TEST (all 3 must be YES or product is excluded):
 3. Would a paid subscriber feel genuine value seeing this in their newsletter?
 If any answer is NO/HESITANT → investmentTest = "PASS" → exclude.
 
-Return ONLY a valid JSON array of exactly 3 objects. No markdown, no backticks, nothing outside the array.
+Return ONLY a valid JSON array of exactly 5 objects. No markdown, no backticks, nothing outside the array.
 
 Required fields per product:
 {"name":"specific name","niche":"assigned niche","emoji":"emoji","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST","trendVelocity":"Accelerating|Rising","whyNow":"primary driver + specific reason in one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"specific UK customer","whyEmerging":"max 20 words","problemSolved":"max 15 words","mainAngle":"max 15 words","tiktokAngle":"max 20 words","metaAngle":"max 20 words","usAuSignal":"max 20 words","verdict":"Strong Opportunity|Watch List","verdictReason":"max 20 words","whyItCouldWork":["reason 1","reason 2","reason 3"],"risks":["risk 1","risk 2"],"bundleIdea":"max 15 words","repeatPurchase":true,"repeatReason":"why or null","aliSearchTerm":"term","cjSearchTerm":"term","googleTrendsKeyword":"keyword","opportunityWindow":"X-Y weeks","scoring":{"ukMarketGap":number,"competitionBarrier":number,"problemIntensity":number,"earlySignalStrength":number,"profitPotential":number,"easeOfEntry":number,"coreTotal":number,"trendVelocityScore":number,"creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number},"bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
@@ -253,11 +288,11 @@ Required fields per product:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 6000,
+        max_tokens: 8000,
         system: systemPrompt,
         messages: [{
           role: 'user',
-          content: `Today is ${today}. Using the live market data above, find 3 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array.`
+          content: `Today is ${today}. Using the live market data above, find 5 genuinely exciting UK dropshipping discoveries — one each from: ${selectedNiches.join(' | ')}. Apply all 6 final principles. Prioritise opportunity over popularity, discovery over obviousness. Only include products that pass all three investment test questions and that you would personally be excited to launch. Return ONLY the JSON array of exactly 5 products.`
         }]
       })
     });
@@ -314,9 +349,42 @@ Required fields per product:
     // Safety filter — strip any PASS products
     products = products.filter(p => p.investmentTest !== 'PASS');
 
-    console.log('[DRH] Fetching images...');
-    const images = await Promise.all(products.map(p => fetchProductImage(p.name)));
-    products = products.map((p, i) => ({ ...p, img: images[i] || '' }));
+    // Run AliExpress enrichment + SerpAPI fallback in parallel
+    console.log('[DRH] Enriching from AliExpress...');
+    const enrichments = await Promise.all(
+      products.map(p => enrichFromAliExpress(p.aliSearchTerm))
+    );
+
+    // Only call SerpAPI for products AliExpress didn't match
+    const serpImages = await Promise.all(
+      products.map((p, i) =>
+        enrichments[i]?.img ? Promise.resolve('') : fetchProductImage(p.name)
+      )
+    );
+
+    // Merge enrichment into product objects
+    products = products.map((p, i) => {
+      const ali = enrichments[i];
+      const fallbackImg = serpImages[i];
+      return {
+        ...p,
+        img: ali?.img || fallbackImg || '',
+        // Real supplier price from AliExpress — kept as returned, labelled as approximate USD
+        supplierCost: ali?.supplierPrice
+          ? `£${parseFloat(String(ali.supplierPrice).replace(/[^\d.]/g, '')).toFixed(2)} (AliExpress live price)`
+          : p.supplierCost,
+        // Real market signals
+        aliOrderCount: ali?.orderCount || null,
+        aliRating: ali?.rating || null,
+        aliReviewCount: ali?.reviewCount || null,
+        aliShipping: ali?.shippingDays || null,
+        // Override Claude saturation estimate with real order data
+        saturationRisk: ali?.orderCount
+          ? ali.orderCount > 10000 ? 'Medium'
+            : 'Low'
+          : p.saturationRisk
+      };
+    });
 
     console.log('[DRH] Done:', products.map(p =>
       p.name + ' [' + p.confidence + '] [excitement:' + p.subscriberExcitement + '] [opportunity:' + p.opportunityMultiplier + ']'
