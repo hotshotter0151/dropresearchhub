@@ -8,7 +8,8 @@
     "api/webhook.js": { "memory": 512, "maxDuration": 10 },
     "api/analyze.js": { "memory": 512, "maxDuration": 15 },
     "api/simulate.js": { "memory": 512, "maxDuration": 20 },
-    "api/saved.js": { "memory": 512, "maxDuration": 10 }
+    "api/saved.js": { "memory": 512, "maxDuration": 10 },
+    "api/pulse.js": { "memory": 512, "maxDuration": 30 }
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/:path*" },
