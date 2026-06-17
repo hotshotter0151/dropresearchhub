@@ -111,22 +111,27 @@ Include 4-6 opportunities. Base them on the live data above. Focus on UK market 
     const pulse = JSON.parse(cleaned);
 
     // Fetch images for each opportunity via SerpAPI
-    async function getImage(query) {
+    async function getImage(aliTerm, title) {
       if (!serpApiKey) return '';
       try {
-        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product')}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
+        // Use aliSearchTerm for more specific product images
+        const query = aliTerm || title;
+        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product white background')}&api_key=${serpApiKey}&num=5&safe=off&gl=gb&hl=en&tbs=isz:m`;
         const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
         if (!r.ok) return '';
         const d = await r.json();
         const results = d?.images_results || [];
-        return results[0]?.original || results[0]?.thumbnail || '';
+        // Prefer product images, avoid stock/lifestyle photos
+        const product = results.find(i => i.original && i.is_product);
+        const clean = results.find(i => i.original && !i.original.includes('shutterstock') && !i.original.includes('getty'));
+        return product?.original || clean?.original || results[0]?.original || results[0]?.thumbnail || '';
       } catch(e) { return ''; }
     }
 
     // Add images and links to opportunities
     pulse.opportunities = await Promise.all(pulse.opportunities.map(async (opp) => ({
       ...opp,
-      img: await getImage(opp.title),
+      img: await getImage(opp.aliSearchTerm, opp.title),
       amazonUrl: `https://www.amazon.co.uk/s?k=${encodeURIComponent(opp.amazonSearchTerm || opp.title)}&ref=nb_sb_noss`,
       aliUrl: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(opp.aliSearchTerm || opp.title)}`,
       tiktokUrl: `https://www.tiktok.com/tag/${encodeURIComponent(opp.tiktokHashtag || opp.title.replace(/\s+/g, ''))}`
