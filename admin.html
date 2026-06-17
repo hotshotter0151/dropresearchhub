@@ -10,7 +10,16 @@
 :root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB;--blue-bg:#EFF6FF;--green-bg:#DCFCE7;--red-bg:#FEE2E2;--amber:#D97706;--amber-bg:#FEF3C7}
 body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6}
 .app{display:flex;min-height:100vh}
-.sidebar{width:240px;background:var(--navy-dark);color:#fff;padding:20px 14px;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:100}
+.sidebar{width:240px;background:var(--navy-dark);color:#fff;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.sb-logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.sb-logo-bar.g{background:var(--gold)}
+.sb-logo-text{font-size:14px;font-weight:800;color:#fff}
+.sb-logo-text span{color:var(--gold)}
+.sb-nav-inner{padding:12px;flex:1}
+.sb-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.sb-bottom-wrap{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;color:#fff}
 .logo-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px}
 .logo-bar{width:4px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}
@@ -139,29 +148,35 @@ select.filter-input{min-width:140px}
 <body>
 <div class="app">
   <aside class="sidebar">
-    <a class="logo" href="index.html">
-      <div class="logo-icon">
-        <div class="logo-bar" style="height:10px;opacity:.4"></div>
-        <div class="logo-bar" style="height:16px;opacity:.7"></div>
-        <div class="logo-bar" style="height:22px"></div>
-        <div class="logo-bar gold" style="height:17px"></div>
+    <a class="sb-logo-wrap" href="dashboard.html">
+      <div class="sb-logo-icon">
+        <div class="sb-logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="sb-logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="sb-logo-bar" style="height:20px"></div>
+        <div class="sb-logo-bar g" style="height:15px"></div>
       </div>
-      <div class="logo-text">Drop<span>Research</span></div>
+      <div class="sb-logo-text">Drop<span>Research</span> Hub</div>
     </a>
-    <div class="nav-label">Dashboard</div>
-    <button class="nav-btn active" onclick="show('overview',this)">📊 Overview</button>
-    <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
-    <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
-    <div class="nav-label">Site</div>
-    <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
-    <button class="nav-btn" onclick="show('validator',this)">✅ Validator</button>
-    <button class="nav-btn" onclick="window.open('members.html','_blank')">→ Members Area</button>
-    <button class="nav-btn" onclick="window.open('trial.html','_blank')">→ Trial Area</button>
-    <button class="nav-btn" onclick="window.open('index.html','_blank')">→ Homepage</button>
-    <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">→ Stripe</button>
-    <button class="nav-btn" onclick="window.open('https://supabase.com/dashboard/project/qpkpvtsoxiqcrkztkagn','_blank')">→ Supabase</button>
-    <div style="margin-top:auto;padding-top:32px">
-      <button class="btn-logout-side" onclick="logout()">🚪 Log out</button>
+    <div class="sb-nav-inner">
+      <div class="sb-section-label">Admin</div>
+      <button class="nav-btn active" onclick="show('overview',this)">📊 Overview</button>
+      <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
+      <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
+      <div class="sb-section-label" style="margin-top:8px">Content</div>
+      <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
+      <button class="nav-btn" onclick="show('pulse',this)">🌍 Market Pulse</button>
+      <div class="sb-section-label" style="margin-top:8px">Pages</div>
+      <button class="nav-btn" onclick="window.open('dashboard.html','_blank')">🏠 Dashboard</button>
+      <button class="nav-btn" onclick="window.open('members.html','_blank')">📈 Members Area</button>
+      <button class="nav-btn" onclick="window.open('pulse.html','_blank')">🌍 Market Pulse</button>
+      <button class="nav-btn" onclick="window.open('trial.html','_blank')">🔒 Trial Area</button>
+      <button class="nav-btn" onclick="window.open('index.html','_blank')">🌐 Homepage</button>
+      <div class="sb-section-label" style="margin-top:8px">External</div>
+      <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">💳 Stripe</button>
+      <button class="nav-btn" onclick="window.open('https://supabase.com/dashboard/project/qpkpvtsoxiqcrkztkagn','_blank')">🗄️ Supabase</button>
+    </div>
+    <div class="sb-bottom-wrap">
+      <button class="btn-logout-side" onclick="logout()">Sign out →</button>
     </div>
   </aside>
 
@@ -299,7 +314,29 @@ select.filter-input{min-width:140px}
       </div>
     </section>
 
-    <!-- CUSTOMERS -->
+    <!-- MARKET PULSE -->
+<div id="sec-pulse" class="section" style="display:none">
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">🌍 Hub's UK Market Pulse</div>
+        <div class="panel-sub">Generate Hub's weekly market intelligence briefing — UK trends, opportunities and signals</div>
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <button id="pulse-gen-btn" onclick="generatePulse()" style="background:var(--navy);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s">
+        <span id="pulse-gen-text">🌍 Generate Market Pulse</span>
+      </button>
+    </div>
+    <div id="pulse-status" style="display:none;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13px;color:var(--g600)"></div>
+    <div id="pulse-preview" style="display:none"></div>
+    <div style="margin-top:16px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:#1e40af;line-height:1.6">
+      💡 <strong>Tip:</strong> Generate the Market Pulse every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMERS -->
     <section id="customers" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
@@ -403,6 +440,7 @@ async function sbFetch(path, options = {}) {
 // Nav
 const sectionTitles = {
   overview: ['Overview','Live data from Supabase & Stripe'],
+  pulse: ['Market Pulse','Generate Hub's weekly UK market intelligence briefing'],
   products: ['Products','Generate and manage the weekly product feed'],
   validator: ['Product Validator','Check any product for market potential'],
   customers: ['Customers','All registered users'],
