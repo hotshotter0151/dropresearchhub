@@ -1105,7 +1105,54 @@ async function runValidator(){
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
     stopHubMessages();removeHubLoader('validator-result');
-    const p={name:data.productName||productName,niche:'Validator result',stage:'Assessed',season:'Assessed',grade:data.opportunityScore||'B',trendScore:data.growthScore||50,saturationRisk:'Medium',margin:data.marginScore?data.marginScore+'%':'—',verdict:data.verdict||'',verdictReason:data.verdictReason||'',whyItCouldWork:data.whyItCouldWork||[],risks:data.risks||[],creativeAngles:data.creativeAngles||[],aliSearchTerm:productName,googleTrendsKeyword:productName,emoji:'🔍'};
+    const p={
+      name:data.productName||productName,
+      niche:data.marketStage||'Validator result',
+      stage:'Assessed',
+      season:'Assessed',
+      grade:data.opportunityScore||'B',
+      trendScore:data.growthScore||50,
+      problemScore:data.competitionScore||50,
+      saturationRisk:data.saturationRisk||'Medium',
+      competitionLevel:data.saturationRisk||'Medium',
+      margin:data.margin||'—',
+      sellingPrice:data.sellingPrice||'—',
+      supplierCost:data.supplierCost||'—',
+      emergingScore:data.growthScore||50,
+      opportunityWindow:data.opportunityWindow||'—',
+      confidence:data.confidence||'Medium',
+      trendVelocity:data.trendVelocity||'—',
+      verdict:data.verdict||'',
+      verdictReason:data.verdict||'',
+      whyNow:data.whyNow||'',
+      targetCustomer:'UK dropshipping market',
+      mainAngle:data.creativeAngles?.[0]||'',
+      tiktokAngle:data.creativeAngles?.[0]||'',
+      metaAngle:data.creativeAngles?.[1]||'',
+      whyEmerging:data.ukMarketNotes||data.whyNow||'',
+      whyItCouldWork:data.whyItCouldWork||[],
+      risks:data.risks||[],
+      creativeAngles:data.creativeAngles||[],
+      aliSearchTerm:productName,
+      googleTrendsKeyword:productName,
+      opportunityMultiplier:data.opportunityMultiplier||5,
+      subscriberExcitement:data.subscriberExcitement||5,
+      bundleIdea:'',
+      problemSolved:data.ukMarketNotes||'',
+      usAuSignal:'',
+      emoji:'🔍',
+      scoring:{
+        ukMarketGap:data.growthScore?Math.round(data.growthScore*0.25):0,
+        competitionBarrier:data.competitionScore?Math.round(data.competitionScore*0.2):0,
+        problemIntensity:data.creativePotential?Math.round(data.creativePotential*2):0,
+        earlySignalStrength:data.subscriberExcitement?Math.round(data.subscriberExcitement*1.5):0,
+        profitPotential:data.brandability?Math.round(data.brandability*1.2):0,
+        easeOfEntry:data.retailGap?Math.round(data.retailGap*0.8):0,
+        creativePotential:data.creativePotential||0,
+        coreTotal:data.growthScore||0
+      },
+      growthData:data.growthGraph||[{label:'W1',value:10},{label:'W2',value:20},{label:'W3',value:35},{label:'W4',value:50},{label:'W5',value:65},{label:'W6',value:75}]
+    };
     resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
     const tempBody=document.createElement('div');tempBody.id='validator-analysis-body';tempBody.className='analysis-body';resultArea.appendChild(tempBody);
     const origBody=document.getElementById('analysis-body');
