@@ -1074,7 +1074,37 @@ async function runValidator(){
   const input=document.getElementById('validator-input').value.trim();
   const resultArea=document.getElementById('validator-result');
   if(!input){showToast('Paste a product URL first');return;}
-  let productName=extractProductName(input);
+  // If URL, look up product via AliExpress API
+  let productName;
+  const isUrl = input.includes('http') || input.includes('aliexpress.com') || input.includes('temu.com') || input.includes('alibaba.com');
+  if (isUrl) {
+    createHubLoader('validator-result', 'Hub is looking up this product...');
+    startHubMessages('validator-result');
+    try {
+      const lookupRes = await fetch('/api/aliexpress-lookup', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ url: input })
+      });
+      const lookupData = await lookupRes.json();
+      if (lookupData.title) {
+        productName = lookupData.title;
+      } else {
+        // Fall back to URL extraction
+        productName = extractProductName(input);
+      }
+    } catch(e) {
+      productName = extractProductName(input);
+    }
+    if (!productName || productName.length < 5 || productName === 'Product from URL') {
+      stopHubMessages();
+      removeHubLoader('validator-result');
+      resultArea.innerHTML = '<div class="validator-empty"><h3>Could not read product from URL</h3><p>Try typing the product name directly instead — e.g. "Wireless Air Duster for Car Cleaning"</p></div>';
+      return;
+    }
+  } else {
+    productName = input.trim();
+  }
   createHubLoader('validator-result', 'Hub is analysing your product...');
   startHubMessages('validator-result');
   try{
@@ -1092,7 +1122,25 @@ async function runValidator(){
     if(origBody)origBody.id='analysis-body';
   }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
 }
-function extractProductName(url){try{const decoded=decodeURIComponent(url);const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>3&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);}catch(e){}return url.slice(0,60);}
+function extractProductName(url){
+  // If it doesn't look like a URL, treat as product name directly
+  if(!url.includes('http')&&!url.includes('.com')){return url.trim().slice(0,80);}
+  try{
+    // AliExpress: title is in the path segment before .html
+    const aliMatch = url.match(/\/([^/]+)\.html/);
+    if(aliMatch){
+      const raw = decodeURIComponent(aliMatch[1]);
+      // Remove item IDs (long numbers) and clean up
+      const cleaned = raw.replace(/[-_]/g,' ').replace(/\d{8,}/g,' ').replace(/\s+/g,' ').trim();
+      if(cleaned.length>5) return cleaned.slice(0,80);
+    }
+    // Generic: find longest meaningful segment
+    const decoded=decodeURIComponent(url);
+    const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>5&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods','html'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
+    if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  }catch(e){}
+  return 'Product from URL';
+}
 
 // Admin functions removed - use admin.html
 
