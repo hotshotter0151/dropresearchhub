@@ -316,23 +316,33 @@ select.filter-input{min-width:140px}
 
     <!-- MARKET PULSE -->
 <div id="pulse" class="section">
-  <div class="panel">
-    <div class="panel-header">
-      <div>
-        <div class="panel-title">🌍 Hub's UK Market Pulse</div>
-        <div class="panel-sub">Generate Hub's weekly market intelligence briefing — UK trends, opportunities and signals</div>
+
+  <!-- Generate button -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="panel-head">
+      <div><div class="panel-title">🌍 Hub's UK Market Pulse</div><div class="panel-sub">Generate Hub's weekly market intelligence — UK trends, opportunities and signals</div></div>
+      <button class="gen-btn" id="pulse-gen-btn" onclick="generatePulse()"><span id="pulse-gen-text">🌍 Generate Market Pulse</span></button>
+    </div>
+    <div id="pulse-status" style="display:none;padding:12px 16px;border-radius:10px;font-size:13px;margin-top:12px"></div>
+  </div>
+
+  <!-- Review queue -->
+  <div class="card" id="pulse-review-card" style="display:none;margin-bottom:16px">
+    <div class="panel-head">
+      <div><div class="panel-title">📋 Pulse Review Queue <span id="pulse-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on the opportunities you want to publish.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" onclick="toggleAllPulse(true)">✓ All on</button>
+        <button class="btn" onclick="toggleAllPulse(false)">✕ All off</button>
+        <button class="btn danger" onclick="clearPulseQueue()">🗑️ Clear</button>
+        <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishPulse()">🚀 Publish selected</button>
       </div>
     </div>
-    <div style="margin-bottom:20px">
-      <button id="pulse-gen-btn" onclick="generatePulse()" style="background:var(--navy);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s">
-        <span id="pulse-gen-text">🌍 Generate Market Pulse</span>
-      </button>
-    </div>
-    <div id="pulse-status" style="display:none;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13px;color:var(--g600)"></div>
-    <div id="pulse-preview" style="display:none"></div>
-    <div style="margin-top:16px;padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:#1e40af;line-height:1.6">
-      💡 <strong>Tip:</strong> Generate the Market Pulse every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
-    </div>
+    <div id="pulse-review-list"></div>
+  </div>
+
+  <!-- Tip -->
+  <div style="padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:#1e40af;line-height:1.6">
+    💡 Generate every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
   </div>
 </div>
 
@@ -426,39 +436,97 @@ const ADMIN_PW = 'Billy1234.';
   }
 })();
 
+let pendingPulse = null;
+
 async function generatePulse() {
   const btn = document.getElementById('pulse-gen-btn');
   const statusEl = document.getElementById('pulse-status');
-  const previewEl = document.getElementById('pulse-preview');
   btn.disabled = true;
   document.getElementById('pulse-gen-text').innerHTML = '<span class="spinner"></span> Generating...';
   statusEl.style.display = 'block';
-  statusEl.textContent = 'Hub is scanning UK market signals...';
+  statusEl.style.background = 'var(--g50)';
+  statusEl.style.border = '1px solid var(--g200)';
   statusEl.style.color = 'var(--g600)';
+  statusEl.style.padding = '12px 16px';
+  statusEl.textContent = 'Hub is scanning UK market signals...';
 
   try {
-    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
+    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({preview: true}) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Generation failed');
-    const pulse = data.pulse;
-    statusEl.textContent = 'Market Pulse generated and saved! Members can see it on the pulse page.';
+    pendingPulse = data.pulse;
+    statusEl.textContent = pendingPulse.opportunities.length + ' opportunities generated — review and publish below.';
     statusEl.style.color = 'var(--green)';
-    previewEl.style.display = 'block';
-    previewEl.innerHTML = `
-      <div style="background:var(--navy);border-radius:14px;padding:20px;color:#fff;margin-top:12px">
-        <div style="font-size:12px;color:rgba(255,255,255,.4);text-transform:uppercase;font-weight:700;margin-bottom:8px">Preview</div>
-        <div style="font-size:15px;font-weight:800;margin-bottom:8px">${pulse.weeklyTheme || ''}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:16px;font-style:italic">"${pulse.hubIntro || ''}"</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
-          ${(pulse.opportunities||[]).map(o=>`<div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px"><div style="font-size:12px;font-weight:800;color:#fff;margin-bottom:4px">${o.emoji||''} ${o.title}</div><div style="font-size:11px;color:rgba(255,255,255,.5)">${o.confidence} - ${o.stage}</div></div>`).join('')}
-        </div>
-      </div>`;
+    renderPulseQueue();
+    document.getElementById('pulse-review-card').style.display = 'block';
   } catch(e) {
     statusEl.textContent = 'Error: ' + e.message;
     statusEl.style.color = 'var(--red)';
   }
   btn.disabled = false;
-  document.getElementById('pulse-gen-text').textContent = 'Generate Market Pulse';
+  document.getElementById('pulse-gen-text').textContent = '🌍 Generate Market Pulse';
+}
+
+function renderPulseQueue() {
+  if (!pendingPulse) return;
+  const opps = pendingPulse.opportunities || [];
+  document.getElementById('pulse-count-badge').textContent = opps.length;
+  const list = document.getElementById('pulse-review-list');
+  list.innerHTML = opps.map((opp, i) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--g100);flex-wrap:wrap">
+      <div style="font-size:28px;flex-shrink:0">${opp.emoji || '📊'}</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:14px;font-weight:700;color:var(--g900);margin-bottom:2px">${opp.title}</div>
+        <div style="font-size:12px;color:var(--g400)">${opp.confidence} Confidence · ${opp.stage} · Window: ${opp.window}</div>
+        <div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">"${opp.hubTake || ''}"</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <button class="toggle-btn on" id="ptoggle-pulse-${i}" onclick="this.classList.toggle('on')"></button>
+        <button onclick="deletePulseOpp(${i})" style="background:none;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--g400);cursor:pointer;font-family:inherit">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function deletePulseOpp(i) {
+  pendingPulse.opportunities.splice(i, 1);
+  renderPulseQueue();
+}
+
+function toggleAllPulse(on) {
+  document.querySelectorAll('[id^="ptoggle-pulse-"]').forEach(b => {
+    b.className = 'toggle-btn' + (on ? ' on' : '');
+  });
+}
+
+function clearPulseQueue() {
+  if (!confirm('Clear the pulse review queue?')) return;
+  pendingPulse = null;
+  document.getElementById('pulse-review-card').style.display = 'none';
+  document.getElementById('pulse-review-list').innerHTML = '';
+}
+
+async function publishPulse() {
+  if (!pendingPulse) return;
+  const selected = pendingPulse.opportunities.filter((_, i) => {
+    const btn = document.getElementById('ptoggle-pulse-' + i);
+    return btn && btn.classList.contains('on');
+  });
+  if (!selected.length) { toast('Toggle on at least one opportunity', 'error'); return; }
+
+  const publishData = { ...pendingPulse, opportunities: selected };
+
+  try {
+    const res = await fetch('/api/pulse', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ publish: true, pulse: publishData })
+    });
+    if (!res.ok) throw new Error('Publish failed');
+    toast('Market Pulse published! Members can see it now.', 'success');
+    clearPulseQueue();
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+  }
 }
 
 function logout() { localStorage.removeItem('drh_admin'); window.location.href = 'index.html'; }
