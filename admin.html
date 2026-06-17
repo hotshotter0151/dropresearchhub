@@ -426,6 +426,41 @@ const ADMIN_PW = 'Billy1234.';
   }
 })();
 
+async function generatePulse() {
+  const btn = document.getElementById('pulse-gen-btn');
+  const statusEl = document.getElementById('pulse-status');
+  const previewEl = document.getElementById('pulse-preview');
+  btn.disabled = true;
+  document.getElementById('pulse-gen-text').innerHTML = '<span class="spinner"></span> Generating...';
+  statusEl.style.display = 'block';
+  statusEl.textContent = 'Hub is scanning UK market signals...';
+  statusEl.style.color = 'var(--g600)';
+
+  try {
+    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+    const pulse = data.pulse;
+    statusEl.textContent = 'Market Pulse generated and saved! Members can see it on the pulse page.';
+    statusEl.style.color = 'var(--green)';
+    previewEl.style.display = 'block';
+    previewEl.innerHTML = `
+      <div style="background:var(--navy);border-radius:14px;padding:20px;color:#fff;margin-top:12px">
+        <div style="font-size:12px;color:rgba(255,255,255,.4);text-transform:uppercase;font-weight:700;margin-bottom:8px">Preview</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px">${pulse.weeklyTheme || ''}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:16px;font-style:italic">"${pulse.hubIntro || ''}"</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+          ${(pulse.opportunities||[]).map(o=>`<div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px"><div style="font-size:12px;font-weight:800;color:#fff;margin-bottom:4px">${o.emoji||''} ${o.title}</div><div style="font-size:11px;color:rgba(255,255,255,.5)">${o.confidence} - ${o.stage}</div></div>`).join('')}
+        </div>
+      </div>`;
+  } catch(e) {
+    statusEl.textContent = 'Error: ' + e.message;
+    statusEl.style.color = 'var(--red)';
+  }
+  btn.disabled = false;
+  document.getElementById('pulse-gen-text').textContent = 'Generate Market Pulse';
+}
+
 function logout() { localStorage.removeItem('drh_admin'); window.location.href = 'index.html'; }
 
 async function sbFetch(path, options = {}) {
