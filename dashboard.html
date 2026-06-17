@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DropResearch Hub — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;
+  --white:#fff;--off:#F8FAFF;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
+  --green:#16A34A;--green-bg:#DCFCE7;
+  --red:#DC2626;--red-bg:#FEE2E2;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+  --sidebar-w:240px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6;overflow-x:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;top:0;left:0;height:100vh;width:var(--sidebar-w);
+  background:var(--navy-dark);display:flex;flex-direction:column;
+  z-index:200;transition:transform .25s ease;overflow-y:auto
+}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.logo-bar.g{background:var(--gold)}
+.logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.logo-text span{color:var(--gold)}
+
+.sidebar-hub{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.hub-avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px}
+.hub-avatar img{width:100%;height:100%;object-fit:cover}
+.hub-status{flex:1;min-width:0}
+.hub-name{font-size:13px;font-weight:800;color:#fff}
+.hub-activity{font-size:11px;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+
+.sidebar-nav{padding:12px 12px;flex:1}
+.nav-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff}
+.nav-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-item-badge{margin-left:auto;background:var(--gold);color:var(--navy-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px}
+
+.sidebar-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
+.sidebar-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ── MOBILE TOPBAR ── */
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px;line-height:1}
+.mobile-logo{font-size:15px;font-weight:800;color:#fff}
+.mobile-logo span{color:var(--gold)}
+.mobile-hub-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)}
+
+/* ── MAIN CONTENT ── */
+.main{margin-left:var(--sidebar-w);min-height:100vh;transition:margin .25s ease}
+.page{display:none;padding:28px 3% 48px}
+.page.active{display:block}
+
+/* ── OVERLAY ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+.sidebar-overlay.show{display:block}
+
+/* ── DASHBOARD PAGE ── */
+.dash-welcome{background:var(--navy);border-radius:20px;padding:28px 28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+.dash-welcome::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.03)}
+.dash-welcome-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+.dash-hub-img{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px}
+.dash-hub-img img{width:100%;height:100%;object-fit:cover}
+.dash-welcome-text{flex:1}
+.dash-welcome-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.dash-welcome-name{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.4px;margin-bottom:4px}
+.dash-hub-note{font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;max-width:600px}
+.dash-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dash-meta-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700}
+.dash-meta-badge.green{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:#86efac}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px 20px}
+.stat-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:8px}
+.stat-card-value{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--g900)}
+.stat-card-sub{font-size:12px;color:var(--g400);margin-top:4px}
+.stat-card-trend{font-size:11px;font-weight:700;margin-top:6px}
+.stat-card-trend.up{color:var(--green)}
+.stat-card-trend.amber{color:var(--amber)}
+
+/* ── SECTION HEADERS ── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
+.section-link{font-size:13px;font-weight:700;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:4px}
+.section-link:hover{color:var(--navy-light)}
+
+/* ── PRODUCT PREVIEW CARDS ── */
+.products-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.preview-card{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;transition:all .18s;cursor:pointer;text-decoration:none;display:block}
+.preview-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1);border-color:var(--g300)}
+.preview-card-img{height:140px;background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:42px;border-bottom:1px solid var(--g100);position:relative;overflow:hidden}
+.preview-card-img img{max-width:100%;max-height:136px;object-fit:contain;padding:8px}
+.preview-grade{position:absolute;top:10px;left:10px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;padding:4px 10px}
+.preview-card-body{padding:14px}
+.preview-card-name{font-size:13px;font-weight:800;color:var(--g900);margin-bottom:3px;line-height:1.35}
+.preview-card-niche{font-size:11px;color:var(--g400);margin-bottom:8px}
+.preview-card-why{font-size:12px;color:var(--g600);font-style:italic;line-height:1.5}
+.preview-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--g100)}
+.preview-card-margin{font-size:13px;font-weight:800;color:var(--green)}
+.preview-card-cta{font-size:11px;font-weight:700;color:var(--navy)}
+
+/* ── QUICK ACTIONS ── */
+.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.qa-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;cursor:pointer;transition:all .15s;text-decoration:none;display:flex;align-items:center;gap:14px}
+.qa-card:hover{border-color:var(--navy);background:var(--off);transform:translateY(-1px);box-shadow:0 4px 16px rgba(30,58,95,.08)}
+.qa-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.qa-text{}
+.qa-title{font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px}
+.qa-desc{font-size:12px;color:var(--g500);line-height:1.4}
+
+/* ── SAVED STRIP ── */
+.saved-strip{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;margin-bottom:20px}
+.saved-strip-empty{text-align:center;padding:20px;color:var(--g400);font-size:13px}
+.saved-items{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.saved-items::-webkit-scrollbar{height:4px}
+.saved-items::-webkit-scrollbar-track{background:var(--g100);border-radius:2px}
+.saved-items::-webkit-scrollbar-thumb{background:var(--g300);border-radius:2px}
+.saved-chip{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px 14px;white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:8px}
+.saved-chip:hover{border-color:var(--navy);background:var(--off)}
+.saved-chip-emoji{font-size:18px}
+.saved-chip-text{}
+.saved-chip-name{font-size:12px;font-weight:700;color:var(--g900)}
+.saved-chip-meta{font-size:10px;color:var(--g400)}
+
+/* ── FEATURE PAGES ── */
+.feature-header{background:var(--navy);border-radius:20px;padding:28px;margin-bottom:20px;color:#fff;display:flex;align-items:center;gap:16px}
+.feature-header-icon{width:52px;height:52px;background:rgba(255,255,255,.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.feature-header-text h1{font-size:24px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px}
+.feature-header-text p{font-size:13px;color:rgba(255,255,255,.65);max-width:500px;line-height:1.55}
+.feature-hub-note{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;margin-top:16px;display:flex;gap:12px;align-items:flex-start}
+.feature-hub-note img,.feature-hub-note .hub-emoji{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.feature-hub-note-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65;font-style:italic}
+
+.feature-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;margin-bottom:16px}
+.feature-card-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
+.feature-card-head h2{font-size:16px;font-weight:800;color:var(--g900)}
+.feature-card-body{padding:22px}
+
+/* ── COMING SOON ── */
+.coming-soon{text-align:center;padding:60px 20px;color:var(--g400)}
+.coming-soon-icon{font-size:48px;margin-bottom:16px}
+.coming-soon h3{font-size:18px;font-weight:800;color:var(--g700);margin-bottom:8px}
+.coming-soon p{font-size:14px;line-height:1.6;max-width:400px;margin:0 auto}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .mobile-topbar{display:flex}
+  .page{padding:80px 16px 48px}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+  .products-preview{grid-template-columns:1fr}
+  .quick-actions{grid-template-columns:1fr}
+  .dash-welcome{border-radius:16px;padding:20px}
+  .dash-welcome-name{font-size:18px}
+}
+@media(max-width:480px){
+  .stat-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-card{padding:14px 16px}
+  .stat-card-value{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a class="logo-wrap" href="dashboard.html">
+      <div class="logo-icon">
+        <div class="logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="logo-bar" style="height:20px"></div>
+        <div class="logo-bar g" style="height:15px"></div>
+      </div>
+      <div class="logo-text">Drop<span>Research</span> Hub</div>
+    </a>
+  </div>
+
+  <div class="sidebar-hub">
+    <div class="hub-avatar">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+    </div>
+    <div class="hub-status">
+      <div class="hub-name">Hub</div>
+      <div class="hub-activity" id="sidebar-hub-status">Researching this week...</div>
+    </div>
+    <div class="hub-dot"></div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">This Week</div>
+    <button class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="nav-item-icon">🏠</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('opportunities',this)">
+      <span class="nav-item-icon">📈</span> Hub's Weekly Picks
+      <span class="nav-item-badge" id="products-badge">3</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px">Ask Hub</div>
+    <button class="nav-item" onclick="showPage('validator',this)">
+      <span class="nav-item-icon">🔍</span> About A Product
+    </button>
+    <button class="nav-item" onclick="showPage('creative',this)">
+      <span class="nav-item-icon">✍️</span> For Ad Angles
+    </button>
+    <button class="nav-item" onclick="showPage('simulator',this)">
+      <span class="nav-item-icon">🚀</span> For A Launch Plan
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px">Your Research</div>
+    <button class="nav-item" onclick="showPage('saved',this)">
+      <span class="nav-item-icon">💛</span> Products Hub Is Tracking
+    </button>
+    <button class="nav-item" onclick="showPage('compare',this)">
+      <span class="nav-item-icon">⚖️</span> Hub's Comparison Report
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user" id="sidebar-user-email">Loading...</div>
+    <button class="sidebar-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+  </div>
+</aside>
+
+<!-- MOBILE TOPBAR -->
+<div class="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+  <div class="mobile-logo">Drop<span>Research</span> Hub</div>
+  <div class="mobile-hub-dot"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+
+    <!-- HUB WELCOME CARD -->
+    <div class="dash-welcome">
+      <div class="dash-welcome-top">
+        <div class="dash-hub-img">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+        </div>
+        <div class="dash-welcome-text">
+          <div class="dash-welcome-label">Hub's weekly note</div>
+          <div class="dash-welcome-name" id="dash-greeting">Good morning</div>
+          <div class="dash-hub-note" id="hub-weekly-note">Loading Hub's research notes...</div>
+        </div>
+      </div>
+      <div class="dash-meta">
+        <div class="dash-meta-badge green">🟢 Hub is active</div>
+        <div class="dash-meta-badge" id="drop-date-badge">Loading...</div>
+        <div class="dash-meta-badge" id="products-live-badge">Loading...</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-card-label">Products This Week</div>
+        <div class="stat-card-value" id="stat-products">—</div>
+        <div class="stat-card-sub">Hub's picks</div>
+        <div class="stat-card-trend up" id="stat-products-trend"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Products Saved</div>
+        <div class="stat-card-value" id="stat-saved">—</div>
+        <div class="stat-card-sub">Hub is tracking</div>
+        <div class="stat-card-trend amber" id="stat-saved-trend"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Avg. Margin</div>
+        <div class="stat-card-value" id="stat-margin">—</div>
+        <div class="stat-card-sub">This week's picks</div>
+        <div class="stat-card-trend up"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Top Grade</div>
+        <div class="stat-card-value" id="stat-grade" style="color:var(--green)">—</div>
+        <div class="stat-card-sub">Best pick this week</div>
+      </div>
+    </div>
+
+    <!-- THIS WEEK'S PICKS -->
+    <div class="section-head">
+      <div class="section-title">Hub's picks this week</div>
+      <a class="section-link" onclick="showPage('opportunities',document.querySelector('.nav-item:nth-child(2)'))">
+        See full reports →
+      </a>
+    </div>
+    <div class="products-preview" id="dash-products-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--g400)">
+        <div style="font-size:32px;margin-bottom:12px">⏳</div>
+        <div style="font-weight:700;color:var(--g600)">Hub is preparing this week's picks</div>
+        <div style="font-size:13px;margin-top:4px">Check back Monday when the weekly drop lands</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-head" style="margin-top:24px">
+      <div class="section-title">Ask Hub</div>
+    </div>
+    <div class="quick-actions">
+      <a class="qa-card" onclick="showPage('validator',null)">
+        <div class="qa-icon" style="background:#eff6ff">🔍</div>
+        <div class="qa-text">
+          <div class="qa-title">Ask Hub About A Product</div>
+          <div class="qa-desc">Found something? Hub will tell you honestly if it's worth your time and money.</div>
+        </div>
+      </a>
+      <a class="qa-card" onclick="showPage('creative',null)">
+        <div class="qa-icon" style="background:#fef3c7">✍️</div>
+        <div class="qa-text">
+          <div class="qa-title">Ask Hub For Ad Angles</div>
+          <div class="qa-desc">Hub writes your TikTok script, hooks and a creator brief ready to send.</div>
+        </div>
+      </a>
+      <a class="qa-card" onclick="showPage('simulator',null)">
+        <div class="qa-icon" style="background:#f0fdf4">🚀</div>
+        <div class="qa-text">
+          <div class="qa-title">Ask Hub For A Launch Plan</div>
+          <div class="qa-desc">Hub builds your store concept and a week-by-week launch roadmap.</div>
+        </div>
+      </a>
+      <a class="qa-card" onclick="showPage('saved',null)">
+        <div class="qa-icon" style="background:#fdf4ff">💛</div>
+        <div class="qa-text">
+          <div class="qa-title">Products Hub Is Tracking</div>
+          <div class="qa-desc">Review and compare the products you've asked Hub to keep an eye on.</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- SAVED STRIP -->
+    <div class="section-head" style="margin-top:8px">
+      <div class="section-title">Hub is tracking for you</div>
+      <a class="section-link" onclick="showPage('saved',null)">View all →</a>
+    </div>
+    <div class="saved-strip">
+      <div id="saved-strip-inner">
+        <div class="saved-strip-empty">Nothing saved yet — hit 💛 on any product to ask Hub to track it.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HUB'S WEEKLY PICKS PAGE -->
+  <div class="page" id="page-opportunities">
+    <div class="feature-header">
+      <div class="feature-header-icon">📈</div>
+      <div class="feature-header-text">
+        <h1>Hub's Weekly Opportunities</h1>
+        <p>Every week Hub researches hundreds of products so you don't have to. These made the cut.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text" id="opportunities-hub-note">"Loading Hub's research notes..."</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:20px;padding:24px">
+      <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Full product analysis available inside the members area.</p>
+      <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none;transition:all .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+        📈 Open Hub's Weekly Picks →
+      </a>
+    </div>
+  </div>
+
+  <!-- ASK HUB — VALIDATOR -->
+  <div class="page" id="page-validator">
+    <div class="feature-header">
+      <div class="feature-header-icon">🔍</div>
+      <div class="feature-header-text">
+        <h1>Ask Hub About A Product</h1>
+        <p>Found something interesting? Paste the link and Hub will tell you honestly whether it's worth your time and money.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text">"Paste the link below. I'll look at it properly and give you my honest take — not just scores, but whether I'd actually back it."</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-body">
+        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area with complete analysis.</p>
+        <a href="members.html#validator" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
+          🔍 Ask Hub About A Product →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASK HUB — CREATIVE -->
+  <div class="page" id="page-creative">
+    <div class="feature-header">
+      <div class="feature-header-icon">✍️</div>
+      <div class="feature-header-text">
+        <h1>Ask Hub For Ad Angles</h1>
+        <p>Hub writes your TikTok script, three opening hooks, and a brief you can send straight to a creator.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text">"Tell me the product and I'll handle the creative angle. I'll give you one strong script — not a dozen options to confuse you."</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-body">
+        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area — open any product analysis to access.</p>
+        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
+          ✍️ Ask Hub For Ad Angles →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASK HUB — SIMULATOR -->
+  <div class="page" id="page-simulator">
+    <div class="feature-header">
+      <div class="feature-header-icon">🚀</div>
+      <div class="feature-header-text">
+        <h1>Ask Hub For A Launch Plan</h1>
+        <p>Hub builds your store concept and a week-by-week plan for launching any product. Takes about 15 seconds.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text">"Give me a product and I'll build the launch plan. Store concept, four-week roadmap, profit projections, honest verdict. Everything you need to decide whether to go."</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-body">
+        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area — open any product analysis to access.</p>
+        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
+          🚀 Ask Hub For A Launch Plan →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVED PRODUCTS -->
+  <div class="page" id="page-saved">
+    <div class="feature-header">
+      <div class="feature-header-icon">💛</div>
+      <div class="feature-header-text">
+        <h1>Products Hub Is Tracking For You</h1>
+        <p>These are the products you've asked Hub to keep an eye on.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text">"I'm keeping these on my radar. Head into the members area to compare them or run a full analysis."</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-body">
+        <div id="saved-page-grid">
+          <div class="coming-soon">
+            <div class="coming-soon-icon">💛</div>
+            <h3>Nothing saved yet</h3>
+            <p>Go to Hub's Weekly Picks and hit 💛 on any product to ask Hub to track it for you.</p>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
+            💛 View in Members Area →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE -->
+  <div class="page" id="page-compare">
+    <div class="feature-header">
+      <div class="feature-header-icon">⚖️</div>
+      <div class="feature-header-text">
+        <h1>Hub's Comparison Report</h1>
+        <p>Can't decide between two products? Hub will tell you which one he'd back and why.</p>
+        <div class="feature-hub-note">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
+          <div class="feature-hub-note-text">"Save at least two products first, then I'll compare them properly and give you a straight recommendation."</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-body">
+        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area under Saved Products.</p>
+        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
+          ⚖️ Open Hub's Comparison Report →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+
+// ── AUTH CHECK ────────────────────────────────────────────────────────────
+const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+const _auth = sessionStorage.getItem('drh_auth');
+if (!_auth && !_session?.email) {
+  window.location.href = 'login.html';
+} else if (_auth === 'trial') {
+  window.location.href = 'trial.html';
+}
+
+// ── USER ─────────────────────────────────────────────────────────────────
+function getUserEmail() {
+  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  if (s?.email) return s.email;
+  if (sessionStorage.getItem('drh_auth') === 'member') return 'admin@dropresearchhub.com';
+  return null;
+}
+
+const email = getUserEmail();
+if (email) {
+  document.getElementById('sidebar-user-email').textContent = email;
+}
+
+// ── GREETING ─────────────────────────────────────────────────────────────
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+document.getElementById('dash-greeting').textContent = getGreeting();
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ── PAGE NAVIGATION ───────────────────────────────────────────────────────
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+  closeSidebar();
+}
+
+// ── GRADE COLOR ───────────────────────────────────────────────────────────
+function gradeColor(g) {
+  if (!g) return '#6B7280';
+  const s = String(g).toUpperCase();
+  if (s.startsWith('A')) return '#16A34A';
+  if (s.startsWith('B')) return '#D97706';
+  return '#DC2626';
+}
+
+// ── LOAD PRODUCTS ─────────────────────────────────────────────────────────
+async function loadProducts() {
+  try {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    const products = data.products || [];
+
+    if (!products.length) return;
+
+    // Update badge
+    document.getElementById('products-badge').textContent = products.length;
+    document.getElementById('products-live-badge').textContent = products.length + ' products live';
+
+    // Stats
+    document.getElementById('stat-products').textContent = products.length;
+    const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
+    const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
+    if (avgMargin) document.getElementById('stat-margin').textContent = avgMargin + '%';
+    const topGrade = products.map(p=>p.grade).sort((a,b)=> {
+      const order = {'A+':0,'A':1,'B+':2,'B':3,'C':4};
+      return (order[a]||5)-(order[b]||5);
+    })[0];
+    if (topGrade) document.getElementById('stat-grade').textContent = topGrade;
+
+    // Drop date
+    const now = new Date();
+    document.getElementById('drop-date-badge').textContent = 'Drop: w/c ' + now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+
+    // Hub weekly note
+    const hubNote = data.hubNote || "I reviewed hundreds of products this week. Most failed — competition already too high, margins too thin, or I've seen them before. These three stood out for very different reasons. Take a look.";
+    document.getElementById('hub-weekly-note').textContent = hubNote;
+    document.getElementById('opportunities-hub-note').textContent = '"' + hubNote + '"';
+    document.getElementById('sidebar-hub-status').textContent = products.length + ' picks ready';
+
+    // Product preview cards
+    const grid = document.getElementById('dash-products-grid');
+    grid.innerHTML = products.map((p,i) => `
+      <a class="preview-card" href="members.html">
+        <div class="preview-card-img" style="background:#fff">
+          ${p.img ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : `<span>${p.emoji||'📦'}</span>`}
+          <div class="preview-grade" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
+        </div>
+        <div class="preview-card-body">
+          <div class="preview-card-name">${p.name}</div>
+          <div class="preview-card-niche">${p.niche||''}</div>
+          <div class="preview-card-why">${p.whyEmerging||p.whyNow||''}</div>
+          <div class="preview-card-footer">
+            <div class="preview-card-margin">${p.margin||'—'} margin</div>
+            <div class="preview-card-cta">Hub's full report →</div>
+          </div>
+        </div>
+      </a>`).join('');
+
+  } catch(e) {
+    console.error('Failed to load products:', e);
+  }
+}
+
+// ── LOAD SAVED ────────────────────────────────────────────────────────────
+async function loadSaved() {
+  if (!email) return;
+  try {
+    const res = await fetch('/api/saved?email=' + encodeURIComponent(email));
+    const data = await res.json();
+    const saved = data.saved || [];
+
+    document.getElementById('stat-saved').textContent = saved.length;
+    if (saved.length) {
+      document.getElementById('stat-saved-trend').textContent = saved.length + ' product' + (saved.length!==1?'s':'') + ' tracked';
+    }
+
+    const strip = document.getElementById('saved-strip-inner');
+    if (!saved.length) {
+      strip.innerHTML = '<div class="saved-strip-empty">Nothing saved yet — hit 💛 on any product to ask Hub to track it.</div>';
+      return;
+    }
+
+    strip.innerHTML = '<div class="saved-items">' + saved.map(p => `
+      <a class="saved-chip" href="members.html">
+        <div class="saved-chip-emoji">${p.emoji||'📦'}</div>
+        <div class="saved-chip-text">
+          <div class="saved-chip-name">${p.name.length>28?p.name.slice(0,28)+'...':p.name}</div>
+          <div class="saved-chip-meta">${p.niche||''} · ${p.margin||'—'}</div>
+        </div>
+      </a>`).join('') + '</div>';
+
+    // Saved page
+    const savedGrid = document.getElementById('saved-page-grid');
+    savedGrid.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px">' +
+      saved.map(p => `
+        <a href="members.html" style="background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px;text-decoration:none;display:block;transition:all .15s" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--g200)'">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="font-size:28px">${p.emoji||'📦'}</div>
+            <div>
+              <div style="font-size:13px;font-weight:800;color:var(--g900)">${p.name}</div>
+              <div style="font-size:11px;color:var(--g400)">${p.niche||''}</div>
+            </div>
+            <div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:3px 9px">Grade ${p.grade||'?'}</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div>
+              <div style="font-size:14px;font-weight:900;color:var(--green)">${p.margin||'—'}</div>
+            </div>
+            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div>
+              <div style="font-size:14px;font-weight:900;color:var(--navy)">${p.trendScore||'—'}</div>
+            </div>
+            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div>
+              <div style="font-size:12px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div>
+            </div>
+          </div>
+        </a>`).join('') + '</div>';
+
+  } catch(e) {
+    console.error('Failed to load saved:', e);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+loadProducts();
+loadSaved();
+</script>
+</body>
+</html>
