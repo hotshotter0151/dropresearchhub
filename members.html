@@ -347,31 +347,102 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 @keyframes hubWrite{0%,100%{transform:rotate(-10deg) translate(0,0)}50%{transform:rotate(5deg) translate(-2px,-3px)}}
 @keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
 @keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* ── SIDEBAR (dashboard consistent) ─────────────────────────────────────── */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;transition:transform .25s ease;overflow-y:auto}
+.sb-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.sb-logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.sb-logo-bar.g{background:var(--gold)}
+.sb-logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.sb-logo-text span{color:var(--gold)}
+.sb-hub{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sb-hub-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sb-hub-avatar img{width:100%;height:100%;object-fit:cover}
+.sb-hub-name{font-size:13px;font-weight:800;color:#fff}
+.sb-hub-status{font-size:11px;color:rgba(255,255,255,.5)}
+.sb-hub-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+.sb-nav{padding:12px;flex:1}
+.sb-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
+.sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.12);color:#fff}
+.sb-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--gold);color:var(--navy-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
+.sb-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+.sb-overlay.show{display:block}
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px}
+.mobile-logo-text{font-size:15px;font-weight:800;color:#fff}
+.mobile-logo-text span{color:var(--gold)}
+.members-main{margin-left:240px;min-height:100vh;transition:margin .25s ease}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .members-main{margin-left:0}
+  .mobile-topbar{display:flex}
+  .topnav{display:none}
+}
 </style>
 </head>
 <body>
-<nav class="topnav">
-  <a class="nav-logo" href="index.html">
-    <div class="nav-logo-icon">
-      <div class="nav-logo-bar" style="height:10px;opacity:.4"></div>
-      <div class="nav-logo-bar" style="height:16px;opacity:.7"></div>
-      <div class="nav-logo-bar" style="height:22px"></div>
-      <div class="nav-logo-bar g" style="height:17px"></div>
-    </div>
-    <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
-  </a>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showView('products',this)">📈 Emerging Products</button>
-    <button class="nav-tab" onclick="showView('validator',this)">✅ Product Validator</button>
-    <button class="nav-tab" onclick="showView('saved',this);loadSavedProducts()">💛 Saved Products</button>
+<div class="members-main" id="members-main">
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
+<!-- MOBILE TOPBAR -->
+<div class="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+  <div class="mobile-logo-text">Drop<span>Research</span> Hub</div>
+  <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <a class="sb-logo-wrap" href="dashboard.html">
+      <div class="sb-logo-icon">
+        <div class="sb-logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="sb-logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="sb-logo-bar" style="height:20px"></div>
+        <div class="sb-logo-bar g" style="height:15px"></div>
+      </div>
+      <div class="sb-logo-text">Drop<span>Research</span> Hub</div>
+    </a>
   </div>
-  <div class="nav-right">
-    <div class="nav-user">👋 Members</div>
-    <button class="nav-user" style="cursor:pointer" onclick="openManageModal()">⚙️ Manage</button>
-    <button class="nav-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out</button>
+  <div class="sb-hub">
+    <div class="sb-hub-avatar">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="sb-hub-name">Hub</div>
+      <div class="sb-hub-status" id="sb-hub-status">Ready to research</div>
+    </div>
+    <div class="sb-hub-dot"></div>
   </div>
-</nav>
+  <nav class="sb-nav">
+    <div class="sb-section">This Week</div>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🏠</span> Dashboard</a>
+    <a class="sb-item" href="dashboard.html#weekly"><span class="sb-item-icon">📦</span> Hub's Weekly Picks</a>
+    <button class="sb-item active" onclick="showView('products',this);closeSidebar()"><span class="sb-item-icon">📈</span> Emerging Products</button>
+    <div class="sb-section" style="margin-top:8px">Ask Hub</div>
+    <button class="sb-item" onclick="showView('validator',this);closeSidebar()"><span class="sb-item-icon">🔍</span> About A Product</button>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">✍️</span> For Ad Angles</a>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
+    <div class="sb-section" style="margin-top:8px">Your Research</div>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">💛</span> Products Hub Is Tracking</button>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">⚖️</span> Hub's Comparison Report</button>
+  </nav>
+  <div class="sb-bottom">
+    <div class="sb-user" id="sb-user-email">Members area</div>
+    <button class="sb-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+  </div>
+</aside>
 
 <div class="view active" id="view-products">
   <div class="page-header">
@@ -1534,6 +1605,13 @@ function startHubMessages(containerId) {
 function stopHubMessages() {
   if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; }
 }
+</script>
+</div>
+
+<script>
+function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");document.body.style.overflow="hidden"}
+function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");document.body.style.overflow=""}
+const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
 </script>
 </body>
 </html>
