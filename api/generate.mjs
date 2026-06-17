@@ -190,8 +190,13 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
     });
     const aiData = await aiRes.json();
     const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    try { return res.status(200).json(JSON.parse(raw.replace(/```json|```/g,'').trim())); }
-    catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
+    try {
+      let cleaned = raw.replace(/```json|```/g,'').trim();
+      const s = cleaned.indexOf('{');
+      const e = cleaned.lastIndexOf('}');
+      if (s !== -1 && e !== -1) cleaned = cleaned.slice(s, e+1);
+      return res.status(200).json(JSON.parse(cleaned));
+    } catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
   }
 
   if (body.system && body.messages) {
