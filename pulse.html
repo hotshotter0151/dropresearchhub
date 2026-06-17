@@ -69,20 +69,20 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 /* ── OPPORTUNITY CARDS ── */
 .opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:20px}
-.opp-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;transition:all .18s}
+.opp-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;transition:all .18s;display:flex;flex-direction:column}
 .opp-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1)}
 .opp-img{height:180px;background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden;border-bottom:1px solid var(--g100)}
 .opp-img img{width:100%;height:100%;object-fit:cover}
 .opp-confidence{position:absolute;top:12px;left:12px;border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px;color:#fff}
 .opp-stage{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;font-size:11px;font-weight:700;padding:5px 10px;color:var(--navy)}
-.opp-body{padding:18px}
+.opp-body{padding:18px;display:flex;flex-direction:column;flex:1}
 .opp-title{font-size:16px;font-weight:800;color:var(--g900);margin-bottom:4px}
 .opp-window{font-size:12px;color:var(--g400);margin-bottom:12px}
 .opp-signals{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .opp-signal{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--g700);line-height:1.5}
 .opp-signal-icon{font-size:14px;flex-shrink:0;margin-top:1px}
 .opp-hub-take{background:var(--g50);border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:var(--g700);font-style:italic;line-height:1.6;margin-bottom:14px}
-.opp-links{display:flex;gap:8px;flex-wrap:wrap}
+.opp-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
 .opp-link{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;transition:all .15s}
 .opp-link.amazon{background:#fff8e6;color:#92400e;border:1px solid #fde68a}
 .opp-link.amazon:hover{background:#fef3c7}
