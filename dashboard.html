@@ -220,10 +220,13 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <button class="nav-item active" onclick="showPage('dashboard',this)">
       <span class="nav-item-icon">🏠</span> Dashboard
     </button>
-    <button class="nav-item" onclick="showPage('opportunities',this)">
-      <span class="nav-item-icon">📈</span> Hub's Weekly Picks
+    <button class="nav-item" onclick="showPage('weekly',this)">
+      <span class="nav-item-icon">📦</span> Hub's Weekly Picks
       <span class="nav-item-badge" id="products-badge">3</span>
     </button>
+    <a class="nav-item" href="members.html">
+      <span class="nav-item-icon">📈</span> Emerging Products
+    </a>
 
     <div class="nav-section-label" style="margin-top:8px">Ask Hub</div>
     <button class="nav-item" onclick="showPage('validator',this)">
@@ -374,22 +377,36 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </div>
 
   <!-- HUB'S WEEKLY PICKS PAGE -->
-  <div class="page" id="page-opportunities">
+  <div class="page" id="page-weekly">
     <div class="feature-header">
-      <div class="feature-header-icon">📈</div>
+      <div class="feature-header-icon">📦</div>
       <div class="feature-header-text">
-        <h1>Hub's Weekly Opportunities</h1>
-        <p>Every week Hub researches hundreds of products so you don't have to. These made the cut.</p>
+        <h1>Hub's Weekly Picks</h1>
+        <p>Every week Hub researches hundreds of products so you don't have to. These three made the cut this Monday.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text" id="opportunities-hub-note">"Loading Hub's research notes..."</div>
+          <div class="feature-hub-note-text" id="weekly-hub-note">"Loading Hub's research notes..."</div>
         </div>
       </div>
     </div>
-    <div style="background:#fff;border:1px solid var(--g200);border-radius:20px;padding:24px">
-      <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Full product analysis available inside the members area.</p>
-      <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none;transition:all .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
-        📈 Open Hub's Weekly Picks →
+
+    <!-- PRODUCT CARDS -->
+    <div id="weekly-products-grid" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
+      <div style="text-align:center;padding:60px 20px;color:var(--g400)">
+        <div style="font-size:40px;margin-bottom:12px">⏳</div>
+        <div style="font-size:16px;font-weight:700;color:var(--g600)">Hub is preparing this week's picks</div>
+        <div style="font-size:13px;margin-top:6px">Check back Monday when the weekly drop lands</div>
+      </div>
+    </div>
+
+    <!-- LINK TO FULL ANALYSIS -->
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:4px">Want the full analysis?</div>
+        <div style="font-size:13px;color:var(--g500)">Go to Emerging Products for scoring, growth charts, launch simulator and more.</div>
+      </div>
+      <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+        📈 Go to Emerging Products →
       </a>
     </div>
   </div>
@@ -618,49 +635,86 @@ async function loadProducts() {
 
     if (!products.length) return;
 
-    // Update badge
-    document.getElementById('products-badge').textContent = products.length;
+    // Only show latest 3 on dashboard
+    const latest3 = products.slice(0, 3);
+    document.getElementById('products-badge').textContent = latest3.length;
     document.getElementById('products-live-badge').textContent = products.length + ' products live';
+    document.getElementById('stat-products').textContent = latest3.length;
 
-    // Stats
-    document.getElementById('stat-products').textContent = products.length;
     const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
     const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
     if (avgMargin) document.getElementById('stat-margin').textContent = avgMargin + '%';
-    const topGrade = products.map(p=>p.grade).sort((a,b)=> {
-      const order = {'A+':0,'A':1,'B+':2,'B':3,'C':4};
-      return (order[a]||5)-(order[b]||5);
-    })[0];
+    const topGrade = products.map(p=>p.grade).sort((a,b)=>({'A+':0,'A':1,'B+':2,'B':3,'C':4}[a]||5)-({'A+':0,'A':1,'B+':2,'B':3,'C':4}[b]||5))[0];
     if (topGrade) document.getElementById('stat-grade').textContent = topGrade;
 
-    // Drop date
     const now = new Date();
     document.getElementById('drop-date-badge').textContent = 'Drop: w/c ' + now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 
-    // Hub weekly note
-    const hubNote = data.hubNote || "I reviewed hundreds of products this week. Most failed — competition already too high, margins too thin, or I've seen them before. These three stood out for very different reasons. Take a look.";
+    const hubNote = data.hubNote || "I reviewed hundreds of products this week. Most failed — competition too high or margins too thin. These three stood out for very different reasons. Take a look.";
     document.getElementById('hub-weekly-note').textContent = hubNote;
-    document.getElementById('opportunities-hub-note').textContent = '"' + hubNote + '"';
-    document.getElementById('sidebar-hub-status').textContent = products.length + ' picks ready';
+    document.getElementById('weekly-hub-note').textContent = '"' + hubNote + '"';
+    document.getElementById('sidebar-hub-status').textContent = latest3.length + ' picks ready';
 
-    // Product preview cards
+    // Dashboard — hero layout
     const grid = document.getElementById('dash-products-grid');
-    grid.innerHTML = products.map((p,i) => `
-      <a class="preview-card" href="members.html">
-        <div class="preview-card-img" style="background:#fff">
-          ${p.img ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : `<span>${p.emoji||'📦'}</span>`}
-          <div class="preview-grade" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
+    const hero = latest3[0];
+    const others = latest3.slice(1);
+    if (!hero) return;
+    grid.innerHTML = `
+      <a class="preview-card" href="members.html" style="display:grid;grid-template-columns:200px 1fr;height:auto;min-height:180px">
+        <div class="preview-card-img" style="height:100%;border-bottom:none;border-right:1px solid var(--g100)">
+          ${hero.img ? `<img src="${hero.img}" alt="${hero.name}" onerror="this.style.display='none'">` : `<span>${hero.emoji||'📦'}</span>`}
+          <div class="preview-grade" style="background:${gradeColor(hero.grade)}">Grade ${hero.grade||'?'} — Top Pick</div>
         </div>
-        <div class="preview-card-body">
-          <div class="preview-card-name">${p.name}</div>
-          <div class="preview-card-niche">${p.niche||''}</div>
-          <div class="preview-card-why">${p.whyEmerging||p.whyNow||''}</div>
+        <div class="preview-card-body" style="display:flex;flex-direction:column;justify-content:center">
+          <div class="preview-card-name" style="font-size:16px;margin-bottom:4px">${hero.name}</div>
+          <div class="preview-card-niche">${hero.niche||''}</div>
+          <div class="preview-card-why" style="margin:10px 0">${hero.whyEmerging||hero.whyNow||''}</div>
           <div class="preview-card-footer">
-            <div class="preview-card-margin">${p.margin||'—'} margin</div>
-            <div class="preview-card-cta">Hub's full report →</div>
+            <div class="preview-card-margin">${hero.margin||'—'} margin</div>
+            <div class="preview-card-cta">See Hub's full report →</div>
           </div>
         </div>
-      </a>`).join('');
+      </a>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        ${others.map(p=>`
+        <a class="preview-card" href="members.html">
+          <div class="preview-card-img" style="height:120px;background:#fff">
+            ${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
+            <div class="preview-grade" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
+          </div>
+          <div class="preview-card-body">
+            <div class="preview-card-name">${p.name}</div>
+            <div class="preview-card-niche">${p.niche||''}</div>
+            <div class="preview-card-footer" style="margin-top:8px">
+              <div class="preview-card-margin">${p.margin||'—'} margin</div>
+              <div class="preview-card-cta">Full report →</div>
+            </div>
+          </div>
+        </a>`).join('')}
+      </div>`;
+
+    // Weekly picks page — full cards
+    const weeklyGrid = document.getElementById('weekly-products-grid');
+    if (weeklyGrid) {
+      weeklyGrid.innerHTML = latest3.map(p=>`
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:160px 1fr">
+          <div style="background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:42px;border-right:1px solid var(--g100);position:relative;min-height:160px">
+            ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:156px;object-fit:contain;padding:8px" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
+            <div style="position:absolute;top:10px;left:10px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 10px">Grade ${p.grade||'?'}</div>
+          </div>
+          <div style="padding:18px 20px;display:flex;flex-direction:column;justify-content:center">
+            <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:3px">${p.name}</div>
+            <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche||''} · ${p.season||'Evergreen'}</div>
+            <div style="font-size:13px;color:var(--g700);line-height:1.6;font-style:italic;padding:10px 12px;background:var(--g50);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;margin-bottom:12px">${p.whyEmerging||p.whyNow||''}</div>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <div style="font-size:14px;font-weight:800;color:var(--green)">${p.margin||'—'} margin</div>
+              <div style="font-size:12px;color:var(--g500)">${p.sellingPrice||''}</div>
+              <a href="members.html" style="margin-left:auto;background:var(--navy);color:#fff;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">See full report →</a>
+            </div>
+          </div>
+        </div>`).join('');
+    }
 
   } catch(e) {
     console.error('Failed to load products:', e);
