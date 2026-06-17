@@ -163,6 +163,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1}
+@keyframes hubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -408,10 +409,21 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     </div>
     <div class="feature-card">
       <div class="feature-card-body">
-        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area with complete analysis.</p>
-        <a href="members.html#validator" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
-          🔍 Ask Hub About A Product →
-        </a>
+        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:16px;transition:border-color .15s" id="val-input-wrap" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
+          <input id="dash-validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL — or just type a product name..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
+          <button onclick="runDashValidator()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
+        </div>
+        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Works with AliExpress · Temu · Alibaba · or just type a product name</div>
+
+        <!-- HUB LOADING -->
+        <div id="dash-val-loading" style="display:none;text-align:center;padding:40px 20px">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style='font-size:60px;margin-bottom:16px'>🤖</div>'">
+          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-val-msg">Hub is looking at this properly...</div>
+          <div style="font-size:13px;color:var(--g400);margin-top:6px">Give me a moment</div>
+        </div>
+
+        <!-- RESULT -->
+        <div id="dash-val-result" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -425,16 +437,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         <p>Hub writes your TikTok script, three opening hooks, and a brief you can send straight to a creator.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Tell me the product and I'll handle the creative angle. I'll give you one strong script — not a dozen options to confuse you."</div>
+          <div class="feature-hub-note-text">"Tell me the product and I'll write you a ready-to-film script. One strong angle — not a dozen options to confuse you."</div>
         </div>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-card-body">
-        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area — open any product analysis to access.</p>
-        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
-          ✍️ Ask Hub For Ad Angles →
-        </a>
+        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .15s" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
+          <input id="dash-creative-input" placeholder="Type a product name e.g. Modular Under-Bed Storage Drawer..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
+          <button onclick="runDashCreative()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
+        </div>
+        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Hub will write one strong TikTok script + 3 hook lines + creator brief</div>
+        <div id="dash-creative-loading" style="display:none;text-align:center;padding:40px 20px">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style='font-size:60px;margin-bottom:16px'>🤖</div>'">
+          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-creative-msg">Hub is writing your script...</div>
+        </div>
+        <div id="dash-creative-result" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -448,16 +466,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         <p>Hub builds your store concept and a week-by-week plan for launching any product. Takes about 15 seconds.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Give me a product and I'll build the launch plan. Store concept, four-week roadmap, profit projections, honest verdict. Everything you need to decide whether to go."</div>
+          <div class="feature-hub-note-text">"Give me a product and I'll build the launch plan. Store concept, four-week roadmap, honest verdict. Everything you need to decide whether to go."</div>
         </div>
       </div>
     </div>
     <div class="feature-card">
       <div class="feature-card-body">
-        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area — open any product analysis to access.</p>
-        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
-          🚀 Ask Hub For A Launch Plan →
-        </a>
+        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .15s" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
+          <input id="dash-sim-input" placeholder="Type a product name e.g. Lightweight Folding Bike Fender..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
+          <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
+        </div>
+        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Hub will build a store concept + 4-week launch roadmap + honest verdict</div>
+        <div id="dash-sim-loading" style="display:none;text-align:center;padding:40px 20px">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style='font-size:60px;margin-bottom:16px'>🤖</div>'">
+          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-sim-msg">Hub is building your launch plan...</div>
+        </div>
+        <div id="dash-sim-result" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -715,6 +739,264 @@ function showToast(msg) {
 // ── INIT ──────────────────────────────────────────────────────────────────
 loadProducts();
 loadSaved();
+
+// ── DASHBOARD VALIDATOR ───────────────────────────────────────────────────
+function extractProductName(url) {
+  try {
+    const decoded = decodeURIComponent(url);
+    const words = decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>3&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
+    if (words.length) return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);
+  } catch(e) {}
+  return url.slice(0,60);
+}
+
+const VAL_MSGS = [
+  "Hub is looking at this properly...",
+  "Checking market signals...",
+  "Reviewing competition levels...",
+  "Assessing UK demand...",
+  "Hub is writing up his verdict..."
+];
+
+async function runDashValidator() {
+  const input = document.getElementById('dash-validator-input').value.trim();
+  if (!input) { showToast('Paste a product URL or type a product name'); return; }
+  const productName = extractProductName(input);
+
+  document.getElementById('dash-val-loading').style.display = 'block';
+  document.getElementById('dash-val-result').style.display = 'none';
+
+  let msgIdx = 0;
+  const msgTimer = setInterval(() => {
+    msgIdx = (msgIdx+1) % VAL_MSGS.length;
+    const el = document.getElementById('dash-val-msg');
+    if (el) el.textContent = VAL_MSGS[msgIdx];
+  }, 3000);
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({productName, niche:'General'})
+    });
+    const data = await res.json();
+    clearInterval(msgTimer);
+    document.getElementById('dash-val-loading').style.display = 'none';
+
+    function gradeC(g) {
+      const s = String(g||'').toUpperCase();
+      if (s.startsWith('A')) return '#16A34A';
+      if (s.startsWith('B')) return '#D97706';
+      return '#DC2626';
+    }
+
+    const verdict = data.verdict || data.opportunityScore || '—';
+    const score = data.opportunityScore || '—';
+    const confidence = data.confidence || data.trendVelocity || '—';
+
+    document.getElementById('dash-val-result').style.display = 'block';
+    document.getElementById('dash-val-result').innerHTML = `
+      <div style="background:var(--navy);border-radius:16px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <img src="${HUB_IMG}" alt="Hub" style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.2)" onerror="this.outerHTML='<div style=\'font-size:36px\'>🤖</div>'">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Hub's verdict on ${productName}</div>
+          <div style="font-size:15px;color:rgba(255,255,255,.9);line-height:1.55">${data.verdict||'Analysis complete.'}</div>
+        </div>
+        <div style="background:${gradeC(score)};color:#fff;border-radius:12px;padding:10px 18px;text-align:center;flex-shrink:0">
+          <div style="font-size:11px;font-weight:700;opacity:.8">Hub's Grade</div>
+          <div style="font-size:28px;font-weight:900;line-height:1">${score}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Trend</div>
+          <div style="font-size:16px;font-weight:900;color:var(--navy)">${data.trendVelocity||'—'}</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Saturation</div>
+          <div style="font-size:16px;font-weight:900;color:var(--amber)">${data.saturationRisk||'—'}</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Margin</div>
+          <div style="font-size:16px;font-weight:900;color:var(--green)">${data.margin||'—'}</div>
+        </div>
+      </div>
+      ${data.whyItCouldWork?.length ? `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px">
+          <div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:8px">✅ Why it could work</div>
+          ${data.whyItCouldWork.map(i=>`<div style="font-size:12px;color:#166534;margin-bottom:4px">· ${i}</div>`).join('')}
+        </div>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px">
+          <div style="font-size:12px;font-weight:800;color:#b91c1c;margin-bottom:8px">⚠️ Risks to check</div>
+          ${(data.risks||[]).map(i=>`<div style="font-size:12px;color:#991b1b;margin-bottom:4px">· ${i}</div>`).join('')}
+        </div>
+      </div>` : ''}
+      <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;font-size:12px;color:var(--g500)">
+        Hub's market notes: ${data.ukMarketNotes||data.whyNow||'—'}
+      </div>
+      <button onclick="document.getElementById('dash-val-result').style.display='none';document.getElementById('dash-validator-input').value=''" style="margin-top:12px;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>
+    `;
+  } catch(e) {
+    clearInterval(msgTimer);
+    document.getElementById('dash-val-loading').style.display = 'none';
+    showToast('Could not reach Hub — try again');
+  }
+}
+
+// Allow Enter key
+document.getElementById('dash-validator-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runDashValidator();
+});
+document.getElementById('dash-creative-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runDashCreative();
+});
+document.getElementById('dash-sim-input')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runDashSimulator();
+});
+
+// ── DASHBOARD CREATIVE ────────────────────────────────────────────────────
+const CREATIVE_MSGS = [
+  "Hub is writing your script...",
+  "Crafting the opening hook...",
+  "Building your creator brief...",
+  "Almost ready..."
+];
+
+async function runDashCreative() {
+  const productName = document.getElementById('dash-creative-input').value.trim();
+  if (!productName) { showToast('Type a product name first'); return; }
+
+  document.getElementById('dash-creative-loading').style.display = 'block';
+  document.getElementById('dash-creative-result').style.display = 'none';
+
+  let i = 0;
+  const t = setInterval(() => {
+    i = (i+1) % CREATIVE_MSGS.length;
+    const el = document.getElementById('dash-creative-msg');
+    if (el) el.textContent = CREATIVE_MSGS[i];
+  }, 2500);
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        system: `You are Hub, a straight-talking UK ecommerce researcher and creative strategist. Write ad creative in first person as Hub. Be direct, specific and action-oriented. Return ONLY valid JSON, no markdown.`,
+        messages: [{role:'user', content:`Write TikTok ad creative for: ${productName}. Return JSON: {"script":"punchy 80-word TikTok video script with hook, middle, CTA — use line breaks","hooks":["hook 1","hook 2","hook 3"],"brief":"ready-to-send creator brief with: Product, Platform, Video length, Key shots, CTA","music":"TikTok music vibe"}`}],
+        max_tokens: 1000
+      })
+    });
+    const data = await res.json();
+    clearInterval(t);
+    document.getElementById('dash-creative-loading').style.display = 'none';
+
+    const raw = (data.content||[]).map(i=>i.text||'').join('');
+    let parsed;
+    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch(e) { parsed = {script: raw, hooks:[], brief:'', music:''}; }
+
+    document.getElementById('dash-creative-result').style.display = 'block';
+    document.getElementById('dash-creative-result').innerHTML = `
+      <div style="background:var(--navy);border-radius:16px;padding:18px 22px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <img src="${HUB_IMG}" alt="Hub" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
+        <div style="font-size:13px;color:rgba(255,255,255,.8);font-style:italic">"Here's how I'd open this ad for ${productName}."</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;padding:20px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">📹 Hub's TikTok Script</div>
+        <div style="font-size:14px;color:var(--g700);line-height:1.8;white-space:pre-wrap">${parsed.script||''}</div>
+        <button onclick="navigator.clipboard.writeText(document.querySelector('#dash-creative-result .script-copy-target').textContent).then(()=>showToast('Script copied ✓'))" style="margin-top:12px;background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--g700)">📋 Copy script</button>
+        <div class="script-copy-target" style="display:none">${parsed.script||''}</div>
+      </div>
+      ${parsed.hooks?.length ? `
+      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;padding:20px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">🎣 3 Opening Hooks</div>
+        ${parsed.hooks.map((h,i)=>`<div style="padding:10px 14px;background:var(--g50);border-radius:8px;margin-bottom:6px;font-size:13px;color:var(--g700)"><strong>${i+1}.</strong> ${h}</div>`).join('')}
+      </div>` : ''}
+      ${parsed.brief ? `
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:20px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">📨 Creator Brief</div>
+        <div style="font-size:13px;color:#166534;line-height:1.7;white-space:pre-wrap">${parsed.brief}</div>
+      </div>` : ''}
+      <button onclick="document.getElementById('dash-creative-result').style.display='none';document.getElementById('dash-creative-input').value=''" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>
+    `;
+  } catch(e) {
+    clearInterval(t);
+    document.getElementById('dash-creative-loading').style.display = 'none';
+    showToast('Could not reach Hub — try again');
+  }
+}
+
+// ── DASHBOARD SIMULATOR ───────────────────────────────────────────────────
+const SIM_MSGS = [
+  "Hub is building your launch plan...",
+  "Designing your store concept...",
+  "Writing your week-by-week roadmap...",
+  "Calculating profit projections...",
+  "Almost ready..."
+];
+
+async function runDashSimulator() {
+  const productName = document.getElementById('dash-sim-input').value.trim();
+  if (!productName) { showToast('Type a product name first'); return; }
+
+  document.getElementById('dash-sim-loading').style.display = 'block';
+  document.getElementById('dash-sim-result').style.display = 'none';
+
+  let i = 0;
+  const t = setInterval(() => {
+    i = (i+1) % SIM_MSGS.length;
+    const el = document.getElementById('dash-sim-msg');
+    if (el) el.textContent = SIM_MSGS[i];
+  }, 2500);
+
+  try {
+    const res = await fetch('/api/simulate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name: productName, adBudget: 20, salesTarget: 5, platform: 'TikTok + Meta' })
+    });
+    const data = await res.json();
+    clearInterval(t);
+    document.getElementById('dash-sim-loading').style.display = 'none';
+
+    const cs = data.colorScheme || {bg:'#0f1f36',nav:'#091628',accent:'#F59E0B',text:'#fff',sub:'rgba(255,255,255,0.65)',btn:'#F59E0B',btnText:'#0f1f36'};
+    const weekColors = [{bg:'#DCFCE7',color:'#166534'},{bg:'#FEF3C7',color:'#92400E'},{bg:'#DBEAFE',color:'#1E40AF'},{bg:'#E1F5EE',color:'#0F6E56'}];
+
+    document.getElementById('dash-sim-result').style.display = 'block';
+    document.getElementById('dash-sim-result').innerHTML = `
+      <div style="border-radius:16px;overflow:hidden;margin-bottom:16px;border:1px solid var(--g200)">
+        <div style="background:${cs.nav};padding:12px 20px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:14px;font-weight:900;color:#fff">${data.storeName||productName}</div>
+          <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:800;padding:5px 12px;border-radius:6px">Cart (0)</div>
+        </div>
+        <div style="background:${cs.bg};padding:32px 28px">
+          <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:10px;font-weight:800;padding:4px 12px;border-radius:999px;width:fit-content;margin-bottom:14px;text-transform:uppercase;letter-spacing:.6px">${data.heroTag||'As seen on TikTok'}</div>
+          <div style="font-size:24px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:10px">${data.heroHeadline||''}</div>
+          <div style="font-size:13px;color:${cs.sub};line-height:1.6;margin-bottom:20px;max-width:420px">${data.heroSubheadline||''}</div>
+          <button style="background:${cs.accent};color:${cs.btnText};font-size:14px;font-weight:900;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;font-family:inherit">${data.heroCTA||'Shop now →'}</button>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--g100);font-size:14px;font-weight:800;color:var(--g900)">📅 Hub's 4-Week Launch Plan</div>
+        ${(data.weeks||[]).map((w,i)=>{const wc=weekColors[i]||weekColors[0];return`<div style="padding:16px 20px;border-bottom:1px solid var(--g100)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:26px;height:26px;border-radius:50%;background:${wc.bg};color:${wc.color};font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">${w.week}</div><div><div style="font-size:13px;font-weight:800;color:var(--g900)">${w.title}</div><div style="font-size:11px;color:var(--g400)">${w.subtitle||''}</div></div></div><div style="padding-left:36px">${(w.items||[]).map(item=>`<div style="font-size:12px;color:var(--g700);margin-bottom:4px;line-height:1.5">· ${item}</div>`).join('')}</div></div>`;}).join('')}
+      </div>
+      <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">Hub's Verdict</div>
+        <div style="font-size:13px;color:var(--g700);line-height:1.65">${data.verdict||''}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px"><div style="font-size:10px;font-weight:800;color:#b91c1c;text-transform:uppercase;margin-bottom:4px">⚠️ Worst Case</div><div style="font-size:12px;color:#991b1b;line-height:1.5">${data.worstCase||''}</div></div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px"><div style="font-size:10px;font-weight:800;color:#15803d;text-transform:uppercase;margin-bottom:4px">✅ Best Case</div><div style="font-size:12px;color:#166534;line-height:1.5">${data.bestCase||''}</div></div>
+      </div>
+      <button onclick="document.getElementById('dash-sim-result').style.display='none';document.getElementById('dash-sim-input').value=''" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>
+    `;
+  } catch(e) {
+    clearInterval(t);
+    document.getElementById('dash-sim-loading').style.display = 'none';
+    showToast('Could not reach Hub — try again');
+  }
+}
 </script>
 </body>
 </html>
