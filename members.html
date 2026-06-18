@@ -107,7 +107,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-panel-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
 .analysis-panel-head h2{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
 .analysis-panel-body{padding:20px 22px}
-/* GROWTH CHART */
 .growth-panel-inner{background:var(--navy-dark);border-radius:16px;padding:20px 22px 16px;position:relative;overflow:hidden}
 .growth-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
 .growth-title{font-size:14px;font-weight:800;color:#fff}
@@ -125,7 +124,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .growth-progress-line.active::before{content:'→ ';color:var(--gold)}
 .growth-progress-line.done{color:rgba(255,255,255,.5)}
 .growth-progress-line.done::before{content:'✓ ';color:#1D9E75}
-/* RESEARCH HUB */
 .research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
 .research-link:hover{background:var(--off);border-color:var(--navy);transform:translateY(-1px)}
@@ -135,12 +133,10 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .research-tooltip{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:230px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
 .research-tooltip::after{content:'';position:absolute;bottom:-5px;right:10px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
 .research-info-btn.open + .research-tooltip{display:block}
-/* LAUNCH READINESS */
 .launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
 .launch-item.pass{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .launch-item.fail{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
-/* PROFIT CALCULATOR */
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .calc-field{display:flex;flex-direction:column;gap:5px}
 .calc-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
@@ -161,14 +157,12 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .calc-verdict.good{background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
 .calc-verdict.tight{background:var(--amber-bg);color:#92400e;border:1px solid #fde68a}
 .calc-verdict.bad{background:var(--red-bg);color:#991b1b;border:1px solid #fecaca}
-/* SUPPLIER TERMS */
 .supplier-terms{display:flex;flex-direction:column;gap:8px}
 .supplier-term{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px 14px}
 .supplier-term-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .supplier-term-text{font-size:13px;font-weight:600;color:var(--g700);flex:1}
 .supplier-term-link{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
 .supplier-term-link:hover{background:var(--navy-light)}
-/* INSIGHT COLS */
 .insight-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .insight-col{border-radius:14px;padding:16px}
 .insight-col.green{background:var(--green-bg);border:1px solid #bbf7d0}
@@ -219,28 +213,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .validator-result-area{padding:28px 3%;max-width:1200px;margin:0 auto}
 .validator-empty{text-align:center;padding:60px 20px;color:var(--g400)}
 .validator-empty h3{font-size:18px;color:var(--g600);margin-bottom:8px}
-.admin-wrap{max-width:800px;margin:0 auto;padding:32px 3%}
-.admin-lock{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:40px;text-align:center}
-.admin-lock h2{font-size:22px;font-weight:800;color:var(--g900);margin-bottom:8px}
-.admin-lock p{font-size:14px;color:var(--g500);margin-bottom:24px}
-.admin-pw-input{border:1px solid var(--g200);border-radius:10px;padding:12px 16px;font-size:15px;font-family:inherit;outline:none;width:260px;text-align:center;display:block;margin:0 auto 12px}
-.admin-pw-input:focus{border-color:var(--navy)}
-.admin-unlock-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.admin-pw-error{color:var(--red);font-size:13px;margin-top:8px;display:none}
-.admin-panel{display:none}
-.admin-panel.visible{display:block}
-.admin-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:24px;margin-bottom:16px}
-.admin-card h2{font-size:18px;font-weight:800;color:var(--g900);margin-bottom:6px}
-.admin-card p{font-size:13px;color:var(--g500);margin-bottom:20px}
-.admin-generate-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
-.admin-generate-btn:hover{background:var(--navy-light)}
-.admin-generate-btn:disabled{background:var(--g300);cursor:default}
-.admin-products-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.admin-product-row{display:flex;align-items:center;gap:12px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:12px 16px}
-.admin-product-info{flex:1}
-.admin-product-name{font-size:14px;font-weight:700;color:var(--g900)}
-.admin-product-meta{font-size:12px;color:var(--g400)}
-.admin-product-grade{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .status-messages{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
@@ -250,105 +222,25 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .status-line.done{color:var(--green)}
 .status-line.done::before{content:'✓ '}
 .status-line.active::before{content:'→ ';color:var(--navy)}
-.admin-product-toggle{width:40px;height:22px;border-radius:11px;background:var(--g200);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.admin-product-toggle.on{background:var(--green)}
-.admin-product-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.admin-product-toggle.on::after{left:20px}
-/* LAUNCH SIMULATOR */
-.sim-store-preview{border-radius:16px;overflow:hidden;margin-bottom:0}
-.sim-store-nav{padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
-.sim-store-nav-logo{font-size:13px;font-weight:800;color:#fff}
-.sim-store-nav-links{display:flex;gap:14px}
-.sim-store-nav-link{font-size:11px;color:rgba(255,255,255,.5)}
-.sim-store-nav-cart{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;border:none;font-family:inherit}
-.sim-store-hero{display:grid;grid-template-columns:1fr 1fr;min-height:200px}
-.sim-store-hero-text{padding:24px 20px;display:flex;flex-direction:column;justify-content:center}
-.sim-store-hero-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px}
-.sim-store-hero-h1{font-size:20px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:8px}
-.sim-store-hero-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:16px}
-.sim-store-hero-btn{font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit}
-.sim-store-hero-img{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.sim-store-hero-img img{width:100%;height:100%;object-fit:cover}
-.sim-watermark{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px}
-.sim-inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.sim-input-field{display:flex;flex-direction:column;gap:5px}
-.sim-input-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
-.sim-input-wrap{display:flex;align-items:center;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;overflow:hidden;transition:border-color .15s}
-.sim-input-wrap:focus-within{border-color:var(--navy)}
-.sim-input-prefix{padding:10px 8px 10px 14px;font-size:14px;color:var(--g400);font-weight:700;flex-shrink:0}
-.sim-input{border:none;background:transparent;padding:10px 14px 10px 0;font-size:14px;font-family:inherit;color:var(--g900);outline:none;width:100%}
-.sim-select{width:100%;border:1.5px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;background:var(--g50);color:var(--g900);outline:none}
-.sim-select:focus{border-color:var(--navy)}
-.sim-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
-.sim-btn:hover{background:var(--navy-light)}
-.sim-btn:disabled{background:var(--g300);cursor:not-allowed}
-.sim-progress{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
-.sim-progress.show{display:block}
-.sim-progress-line{font-size:13px;color:var(--g400);padding:4px 0;transition:all .3s}
-.sim-progress-line.active{color:var(--navy);font-weight:600}
-.sim-progress-line.active::before{content:'→ '}
-.sim-progress-line.done{color:var(--green)}
-.sim-progress-line.done::before{content:'✓ '}
-.sim-result{display:none;margin-top:0}
-.sim-result.show{display:block}
-.sim-roadmap{border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px}
-.sim-week{padding:14px 16px;border-bottom:1px solid var(--g100)}
-.sim-week:last-child{border-bottom:none}
-.sim-week-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.sim-week-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0}
-.sim-week-title{font-size:13px;font-weight:800;color:var(--g900)}
-.sim-week-sub{font-size:11px;color:var(--g400)}
-.sim-week-items{padding-left:36px;display:flex;flex-direction:column;gap:5px}
-.sim-week-item{font-size:12px;color:var(--g700);line-height:1.5;display:flex;gap:6px}
-.sim-week-item::before{content:'·';color:var(--g300);flex-shrink:0}
-.sim-verdict{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 16px;margin-bottom:12px}
-.sim-verdict-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:6px}
-.sim-verdict-text{font-size:13px;color:var(--g700);line-height:1.65}
-.sim-cases{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sim-case{padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.5}
-.sim-case.worst{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
-.sim-case.best{background:var(--green-bg);border:1px solid #bbf7d0;color:#166534}
-.sim-case-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .toast.show{opacity:1}
-/* SAVED PRODUCTS */
-.compare-slot{background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:16px;min-height:90px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
-.compare-slot.filled{border-style:solid;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);align-items:flex-start;padding:12px}
-.compare-slot-empty{font-size:12px;color:rgba(255,255,255,.4);text-align:center;font-weight:500}
-.compare-slot-product{width:100%}
-.compare-slot-name{font-size:13px;font-weight:800;color:var(--g900);margin-bottom:4px}
-.compare-slot-meta{font-size:11px;color:var(--g400)}
-.compare-slot-remove{position:absolute;top:8px;right:8px;background:var(--red-bg);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;color:var(--red);font-family:inherit;display:flex;align-items:center;justify-content:center;line-height:1}
 .compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
 .compare-table th{background:var(--g50);padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);font-weight:700;border-bottom:1px solid var(--g200)}
 .compare-table td{padding:10px 14px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table .winner{background:#f0fdf4;font-weight:800;color:var(--green)}
-.saved-card{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;transition:all .18s;position:relative;display:flex;flex-direction:column}
-.saved-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1)}
-.saved-card:active{cursor:grabbing}
-.saved-card-drag-hint{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.3px}
-.unsave-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3}
-@media(max-width:900px){.score-row{grid-template-columns:repeat(2,1fr)}.insight-cols{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,1fr)}.creative-form{grid-template-columns:1fr}.meta-info-row{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(2,1fr)}.calc-results.show{grid-template-columns:1fr 1fr}.launch-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.products-grid{grid-template-columns:1fr}.score-row{grid-template-columns:repeat(2,1fr)}.research-grid{grid-template-columns:1fr}.nav-tabs{display:none}.analysis-header{flex-direction:column}.calc-results.show{grid-template-columns:1fr}}
-
-/* ── HUB MASCOT LOADING STATE ─────────────────────────────────── */
 .hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
 .hub-loading.active{display:flex}
 .hub-img-wrap{position:relative;width:140px;height:140px}
 .hub-img-wrap img{width:140px;height:140px;object-fit:contain;animation:hubFloat 3s ease-in-out infinite}
-.hub-pen{position:absolute;bottom:18px;right:8px;width:20px;height:20px;animation:hubWrite 1.2s ease-in-out infinite}
 .hub-dots{position:absolute;top:-10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
 .hub-dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#F59E0B);animation:hubDot 1.4s ease-in-out infinite}
 .hub-dot:nth-child(2){animation-delay:.2s;background:#3B82F6}
 .hub-dot:nth-child(3){animation-delay:.4s;background:#10B981}
 .hub-msg{font-size:14px;font-weight:600;color:var(--g600,#4B5563);animation:hubPulse 2s ease-in-out infinite}
 @keyframes hubFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
-@keyframes hubWrite{0%,100%{transform:rotate(-10deg) translate(0,0)}50%{transform:rotate(5deg) translate(-2px,-3px)}}
 @keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
 @keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
-
-/* ── SIDEBAR (dashboard consistent) ─────────────────────────────────────── */
 .sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;transition:transform .25s ease;overflow-y:auto}
 .sb-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
 .sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -369,7 +261,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
 .sb-item.active{background:rgba(255,255,255,.12);color:#fff}
 .sb-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.sb-badge{margin-left:auto;background:var(--gold);color:var(--navy-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px}
 .sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
 .sb-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
@@ -387,22 +278,35 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   .members-main{margin-left:0}
   .mobile-topbar{display:flex}
   .topnav{display:none}
+  .score-row{grid-template-columns:repeat(2,1fr)}
+  .insight-cols{grid-template-columns:1fr}
+  .research-grid{grid-template-columns:repeat(2,1fr)}
+  .creative-form{grid-template-columns:1fr}
+  .meta-info-row{grid-template-columns:1fr}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .calc-results.show{grid-template-columns:1fr 1fr}
+  .launch-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .products-grid{grid-template-columns:1fr}
+  .score-row{grid-template-columns:repeat(2,1fr)}
+  .research-grid{grid-template-columns:1fr}
+  .nav-tabs{display:none}
+  .analysis-header{flex-direction:column}
+  .calc-results.show{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <div class="members-main" id="members-main">
-<!-- SIDEBAR OVERLAY -->
 <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
-<!-- MOBILE TOPBAR -->
 <div class="mobile-topbar">
   <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
   <div class="mobile-logo-text">Drop<span>Research</span> Hub</div>
   <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
 </div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sb-logo">
     <a class="sb-logo-wrap" href="dashboard.html">
@@ -469,7 +373,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <div class="view" id="view-analysis">
   <div class="analysis-header">
-    <button class="back-btn" onclick="showView('products',document.querySelector('.nav-tab'))">← Back to products</button>
+    <button class="back-btn" onclick="showView('products',null)">← Back to products</button>
     <div class="analysis-header-info">
       <h1 id="analysis-product-name">Product Analysis</h1>
       <p id="analysis-product-niche">Loading...</p>
@@ -487,8 +391,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     </div>
   </div>
   <div style="padding:28px 3%">
-
-    <!-- COMPARE BOX -->
     <div style="background:var(--navy-dark);border-radius:20px;padding:24px;margin-bottom:28px">
       <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:4px">⚖️ Compare Two Products</div>
       <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px">Select two saved products to compare them side by side</div>
@@ -503,8 +405,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       </div>
       <div id="compare-table"></div>
     </div>
-
-    <!-- SAVED PRODUCTS GRID -->
     <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
     <div id="saved-grid">
       <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product card to save it here.</p></div>
@@ -532,8 +432,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </div>
 </div>
 
-
-
 <div class="toast" id="toast"></div>
 <div id="manage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
@@ -547,9 +445,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 </div>
 
 <script>
-const ADMIN_PW = 'Billy1234.';
 let allProducts = [];
-let pendingProducts = [];
 let activeNiche = 'all';
 let creativeVariations = [];
 let currentVariation = 0;
@@ -557,7 +453,7 @@ let activeGrowthChart = null;
 
 function showView(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
@@ -621,10 +517,18 @@ function setNicheFilter(niche,btn){activeNiche=niche;document.querySelectorAll('
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
   showView('analysis',null);
-  const navTab = document.querySelector('.nav-tab');
-  if (navTab) navTab.classList.add('active');
   document.getElementById('analysis-product-name').textContent=p.name;
   document.getElementById('analysis-product-niche').textContent=`${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`;
+  buildAnalysisBody(p);
+}
+
+function openAnalysisFromSaved(idx) {
+  const saved = window._savedProducts || [];
+  const p = saved[idx];
+  if (!p) return;
+  showView('analysis', null);
+  document.getElementById('analysis-product-name').textContent = p.name;
+  document.getElementById('analysis-product-niche').textContent = `${p.niche||''} · Saved product`;
   buildAnalysisBody(p);
 }
 
@@ -649,6 +553,9 @@ function buildAnalysisBody(p) {
   const launchColor=launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
   const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
   const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
+
+  // Build launch plan URL with product name and image
+  const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
   body.innerHTML=`
     <div class="score-row">
@@ -676,8 +583,6 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth projection — ${p.name} — next 12 weeks</h2></div>
       <div class="analysis-panel-body" style="padding:0">
         <div class="growth-panel-inner" style="border-radius:0 0 20px 20px">
-
-          <!-- GENERATE BUTTON STATE -->
           <div id="growth-generate-state">
             <div style="text-align:center;padding:40px 20px">
               <div style="font-size:40px;margin-bottom:16px">📊</div>
@@ -688,8 +593,6 @@ function buildAnalysisBody(p) {
               </button>
             </div>
           </div>
-
-          <!-- LOADING STATE -->
           <div id="growth-loading-state" style="display:none;padding:28px 0 20px">
             <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px">Analysing your product...</div>
             <div id="growth-progress-lines">
@@ -703,8 +606,6 @@ function buildAnalysisBody(p) {
               <div class="growth-progress-line" id="gpl-8">Done — your projection is ready</div>
             </div>
           </div>
-
-          <!-- CHART STATE -->
           <div id="growth-chart-state" style="display:none">
             <div class="growth-header">
               <div>
@@ -725,7 +626,6 @@ function buildAnalysisBody(p) {
             </div>
             <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold)"></div>
           </div>
-
         </div>
       </div>
     </div>
@@ -851,60 +751,18 @@ function buildAnalysisBody(p) {
       </div>
     </div>
 
+    <!-- LAUNCH PLAN CTA — replaces old simulator -->
     <div class="analysis-panel">
-      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch Simulator</h2></div>
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Build My Launch Plan</h2></div>
       <div class="analysis-panel-body">
-        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your budget and platform — we'll generate your Shopify store preview and a week-by-week launch roadmap specific to this product.</p>
-
-        <!-- STORE PREVIEW -->
-        <div id="sim-store-wrap" style="margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid var(--g200);display:none">
-          <div id="sim-store-inner"></div>
-        </div>
-
-        <!-- INPUTS -->
-        <div id="sim-inputs-wrap">
-          <div class="sim-inputs-grid">
-            <div class="sim-input-field">
-              <label class="sim-input-label">Daily ad budget</label>
-              <div class="sim-input-wrap"><span class="sim-input-prefix">£</span><input class="sim-input" id="sim-budget" type="number" placeholder="20" value="20"></div>
-            </div>
-            <div class="sim-input-field">
-              <label class="sim-input-label">Daily sales target</label>
-              <div class="sim-input-wrap"><span class="sim-input-prefix" style="font-size:12px">🎯</span><input class="sim-input" id="sim-target" type="number" placeholder="5" value="5"></div>
-            </div>
-            <div class="sim-input-field" style="grid-column:1/-1">
-              <label class="sim-input-label">Platform</label>
-              <select class="sim-select" id="sim-platform">
-                <option>TikTok + Meta</option>
-                <option>TikTok only</option>
-                <option>Meta only</option>
-              </select>
-            </div>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:6px">Ready to launch ${p.name}?</div>
+            <div style="font-size:13px;color:var(--g500);line-height:1.6">Hub will build your store concept, week-by-week launch roadmap and show you what your homepage could look like — all in one place.</div>
           </div>
-          <button class="sim-btn" id="sim-btn" onclick="runSimulator('${p.name.replace(/'/g,"\\'")}')">🚀 Generate my launch plan</button>
-          <div class="sim-progress" id="sim-progress">
-            <div class="sim-progress-line" id="spl-1">Building your Shopify store preview...</div>
-            <div class="sim-progress-line" id="spl-2">Analysing product launch viability...</div>
-            <div class="sim-progress-line" id="spl-3">Calculating ad budget recommendations...</div>
-            <div class="sim-progress-line" id="spl-4">Writing your week-by-week roadmap...</div>
-            <div class="sim-progress-line" id="spl-5">Calculating profit projections...</div>
-            <div class="sim-progress-line" id="spl-6">Launch plan ready</div>
-          </div>
-        </div>
-
-        <!-- RESULT -->
-        <div class="sim-result" id="sim-result">
-          <div style="font-size:13px;font-weight:800;color:var(--g900);margin-bottom:12px">Your 30-day launch roadmap</div>
-          <div class="sim-roadmap" id="sim-roadmap"></div>
-          <div class="sim-verdict">
-            <div class="sim-verdict-label">DropResearch Hub assessment</div>
-            <div class="sim-verdict-text" id="sim-verdict-text"></div>
-          </div>
-          <div class="sim-cases">
-            <div class="sim-case worst"><div class="sim-case-label">⚠️ Worst case</div><div id="sim-worst"></div></div>
-            <div class="sim-case best"><div class="sim-case-label">✅ Best case</div><div id="sim-best"></div></div>
-          </div>
-          <button onclick="resetSimulator()" style="margin-top:12px;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit;width:100%">↺ Run again with different inputs</button>
+          <a href="${launchUrl}" style="display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:14px;padding:16px 28px;font-size:15px;font-weight:900;text-decoration:none;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+            🚀 Build My Launch Plan →
+          </a>
         </div>
       </div>
     </div>
@@ -935,18 +793,13 @@ function buildAnalysisBody(p) {
         </div>
       </div>
     </div>`;
-
 }
-
 
 async function generateProjection(btn) {
   const p = JSON.parse(decodeURIComponent(btn.dataset.product));
   const { name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring } = p;
-  // Switch to loading state
   document.getElementById('growth-generate-state').style.display = 'none';
   document.getElementById('growth-loading-state').style.display = 'block';
-
-  // Animate progress lines
   const lines = ['gpl-1','gpl-2','gpl-3','gpl-4','gpl-5','gpl-6','gpl-7','gpl-8'];
   lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line'; });
   let idx = 0;
@@ -956,7 +809,6 @@ async function generateProjection(btn) {
   }
   nextLine();
   const progressTimer = setInterval(nextLine, 800);
-
   try {
     const res = await fetch('/api/analyze', {
       method: 'POST',
@@ -966,8 +818,6 @@ async function generateProjection(btn) {
     const data = await res.json();
     clearInterval(progressTimer);
     lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line done'; });
-
-    // Small delay then show chart
     setTimeout(() => {
       document.getElementById('growth-loading-state').style.display = 'none';
       document.getElementById('growth-chart-state').style.display = 'block';
@@ -975,8 +825,6 @@ async function generateProjection(btn) {
       document.getElementById('growth-window-label').textContent = `⚠️ Window closes — week ${data.windowClosesWeek || 8}`;
       const summary = document.getElementById('growth-summary');
       if (data.projectionSummary) { summary.textContent = '💡 ' + data.projectionSummary; summary.style.display='block'; }
-
-      // Update launch readiness if returned
       if (data.launchReadiness) {
         const passCount = data.launchReadiness.filter(i=>i.pass).length;
         const launchPct = Math.round((passCount/data.launchReadiness.length)*100);
@@ -984,20 +832,13 @@ async function generateProjection(btn) {
         const launchVerdict = launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
         const grid = document.querySelector('.launch-grid');
         if (grid) grid.innerHTML = data.launchReadiness.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('');
-        const bar = document.querySelector('.launch-score-bar');
-        if (bar) bar.innerHTML = `<span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span><span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span><span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>`;
       }
-
-      // Update supplier terms if returned
       if (data.supplierSearchTerms) {
         const wrap = document.querySelector('.supplier-terms');
         if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
       }
-
-      // Build the animated chart
       buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
     }, 600);
-
   } catch(e) {
     clearInterval(progressTimer);
     document.getElementById('growth-loading-state').style.display = 'none';
@@ -1076,13 +917,10 @@ async function runValidator(){
   const input=document.getElementById('validator-input').value.trim();
   const resultArea=document.getElementById('validator-result');
   if(!input){showToast('Paste a product URL first');return;}
-  // Handle URL vs product name
   let productName;
   const isAliExpressItem = input.includes('aliexpress.com/item/');
   const isUrl = input.includes('http') || input.includes('.com/');
-
   if (isAliExpressItem) {
-    // AliExpress item URLs don't contain the product name — guide member
     resultArea.innerHTML = `<div style="background:var(--navy);border-radius:16px;padding:28px;text-align:center;color:#fff">
       <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:60px;height:60px;border-radius:50%;margin-bottom:14px;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
       <div style="font-size:16px;font-weight:800;margin-bottom:8px">One quick thing</div>
@@ -1095,9 +933,7 @@ async function runValidator(){
     return;
   } else if (isUrl) {
     productName = extractProductName(input);
-    if (!productName || productName.length < 5) {
-      productName = input;
-    }
+    if (!productName || productName.length < 5) productName = input;
   } else {
     productName = input.trim();
   }
@@ -1108,61 +944,27 @@ async function runValidator(){
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
     stopHubMessages();removeHubLoader('validator-result');
     const p={
-      name:data.productName||productName,
-      niche:data.marketStage||'Validator result',
-      stage:'Assessed',
-      season:'Assessed',
-      grade:data.opportunityScore||'B',
-      trendScore:data.growthScore||50,
-      problemScore:data.competitionScore||50,
-      saturationRisk:data.saturationRisk||'Medium',
-      competitionLevel:data.saturationRisk||'Medium',
-      margin:data.margin||'—',
-      sellingPrice:data.sellingPrice||'—',
-      supplierCost:data.supplierCost||'—',
-      emergingScore:data.growthScore||50,
-      opportunityWindow:data.opportunityWindow||'—',
-      confidence:data.confidence||'Medium',
-      trendVelocity:data.trendVelocity||'—',
-      verdict:data.verdict||'',
-      verdictReason:data.verdict||'',
-      whyNow:data.whyNow||'',
-      targetCustomer:'UK dropshipping market',
-      mainAngle:data.creativeAngles?.[0]||'',
-      tiktokAngle:data.creativeAngles?.[0]||'',
-      metaAngle:data.creativeAngles?.[1]||'',
-      whyEmerging:data.ukMarketNotes||data.whyNow||'',
-      whyItCouldWork:data.whyItCouldWork||[],
-      risks:data.risks||[],
-      creativeAngles:data.creativeAngles||[],
-      aliSearchTerm:productName,
-      googleTrendsKeyword:productName,
-      opportunityMultiplier:data.opportunityMultiplier||5,
-      subscriberExcitement:data.subscriberExcitement||5,
-      bundleIdea:'',
-      problemSolved:data.ukMarketNotes||'',
-      usAuSignal:'',
-      emoji:'🔍',
-      scoring:{
-        ukMarketGap:data.growthScore?Math.round(data.growthScore*0.25):0,
-        competitionBarrier:data.competitionScore?Math.round(data.competitionScore*0.2):0,
-        problemIntensity:data.creativePotential?Math.round(data.creativePotential*2):0,
-        earlySignalStrength:data.subscriberExcitement?Math.round(data.subscriberExcitement*1.5):0,
-        profitPotential:data.brandability?Math.round(data.brandability*1.2):0,
-        easeOfEntry:data.retailGap?Math.round(data.retailGap*0.8):0,
-        creativePotential:data.creativePotential||0,
-        coreTotal:data.growthScore||0
-      },
-      growthData:data.growthGraph||[{label:'W1',value:10},{label:'W2',value:20},{label:'W3',value:35},{label:'W4',value:50},{label:'W5',value:65},{label:'W6',value:75}]
+      name:data.productName||productName,niche:data.marketStage||'Validator result',stage:'Assessed',season:'Assessed',
+      grade:data.opportunityScore||'B',trendScore:data.growthScore||50,problemScore:data.competitionScore||50,
+      saturationRisk:data.saturationRisk||'Medium',competitionLevel:data.saturationRisk||'Medium',
+      margin:data.margin||'—',sellingPrice:data.sellingPrice||'—',supplierCost:data.supplierCost||'—',
+      emergingScore:data.growthScore||50,verdict:data.verdict||'',verdictReason:data.verdict||'',
+      targetCustomer:'UK dropshipping market',mainAngle:data.creativeAngles?.[0]||'',
+      tiktokAngle:data.creativeAngles?.[0]||'',metaAngle:data.creativeAngles?.[1]||'',
+      whyEmerging:data.ukMarketNotes||data.whyNow||'',whyItCouldWork:data.whyItCouldWork||[],
+      risks:data.risks||[],creativeAngles:data.creativeAngles||[],
+      aliSearchTerm:productName,googleTrendsKeyword:productName,
+      bundleIdea:'',problemSolved:data.ukMarketNotes||'',emoji:'🔍',
+      scoring:{ukMarketGap:data.growthScore?Math.round(data.growthScore*0.25):0,competitionBarrier:data.competitionScore?Math.round(data.competitionScore*0.2):0,problemIntensity:data.creativePotential?Math.round(data.creativePotential*2):0,earlySignalStrength:data.subscriberExcitement?Math.round(data.subscriberExcitement*1.5):0,profitPotential:data.brandability?Math.round(data.brandability*1.2):0,easeOfEntry:data.retailGap?Math.round(data.retailGap*0.8):0,creativePotential:data.creativePotential||0,coreTotal:data.growthScore||0}
     };
     resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
-    const tempBody=document.createElement('div');tempBody.id='validator-analysis-body';tempBody.className='analysis-body';resultArea.appendChild(tempBody);
+    const tempBody=document.createElement('div');tempBody.className='analysis-body';resultArea.appendChild(tempBody);
     const origBody=document.getElementById('analysis-body');
-    document.getElementById('analysis-body').id='analysis-body-bak';
+    origBody.id='analysis-body-bak';
     tempBody.id='analysis-body';
     buildAnalysisBody(p);
     tempBody.id='validator-analysis-body';
-    if(origBody)origBody.id='analysis-body';
+    origBody.id='analysis-body';
   }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
 }
 async function runValidatorWithName(name) {
@@ -1172,18 +974,10 @@ async function runValidatorWithName(name) {
 }
 
 function extractProductName(url){
-  // If it doesn't look like a URL, treat as product name directly
   if(!url.includes('http')&&!url.includes('.com')){return url.trim().slice(0,80);}
   try{
-    // AliExpress: title is in the path segment before .html
     const aliMatch = url.match(/\/([^/]+)\.html/);
-    if(aliMatch){
-      const raw = decodeURIComponent(aliMatch[1]);
-      // Remove item IDs (long numbers) and clean up
-      const cleaned = raw.replace(/[-_]/g,' ').replace(/\d{8,}/g,' ').replace(/\s+/g,' ').trim();
-      if(cleaned.length>5) return cleaned.slice(0,80);
-    }
-    // Generic: find longest meaningful segment
+    if(aliMatch){const raw=decodeURIComponent(aliMatch[1]);const cleaned=raw.replace(/[-_]/g,' ').replace(/\d{8,}/g,' ').replace(/\s+/g,' ').trim();if(cleaned.length>5)return cleaned.slice(0,80);}
     const decoded=decodeURIComponent(url);
     const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>5&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods','html'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
     if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
@@ -1191,217 +985,7 @@ function extractProductName(url){
   return 'Product from URL';
 }
 
-// Admin functions removed - use admin.html
-
-async function adminGenerate(){
-  const btn=document.getElementById('admin-gen-btn');btn.disabled=true;
-  document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Searching...';
-  const hubArea = document.getElementById('members-hub-area');
-  if(hubArea) { hubArea.style.display='flex'; createHubLoader('members-hub-area', 'Hub is searching for emerging products...'); startHubMessages('members-hub-area'); }
-  const statusBox=document.getElementById('status-messages');statusBox.className='status-messages show';
-  const lines=['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
-  lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line';});
-  let lineIdx=0;
-  function nextLine(){if(lineIdx>0){const prev=document.getElementById(lines[lineIdx-1]);if(prev)prev.className='status-line done show';}if(lineIdx<lines.length){const curr=document.getElementById(lines[lineIdx]);if(curr)curr.className='status-line active show';lineIdx++;}}
-  nextLine();const statusTimer=setInterval(nextLine,7000);
-  try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging'})});
-    const d=await r.json();if(!r.ok)throw new Error(d.error||'Generate failed');
-    const t=(d.content||[]).map(i=>i.text||'').join('');
-    let c=t.replace(/```json|```/g,'').trim();const s=c.indexOf('['),e=c.lastIndexOf(']');
-    if(s===-1||e===-1)throw new Error('No product array found');
-    let products=JSON.parse(c.slice(s,e+1));
-    pendingProducts=[...pendingProducts,...products];
-    clearInterval(statusTimer);lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line done show';});
-    renderAdminProductsList();document.getElementById('admin-products-card').style.display='block';
-  }catch(e){
-    clearInterval(statusTimer);const errLine=document.createElement('div');errLine.className='status-line show';errLine.style.color='var(--red)';errLine.textContent='✕ Error: '+e.message;document.getElementById('status-messages').appendChild(errLine);
-  }
-  stopHubMessages();removeHubLoader('members-hub-area');const hubA=document.getElementById('members-hub-area');if(hubA)hubA.style.display='none';
-  btn.disabled=false;document.getElementById('admin-gen-text').textContent='✨ Generate emerging products';
-}
-
-function renderAdminProductsList(){
-  const list=document.getElementById('admin-products-list');
-  list.innerHTML=pendingProducts.map((p,i)=>`
-    <div class="admin-product-row" id="apr-${i}" style="flex-wrap:wrap;gap:10px;align-items:flex-start;padding:14px 16px">
-      <div style="font-size:32px;width:44px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div>
-      <div class="admin-product-info" style="min-width:200px">
-        <div class="admin-product-name">${p.name}</div>
-        <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore}/100 · ${p.margin} margin</div>
-        <div style="font-size:12px;color:var(--g500);margin-top:4px;font-style:italic;line-height:1.5">${p.whyNow||''}</div>
-        ${p.img?`<img src="${p.img}" alt="${p.name}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid var(--g200)" onerror="this.style.display='none'">`:''}
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #bfdbfe">📺 Meta Ads</a>
-          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fff0e6;color:#c2410c;text-decoration:none;border:1px solid #fed7aa">🛒 AliExpress</a>
-          <a href="https://trends.pinterest.com/trends/explore#ideas=${encodeURIComponent(p.name)}&country=GB" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fce4ec;color:#9c27b0;text-decoration:none;border:1px solid #f48fb1">📌 Pinterest</a>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-left:auto">
-        <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade}</div>
-        <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})" title="Toggle product"></button>
-        <button onclick="deletePending(${i})" style="background:none;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--g400);cursor:pointer;font-family:inherit" title="Remove">🗑️ Remove</button>
-      </div>
-    </div>`).join('');
-  updateSelectedCount();
-}
-
-function deletePending(i){pendingProducts.splice(i,1);renderAdminProductsList();}
-function toggleProduct(i){document.getElementById('toggle-'+i).classList.toggle('on');updateSelectedCount();}
-function renderLiveFeed(){const list=document.getElementById('admin-live-list');if(!list)return;if(!allProducts.length){list.innerHTML='<div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div>';return;}list.innerHTML=allProducts.map((p,i)=>`<div class="admin-product-row" style="flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px"><div style="font-size:26px;width:36px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div><div class="admin-product-info" style="flex:1;min-width:150px"><div class="admin-product-name">${p.name}</div><div class="admin-product-meta">${p.niche} · Grade ${p.grade}</div></div><button onclick="removePublished(${i})" style="background:var(--red-bg);border:1px solid #fecaca;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--red);font-family:inherit;white-space:nowrap">🗑️ Remove</button></div>`).join('');}
-function removePublished(i){const name=allProducts[i]?.name;allProducts.splice(i,1);buildNicheFilters();renderProductsGrid();renderLiveFeed();document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;showToast(`Removed: ${name}`);}
-function toggleAll(on){pendingProducts.forEach((_,i)=>{const btn=document.getElementById('toggle-'+i);if(btn)btn.className='admin-product-toggle'+(on?' on':'');});updateSelectedCount();}
-function selectGradeA(){pendingProducts.forEach((p,i)=>{const btn=document.getElementById('toggle-'+i);const isA=p.grade&&(p.grade==='A+'||p.grade==='A');if(btn)btn.className='admin-product-toggle'+(isA?' on':'');});updateSelectedCount();showToast('Grade A and A+ products selected');}
-function updateSelectedCount(){const total=pendingProducts.length;const selected=document.querySelectorAll('.admin-product-toggle.on').length;const el=document.getElementById('selected-count');if(el)el.textContent=selected+' of '+total+' selected';}
-
-async function publishProducts(){
-  if(!pendingProducts.length){showToast('Generate products first');return;}
-  const selected=pendingProducts.filter((_,i)=>{const btn=document.getElementById('toggle-'+i);return btn&&btn.classList.contains('on');});
-  if(!selected.length){showToast('Toggle on at least one product first');return;}
-  allProducts=[...allProducts,...selected];pendingProducts=[];
-  try{localStorage.setItem('drh_published_products',JSON.stringify(allProducts));}catch(e){}
-  try{await fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:allProducts})});}catch(e){console.log('Supabase save failed:',e.message);}
-  const now=new Date();const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
-  document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;
-  document.getElementById('last-updated-badge').textContent=`Updated ${dateStr}`;
-  buildNicheFilters();renderProductsGrid();renderLiveFeed();
-  showToast(`✅ ${allProducts.length} products published to member feed!`);
-  showView('products',document.querySelector('.nav-tab'));
-}
-
-// ── LAUNCH SIMULATOR ─────────────────────────────────────────────────────
-async function runSimulator(productName) {
-  const p = allProducts.find(p => p.name === productName) || {};
-  const budget = document.getElementById('sim-budget')?.value || 20;
-  const target = document.getElementById('sim-target')?.value || 5;
-  const platform = document.getElementById('sim-platform')?.value || 'TikTok + Meta';
-  const btn = document.getElementById('sim-btn');
-  btn.disabled = true; btn.textContent = '⏳ Generating...';
-
-  const progress = document.getElementById('sim-progress');
-  progress.className = 'sim-progress show';
-  const lines = ['spl-1','spl-2','spl-3','spl-4','spl-5','spl-6'];
-  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line'; });
-  let idx = 0;
-  function nextLine() {
-    if(idx>0){const prev=document.getElementById(lines[idx-1]);if(prev)prev.className='sim-progress-line done';}
-    if(idx<lines.length){const curr=document.getElementById(lines[idx]);if(curr)curr.className='sim-progress-line active';idx++;}
-  }
-  nextLine();
-  const timer = setInterval(nextLine, 800);
-
-  try {
-    const res = await fetch('/api/simulate', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        name: productName, niche: p.niche, margin: p.margin,
-        sellingPrice: p.sellingPrice, supplierCost: p.supplierCost,
-        trendScore: p.trendScore, saturationRisk: p.saturationRisk,
-        tiktokAngle: p.tiktokAngle, metaAngle: p.metaAngle, mainAngle: p.mainAngle,
-        img: p.img, adBudget: budget, salesTarget: target, platform
-      })
-    });
-    const data = await res.json();
-    clearInterval(timer);
-    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line done'; });
-
-    setTimeout(() => {
-      progress.className = 'sim-progress';
-      renderSimulator(data, p.img);
-    }, 400);
-
-  } catch(e) {
-    clearInterval(timer);
-    showToast('Could not generate launch plan — try again');
-    btn.disabled = false; btn.textContent = '🚀 Generate my launch plan';
-    progress.className = 'sim-progress';
-  }
-}
-
-function renderSimulator(data, productImg) {
-  const cs = data.colorScheme || { bg:'#0f1f36', nav:'#091628', accent:'#F59E0B', text:'#fff', sub:'rgba(255,255,255,0.65)', btn:'#F59E0B', btnText:'#0f1f36' };
-
-  // Build store preview
-  const storeWrap = document.getElementById('sim-store-wrap');
-  const storeInner = document.getElementById('sim-store-inner');
-  storeInner.innerHTML = `
-    <!-- NAV -->
-    <div style="background:${cs.nav};padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08)">
-      <div style="font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px">${data.storeName || 'My Store'}</div>
-      <div style="display:flex;gap:24px;align-items:center">
-        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Home</span>
-        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Shop</span>
-        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">FAQ</span>
-        <div style="background:${cs.accent};color:${cs.btnText};font-size:12px;font-weight:800;padding:7px 16px;border-radius:8px">Cart (0)</div>
-      </div>
-    </div>
-    <!-- HERO -->
-    <div style="background:${cs.bg};display:grid;grid-template-columns:55% 45%;min-height:320px">
-      <div style="padding:48px 40px;display:flex;flex-direction:column;justify-content:center">
-        <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;width:fit-content;margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase">${data.heroTag || 'As seen on TikTok'}</div>
-        <div style="font-size:28px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:14px;letter-spacing:-.5px">${data.heroHeadline || ''}</div>
-        <div style="font-size:14px;color:${cs.sub};line-height:1.65;margin-bottom:28px;max-width:380px">${data.heroSubheadline || ''}</div>
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-          <button style="background:${cs.accent};color:${cs.btnText};font-size:15px;font-weight:900;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px">${data.heroCTA || 'Shop now →'}</button>
-          <div style="font-size:12px;color:rgba(255,255,255,.4)">⭐⭐⭐⭐⭐ 4.9 (2,847 reviews)</div>
-        </div>
-        <div style="margin-top:24px;display:flex;gap:20px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Free UK shipping over £40</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> 30-day returns</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Delivered in 3-5 days</div>
-        </div>
-      </div>
-      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
-        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:contain;padding:24px;max-height:320px" onerror="this.style.opacity='.1'">` : '<div style="font-size:80px;opacity:.15">📦</div>'}
-        <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.5px">DropResearch Hub preview</div>
-      </div>
-    </div>
-    <!-- TRUST BAR -->
-    <div style="background:${cs.accent};padding:10px 28px;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap">
-      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔥 8,400+ sold this month</div>
-      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">📦 Ships from UK warehouse</div>
-      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔒 Secure checkout</div>
-    </div>`;
-  storeWrap.style.display = 'block';
-
-  // Build roadmap
-  const weekColors = [
-    { bg:'#DCFCE7', color:'#166534' },
-    { bg:'#FEF3C7', color:'#92400E' },
-    { bg:'#DBEAFE', color:'#1E40AF' },
-    { bg:'#E1F5EE', color:'#0F6E56' }
-  ];
-  const roadmap = document.getElementById('sim-roadmap');
-  roadmap.innerHTML = (data.weeks || []).map((w, i) => {
-    const wc = weekColors[i] || weekColors[0];
-    return `<div class="sim-week">
-      <div class="sim-week-header">
-        <div class="sim-week-dot" style="background:${wc.bg};color:${wc.color}">${w.week}</div>
-        <div><div class="sim-week-title">${w.title}</div><div class="sim-week-sub">${w.subtitle}</div></div>
-      </div>
-      <div class="sim-week-items">${(w.items||[]).map(item=>`<div class="sim-week-item">${item}</div>`).join('')}</div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('sim-verdict-text').textContent = data.verdict || '';
-  document.getElementById('sim-worst').textContent = data.worstCase || '';
-  document.getElementById('sim-best').textContent = data.bestCase || '';
-
-  document.getElementById('sim-inputs-wrap').style.display = 'none';
-  document.getElementById('sim-result').className = 'sim-result show';
-}
-
-function resetSimulator() {
-  document.getElementById('sim-store-wrap').style.display = 'none';
-  document.getElementById('sim-inputs-wrap').style.display = 'block';
-  document.getElementById('sim-result').className = 'sim-result';
-  const btn = document.getElementById('sim-btn');
-  if(btn) { btn.disabled = false; btn.textContent = '🚀 Generate my launch plan'; }
-}
-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
-
 function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
 function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
 async function goToPortal(){
@@ -1411,16 +995,12 @@ async function goToPortal(){
   finally{btn.disabled=false;btn.textContent='Open Portal →';closeManageModal();}
 }
 
-renderProductsGrid();
-
 // ── SAVED PRODUCTS ────────────────────────────────────────────────────────
 let savedProductNames = new Set();
-
 
 function getUserEmail() {
   const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
   if (s?.email) return s.email;
-  // Admin bypass — use a placeholder admin email
   const auth = sessionStorage.getItem('drh_auth');
   if (auth === 'member') return 'admin@dropresearchhub.com';
   return null;
@@ -1453,9 +1033,7 @@ async function toggleSaveProduct(idx, btn) {
   if (!p) return;
   const email = getUserEmail();
   if (!email) { showToast('Please log in to save products'); return; }
-
   if (savedProductNames.has(p.name)) {
-    // Unsave
     try {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
@@ -1464,7 +1042,6 @@ async function toggleSaveProduct(idx, btn) {
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
     } catch(e) { showToast('Could not unsave — try again'); }
   } else {
-    // Save
     try {
       await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
       savedProductNames.add(p.name);
@@ -1491,7 +1068,7 @@ function renderSavedGrid(saved) {
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
   grid.innerHTML = saved.map((p, i) => `
     <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
-      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\'")}', ${i})" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\\'")}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
       <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
         ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
         <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
@@ -1504,16 +1081,15 @@ function renderSavedGrid(saved) {
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
         </div>
-        <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
+        <div style="font-size:12px;color:var(--g700);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;background:var(--g50);flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
         <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
       </div>
     </div>`).join('');
-
   window._savedProducts = saved;
   populateCompareDropdowns();
 }
 
-async function unsaveProduct(name, idx) {
+async function unsaveProduct(name) {
   const email = getUserEmail();
   if (!email) return;
   try {
@@ -1525,7 +1101,6 @@ async function unsaveProduct(name, idx) {
   } catch(e) { showToast('Could not remove — try again'); }
 }
 
-// ── COMPARE (DROPDOWN) ───────────────────────────────────────────────────
 function populateCompareDropdowns() {
   const saved = window._savedProducts || [];
   ['compare-select-a', 'compare-select-b'].forEach(id => {
@@ -1545,20 +1120,12 @@ function runCompare() {
   var tableEl = document.getElementById('compare-table');
   if (!tableEl || !selA || !selB) return;
   var idxA = selA.value, idxB = selB.value;
-  if (idxA === '' || idxB === '' || idxA === idxB) {
-    tableEl.innerHTML = '';
-    return;
-  }
+  if (idxA === '' || idxB === '' || idxA === idxB) { tableEl.innerHTML = ''; return; }
   var a = saved[parseInt(idxA)];
   var b = saved[parseInt(idxB)];
   if (!a || !b) return;
-
   function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
-  function getLaunch(p) {
-    if (!p.launchReadiness) return '—';
-    return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%';
-  }
-
+  function getLaunch(p) { if (!p.launchReadiness) return '—'; return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%'; }
   var metrics = [
     { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
     { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
@@ -1566,45 +1133,26 @@ function runCompare() {
     { label: 'Est. Margin', av: a.margin||'—', bv: b.margin||'—', higher: true },
     { label: 'Supplier Cost', av: a.supplierCost||'—', bv: b.supplierCost||'—', higher: false },
     { label: 'Selling Price', av: a.sellingPrice||'—', bv: b.sellingPrice||'—', higher: false },
-    { label: 'Saturation Risk', av: a.saturationRisk||'—', bv: b.saturationRisk||'—', higher: false,
-      winFn: function(av,bv){ var m={Low:0,Medium:1,High:2}; return (m[av]||1)<(m[bv]||1)?'a':(m[bv]||1)<(m[av]||1)?'b':''; } },
+    { label: 'Saturation Risk', av: a.saturationRisk||'—', bv: b.saturationRisk||'—', higher: false, winFn: function(av,bv){ var m={Low:0,Medium:1,High:2}; return (m[av]||1)<(m[bv]||1)?'a':(m[bv]||1)<(m[av]||1)?'b':''; } },
     { label: 'Launch Readiness', av: getLaunch(a), bv: getLaunch(b), higher: true },
-    { label: 'Window Closes', av: a.windowClosesWeek?'Week '+a.windowClosesWeek:'—', bv: b.windowClosesWeek?'Week '+b.windowClosesWeek:'—', higher: false },
     { label: 'Verdict', av: a.verdict||'—', bv: b.verdict||'—', higher: false },
     { label: 'TikTok Angle', av: a.tiktokAngle||'—', bv: b.tiktokAngle||'—', higher: false },
     { label: 'Target Customer', av: a.targetCustomer||'—', bv: b.targetCustomer||'—', higher: false },
   ];
-
   var aWins = 0, bWins = 0;
   metrics.forEach(function(m) {
-    if (m.winFn) {
-      var w = m.winFn(m.av, m.bv);
-      m.winA = w==='a'; m.winB = w==='b';
-    } else if (m.higher) {
-      var na = numVal(m.av), nb = numVal(m.bv);
-      m.winA = na>nb && na>0; m.winB = nb>na && nb>0;
-    } else {
-      m.winA = false; m.winB = false;
-    }
-    if (m.winA) aWins++;
-    if (m.winB) bWins++;
+    if (m.winFn) { var w = m.winFn(m.av, m.bv); m.winA = w==='a'; m.winB = w==='b'; }
+    else if (m.higher) { var na = numVal(m.av), nb = numVal(m.bv); m.winA = na>nb && na>0; m.winB = nb>na && nb>0; }
+    else { m.winA = false; m.winB = false; }
+    if (m.winA) aWins++; if (m.winB) bWins++;
   });
-
   var winner = aWins > bWins ? a : bWins > aWins ? b : null;
   var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
   var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
-
-  var summaryText = winner
-    ? '🏆 ' + (winner===a?aName:bName) + ' wins on ' + Math.max(aWins,bWins) + ' of ' + (aWins+bWins) + ' comparable metrics'
-    : '🤝 Both products are evenly matched across all metrics';
-
-  var recReason = winner
-    ? 'Based on the scores, ' + (winner===a?aName:bName) + ' has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.')
-    : 'Both products are closely matched. Go with whichever you can source most easily or feel most confident creating content for.';
-
+  var summaryText = winner ? '🏆 ' + (winner===a?aName:bName) + ' wins on ' + Math.max(aWins,bWins) + ' of ' + (aWins+bWins) + ' comparable metrics' : '🤝 Both products are evenly matched across all metrics';
+  var recReason = winner ? 'Based on the scores, ' + (winner===a?aName:bName) + ' has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.') : 'Both products are closely matched. Go with whichever you can source most easily or feel most confident creating content for.';
   var aWinnerBadge = aWins > bWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
   var bWinnerBadge = bWins > aWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
-
   var labelHTML = '', aHTML = '', bHTML = '';
   var cs = 'padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);min-height:42px;display:flex;align-items:center;';
   metrics.forEach(function(m) {
@@ -1612,9 +1160,7 @@ function runCompare() {
     aHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winA?'800':'400') + ';color:' + (m.winA?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.av + (m.winA?' ✓':'') + '</div>';
     bHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winB?'800':'400') + ';color:' + (m.winB?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.bv + (m.winB?' ✓':'') + '</div>';
   });
-
-  var html = '';
-  html += '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">';
+  var html = '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">';
   html += '<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:700;color:#fff">' + summaryText + '</div>';
   html += '<div style="display:grid;grid-template-columns:150px 1fr 1fr;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);margin-bottom:16px">';
   html += '<div><div style="padding:10px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</div>' + labelHTML + '</div>';
@@ -1623,9 +1169,9 @@ function runCompare() {
   html += '</div>';
   html += '<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:14px 16px"><div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">DropResearch Hub Recommendation</div><div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.65">' + recReason + '</div></div>';
   html += '</div>';
-
   tableEl.innerHTML = html;
 }
+
 async function loadPublishedProducts() {
   try {
     const res = await fetch('/api/products');
@@ -1660,9 +1206,7 @@ const HUB_MESSAGES = [
   "Hub is scanning trend data...",
   "Hub is crunching the numbers..."
 ];
-
 const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
-
 function createHubLoader(containerId, message) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -1670,26 +1214,11 @@ function createHubLoader(containerId, message) {
   const div = document.createElement('div');
   div.className = 'hub-loading active';
   div.id = containerId + '-hub';
-  div.innerHTML = `
-    <div class="hub-img-wrap">
-      <img src="${HUB_IMG}" alt="Hub is researching" onerror="this.outerHTML='<div style=\'font-size:72px\'>🤖</div>'">
-      <div class="hub-dots">
-        <div class="hub-dot"></div>
-        <div class="hub-dot"></div>
-        <div class="hub-dot"></div>
-      </div>
-    </div>
-    <div class="hub-msg">${msg}</div>
-  `;
+  div.innerHTML = `<div class="hub-img-wrap"><img src="${HUB_IMG}" alt="Hub is researching" onerror="this.outerHTML='<div style=\'font-size:72px\'>🤖</div>'"><div class="hub-dots"><div class="hub-dot"></div><div class="hub-dot"></div><div class="hub-dot"></div></div></div><div class="hub-msg">${msg}</div>`;
   container.innerHTML = '';
   container.appendChild(div);
 }
-
-function removeHubLoader(containerId) {
-  const hub = document.getElementById(containerId + '-hub');
-  if (hub) hub.remove();
-}
-
+function removeHubLoader(containerId) { const hub = document.getElementById(containerId + '-hub'); if (hub) hub.remove(); }
 let hubMsgInterval = null;
 function startHubMessages(containerId) {
   let i = 0;
@@ -1699,16 +1228,14 @@ function startHubMessages(containerId) {
     if (msgEl) msgEl.textContent = HUB_MESSAGES[i];
   }, 3500);
 }
-function stopHubMessages() {
-  if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; }
-}
+function stopHubMessages() { if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; } }
 </script>
-</div>
 
 <script>
 function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");document.body.style.overflow="hidden"}
 function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");document.body.style.overflow=""}
 const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
 </script>
+</div>
 </body>
 </html>
