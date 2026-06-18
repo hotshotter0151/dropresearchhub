@@ -78,43 +78,22 @@ export default async function handler(req, res) {
   } catch(e) {}
 
   // Generate pulse with Haiku
-  const prompt = `You are Hub, a straight-talking UK ecommerce researcher writing a weekly market intelligence briefing for dropshippers. Today: ${today}.
+  const prompt = `You are Hub, a UK ecommerce researcher. Today: ${today}.
 
-LIVE MARKET DATA:
-${JSON.stringify(signals, null, 2)}
+LIVE UK MARKET DATA:
+${signals.map(s => s.source + ': ' + JSON.stringify(s.items)).join('\n')}
 
-Write a UK Market Pulse briefing. Return ONLY valid JSON, no markdown.
+Return ONLY a valid JSON object. No markdown. No trailing commas.
 
-{
-  "weekOf": "w/c ${weekOf}",
-  "hubIntro": "Hub's 2-3 sentence personal intro — what he's noticed this week, his overall read on the market. First person, direct, honest.",
-  "opportunities": [
-    {
-      "title": "opportunity name e.g. Portable Cooling Products",
-      "emoji": "emoji",
-      "confidence": "High|Medium|Low",
-      "stage": "Early|Growing|Peaking",
-      "window": "e.g. 3-6 weeks",
-      "tiktokSignal": "what Hub sees on TikTok UK",
-      "amazonSignal": "what Hub sees on Amazon UK",
-      "googleSignal": "what Hub sees on Google UK",
-      "hubTake": "Hub's honest 1-2 sentence take on this opportunity",
-      "aliSearchTerm": "best AliExpress search term",
-      "amazonSearchTerm": "best Amazon UK search term",
-      "tiktokHashtag": "tiktok hashtag without #"
-    }
-  ],
-  "weeklyTheme": "one sentence summing up the week's dominant trend",
-  "hubSignOff": "Hub's closing thought — what members should do with this information. 1-2 sentences, direct."
-}
+{"weekOf":"w/c ${weekOf}","hubIntro":"2-3 sentences, first person, honest market read","weeklyTheme":"one sentence on the dominant trend this week","hubSignOff":"1-2 sentences on what members should do","opportunities":[{"title":"string","emoji":"string","confidence":"High","stage":"Early","window":"3-6 weeks","tiktokSignal":"string","amazonSignal":"string","googleSignal":"string","hubTake":"string","aliSearchTerm":"string","amazonSearchTerm":"string","tiktokHashtag":"string"},{"title":"string","emoji":"string","confidence":"Medium","stage":"Growing","window":"2-4 weeks","tiktokSignal":"string","amazonSignal":"string","googleSignal":"string","hubTake":"string","aliSearchTerm":"string","amazonSearchTerm":"string","tiktokHashtag":"string"},{"title":"string","emoji":"string","confidence":"High","stage":"Early","window":"4-8 weeks","tiktokSignal":"string","amazonSignal":"string","googleSignal":"string","hubTake":"string","aliSearchTerm":"string","amazonSearchTerm":"string","tiktokHashtag":"string"},{"title":"string","emoji":"string","confidence":"Low","stage":"Peaking","window":"1-2 weeks","tiktokSignal":"string","amazonSignal":"string","googleSignal":"string","hubTake":"string","aliSearchTerm":"string","amazonSearchTerm":"string","tiktokHashtag":"string"}]}
 
-Include 4-6 opportunities. Base them on the live data above. Focus on UK market specifically. Be honest — if something is peaking say so.`;
+Fill in all string values based on the live data. 4 opportunities total. Focus on UK dropshipping physical products only.`;
 
   try {
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2500, messages: [{ role: 'user', content: prompt }] })
     });
 
     const aiData = await aiRes.json();
