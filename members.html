@@ -621,7 +621,8 @@ function setNicheFilter(niche,btn){activeNiche=niche;document.querySelectorAll('
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
   showView('analysis',null);
-  document.querySelector('.nav-tab').classList.add('active');
+  const navTab = document.querySelector('.nav-tab');
+  if (navTab) navTab.classList.add('active');
   document.getElementById('analysis-product-name').textContent=p.name;
   document.getElementById('analysis-product-niche').textContent=`${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`;
   buildAnalysisBody(p);
