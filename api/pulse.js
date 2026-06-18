@@ -23,8 +23,24 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── POST — generate new pulse ─────────────────────────────────────────
+  // ── POST — generate or publish pulse ────────────────────────────────────
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Publish mode — save pre-generated pulse to Supabase
+  if (req.body?.publish && req.body?.pulse) {
+    try {
+      const pulse = req.body.pulse;
+      pulse.generatedAt = new Date().toISOString();
+      await fetch(`${supabaseUrl}/rest/v1/market_pulse`, {
+        method: 'POST',
+        headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ data: pulse, created_at: new Date().toISOString() })
+      });
+      return res.status(200).json({ success: true });
+    } catch(e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -108,7 +124,21 @@ Include 4-6 opportunities. Base them on the live data above. Focus on UK market 
     const e = cleaned.lastIndexOf('}');
     if (s === -1 || e === -1) return res.status(500).json({ error: 'No JSON in response' });
     cleaned = cleaned.slice(s, e + 1);
-    const pulse = JSON.parse(cleaned);
+    
+    // Fix common JSON issues from Haiku
+    cleaned = cleaned
+      .replace(/,\s*}/g, '}')      // trailing commas in objects
+      .replace(/,\s*]/g, ']')      // trailing commas in arrays
+      .replace(/[‘’]/g, "'")  // curly single quotes
+      .replace(/[“”]/g, '"'); // curly double quotes
+    
+    let pulse;
+    try {
+      pulse = JSON.parse(cleaned);
+    } catch(parseErr) {
+      console.error('[PULSE] Parse error:', parseErr.message, cleaned.slice(0, 200));
+      return res.status(500).json({ error: 'JSON parse error: ' + parseErr.message });
+    }
 
     // Fetch images for each opportunity via SerpAPI
     async function getImage(aliTerm, title) {
@@ -139,20 +169,7 @@ Include 4-6 opportunities. Base them on the live data above. Focus on UK market 
 
     pulse.generatedAt = new Date().toISOString();
 
-    // Save to Supabase
-    if (supabaseKey) {
-      await fetch(`${supabaseUrl}/rest/v1/market_pulse`, {
-        method: 'POST',
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ data: pulse, created_at: new Date().toISOString() })
-      });
-    }
-
+    // Return for admin review — not saved yet
     return res.status(200).json({ pulse });
 
   } catch(e) {
