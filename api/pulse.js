@@ -119,28 +119,28 @@ Fill in all string values based on the live data. 4 opportunities total. Focus o
       return res.status(500).json({ error: 'JSON parse error: ' + parseErr.message });
     }
 
-    // Fetch images for each opportunity via SerpAPI
+    // Fetch images in parallel with short timeout
     async function getImage(aliTerm, title) {
       if (!serpApiKey) return '';
       try {
-        // Use aliSearchTerm for more specific product images
         const query = aliTerm || title;
-        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product white background')}&api_key=${serpApiKey}&num=5&safe=off&gl=gb&hl=en&tbs=isz:m`;
-        const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product')}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
+        const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
         if (!r.ok) return '';
         const d = await r.json();
         const results = d?.images_results || [];
-        // Prefer product images, avoid stock/lifestyle photos
         const product = results.find(i => i.original && i.is_product);
-        const clean = results.find(i => i.original && !i.original.includes('shutterstock') && !i.original.includes('getty'));
-        return product?.original || clean?.original || results[0]?.original || results[0]?.thumbnail || '';
+        return product?.original || results[0]?.original || results[0]?.thumbnail || '';
       } catch(e) { return ''; }
     }
 
+    // Fetch all images in parallel
+    const imgs = await Promise.all(pulse.opportunities.map(o => getImage(o.aliSearchTerm, o.title)));
+
     // Add images and links to opportunities
-    pulse.opportunities = await Promise.all(pulse.opportunities.map(async (opp) => ({
+    pulse.opportunities = await Promise.all(pulse.opportunities.map(async (opp, idx) => ({
       ...opp,
-      img: await getImage(opp.aliSearchTerm, opp.title),
+      img: imgs[idx] || '',
       amazonUrl: `https://www.amazon.co.uk/s?k=${encodeURIComponent(opp.amazonSearchTerm || opp.title)}&ref=nb_sb_noss`,
       aliUrl: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(opp.aliSearchTerm || opp.title)}`,
       tiktokUrl: `https://www.tiktok.com/tag/${encodeURIComponent(opp.tiktokHashtag || opp.title.replace(/\s+/g, ''))}`
