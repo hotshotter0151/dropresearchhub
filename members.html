@@ -3,8 +3,30 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DropResearch Hub — Dashboard</title>
+<title>DropResearch Hub — Members</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+const _auth = sessionStorage.getItem('drh_auth');
+if (_auth === 'member' && !_session?.email) {
+} else if (!_auth && !_session?.email) {
+  window.location.href = 'login.html';
+} else if (_auth === 'trial') {
+  window.location.href = 'trial.html';
+}
+async function verifyMemberAccess() {
+  const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  if (!session?.email) return;
+  try {
+    const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
+    const data = await res.json();
+    if (!data.success) { sessionStorage.clear(); window.location.href = 'login.html'; return; }
+    if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
+  } catch(e) {}
+}
+verifyMemberAccess();
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -16,164 +38,250 @@
   --green:#16A34A;--green-bg:#DCFCE7;
   --red:#DC2626;--red-bg:#FEE2E2;
   --amber:#D97706;--amber-bg:#FEF3C7;
-  --sidebar-w:240px;
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6;overflow-x:hidden}
-
-/* ── SIDEBAR ── */
-.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--sidebar-w);background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;transition:transform .25s ease;overflow-y:auto}
-.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
-.logo-bar{width:4px;border-radius:2px;background:var(--navy)}
-.logo-bar.g{background:var(--gold)}
-.logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
-.logo-text span{color:var(--gold)}
-.sidebar-hub{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
-.hub-avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px}
-.hub-avatar img{width:100%;height:100%;object-fit:cover}
-.hub-status{flex:1;min-width:0}
-.hub-name{font-size:13px;font-weight:800;color:#fff}
-.hub-activity{font-size:11px;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hub-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
-.sidebar-nav{padding:12px 12px;flex:1}
-.nav-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
-.nav-item.active{background:rgba(255,255,255,.12);color:#fff}
-.nav-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
-.nav-item-badge{margin-left:auto;background:var(--gold);color:var(--navy-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px}
-.sidebar-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
-.sidebar-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sidebar-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
-.sidebar-signout:hover{background:rgba(255,255,255,.1);color:#fff}
-
-/* ── MOBILE TOPBAR ── */
-.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px;line-height:1}
-.mobile-logo{font-size:15px;font-weight:800;color:#fff}
-.mobile-logo span{color:var(--gold)}
-.mobile-hub-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)}
-
-/* ── MAIN CONTENT ── */
-.main{margin-left:var(--sidebar-w);min-height:100vh;transition:margin .25s ease}
-.page{display:none;padding:28px 3% 48px}
-.page.active{display:block}
-
-/* ── OVERLAY ── */
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
-.sidebar-overlay.show{display:block}
-
-/* ── DASHBOARD PAGE ── */
-.dash-welcome{background:var(--navy);border-radius:20px;padding:28px 28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
-.dash-welcome::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.03)}
-.dash-welcome-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
-.dash-hub-img{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px}
-.dash-hub-img img{width:100%;height:100%;object-fit:cover}
-.dash-welcome-text{flex:1}
-.dash-welcome-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
-.dash-welcome-name{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.4px;margin-bottom:4px}
-.dash-hub-note{font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;max-width:600px}
-.dash-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.dash-meta-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700}
-.dash-meta-badge.green{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:#86efac}
-
-/* ── STAT CARDS ── */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-.stat-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px 20px}
-.stat-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:8px}
-.stat-card-value{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--g900)}
-.stat-card-sub{font-size:12px;color:var(--g400);margin-top:4px}
-.stat-card-trend{font-size:11px;font-weight:700;margin-top:6px}
-.stat-card-trend.up{color:var(--green)}
-.stat-card-trend.amber{color:var(--amber)}
-
-/* ── SECTION HEADERS ── */
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
-.section-link{font-size:13px;font-weight:700;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:4px}
-.section-link:hover{color:var(--navy-light)}
-
-/* ── PRODUCT PREVIEW CARDS ── */
-.products-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-.preview-card{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;transition:all .18s;cursor:pointer;text-decoration:none;display:block}
-.preview-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1);border-color:var(--g300)}
-.preview-card-img{height:140px;background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:42px;border-bottom:1px solid var(--g100);position:relative;overflow:hidden}
-.preview-card-img img{max-width:100%;max-height:136px;object-fit:contain;padding:8px}
-.preview-grade{position:absolute;top:10px;left:10px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;padding:4px 10px}
-.preview-card-body{padding:14px}
-.preview-card-name{font-size:13px;font-weight:800;color:var(--g900);margin-bottom:3px;line-height:1.35}
-.preview-card-niche{font-size:11px;color:var(--g400);margin-bottom:8px}
-.preview-card-why{font-size:12px;color:var(--g600);font-style:italic;line-height:1.5}
-.preview-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--g100)}
-.preview-card-margin{font-size:13px;font-weight:800;color:var(--green)}
-.preview-card-cta{font-size:11px;font-weight:700;color:var(--navy)}
-
-/* ── QUICK ACTIONS ── */
-.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
-.qa-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;cursor:pointer;transition:all .15s;text-decoration:none;display:flex;align-items:center;gap:14px}
-.qa-card:hover{border-color:var(--navy);background:var(--off);transform:translateY(-1px);box-shadow:0 4px 16px rgba(30,58,95,.08)}
-.qa-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.qa-title{font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px}
-.qa-desc{font-size:12px;color:var(--g500);line-height:1.4}
-
-/* ── SAVED STRIP ── */
-.saved-strip{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px;margin-bottom:20px}
-.saved-strip-empty{text-align:center;padding:20px;color:var(--g400);font-size:13px}
-.saved-items{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
-.saved-items::-webkit-scrollbar{height:4px}
-.saved-items::-webkit-scrollbar-track{background:var(--g100);border-radius:2px}
-.saved-items::-webkit-scrollbar-thumb{background:var(--g300);border-radius:2px}
-.saved-chip{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px 14px;white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:8px}
-.saved-chip:hover{border-color:var(--navy);background:var(--off)}
-.saved-chip-name{font-size:12px;font-weight:700;color:var(--g900)}
-.saved-chip-meta{font-size:10px;color:var(--g400)}
-
-/* ── FEATURE PAGES ── */
-.feature-header{background:var(--navy);border-radius:20px;padding:28px;margin-bottom:20px;color:#fff;display:flex;align-items:center;gap:16px}
-.feature-header-icon{width:52px;height:52px;background:rgba(255,255,255,.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-.feature-header-text h1{font-size:24px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px}
-.feature-header-text p{font-size:13px;color:rgba(255,255,255,.65);max-width:500px;line-height:1.55}
-.feature-hub-note{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;margin-top:16px;display:flex;gap:12px;align-items:flex-start}
-.feature-hub-note img,.feature-hub-note .hub-emoji{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
-.feature-hub-note-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65;font-style:italic}
-.feature-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;margin-bottom:16px}
-.feature-card-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
-.feature-card-head h2{font-size:16px;font-weight:800;color:var(--g900)}
-.feature-card-body{padding:22px}
-
-/* ── COMING SOON ── */
-.coming-soon{text-align:center;padding:60px 20px;color:var(--g400)}
-.coming-soon-icon{font-size:48px;margin-bottom:16px}
-.coming-soon h3{font-size:18px;font-weight:800;color:var(--g700);margin-bottom:8px}
-.coming-soon p{font-size:14px;line-height:1.6;max-width:400px;margin:0 auto}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
-.toast.show{opacity:1}
-@keyframes hubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .mobile-topbar{display:flex}
-  .page{padding:80px 16px 48px}
-  .stat-row{grid-template-columns:repeat(2,1fr)}
-  .products-preview{grid-template-columns:1fr}
-  .quick-actions{grid-template-columns:1fr}
-  .dash-welcome{border-radius:16px;padding:20px}
-  .dash-welcome-name{font-size:18px}
-}
-@media(max-width:480px){
-  .stat-row{grid-template-columns:repeat(2,1fr);gap:10px}
-  .stat-card{padding:14px 16px}
-  .stat-card-value{font-size:22px}
-}
-
-/* ── SIMULATOR STORE PREVIEW ── */
+.topnav{position:sticky;top:0;z-index:100;background:var(--navy-dark);height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 3%;box-shadow:0 2px 20px rgba(0,0,0,.18)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px}
+.nav-logo-bar{width:5px;border-radius:2px;background:var(--navy)}
+.nav-logo-bar.g{background:var(--gold)}
+.nav-logo-text{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.nav-logo-text span{color:var(--gold)}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{background:none;border:none;color:rgba(255,255,255,.6);font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .15s}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-tab.active{background:#fff;color:var(--navy)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-user{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.nav-signout{color:rgba(255,255,255,.5);font-size:12px;background:none;border:none;cursor:pointer;font-family:inherit}
+.nav-signout:hover{color:#fff}
+.view{display:none}.view.active{display:block}
+.page-header{background:var(--navy);padding:40px 3% 36px;color:#fff}
+.page-header h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+.page-header p{color:rgba(255,255,255,.7);font-size:15px;max-width:560px}
+.header-meta{display:flex;align-items:center;gap:16px;margin-top:16px;flex-wrap:wrap}
+.header-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700}
+.header-badge.green{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4);color:#86efac}
+.products-section{padding:28px 3%}
+.products-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-btn{background:#fff;border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.filter-btn:hover:not(.active){border-color:var(--navy);color:var(--navy)}
+.toolbar-right{font-size:13px;color:var(--g400)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.product-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;transition:all .18s;cursor:pointer;display:flex;flex-direction:column;height:100%}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(30,58,95,.1);border-color:var(--g300)}
+.product-card-img{height:200px;background:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:52px;border-bottom:1px solid var(--g100);flex-shrink:0}
+.product-card-img img{max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:12px}
+.trend-badge{position:absolute;top:12px;left:12px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;padding:5px 10px;z-index:2}
+.stage-badge{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;color:var(--navy);font-size:11px;font-weight:800;padding:5px 9px;z-index:2}
+.product-card-body{padding:16px;display:flex;flex-direction:column;flex:1;gap:0}
+.product-card-name{font-size:15px;font-weight:800;color:var(--g900);letter-spacing:-.2px;margin-bottom:3px}
+.product-card-niche{font-size:12px;color:var(--g400);margin-bottom:12px}
+.product-card-why{font-size:12px;color:var(--g600);line-height:1.55;padding:10px;background:var(--g50);border-radius:10px;border-left:3px solid var(--gold)}
+.mini-scores{display:flex;gap:8px;margin-bottom:14px;margin-top:12px}
+.mini-score{flex:1;text-align:center;background:var(--g50);border-radius:10px;padding:8px 4px;border:1px solid var(--g100)}
+.mini-score-label{font-size:9px;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.mini-score-val{font-size:14px;font-weight:900;color:var(--g900);margin-top:2px}
+.analyse-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto}
+.analyse-btn:hover{background:var(--navy-light)}
+.analyse-btn svg{width:16px;height:16px}
+.empty-state{text-align:center;padding:80px 20px;color:var(--g400)}
+.empty-state h3{font-size:20px;color:var(--g600);margin-bottom:8px}
+.empty-state p{font-size:14px;margin-bottom:24px}
+.analysis-header{background:var(--navy);padding:28px 3%;color:#fff;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.back-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.back-btn:hover{background:rgba(255,255,255,.18)}
+.analysis-header-info{flex:1}
+.analysis-header-info h1{font-size:28px;font-weight:900;letter-spacing:-.8px;margin-bottom:4px}
+.analysis-header-info p{color:rgba(255,255,255,.65);font-size:14px}
+.analysis-body{padding:28px 3%;display:flex;flex-direction:column;gap:20px;max-width:1200px;margin:0 auto}
+.score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
+.score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
+.score-card-value{font-size:36px;font-weight:900;letter-spacing:-1px}
+.score-card-sub{font-size:12px;color:var(--g400);margin-top:4px}
+.analysis-panel{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden}
+.analysis-panel-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
+.analysis-panel-head h2{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
+.analysis-panel-body{padding:20px 22px}
+/* GROWTH CHART */
+.growth-panel-inner{background:var(--navy-dark);border-radius:16px;padding:20px 22px 16px;position:relative;overflow:hidden}
+.growth-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
+.growth-title{font-size:14px;font-weight:800;color:#fff}
+.growth-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.growth-window-badge{background:rgba(216,90,48,.15);border:1px solid rgba(216,90,48,.3);color:#f87171;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;align-self:flex-start}
+.growth-chart-wrap{position:relative;height:200px;margin:16px 0 8px}
+.growth-legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.growth-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)}
+.growth-legend-dot{width:8px;height:8px;border-radius:50%}
+.growth-why{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:12px 14px;margin-top:4px;border-radius:0 10px 10px 0}
+.growth-why-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:4px}
+.growth-why-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65}
+.growth-progress-line{font-size:13px;color:rgba(255,255,255,.3);padding:5px 0;display:flex;align-items:center;gap:10px;transition:all .3s}
+.growth-progress-line.active{color:rgba(255,255,255,.9)}
+.growth-progress-line.active::before{content:'→ ';color:var(--gold)}
+.growth-progress-line.done{color:rgba(255,255,255,.5)}
+.growth-progress-line.done::before{content:'✓ ';color:#1D9E75}
+/* RESEARCH HUB */
+.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
+.research-link:hover{background:var(--off);border-color:var(--navy);transform:translateY(-1px)}
+.research-link-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.research-info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--g200);border:none;cursor:pointer;font-size:10px;font-weight:900;color:var(--g500);display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit;line-height:1;z-index:2}
+.research-info-btn:hover{background:var(--navy);color:#fff}
+.research-tooltip{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:230px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
+.research-tooltip::after{content:'';position:absolute;bottom:-5px;right:10px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
+.research-info-btn.open + .research-tooltip{display:block}
+/* LAUNCH READINESS */
+.launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
+.launch-item.pass{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.launch-item.fail{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
+/* PROFIT CALCULATOR */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.calc-field{display:flex;flex-direction:column;gap:5px}
+.calc-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.calc-input-wrap{display:flex;align-items:center;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.calc-input-wrap:focus-within{border-color:var(--navy)}
+.calc-prefix{padding:10px 8px 10px 14px;font-size:14px;color:var(--g400);font-weight:700;flex-shrink:0}
+.calc-input{border:none;background:transparent;padding:10px 14px 10px 0;font-size:14px;font-family:inherit;color:var(--g900);outline:none;width:100%}
+.calc-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;width:100%}
+.calc-btn:hover{background:var(--navy-light)}
+.calc-results{display:none;margin-top:16px}
+.calc-results.show{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.calc-result-card{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center}
+.calc-result-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:6px}
+.calc-result-val{font-size:20px;font-weight:900;color:var(--g900)}
+.calc-verdict-row{margin-top:10px;display:none}
+.calc-verdict-row.show{display:block}
+.calc-verdict{padding:14px 16px;border-radius:12px;font-size:13px;font-weight:700;text-align:center}
+.calc-verdict.good{background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
+.calc-verdict.tight{background:var(--amber-bg);color:#92400e;border:1px solid #fde68a}
+.calc-verdict.bad{background:var(--red-bg);color:#991b1b;border:1px solid #fecaca}
+/* SUPPLIER TERMS */
+.supplier-terms{display:flex;flex-direction:column;gap:8px}
+.supplier-term{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px 14px}
+.supplier-term-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.supplier-term-text{font-size:13px;font-weight:600;color:var(--g700);flex:1}
+.supplier-term-link{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
+.supplier-term-link:hover{background:var(--navy-light)}
+/* INSIGHT COLS */
+.insight-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.insight-col{border-radius:14px;padding:16px}
+.insight-col.green{background:var(--green-bg);border:1px solid #bbf7d0}
+.insight-col.red{background:var(--red-bg);border:1px solid #fecaca}
+.insight-col.blue{background:#eff6ff;border:1px solid #bfdbfe}
+.insight-col h3{font-size:13px;font-weight:800;margin-bottom:10px}
+.insight-col.green h3{color:#15803d}
+.insight-col.red h3{color:#b91c1c}
+.insight-col.blue h3{color:#1d4ed8}
+.insight-col ul{padding-left:16px;font-size:13px;line-height:1.75}
+.insight-col.green ul{color:#166534}
+.insight-col.red ul{color:#991b1b}
+.insight-col.blue ul{color:#1e40af}
+.creative-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.creative-label{font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:.6px;font-weight:700;display:block;margin-bottom:5px}
+.creative-select{width:100%;border:1px solid var(--g200);border-radius:10px;padding:11px 12px;font-size:14px;font-family:inherit;background:#fff;color:var(--g900);outline:none}
+.creative-select:focus{border-color:var(--navy)}
+.generate-creative-btn{background:var(--gold);color:var(--navy);border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:8px}
+.generate-creative-btn:hover{background:var(--gold-light)}
+.generate-creative-btn:disabled{background:var(--g200);color:var(--g400);cursor:default}
+.creative-output{display:none;margin-top:18px}
+.creative-output.show{display:block}
+.variation-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.var-tab{background:var(--g100);border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.var-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.script-tabs{display:flex;gap:6px;margin-bottom:12px}
+.script-tab{background:none;border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.script-tab.active{background:var(--navy-dark);color:#fff;border-color:var(--navy-dark)}
+.script-box{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;font-size:13px;color:var(--g700);line-height:1.8;white-space:pre-wrap;min-height:120px}
+.brief-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;font-size:13px;color:#166534;line-height:1.8;white-space:pre-wrap}
+.copy-row{display:flex;gap:8px;margin-top:10px}
+.copy-btn{background:#fff;border:1px solid var(--g200);color:var(--g700);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.copy-btn:hover{border-color:var(--navy);color:var(--navy)}
+.meta-info-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.meta-info-card{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px}
+.meta-info-card-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:4px}
+.meta-info-card-val{font-size:13px;color:var(--g700);font-weight:500}
+.validator-hero{background:var(--navy);padding:48px 3%;text-align:center;color:#fff}
+.validator-hero h1{font-size:34px;font-weight:900;letter-spacing:-1px;margin-bottom:10px}
+.validator-hero p{color:rgba(255,255,255,.7);font-size:15px;max-width:520px;margin:0 auto 28px}
+.validator-input-wrap{display:flex;gap:0;background:#fff;border-radius:14px;padding:6px;max-width:640px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.validator-input{flex:1;border:none;outline:none;padding:12px 14px;font-size:14px;font-family:inherit;color:var(--g900);background:transparent;border-radius:10px}
+.validator-submit{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.validator-submit:hover{background:var(--gold-light)}
+.validator-hint{color:rgba(255,255,255,.5);font-size:12px}
+.validator-supported{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.supported-tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.8);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700}
+.validator-result-area{padding:28px 3%;max-width:1200px;margin:0 auto}
+.validator-empty{text-align:center;padding:60px 20px;color:var(--g400)}
+.validator-empty h3{font-size:18px;color:var(--g600);margin-bottom:8px}
+.admin-wrap{max-width:800px;margin:0 auto;padding:32px 3%}
+.admin-lock{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:40px;text-align:center}
+.admin-lock h2{font-size:22px;font-weight:800;color:var(--g900);margin-bottom:8px}
+.admin-lock p{font-size:14px;color:var(--g500);margin-bottom:24px}
+.admin-pw-input{border:1px solid var(--g200);border-radius:10px;padding:12px 16px;font-size:15px;font-family:inherit;outline:none;width:260px;text-align:center;display:block;margin:0 auto 12px}
+.admin-pw-input:focus{border-color:var(--navy)}
+.admin-unlock-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.admin-pw-error{color:var(--red);font-size:13px;margin-top:8px;display:none}
+.admin-panel{display:none}
+.admin-panel.visible{display:block}
+.admin-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:24px;margin-bottom:16px}
+.admin-card h2{font-size:18px;font-weight:800;color:var(--g900);margin-bottom:6px}
+.admin-card p{font-size:13px;color:var(--g500);margin-bottom:20px}
+.admin-generate-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
+.admin-generate-btn:hover{background:var(--navy-light)}
+.admin-generate-btn:disabled{background:var(--g300);cursor:default}
+.admin-products-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.admin-product-row{display:flex;align-items:center;gap:12px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:12px 16px}
+.admin-product-info{flex:1}
+.admin-product-name{font-size:14px;font-weight:700;color:var(--g900)}
+.admin-product-meta{font-size:12px;color:var(--g400)}
+.admin-product-grade{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-messages{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
+.status-messages.show{display:block}
+.status-line{font-size:13px;color:var(--g500);padding:3px 0;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .4s}
+.status-line.show{opacity:1}
+.status-line.done{color:var(--green)}
+.status-line.done::before{content:'✓ '}
+.status-line.active::before{content:'→ ';color:var(--navy)}
+.admin-product-toggle{width:40px;height:22px;border-radius:11px;background:var(--g200);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.admin-product-toggle.on{background:var(--green)}
+.admin-product-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.admin-product-toggle.on::after{left:20px}
+/* LAUNCH SIMULATOR */
+.sim-store-preview{border-radius:16px;overflow:hidden;margin-bottom:0}
+.sim-store-nav{padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.sim-store-nav-logo{font-size:13px;font-weight:800;color:#fff}
+.sim-store-nav-links{display:flex;gap:14px}
+.sim-store-nav-link{font-size:11px;color:rgba(255,255,255,.5)}
+.sim-store-nav-cart{font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;border:none;font-family:inherit}
+.sim-store-hero{display:grid;grid-template-columns:1fr 1fr;min-height:200px}
+.sim-store-hero-text{padding:24px 20px;display:flex;flex-direction:column;justify-content:center}
+.sim-store-hero-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:10px;letter-spacing:.5px}
+.sim-store-hero-h1{font-size:20px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:8px}
+.sim-store-hero-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:16px}
+.sim-store-hero-btn{font-size:13px;font-weight:800;padding:10px 20px;border-radius:8px;width:fit-content;border:none;cursor:pointer;font-family:inherit}
+.sim-store-hero-img{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.sim-store-hero-img img{width:100%;height:100%;object-fit:cover}
+.sim-watermark{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.3px}
+.sim-inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sim-input-field{display:flex;flex-direction:column;gap:5px}
+.sim-input-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.sim-input-wrap{display:flex;align-items:center;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.sim-input-wrap:focus-within{border-color:var(--navy)}
+.sim-input-prefix{padding:10px 8px 10px 14px;font-size:14px;color:var(--g400);font-weight:700;flex-shrink:0}
+.sim-input{border:none;background:transparent;padding:10px 14px 10px 0;font-size:14px;font-family:inherit;color:var(--g900);outline:none;width:100%}
+.sim-select{width:100%;border:1.5px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;background:var(--g50);color:var(--g900);outline:none}
+.sim-select:focus{border-color:var(--navy)}
+.sim-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.sim-btn:hover{background:var(--navy-light)}
+.sim-btn:disabled{background:var(--g300);cursor:not-allowed}
 .sim-progress{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
 .sim-progress.show{display:block}
 .sim-progress-line{font-size:13px;color:var(--g400);padding:4px 0;transition:all .3s}
@@ -181,6 +289,9 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sim-progress-line.active::before{content:'→ '}
 .sim-progress-line.done{color:var(--green)}
 .sim-progress-line.done::before{content:'✓ '}
+.sim-result{display:none;margin-top:0}
+.sim-result.show{display:block}
+.sim-roadmap{border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px}
 .sim-week{padding:14px 16px;border-bottom:1px solid var(--g100)}
 .sim-week:last-child{border-bottom:none}
 .sim-week-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
@@ -190,804 +301,1414 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sim-week-items{padding-left:36px;display:flex;flex-direction:column;gap:5px}
 .sim-week-item{font-size:12px;color:var(--g700);line-height:1.5;display:flex;gap:6px}
 .sim-week-item::before{content:'·';color:var(--g300);flex-shrink:0}
+.sim-verdict{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.sim-verdict-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:6px}
+.sim-verdict-text{font-size:13px;color:var(--g700);line-height:1.65}
+.sim-cases{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sim-case{padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.5}
+.sim-case.worst{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
+.sim-case.best{background:var(--green-bg);border:1px solid #bbf7d0;color:#166534}
+.sim-case-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
+/* SAVED PRODUCTS */
+.compare-slot{background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:16px;min-height:90px;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
+.compare-slot.filled{border-style:solid;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);align-items:flex-start;padding:12px}
+.compare-slot-empty{font-size:12px;color:rgba(255,255,255,.4);text-align:center;font-weight:500}
+.compare-slot-product{width:100%}
+.compare-slot-name{font-size:13px;font-weight:800;color:var(--g900);margin-bottom:4px}
+.compare-slot-meta{font-size:11px;color:var(--g400)}
+.compare-slot-remove{position:absolute;top:8px;right:8px;background:var(--red-bg);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;color:var(--red);font-family:inherit;display:flex;align-items:center;justify-content:center;line-height:1}
+.compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.compare-table th{background:var(--g50);padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);font-weight:700;border-bottom:1px solid var(--g200)}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .winner{background:#f0fdf4;font-weight:800;color:var(--green)}
+.saved-card{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;transition:all .18s;position:relative;display:flex;flex-direction:column}
+.saved-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1)}
+.saved-card:active{cursor:grabbing}
+.saved-card-drag-hint{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.3px}
+.unsave-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3}
+@media(max-width:900px){.score-row{grid-template-columns:repeat(2,1fr)}.insight-cols{grid-template-columns:1fr}.research-grid{grid-template-columns:repeat(2,1fr)}.creative-form{grid-template-columns:1fr}.meta-info-row{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(2,1fr)}.calc-results.show{grid-template-columns:1fr 1fr}.launch-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.products-grid{grid-template-columns:1fr}.score-row{grid-template-columns:repeat(2,1fr)}.research-grid{grid-template-columns:1fr}.nav-tabs{display:none}.analysis-header{flex-direction:column}.calc-results.show{grid-template-columns:1fr}}
+
+/* ── HUB MASCOT LOADING STATE ─────────────────────────────────── */
+.hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
+.hub-loading.active{display:flex}
+.hub-img-wrap{position:relative;width:140px;height:140px}
+.hub-img-wrap img{width:140px;height:140px;object-fit:contain;animation:hubFloat 3s ease-in-out infinite}
+.hub-pen{position:absolute;bottom:18px;right:8px;width:20px;height:20px;animation:hubWrite 1.2s ease-in-out infinite}
+.hub-dots{position:absolute;top:-10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.hub-dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#F59E0B);animation:hubDot 1.4s ease-in-out infinite}
+.hub-dot:nth-child(2){animation-delay:.2s;background:#3B82F6}
+.hub-dot:nth-child(3){animation-delay:.4s;background:#10B981}
+.hub-msg{font-size:14px;font-weight:600;color:var(--g600,#4B5563);animation:hubPulse 2s ease-in-out infinite}
+@keyframes hubFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+@keyframes hubWrite{0%,100%{transform:rotate(-10deg) translate(0,0)}50%{transform:rotate(5deg) translate(-2px,-3px)}}
+@keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+@keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* ── SIDEBAR (dashboard consistent) ─────────────────────────────────────── */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;transition:transform .25s ease;overflow-y:auto}
+.sb-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.sb-logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.sb-logo-bar.g{background:var(--gold)}
+.sb-logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.sb-logo-text span{color:var(--gold)}
+.sb-hub{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sb-hub-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sb-hub-avatar img{width:100%;height:100%;object-fit:cover}
+.sb-hub-name{font-size:13px;font-weight:800;color:#fff}
+.sb-hub-status{font-size:11px;color:rgba(255,255,255,.5)}
+.sb-hub-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+.sb-nav{padding:12px;flex:1}
+.sb-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
+.sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.12);color:#fff}
+.sb-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--gold);color:var(--navy-dark);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
+.sb-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+.sb-overlay.show{display:block}
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px}
+.mobile-logo-text{font-size:15px;font-weight:800;color:#fff}
+.mobile-logo-text span{color:var(--gold)}
+.members-main{margin-left:240px;min-height:100vh;transition:margin .25s ease}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .members-main{margin-left:0}
+  .mobile-topbar{display:flex}
+  .topnav{display:none}
+}
 </style>
 </head>
 <body>
+<div class="members-main" id="members-main">
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
 
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<!-- MOBILE TOPBAR -->
+<div class="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+  <div class="mobile-logo-text">Drop<span>Research</span> Hub</div>
+  <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+</div>
 
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <a class="logo-wrap" href="dashboard.html">
-      <div class="logo-icon">
-        <div class="logo-bar" style="height:8px;opacity:.4"></div>
-        <div class="logo-bar" style="height:14px;opacity:.7"></div>
-        <div class="logo-bar" style="height:20px"></div>
-        <div class="logo-bar g" style="height:15px"></div>
+  <div class="sb-logo">
+    <a class="sb-logo-wrap" href="dashboard.html">
+      <div class="sb-logo-icon">
+        <div class="sb-logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="sb-logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="sb-logo-bar" style="height:20px"></div>
+        <div class="sb-logo-bar g" style="height:15px"></div>
       </div>
-      <div class="logo-text">Drop<span>Research</span> Hub</div>
+      <div class="sb-logo-text">Drop<span>Research</span> Hub</div>
     </a>
   </div>
-  <div class="sidebar-hub">
-    <div class="hub-avatar">
+  <div class="sb-hub">
+    <div class="sb-hub-avatar">
       <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
     </div>
-    <div class="hub-status">
-      <div class="hub-name">Hub</div>
-      <div class="hub-activity" id="sidebar-hub-status">Researching this week...</div>
+    <div style="flex:1;min-width:0">
+      <div class="sb-hub-name">Hub</div>
+      <div class="sb-hub-status" id="sb-hub-status">Ready to research</div>
     </div>
-    <div class="hub-dot"></div>
+    <div class="sb-hub-dot"></div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">This Week</div>
-    <button class="nav-item active" onclick="showPage('dashboard',this)">
-      <span class="nav-item-icon">🏠</span> Dashboard
-    </button>
-    <button class="nav-item" onclick="showPage('weekly',this)">
-      <span class="nav-item-icon">📦</span> Hub's Weekly Picks
-      <span class="nav-item-badge" id="products-badge">3</span>
-    </button>
-    <a class="nav-item" href="members.html">
-      <span class="nav-item-icon">📈</span> Emerging Products
-    </a>
-    <div class="nav-section-label" style="margin-top:8px">Hub's Research</div>
-    <a class="nav-item" href="pulse.html">
-      <span class="nav-item-icon">🌍</span> UK Market Pulse
-    </a>
-    <div class="nav-section-label" style="margin-top:8px">Ask Hub</div>
-    <button class="nav-item" onclick="showPage('validator',this)">
-      <span class="nav-item-icon">🔍</span> About A Product
-    </button>
-    <button class="nav-item" id="nav-simulator" onclick="showPage('simulator',this)">
-      <span class="nav-item-icon">🚀</span> For A Launch Plan
-    </button>
-    <div class="nav-section-label" style="margin-top:8px">Your Research</div>
-    <button class="nav-item" onclick="showPage('saved',this)">
-      <span class="nav-item-icon">💛</span> Products Hub Is Tracking
-    </button>
-    <button class="nav-item" onclick="showPage('compare',this)">
-      <span class="nav-item-icon">⚖️</span> Hub's Comparison Report
-    </button>
+  <nav class="sb-nav">
+    <div class="sb-section">This Week</div>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🏠</span> Dashboard</a>
+    <a class="sb-item" href="dashboard.html#weekly"><span class="sb-item-icon">📦</span> Hub's Weekly Picks</a>
+    <button class="sb-item active" onclick="showView('products',this);closeSidebar()"><span class="sb-item-icon">📈</span> Emerging Products</button>
+    <div class="sb-section" style="margin-top:8px">Hub's Research</div>
+    <a class="sb-item" href="pulse.html"><span class="sb-item-icon">🌍</span> UK Market Pulse</a>
+    <div class="sb-section" style="margin-top:8px">Ask Hub</div>
+    <button class="sb-item" onclick="showView('validator',this);closeSidebar()"><span class="sb-item-icon">🔍</span> About A Product</button>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
+    <div class="sb-section" style="margin-top:8px">Your Research</div>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">💛</span> Products Hub Is Tracking</button>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">⚖️</span> Hub's Comparison Report</button>
   </nav>
-  <div class="sidebar-bottom">
-    <div class="sidebar-user" id="sidebar-user-email">Loading...</div>
-    <button class="sidebar-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+  <div class="sb-bottom">
+    <div class="sb-user" id="sb-user-email">Members area</div>
+    <button class="sb-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
   </div>
 </aside>
 
-<div class="mobile-topbar">
-  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
-  <div class="mobile-logo">Drop<span>Research</span> Hub</div>
-  <div class="mobile-hub-dot"></div>
+<div class="view active" id="view-products">
+  <div class="page-header">
+    <h1>Emerging Products</h1>
+    <p>Products showing early growth signals — find them first, move fast.</p>
+    <div class="header-meta">
+      <div class="header-badge green">🟢 Feed live</div>
+      <div class="header-badge" id="product-count-badge">Loading products...</div>
+      <div class="header-badge" id="last-updated-badge">Updated by admin</div>
+    </div>
+  </div>
+  <div class="products-section">
+    <div class="products-toolbar">
+      <div class="toolbar-left" id="niche-filters"><button class="filter-btn active" onclick="setNicheFilter('all',this)">All niches</button></div>
+      <div class="toolbar-right" id="toolbar-count"></div>
+    </div>
+    <div id="members-hub-area" class="hub-loading" style="display:none;grid-column:1/-1"></div>
+    <div class="products-grid" id="products-grid">
+      <div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
+    </div>
+  </div>
 </div>
 
-<main class="main">
-
-  <!-- DASHBOARD -->
-  <div class="page active" id="page-dashboard">
-    <div class="dash-welcome">
-      <div class="dash-welcome-top">
-        <div class="dash-hub-img">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
-        </div>
-        <div class="dash-welcome-text">
-          <div class="dash-welcome-label">Hub's weekly note</div>
-          <div class="dash-welcome-name" id="dash-greeting">Good morning</div>
-          <div class="dash-hub-note" id="hub-weekly-note">Loading Hub's research notes...</div>
-        </div>
-      </div>
-      <div class="dash-meta">
-        <div class="dash-meta-badge green">🟢 Hub is active</div>
-        <div class="dash-meta-badge" id="drop-date-badge">Loading...</div>
-        <div class="dash-meta-badge" id="products-live-badge">Loading...</div>
-      </div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-card">
-        <div class="stat-card-label">Products This Week</div>
-        <div class="stat-card-value" id="stat-products">—</div>
-        <div class="stat-card-sub">Hub's picks</div>
-        <div class="stat-card-trend up" id="stat-products-trend"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Products Saved</div>
-        <div class="stat-card-value" id="stat-saved">—</div>
-        <div class="stat-card-sub">Hub is tracking</div>
-        <div class="stat-card-trend amber" id="stat-saved-trend"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Avg. Margin</div>
-        <div class="stat-card-value" id="stat-margin">—</div>
-        <div class="stat-card-sub">This week's picks</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Top Grade</div>
-        <div class="stat-card-value" id="stat-grade" style="color:var(--green)">—</div>
-        <div class="stat-card-sub">Best pick this week</div>
-      </div>
-    </div>
-
-    <div class="section-head">
-      <div class="section-title">Hub's picks this week</div>
-      <a class="section-link" href="members.html">See full reports →</a>
-    </div>
-    <div class="products-preview" id="dash-products-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--g400)">
-        <div style="font-size:32px;margin-bottom:12px">⏳</div>
-        <div style="font-weight:700;color:var(--g600)">Hub is preparing this week's picks</div>
-        <div style="font-size:13px;margin-top:4px">Check back Monday when the weekly drop lands</div>
-      </div>
-    </div>
-
-    <div class="section-head" style="margin-top:24px">
-      <div class="section-title">Ask Hub</div>
-    </div>
-    <div class="quick-actions">
-      <a class="qa-card" onclick="showPage('validator',null)">
-        <div class="qa-icon" style="background:#eff6ff">🔍</div>
-        <div>
-          <div class="qa-title">Ask Hub About A Product</div>
-          <div class="qa-desc">Found something? Hub will tell you honestly if it's worth your time and money.</div>
-        </div>
-      </a>
-      <a class="qa-card" onclick="showPage('creative',null)">
-        <div class="qa-icon" style="background:#fef3c7">✍️</div>
-        <div>
-          <div class="qa-title">Ask Hub For Ad Angles</div>
-          <div class="qa-desc">Hub writes your TikTok script, hooks and a creator brief ready to send.</div>
-        </div>
-      </a>
-      <a class="qa-card" onclick="showPage('simulator',null)">
-        <div class="qa-icon" style="background:#f0fdf4">🚀</div>
-        <div>
-          <div class="qa-title">Ask Hub For A Launch Plan</div>
-          <div class="qa-desc">Hub builds your store concept and a week-by-week launch roadmap.</div>
-        </div>
-      </a>
-      <a class="qa-card" onclick="showPage('saved',null)">
-        <div class="qa-icon" style="background:#fdf4ff">💛</div>
-        <div>
-          <div class="qa-title">Products Hub Is Tracking</div>
-          <div class="qa-desc">Review and compare the products you've asked Hub to keep an eye on.</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="section-head" style="margin-top:8px">
-      <div class="section-title">Hub is tracking for you</div>
-      <a class="section-link" onclick="showPage('saved',null)">View all →</a>
-    </div>
-    <div class="saved-strip">
-      <div id="saved-strip-inner">
-        <div class="saved-strip-empty">Nothing saved yet — hit 💛 on any product to ask Hub to track it.</div>
-      </div>
+<div class="view" id="view-analysis">
+  <div class="analysis-header">
+    <button class="back-btn" onclick="showView('products',document.querySelector('.nav-tab'))">← Back to products</button>
+    <div class="analysis-header-info">
+      <h1 id="analysis-product-name">Product Analysis</h1>
+      <p id="analysis-product-niche">Loading...</p>
     </div>
   </div>
+  <div class="analysis-body" id="analysis-body"></div>
+</div>
 
-  <!-- HUB'S WEEKLY PICKS -->
-  <div class="page" id="page-weekly">
-    <div class="feature-header">
-      <div class="feature-header-icon">📦</div>
-      <div class="feature-header-text">
-        <h1>Hub's Weekly Picks</h1>
-        <p>Every week Hub researches hundreds of products so you don't have to. These three made the cut this Monday.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text" id="weekly-hub-note">"Loading Hub's research notes..."</div>
-        </div>
-      </div>
-    </div>
-    <div id="weekly-products-grid" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px">
-      <div style="text-align:center;padding:60px 20px;color:var(--g400)">
-        <div style="font-size:40px;margin-bottom:12px">⏳</div>
-        <div style="font-size:16px;font-weight:700;color:var(--g600)">Hub is preparing this week's picks</div>
-        <div style="font-size:13px;margin-top:6px">Check back Monday when the weekly drop lands</div>
-      </div>
-    </div>
-    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
-      <div>
-        <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:4px">Want the full analysis?</div>
-        <div style="font-size:13px;color:var(--g500)">Go to Emerging Products for scoring, growth charts, launch simulator and more.</div>
-      </div>
-      <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 22px;font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
-        📈 Go to Emerging Products →
-      </a>
+<div class="view" id="view-saved">
+  <div class="page-header">
+    <h1>💛 Saved Products Hub</h1>
+    <p>Your saved products — compare any two side by side to find your best opportunity.</p>
+    <div class="header-meta">
+      <div class="header-badge green" id="saved-count-badge">Loading...</div>
     </div>
   </div>
+  <div style="padding:28px 3%">
 
-  <!-- ASK HUB — VALIDATOR -->
-  <div class="page" id="page-validator">
-    <div class="feature-header">
-      <div class="feature-header-icon">🔍</div>
-      <div class="feature-header-text">
-        <h1>Ask Hub About A Product</h1>
-        <p>Found something interesting? Paste the link and Hub will tell you honestly whether it's worth your time and money.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Paste the link below. I'll look at it properly and give you my honest take — not just scores, but whether I'd actually back it."</div>
-        </div>
+    <!-- COMPARE BOX -->
+    <div style="background:var(--navy-dark);border-radius:20px;padding:24px;margin-bottom:28px">
+      <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:4px">⚖️ Compare Two Products</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px">Select two saved products to compare them side by side</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:20px">
+        <select id="compare-select-a" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product A...</option>
+        </select>
+        <div style="font-size:20px;color:rgba(255,255,255,.4);font-weight:700;text-align:center">vs</div>
+        <select id="compare-select-b" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product B...</option>
+        </select>
       </div>
+      <div id="compare-table"></div>
     </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:16px;transition:border-color .15s" id="val-input-wrap" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
-          <input id="dash-validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL — or just type a product name..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
-          <button onclick="runDashValidator()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
-        </div>
-        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Works with AliExpress · Temu · Alibaba · or just type a product name</div>
-        <div id="dash-val-loading" style="display:none;text-align:center;padding:40px 20px">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style=font-size:60px;margin-bottom:16px>🤖</div>'">
-          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-val-msg">Hub is looking at this properly...</div>
-          <div style="font-size:13px;color:var(--g400);margin-top:6px">Give me a moment</div>
-        </div>
-        <div id="dash-val-result" style="display:none"></div>
-      </div>
+
+    <!-- SAVED PRODUCTS GRID -->
+    <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
+    <div id="saved-grid">
+      <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product card to save it here.</p></div>
     </div>
   </div>
+</div>
 
-  <!-- ASK HUB — CREATIVE -->
-  <div class="page" id="page-creative">
-    <div class="feature-header">
-      <div class="feature-header-icon">✍️</div>
-      <div class="feature-header-text">
-        <h1>Ask Hub For Ad Angles</h1>
-        <p>Hub writes your TikTok script, three opening hooks, and a brief you can send straight to a creator.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Tell me the product and I'll write you a ready-to-film script. One strong angle — not a dozen options to confuse you."</div>
-        </div>
-      </div>
+<div class="view" id="view-validator">
+  <div class="validator-hero">
+    <h1>Is it worth building a brand around?</h1>
+    <p>Paste the link below and we'll tell you whether it's worth your time and money.</p>
+    <div class="validator-input-wrap">
+      <input class="validator-input" id="validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL...">
+      <button class="validator-submit" onclick="runValidator()">Analyse →</button>
     </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .15s" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
-          <input id="dash-creative-input" placeholder="Type a product name e.g. Modular Under-Bed Storage Drawer..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
-          <button onclick="runDashCreative()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
-        </div>
-        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Hub will write one strong TikTok script + 3 hook lines + creator brief</div>
-        <div id="dash-creative-loading" style="display:none;text-align:center;padding:40px 20px">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style=font-size:60px;margin-bottom:16px>🤖</div>'">
-          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-creative-msg">Hub is writing your script...</div>
-        </div>
-        <div id="dash-creative-result" style="display:none"></div>
-      </div>
+    <div class="validator-hint">We extract the product details from your link and give you a full brand-readiness assessment</div>
+    <div class="validator-supported">
+      <span class="supported-tag">AliExpress</span>
+      <span class="supported-tag">Temu</span>
+      <span class="supported-tag">Alibaba</span>
     </div>
   </div>
-
-  <!-- ASK HUB — LAUNCH PLAN (SIMULATOR) -->
-  <div class="page" id="page-simulator">
-    <div class="feature-header">
-      <div class="feature-header-icon">🚀</div>
-      <div class="feature-header-text">
-        <h1>Ask Hub For A Launch Plan</h1>
-        <p>Hub builds your store concept and a week-by-week plan for launching any product. Takes about 15 seconds.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Give me a product and I'll build the launch plan. Store concept, four-week roadmap, honest verdict. Everything you need to decide whether to go."</div>
-        </div>
-      </div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .15s" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
-          <input id="dash-sim-input" placeholder="Type a product name e.g. Lightweight Folding Bike Fender..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
-          <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
-        </div>
-        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Hub will build a store concept + 4-week launch roadmap + honest verdict</div>
-        <div id="dash-sim-loading" style="display:none;text-align:center;padding:40px 20px">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style=font-size:60px;margin-bottom:16px>🤖</div>'">
-          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-sim-msg">Hub is building your launch plan...</div>
-        </div>
-        <div id="dash-sim-result" style="display:none"></div>
-      </div>
-    </div>
+  <div class="validator-result-area" id="validator-result">
+    <div class="validator-empty"><h3>Paste a product URL above to get started</h3><p>We'll analyse market demand, competition level, brand potential and give you a clear verdict.</p></div>
   </div>
+</div>
 
-  <!-- SAVED PRODUCTS -->
-  <div class="page" id="page-saved">
-    <div class="feature-header">
-      <div class="feature-header-icon">💛</div>
-      <div class="feature-header-text">
-        <h1>Products Hub Is Tracking For You</h1>
-        <p>These are the products you've asked Hub to keep an eye on.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"I'm keeping these on my radar. Head into the members area to compare them or run a full analysis."</div>
-        </div>
-      </div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <div id="saved-page-grid">
-          <div class="coming-soon">
-            <div class="coming-soon-icon">💛</div>
-            <h3>Nothing saved yet</h3>
-            <p>Go to Hub's Weekly Picks and hit 💛 on any product to ask Hub to track it for you.</p>
-          </div>
-        </div>
-        <div style="margin-top:16px">
-          <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
-            💛 View in Members Area →
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- COMPARE -->
-  <div class="page" id="page-compare">
-    <div class="feature-header">
-      <div class="feature-header-icon">⚖️</div>
-      <div class="feature-header-text">
-        <h1>Hub's Comparison Report</h1>
-        <p>Can't decide between two products? Hub will tell you which one he'd back and why.</p>
-        <div class="feature-hub-note">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Save at least two products first, then I'll compare them properly and give you a straight recommendation."</div>
-        </div>
-      </div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <p style="font-size:14px;color:var(--g500);margin-bottom:16px">Available inside the full members area under Saved Products.</p>
-        <a href="members.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;text-decoration:none">
-          ⚖️ Open Hub's Comparison Report →
-        </a>
-      </div>
-    </div>
-  </div>
-
-</main>
 
 <div class="toast" id="toast"></div>
+<div id="manage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
+    <h2 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px">Manage Subscription</h2>
+    <p style="font-size:14px;color:var(--g500);margin-bottom:24px;line-height:1.6">You'll be taken to the Stripe customer portal where you can update your payment method, view invoices or cancel your subscription.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="closeManageModal()" style="border:1px solid var(--g200);background:#fff;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>
+      <button id="portal-btn" onclick="goToPortal()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Open Portal →</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+const ADMIN_PW = 'Billy1234.';
+let allProducts = [];
+let pendingProducts = [];
+let activeNiche = 'all';
+let creativeVariations = [];
+let currentVariation = 0;
+let activeGrowthChart = null;
 
-// ── AUTH CHECK ────────────────────────────────────────────────────────────
-const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-const _auth = sessionStorage.getItem('drh_auth');
-if (!_auth && !_session?.email) {
-  window.location.href = 'login.html';
-} else if (_auth === 'trial') {
-  window.location.href = 'trial.html';
-}
-
-function getUserEmail() {
-  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  if (s?.email) return s.email;
-  if (sessionStorage.getItem('drh_auth') === 'member') return 'admin@dropresearchhub.com';
-  return null;
-}
-
-const email = getUserEmail();
-if (email) document.getElementById('sidebar-user-email').textContent = email;
-
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
-}
-document.getElementById('dash-greeting').textContent = getGreeting();
-
-function openSidebar() {
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sidebar-overlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
-  closeSidebar();
 }
 
 function gradeColor(g) {
   if (!g) return '#6B7280';
   const s = String(g).toUpperCase();
   if (s.startsWith('A')) return '#16A34A';
-  if (s.startsWith('B')) return '#D97706';
+  if (s === 'B') return '#D97706';
+  if (s === 'C') return '#EA580C';
   return '#DC2626';
 }
+function gradeColorBg(g) {
+  const s = String(g || '').toUpperCase();
+  if (s.startsWith('A')) return '#DCFCE7';
+  if (s === 'B') return '#FEF3C7';
+  if (s === 'C') return '#FEE2E2';
+  return '#FEE2E2';
+}
 
-async function loadProducts() {
+function renderProductsGrid() {
+  const grid = document.getElementById('products-grid');
+  const list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche||'').toLowerCase() === activeNiche.toLowerCase());
+  document.getElementById('toolbar-count').textContent = `${list.length} product${list.length!==1?'s':''}`;
+  if (!list.length) { grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back Monday when new products drop.</p></div>`; return; }
+  grid.innerHTML = list.map((p,i) => `
+    <div class="product-card" onclick="openAnalysis(${i})">
+      <div class="product-card-img" style="background:#fff">
+        ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
+        <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
+        <div class="stage-badge">${p.verdict||p.stage||'Emerging'}</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-name">${p.name}</div>
+        <div class="product-card-niche">${p.niche} · ${p.season||'Evergreen'}</div>
+        <div class="product-card-why" style="flex:1;margin-bottom:12px">${p.whyEmerging||p.whyNow||'Early growth signal detected.'}</div>
+        <div class="mini-scores" style="margin-bottom:14px">
+          <div class="mini-score"><div class="mini-score-label">Trend</div><div class="mini-score-val" style="color:var(--navy)">${p.trendScore||'—'}</div></div>
+          <div class="mini-score"><div class="mini-score-label">Problem</div><div class="mini-score-val" style="color:var(--green)">${p.problemScore||'—'}</div></div>
+          <div class="mini-score"><div class="mini-score-label">Sat. Risk</div><div class="mini-score-val" style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 48px;gap:8px">
+          <button class="analyse-btn" style="height:48px;margin:0" onclick="event.stopPropagation();openAnalysis(${i})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Analyse
+          </button>
+          <button onclick="event.stopPropagation();toggleSaveProduct(${i},this)" id="save-btn-${i}" title="Save to Saved Products Hub" style="height:48px;width:48px;background:#fff;border:1px solid var(--g200);border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">🤍</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function buildNicheFilters() {
+  const niches=[...new Set(allProducts.map(p=>p.niche).filter(Boolean))];
+  const wrap=document.getElementById('niche-filters');
+  wrap.innerHTML=`<button class="filter-btn active" onclick="setNicheFilter('all',this)">All niches</button>`+niches.map(n=>`<button class="filter-btn" onclick="setNicheFilter('${n}',this)">${n}</button>`).join('');
+}
+function setNicheFilter(niche,btn){activeNiche=niche;document.querySelectorAll('#niche-filters .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProductsGrid();}
+
+function openAnalysis(idx) {
+  const p=allProducts[idx];if(!p)return;
+  showView('analysis',null);
+  const navTab = document.querySelector('.nav-tab');
+  if (navTab) navTab.classList.add('active');
+  document.getElementById('analysis-product-name').textContent=p.name;
+  document.getElementById('analysis-product-niche').textContent=`${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`;
+  buildAnalysisBody(p);
+}
+
+function buildAnalysisBody(p) {
+  const body=document.getElementById('analysis-body');
+  const aliQ=encodeURIComponent(p.aliSearchTerm||p.name);
+  const metaQ=encodeURIComponent(p.name);
+  const tiktokQ=encodeURIComponent(p.name);
+  const pinterestQ=encodeURIComponent(p.googleTrendsKeyword||p.name);
+  const launchItems=p.launchReadiness||[
+    {check:'Demonstrable in under 10 seconds of video',pass:true},
+    {check:'Solves a problem most people recognise instantly',pass:true},
+    {check:'Available on AliExpress under £10',pass:true},
+    {check:'Sellable between £20–£60',pass:true},
+    {check:'Not already saturating UK TikTok feeds',pass:true},
+    {check:'Strong impulse-buy angle',pass:true},
+    {check:'Lightweight and easy to ship',pass:true},
+    {check:'No legal or compliance issues',pass:true}
+  ];
+  const passCount=launchItems.filter(i=>i.pass).length;
+  const launchPct=Math.round((passCount/launchItems.length)*100);
+  const launchColor=launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+  const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+  const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
+
+  body.innerHTML=`
+    <div class="score-row">
+      <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.emergingScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
+      <div class="score-card"><div class="score-card-label">Trend Score</div><div class="score-card-value" style="color:var(--navy)">${p.trendScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Growth signal strength</div></div>
+      <div class="score-card"><div class="score-card-label">Sat. Risk</div><div class="score-card-value" style="font-size:22px;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div><div class="score-card-sub">Competition level</div></div>
+      <div class="score-card"><div class="score-card-label">Est. Margin</div><div class="score-card-value" style="color:var(--green)">${p.margin||'—'}</div><div class="score-card-sub">${p.supplierCost?`Cost: ${p.supplierCost}`:'Estimated margin'}</div></div>
+    </div>
+
+    <div style="background:${p.verdict==='Strong Opportunity'?'var(--green-bg)':p.verdict==='Watch List'?'var(--amber-bg)':'var(--red-bg)'};border:1px solid ${p.verdict==='Strong Opportunity'?'#bbf7d0':p.verdict==='Watch List'?'#fde68a':'#fecaca'};border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="font-size:28px">${p.verdict==='Strong Opportunity'?'✅':p.verdict==='Watch List'?'👀':'❌'}</div>
+      <div style="flex:1"><div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict||'Under Review'}</div><div style="font-size:13px;color:var(--g700);margin-top:3px">${p.verdictReason||''}</div></div>
+      <div style="text-align:right"><div style="font-size:11px;color:var(--g400);text-transform:uppercase;font-weight:700">Selling Price</div><div style="font-size:18px;font-weight:900;color:var(--navy)">${p.sellingPrice||p.margin||'—'}</div></div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">📊</span><h2>Scoring breakdown</h2></div>
+      <div class="analysis-panel-body">
+        ${[{label:'UK Market Gap',key:'ukMarketGap',max:25,color:'var(--navy)'},{label:'Problem Intensity',key:'problemIntensity',max:20,color:'var(--green)'},{label:'Creative Potential',key:'creativePotential',max:10,color:'#8B5CF6'},{label:'Profit Potential',key:'profitPotential',max:12,color:'var(--gold)'},{label:'Competition Barrier',key:'competitionBarrier',max:20,color:'var(--amber)'},{label:'Ease of Entry',key:'easeOfEntry',max:8,color:'#06B6D4'},{label:'Signal Strength',key:'earlySignalStrength',max:15,color:'#10B981'}].map(s=>{const val=p.scoring?.[s.key]||0;const pct=Math.round((val/s.max)*100);return`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:700;color:var(--g700)">${s.label}</span><span style="font-size:13px;font-weight:900;color:${s.color}">${val}/${s.max}</span></div><div style="background:var(--g100);border-radius:999px;height:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${s.color};border-radius:999px;transition:width .6s"></div></div></div>`;}).join('')}
+        <div style="border-top:2px solid var(--g200);padding-top:14px;margin-top:4px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;font-weight:800;color:var(--g900)">Total Score</span><span style="font-size:24px;font-weight:900;color:${gradeColor(p.grade)}">${p.emergingScore||Object.values(p.scoring||{}).reduce((a,b)=>a+b,0)}/100</span></div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth projection — ${p.name} — next 12 weeks</h2></div>
+      <div class="analysis-panel-body" style="padding:0">
+        <div class="growth-panel-inner" style="border-radius:0 0 20px 20px">
+
+          <!-- GENERATE BUTTON STATE -->
+          <div id="growth-generate-state">
+            <div style="text-align:center;padding:40px 20px">
+              <div style="font-size:40px;margin-bottom:16px">📊</div>
+              <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px">Generate Growth Projection</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:24px;line-height:1.6">Our research engine will analyse this product across<br>TikTok, Meta, AliExpress and more to build your projection.</div>
+              <button id="growth-gen-btn" data-product="${encodeURIComponent(JSON.stringify({name:p.name,niche:p.niche||'',trendScore:p.trendScore||50,saturationRisk:p.saturationRisk||'Medium',emergingScore:p.emergingScore||60,competitionLevel:p.competitionLevel||'Medium',scoring:p.scoring||{}}))}" onclick="generateProjection(this)" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">
+                ✨ Generate Growth Projection
+              </button>
+            </div>
+          </div>
+
+          <!-- LOADING STATE -->
+          <div id="growth-loading-state" style="display:none;padding:28px 0 20px">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px">Analysing your product...</div>
+            <div id="growth-progress-lines">
+              <div class="growth-progress-line" id="gpl-1">Analysing TikTok Shop UK saturation...</div>
+              <div class="growth-progress-line" id="gpl-2">Checking Meta Ads Library activity...</div>
+              <div class="growth-progress-line" id="gpl-3">Assessing AliExpress order velocity...</div>
+              <div class="growth-progress-line" id="gpl-4">Reviewing Amazon UK review growth...</div>
+              <div class="growth-progress-line" id="gpl-5">Checking Pinterest trend signals...</div>
+              <div class="growth-progress-line" id="gpl-6">Calculating your entry window...</div>
+              <div class="growth-progress-line" id="gpl-7">Building growth projection...</div>
+              <div class="growth-progress-line" id="gpl-8">Done — your projection is ready</div>
+            </div>
+          </div>
+
+          <!-- CHART STATE -->
+          <div id="growth-chart-state" style="display:none">
+            <div class="growth-header">
+              <div>
+                <div class="growth-title">DropResearch Hub estimated projection</div>
+                <div class="growth-sub">Based on market signals and product analysis</div>
+              </div>
+              <div class="growth-window-badge" id="growth-window-label">⚠️ Window closes — week 8</div>
+            </div>
+            <div class="growth-chart-wrap"><canvas id="growthChart" role="img" aria-label="Growth projection chart">Growth projection over 12 weeks.</canvas></div>
+            <div class="growth-legend">
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#1D9E75"></div>Entry window — get in now</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#D85A30"></div>Social feeds fill up</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="width:3px;height:12px;border-radius:1px;background:#378ADD"></div>Today</div>
+            </div>
+            <div class="growth-why">
+              <div class="growth-why-label">DropResearch Hub assessment</div>
+              <div class="growth-why-text" id="growth-why-text">Generating...</div>
+            </div>
+            <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold)"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch readiness checklist</h2></div>
+      <div class="analysis-panel-body">
+        <div class="launch-grid">${launchItems.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('')}</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;background:var(--g50);border-radius:10px;border:1px solid var(--g200)">
+          <span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span>
+          <span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span>
+          <span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🎯</span><h2>Product intelligence</h2></div>
+      <div class="analysis-panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Target Customer</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.targetCustomer||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Problem Solved</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.problemSolved||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Main Angle</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.mainAngle||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Bundle / Upsell</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.bundleIdea||'—'}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px"><div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:6px">🎵 TikTok Angle</div><div style="font-size:13px;color:#1e40af">${p.tiktokAngle||'—'}</div></div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px">📘 Meta Angle</div><div style="font-size:13px;color:#166534">${p.metaAngle||'—'}</div></div>
+        </div>
+        ${p.redFlags&&p.redFlags!=='None'?`<div style="background:var(--red-bg);border:1px solid #fecaca;border-radius:12px;padding:14px;margin-top:12px"><div style="font-size:11px;font-weight:800;color:var(--red);margin-bottom:4px">⚠️ Red Flags</div><div style="font-size:13px;color:#991b1b">${p.redFlags}</div></div>`:''}
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🔍</span><h2>Opportunity breakdown</h2></div>
+      <div class="analysis-panel-body">
+        <div class="insight-cols">
+          <div class="insight-col green"><h3>✅ Why it could work</h3><ul>${(p.whyItCouldWork||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Strong early trend signal</li>'}</ul></div>
+          <div class="insight-col red"><h3>⚠️ Risks to check</h3><ul>${(p.risks||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Research competition before launching</li>'}</ul></div>
+          <div class="insight-col blue"><h3>🎬 Creative angles</h3><ul>${(p.creativeAngles||[p.tiktokAngle,p.metaAngle,p.mainAngle]).filter(Boolean).map(i=>`<li>${i}</li>`).join('')||'<li>Problem → solution demo</li>'}</ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">💰</span><h2>Profit calculator</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your real numbers to see if this product is worth launching at your budget.</p>
+        <div class="calc-grid">
+          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}"></div></div>
+          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}"></div></div>
+          <div class="calc-field"><label class="calc-label">Shipping cost per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50"></div></div>
+          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20"></div></div>
+        </div>
+        <button class="calc-btn" onclick="runCalc()">Calculate profit →</button>
+        <div class="calc-results" id="calc-results">
+          <div class="calc-result-card"><div class="calc-result-label">Profit per unit</div><div class="calc-result-val" id="calc-profit-unit">—</div></div>
+          <div class="calc-result-card"><div class="calc-result-label">Break even per day</div><div class="calc-result-val" id="calc-breakeven">—</div></div>
+          <div class="calc-result-card"><div class="calc-result-label">Est. monthly profit</div><div class="calc-result-val" id="calc-monthly">—</div></div>
+        </div>
+        <div class="calc-verdict-row" id="calc-verdict-row">
+          <div class="calc-verdict" id="calc-verdict"></div>
+          <div style="font-size:12px;color:var(--g400);margin-top:8px;text-align:center">Based on 2× break even sales daily · ROAS needed: <span id="calc-roas" style="font-weight:700;color:var(--g700)">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🛒</span><h2>Supplier search terms</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Use these exact search terms on AliExpress to find the best suppliers. Try all three — results vary.</p>
+        <div class="supplier-terms">
+          ${supplierTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('')}
+        </div>
+        <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">
+          💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🔗</span><h2>Research hub — verify it yourself</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Our analysis is AI-powered — use these tools to verify with live data before you commit your ad budget.</p>
+        <div class="research-grid">
+          <a class="research-link" href="https://trends.pinterest.com/trends/explore#ideas=${pinterestQ}&country=GB" target="_blank">
+            <div class="research-link-icon" style="background:#fce4ec">📌</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">PINTEREST TRENDS</div>Early lifestyle demand</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">See if the lifestyle audience is already searching for this. Rising saves on Pinterest is one of the earliest signals a product is about to go mainstream — often 2-3 months before TikTok picks it up.</div>
+          </a>
+          <a class="research-link" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${metaQ}" target="_blank">
+            <div class="research-link-icon" style="background:#e7f3ff">📺</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">META ADS LIBRARY</div>Who's running ads</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Spy on brands already running ads on this product. A few ads = validated but not crowded. Hundreds of ads = you're late. Look for ads running longer than 2 weeks — that means they're converting.</div>
+          </a>
+          <a class="research-link" href="https://www.tiktok.com/shop/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Shows what's actually selling on TikTok Shop right now — not just what has views. Low seller count with sales = your entry window. High seller count = already crowded.</div>
+          </a>
+          <a class="research-link" href="https://www.aliexpress.com/wholesale?SearchText=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🛒</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Find your supplier here. Filter by 4★ minimum and 100+ orders. Check shipping times — anything over 3 weeks will hurt your reviews. Read negative reviews to find quality issues to fix in your brand.</div>
+          </a>
+          <a class="research-link" href="https://www.amazon.co.uk/s?k=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff8e6">📦</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">AMAZON UK</div>Demand & reviews</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Check real buyer demand and pricing. Under 200 reviews on the top listing means the market is still early. Read the 3★ reviews — they tell you exactly what to improve in your brand version.</div>
+          </a>
+          <a class="research-link" href="https://www.etsy.com/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🧶</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ETSY</div>Handmade going mainstream</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">If a product is already selling handmade on Etsy, it's typically 3-6 months away from hitting AliExpress at scale. Etsy demand signals what lifestyle buyers want before mass market catches up.</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch Simulator</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your budget and platform — we'll generate your Shopify store preview and a week-by-week launch roadmap specific to this product.</p>
+
+        <!-- STORE PREVIEW -->
+        <div id="sim-store-wrap" style="margin-bottom:16px;border-radius:16px;overflow:hidden;border:1px solid var(--g200);display:none">
+          <div id="sim-store-inner"></div>
+        </div>
+
+        <!-- INPUTS -->
+        <div id="sim-inputs-wrap">
+          <div class="sim-inputs-grid">
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily ad budget</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix">£</span><input class="sim-input" id="sim-budget" type="number" placeholder="20" value="20"></div>
+            </div>
+            <div class="sim-input-field">
+              <label class="sim-input-label">Daily sales target</label>
+              <div class="sim-input-wrap"><span class="sim-input-prefix" style="font-size:12px">🎯</span><input class="sim-input" id="sim-target" type="number" placeholder="5" value="5"></div>
+            </div>
+            <div class="sim-input-field" style="grid-column:1/-1">
+              <label class="sim-input-label">Platform</label>
+              <select class="sim-select" id="sim-platform">
+                <option>TikTok + Meta</option>
+                <option>TikTok only</option>
+                <option>Meta only</option>
+              </select>
+            </div>
+          </div>
+          <button class="sim-btn" id="sim-btn" onclick="runSimulator('${p.name.replace(/'/g,"\\'")}')">🚀 Generate my launch plan</button>
+          <div class="sim-progress" id="sim-progress">
+            <div class="sim-progress-line" id="spl-1">Building your Shopify store preview...</div>
+            <div class="sim-progress-line" id="spl-2">Analysing product launch viability...</div>
+            <div class="sim-progress-line" id="spl-3">Calculating ad budget recommendations...</div>
+            <div class="sim-progress-line" id="spl-4">Writing your week-by-week roadmap...</div>
+            <div class="sim-progress-line" id="spl-5">Calculating profit projections...</div>
+            <div class="sim-progress-line" id="spl-6">Launch plan ready</div>
+          </div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="sim-result" id="sim-result">
+          <div style="font-size:13px;font-weight:800;color:var(--g900);margin-bottom:12px">Your 30-day launch roadmap</div>
+          <div class="sim-roadmap" id="sim-roadmap"></div>
+          <div class="sim-verdict">
+            <div class="sim-verdict-label">DropResearch Hub assessment</div>
+            <div class="sim-verdict-text" id="sim-verdict-text"></div>
+          </div>
+          <div class="sim-cases">
+            <div class="sim-case worst"><div class="sim-case-label">⚠️ Worst case</div><div id="sim-worst"></div></div>
+            <div class="sim-case best"><div class="sim-case-label">✅ Best case</div><div id="sim-best"></div></div>
+          </div>
+          <button onclick="resetSimulator()" style="margin-top:12px;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit;width:100%">↺ Run again with different inputs</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🎬</span><h2>Ad creative generator — 3 variations</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Generate 3 complete video ad scripts with hooks, shot list and a ready-to-send production brief.</p>
+        <div class="creative-form">
+          <div><label class="creative-label">Platform</label><select class="creative-select" id="creative-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
+          <div><label class="creative-label">Primary angle</label><select class="creative-select" id="creative-angle"><option>Problem → Solution</option><option>Curiosity / Pattern interrupt</option><option>Social proof / Testimonial</option><option>Lifestyle / Aspirational</option><option>Before & After</option></select></div>
+        </div>
+        <button class="generate-creative-btn" id="creative-gen-btn" onclick="generateCreative('${p.name.replace(/'/g,"\\'")}')">✨ Generate 3 creative variations</button>
+        <div class="creative-output" id="creative-output">
+          <div class="variation-tabs" id="variation-tabs"></div>
+          <div class="script-tabs">
+            <button class="script-tab active" onclick="setScriptTab('script',this)">Video script</button>
+            <button class="script-tab" onclick="setScriptTab('hooks',this)">5 hooks</button>
+            <button class="script-tab" onclick="setScriptTab('brief',this)">Brief to send</button>
+          </div>
+          <div id="tab-script"><div class="script-box" id="script-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('script-content')">📋 Copy script</button></div></div>
+          <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy hooks</button></div></div>
+          <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy brief</button></div></div>
+          <div class="meta-info-row">
+            <div class="meta-info-card"><div class="meta-info-card-label">🎵 TikTok music vibe</div><div class="meta-info-card-val" id="music-val">—</div></div>
+            <div class="meta-info-card"><div class="meta-info-card-label">🎯 Meta target audience</div><div class="meta-info-card-val" id="audience-val">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+}
+
+
+async function generateProjection(btn) {
+  const p = JSON.parse(decodeURIComponent(btn.dataset.product));
+  const { name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring } = p;
+  // Switch to loading state
+  document.getElementById('growth-generate-state').style.display = 'none';
+  document.getElementById('growth-loading-state').style.display = 'block';
+
+  // Animate progress lines
+  const lines = ['gpl-1','gpl-2','gpl-3','gpl-4','gpl-5','gpl-6','gpl-7','gpl-8'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if (idx > 0) { const prev=document.getElementById(lines[idx-1]); if(prev) prev.className='growth-progress-line done'; }
+    if (idx < lines.length) { const curr=document.getElementById(lines[idx]); if(curr) curr.className='growth-progress-line active'; idx++; }
+  }
+  nextLine();
+  const progressTimer = setInterval(nextLine, 800);
+
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring })
+    });
     const data = await res.json();
-    const products = data.products || [];
-    if (!products.length) return;
-    const latest3 = products.slice(0, 3);
-    document.getElementById('products-badge').textContent = latest3.length;
-    document.getElementById('products-live-badge').textContent = products.length + ' products live';
-    document.getElementById('stat-products').textContent = latest3.length;
-    const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
-    const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
-    if (avgMargin) document.getElementById('stat-margin').textContent = avgMargin + '%';
-    const topGrade = products.map(p=>p.grade).sort((a,b)=>({'A+':0,'A':1,'B+':2,'B':3,'C':4}[a]||5)-({'A+':0,'A':1,'B+':2,'B':3,'C':4}[b]||5))[0];
-    if (topGrade) document.getElementById('stat-grade').textContent = topGrade;
-    const now = new Date();
-    document.getElementById('drop-date-badge').textContent = 'Drop: w/c ' + now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
-    const hubNote = data.hubNote || "I reviewed hundreds of products this week. Most failed — competition too high or margins too thin. These three stood out for very different reasons. Take a look.";
-    document.getElementById('hub-weekly-note').textContent = hubNote;
-    document.getElementById('weekly-hub-note').textContent = '"' + hubNote + '"';
-    document.getElementById('sidebar-hub-status').textContent = latest3.length + ' picks ready';
-    const grid = document.getElementById('dash-products-grid');
-    const hero = latest3[0];
-    const others = latest3.slice(1);
-    if (!hero) return;
-    grid.innerHTML = `
-      <a class="preview-card" href="members.html" style="display:grid;grid-template-columns:200px 1fr;height:auto;min-height:180px">
-        <div class="preview-card-img" style="height:100%;border-bottom:none;border-right:1px solid var(--g100)">
-          ${hero.img ? `<img src="${hero.img}" alt="${hero.name}" onerror="this.style.display='none'">` : `<span>${hero.emoji||'📦'}</span>`}
-          <div class="preview-grade" style="background:${gradeColor(hero.grade)}">Grade ${hero.grade||'?'} — Top Pick</div>
-        </div>
-        <div class="preview-card-body" style="display:flex;flex-direction:column;justify-content:center">
-          <div class="preview-card-name" style="font-size:16px;margin-bottom:4px">${hero.name}</div>
-          <div class="preview-card-niche">${hero.niche||''}</div>
-          <div class="preview-card-why" style="margin:10px 0">${hero.whyEmerging||hero.whyNow||''}</div>
-          <div class="preview-card-footer">
-            <div class="preview-card-margin">${hero.margin||'—'} margin</div>
-            <div class="preview-card-cta">See Hub's full report →</div>
-          </div>
-        </div>
-      </a>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        ${others.map(p=>`
-        <a class="preview-card" href="members.html">
-          <div class="preview-card-img" style="height:120px;background:#fff">
-            ${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
-            <div class="preview-grade" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
-          </div>
-          <div class="preview-card-body">
-            <div class="preview-card-name">${p.name}</div>
-            <div class="preview-card-niche">${p.niche||''}</div>
-            <div class="preview-card-footer" style="margin-top:8px">
-              <div class="preview-card-margin">${p.margin||'—'} margin</div>
-              <div class="preview-card-cta">Full report →</div>
-            </div>
-          </div>
-        </a>`).join('')}
-      </div>`;
-    const weeklyGrid = document.getElementById('weekly-products-grid');
-    if (weeklyGrid) {
-      weeklyGrid.innerHTML = latest3.map(p=>`
-        <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:160px 1fr">
-          <div style="background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:42px;border-right:1px solid var(--g100);position:relative;min-height:160px">
-            ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:156px;object-fit:contain;padding:8px" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
-            <div style="position:absolute;top:10px;left:10px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 10px">Grade ${p.grade||'?'}</div>
-          </div>
-          <div style="padding:18px 20px;display:flex;flex-direction:column;justify-content:center">
-            <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:3px">${p.name}</div>
-            <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche||''} · ${p.season||'Evergreen'}</div>
-            <div style="font-size:13px;color:var(--g700);line-height:1.6;font-style:italic;padding:10px 12px;background:var(--g50);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;margin-bottom:12px">${p.whyEmerging||p.whyNow||''}</div>
-            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-              <div style="font-size:14px;font-weight:800;color:var(--green)">${p.margin||'—'} margin</div>
-              <a href="members.html" style="margin-left:auto;background:var(--navy);color:#fff;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">See full report →</a>
-            </div>
-          </div>
-        </div>`).join('');
+    clearInterval(progressTimer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line done'; });
+
+    // Small delay then show chart
+    setTimeout(() => {
+      document.getElementById('growth-loading-state').style.display = 'none';
+      document.getElementById('growth-chart-state').style.display = 'block';
+      document.getElementById('growth-why-text').textContent = data.whyNowDetailed || 'Analysis complete.';
+      document.getElementById('growth-window-label').textContent = `⚠️ Window closes — week ${data.windowClosesWeek || 8}`;
+      const summary = document.getElementById('growth-summary');
+      if (data.projectionSummary) { summary.textContent = '💡 ' + data.projectionSummary; summary.style.display='block'; }
+
+      // Update launch readiness if returned
+      if (data.launchReadiness) {
+        const passCount = data.launchReadiness.filter(i=>i.pass).length;
+        const launchPct = Math.round((passCount/data.launchReadiness.length)*100);
+        const launchColor = launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+        const launchVerdict = launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+        const grid = document.querySelector('.launch-grid');
+        if (grid) grid.innerHTML = data.launchReadiness.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('');
+        const bar = document.querySelector('.launch-score-bar');
+        if (bar) bar.innerHTML = `<span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span><span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span><span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>`;
+      }
+
+      // Update supplier terms if returned
+      if (data.supplierSearchTerms) {
+        const wrap = document.querySelector('.supplier-terms');
+        if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
+      }
+
+      // Build the animated chart
+      buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
+    }, 600);
+
+  } catch(e) {
+    clearInterval(progressTimer);
+    document.getElementById('growth-loading-state').style.display = 'none';
+    document.getElementById('growth-generate-state').style.display = 'block';
+    showToast('Could not generate projection — try again');
+  }
+}
+
+function buildGrowthChart(rawCurve, windowClosesWeek) {
+  if (activeGrowthChart) { activeGrowthChart.destroy(); activeGrowthChart=null; }
+  const canvas=document.getElementById('growthChart');
+  if (!canvas) return;
+  const labels=['Today','2w','4w','6w','8w','10w','12w'];
+  const closeIdx=Math.min(Math.max(Math.round(windowClosesWeek/2),1),6);
+  const greenData=rawCurve.map((v,i)=>i<=closeIdx?v:null);
+  const redData=rawCurve.map((v,i)=>i>=closeIdx?v:null);
+  const ctx=canvas.getContext('2d');
+  const greenGrad=ctx.createLinearGradient(0,0,0,180);
+  greenGrad.addColorStop(0,'rgba(29,158,117,0.3)');greenGrad.addColorStop(1,'rgba(29,158,117,0)');
+  const redGrad=ctx.createLinearGradient(0,0,0,180);
+  redGrad.addColorStop(0,'rgba(216,90,48,0.2)');redGrad.addColorStop(1,'rgba(216,90,48,0)');
+  const windowPlugin={id:'wl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(closeIdx);ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#f87171';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,scales.y.top-2);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.setLineDash([]);ctx.restore();}};
+  const todayPlugin={id:'tl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(0);ctx.save();ctx.strokeStyle='#378ADD';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,scales.y.top);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.restore();}};
+  activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
+}
+
+function toggleTooltip(btn){const isOpen=btn.classList.contains('open');document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));if(!isOpen)btn.classList.add('open');}
+document.addEventListener('click',e=>{if(!e.target.classList.contains('research-info-btn'))document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));});
+
+function runCalc(){
+  const sell=parseFloat(document.getElementById('calc-sell').value)||0;
+  const supplier=parseFloat(document.getElementById('calc-supplier').value)||0;
+  const shipping=parseFloat(document.getElementById('calc-shipping').value)||0;
+  const ads=parseFloat(document.getElementById('calc-ads').value)||0;
+  if(!sell||!supplier){showToast('Enter at least selling price and supplier cost');return;}
+  const profitPerUnit=sell-supplier-shipping;
+  const breakevenUnits=ads>0&&profitPerUnit>0?Math.ceil(ads/profitPerUnit):0;
+  const monthlyProfit=profitPerUnit>0?Math.round((breakevenUnits*2*profitPerUnit-ads)*30):0;
+  const roas=sell>0&&ads>0&&breakevenUnits>0?((breakevenUnits*sell)/ads).toFixed(2):'—';
+  document.getElementById('calc-profit-unit').textContent=profitPerUnit>=0?`£${profitPerUnit.toFixed(2)}`:`-£${Math.abs(profitPerUnit).toFixed(2)}`;
+  document.getElementById('calc-breakeven').textContent=breakevenUnits>0?`${breakevenUnits} sales`:'—';
+  document.getElementById('calc-monthly').textContent=monthlyProfit>0?`£${monthlyProfit.toLocaleString()}`:profitPerUnit<=0?'Loss':'—';
+  document.getElementById('calc-roas').textContent=roas;
+  document.getElementById('calc-results').classList.add('show');
+  document.getElementById('calc-verdict-row').classList.add('show');
+  const verdict=document.getElementById('calc-verdict');
+  const marginPct=sell>0?(profitPerUnit/sell)*100:0;
+  if(profitPerUnit<=0){verdict.className='calc-verdict bad';verdict.textContent='❌ Not profitable at these numbers — reduce supplier cost or increase selling price';}
+  else if(marginPct<40){verdict.className='calc-verdict tight';verdict.textContent=`⚠️ Tight margin (${Math.round(marginPct)}%) — workable but leaves little room for ad testing.`;}
+  else{verdict.className='calc-verdict good';verdict.textContent=`✅ Strong margin (${Math.round(marginPct)}%) — good foundation for paid ads. Hit ${breakevenUnits} sales/day to break even.`;}
+}
+
+async function generateCreative(productName){
+  const btn=document.getElementById('creative-gen-btn');
+  const platform=document.getElementById('creative-platform').value;
+  const angle=document.getElementById('creative-angle').value;
+  btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
+  createHubLoader('creative-output', 'Hub is crafting your ad angles...'); startHubMessages('creative-output');
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
+    const data=await res.json();
+    const text=(data.content||[]).map(i=>i.text||'').join('');
+    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
+    creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
+  }catch(e){showToast('Could not generate creatives — try again');}
+  stopHubMessages();removeHubLoader('creative-output');
+  btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
+}
+function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
+function setVariation(idx,btn){currentVariation=idx;document.querySelectorAll('.var-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadVariation(idx);setScriptTab('script',document.querySelector('.script-tab'));}
+function loadVariation(idx){const v=creativeVariations[idx];if(!v)return;document.getElementById('script-content').textContent=v.script||'';document.getElementById('hooks-content').textContent=v.hooks||'';document.getElementById('brief-content').textContent=v.brief||'';document.getElementById('music-val').textContent=v.music||'—';document.getElementById('audience-val').textContent=v.audience||'—';}
+function setScriptTab(tab,btn){document.querySelectorAll('.script-tab').forEach(b=>b.classList.remove('active'));['tab-script','tab-hooks','tab-brief'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});if(btn)btn.classList.add('active');const el=document.getElementById('tab-'+tab);if(el)el.style.display='block';}
+function copyEl(id){const text=document.getElementById(id)?.textContent||'';navigator.clipboard.writeText(text).then(()=>showToast('Copied ✓'));}
+
+async function runValidator(){
+  const input=document.getElementById('validator-input').value.trim();
+  const resultArea=document.getElementById('validator-result');
+  if(!input){showToast('Paste a product URL first');return;}
+  // Handle URL vs product name
+  let productName;
+  const isAliExpressItem = input.includes('aliexpress.com/item/');
+  const isUrl = input.includes('http') || input.includes('.com/');
+
+  if (isAliExpressItem) {
+    // AliExpress item URLs don't contain the product name — guide member
+    resultArea.innerHTML = `<div style="background:var(--navy);border-radius:16px;padding:28px;text-align:center;color:#fff">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:60px;height:60px;border-radius:50%;margin-bottom:14px;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
+      <div style="font-size:16px;font-weight:800;margin-bottom:8px">One quick thing</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;margin-bottom:20px;max-width:460px;margin-left:auto;margin-right:auto">AliExpress links don't include the product name. Copy the product title from the top of the AliExpress page and paste it below — Hub will do the rest.</div>
+      <div style="display:flex;gap:0;background:#fff;border-radius:10px;overflow:hidden;max-width:500px;margin:0 auto">
+        <input id="validator-name-fallback" placeholder="e.g. WOLFBOX DF200 Electric Air Duster..." style="flex:1;border:none;padding:12px 14px;font-size:14px;font-family:inherit;color:#111;outline:none">
+        <button onclick="runValidatorWithName(document.getElementById('validator-name-fallback').value)" style="background:var(--gold);color:var(--navy);border:none;padding:12px 18px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">Ask Hub →</button>
+      </div>
+    </div>`;
+    return;
+  } else if (isUrl) {
+    productName = extractProductName(input);
+    if (!productName || productName.length < 5) {
+      productName = input;
     }
-  } catch(e) { console.error('Failed to load products:', e); }
-}
-
-async function loadSaved() {
-  if (!email) return;
-  try {
-    const res = await fetch('/api/saved?email=' + encodeURIComponent(email));
-    const data = await res.json();
-    const saved = data.saved || [];
-    document.getElementById('stat-saved').textContent = saved.length;
-    if (saved.length) document.getElementById('stat-saved-trend').textContent = saved.length + ' product' + (saved.length!==1?'s':'') + ' tracked';
-    const strip = document.getElementById('saved-strip-inner');
-    if (!saved.length) { strip.innerHTML = '<div class="saved-strip-empty">Nothing saved yet — hit 💛 on any product to ask Hub to track it.</div>'; return; }
-    strip.innerHTML = '<div class="saved-items">' + saved.map(p => `
-      <a class="saved-chip" href="members.html">
-        <div style="font-size:18px">${p.emoji||'📦'}</div>
-        <div>
-          <div class="saved-chip-name">${p.name.length>28?p.name.slice(0,28)+'...':p.name}</div>
-          <div class="saved-chip-meta">${p.niche||''} · ${p.margin||'—'}</div>
-        </div>
-      </a>`).join('') + '</div>';
-    const savedGrid = document.getElementById('saved-page-grid');
-    savedGrid.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:20px">' +
-      saved.map(p => `
-        <a href="members.html" style="background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px;text-decoration:none;display:block;transition:all .15s" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--g200)'">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div style="font-size:28px">${p.emoji||'📦'}</div>
-            <div>
-              <div style="font-size:13px;font-weight:800;color:var(--g900)">${p.name}</div>
-              <div style="font-size:11px;color:var(--g400)">${p.niche||''}</div>
-            </div>
-            <div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:3px 9px">Grade ${p.grade||'?'}</div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:14px;font-weight:900;color:var(--green)">${p.margin||'—'}</div></div>
-            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:14px;font-weight:900;color:var(--navy)">${p.trendScore||'—'}</div></div>
-            <div style="flex:1;background:#fff;border:1px solid var(--g200);border-radius:8px;padding:8px;text-align:center"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:12px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div></div>
-          </div>
-        </a>`).join('') + '</div>';
-  } catch(e) { console.error('Failed to load saved:', e); }
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-loadProducts();
-loadSaved();
-
-// ── URL PARAM DETECTION — auto-fire launch plan from members.html ─────────
-(function checkUrlParams() {
-  const params = new URLSearchParams(window.location.search);
-  const product = params.get('product');
-  const image = params.get('image');
-  if (product) {
-    // Switch to simulator page
-    showPage('simulator', document.getElementById('nav-simulator'));
-    // Pre-fill input
-    const input = document.getElementById('dash-sim-input');
-    if (input) input.value = decodeURIComponent(product);
-    // Store image URL for use in result rendering
-    window._launchPlanImage = image ? decodeURIComponent(image) : '';
-    // Auto-fire after a short delay to let page render
-    setTimeout(() => runDashSimulator(), 400);
-    // Clean up URL without reload
-    window.history.replaceState({}, '', 'dashboard.html');
+  } else {
+    productName = input.trim();
   }
-})();
-
-// ── DASHBOARD VALIDATOR ───────────────────────────────────────────────────
-function extractProductName(url) {
-  try {
-    const decoded = decodeURIComponent(url);
-    const words = decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>3&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
-    if (words.length) return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,60);
-  } catch(e) {}
-  return url.slice(0,60);
+  createHubLoader('validator-result', 'Hub is analysing your product...');
+  startHubMessages('validator-result');
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
+    stopHubMessages();removeHubLoader('validator-result');
+    const p={
+      name:data.productName||productName,
+      niche:data.marketStage||'Validator result',
+      stage:'Assessed',
+      season:'Assessed',
+      grade:data.opportunityScore||'B',
+      trendScore:data.growthScore||50,
+      problemScore:data.competitionScore||50,
+      saturationRisk:data.saturationRisk||'Medium',
+      competitionLevel:data.saturationRisk||'Medium',
+      margin:data.margin||'—',
+      sellingPrice:data.sellingPrice||'—',
+      supplierCost:data.supplierCost||'—',
+      emergingScore:data.growthScore||50,
+      opportunityWindow:data.opportunityWindow||'—',
+      confidence:data.confidence||'Medium',
+      trendVelocity:data.trendVelocity||'—',
+      verdict:data.verdict||'',
+      verdictReason:data.verdict||'',
+      whyNow:data.whyNow||'',
+      targetCustomer:'UK dropshipping market',
+      mainAngle:data.creativeAngles?.[0]||'',
+      tiktokAngle:data.creativeAngles?.[0]||'',
+      metaAngle:data.creativeAngles?.[1]||'',
+      whyEmerging:data.ukMarketNotes||data.whyNow||'',
+      whyItCouldWork:data.whyItCouldWork||[],
+      risks:data.risks||[],
+      creativeAngles:data.creativeAngles||[],
+      aliSearchTerm:productName,
+      googleTrendsKeyword:productName,
+      opportunityMultiplier:data.opportunityMultiplier||5,
+      subscriberExcitement:data.subscriberExcitement||5,
+      bundleIdea:'',
+      problemSolved:data.ukMarketNotes||'',
+      usAuSignal:'',
+      emoji:'🔍',
+      scoring:{
+        ukMarketGap:data.growthScore?Math.round(data.growthScore*0.25):0,
+        competitionBarrier:data.competitionScore?Math.round(data.competitionScore*0.2):0,
+        problemIntensity:data.creativePotential?Math.round(data.creativePotential*2):0,
+        earlySignalStrength:data.subscriberExcitement?Math.round(data.subscriberExcitement*1.5):0,
+        profitPotential:data.brandability?Math.round(data.brandability*1.2):0,
+        easeOfEntry:data.retailGap?Math.round(data.retailGap*0.8):0,
+        creativePotential:data.creativePotential||0,
+        coreTotal:data.growthScore||0
+      },
+      growthData:data.growthGraph||[{label:'W1',value:10},{label:'W2',value:20},{label:'W3',value:35},{label:'W4',value:50},{label:'W5',value:65},{label:'W6',value:75}]
+    };
+    resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
+    const tempBody=document.createElement('div');tempBody.id='validator-analysis-body';tempBody.className='analysis-body';resultArea.appendChild(tempBody);
+    const origBody=document.getElementById('analysis-body');
+    document.getElementById('analysis-body').id='analysis-body-bak';
+    tempBody.id='analysis-body';
+    buildAnalysisBody(p);
+    tempBody.id='validator-analysis-body';
+    if(origBody)origBody.id='analysis-body';
+  }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+}
+async function runValidatorWithName(name) {
+  if (!name || name.trim().length < 3) { showToast('Please type the product name'); return; }
+  document.getElementById('validator-input').value = name;
+  await runValidator();
 }
 
-const VAL_MSGS = ["Hub is looking at this properly...","Checking market signals...","Reviewing competition levels...","Assessing UK demand...","Hub is writing up his verdict..."];
+function extractProductName(url){
+  // If it doesn't look like a URL, treat as product name directly
+  if(!url.includes('http')&&!url.includes('.com')){return url.trim().slice(0,80);}
+  try{
+    // AliExpress: title is in the path segment before .html
+    const aliMatch = url.match(/\/([^/]+)\.html/);
+    if(aliMatch){
+      const raw = decodeURIComponent(aliMatch[1]);
+      // Remove item IDs (long numbers) and clean up
+      const cleaned = raw.replace(/[-_]/g,' ').replace(/\d{8,}/g,' ').replace(/\s+/g,' ').trim();
+      if(cleaned.length>5) return cleaned.slice(0,80);
+    }
+    // Generic: find longest meaningful segment
+    const decoded=decodeURIComponent(url);
+    const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>5&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods','html'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
+    if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  }catch(e){}
+  return 'Product from URL';
+}
 
-async function runDashValidator() {
-  const input = document.getElementById('dash-validator-input').value.trim();
-  if (!input) { showToast('Paste a product URL or type a product name'); return; }
-  const productName = extractProductName(input);
-  document.getElementById('dash-val-loading').style.display = 'block';
-  document.getElementById('dash-val-result').style.display = 'none';
-  let msgIdx = 0;
-  const msgTimer = setInterval(() => {
-    msgIdx = (msgIdx+1) % VAL_MSGS.length;
-    const el = document.getElementById('dash-val-msg');
-    if (el) el.textContent = VAL_MSGS[msgIdx];
-  }, 3000);
-  try {
-    const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName, niche:'General'}) });
-    const data = await res.json();
-    clearInterval(msgTimer);
-    document.getElementById('dash-val-loading').style.display = 'none';
-    function gradeC(g){const s=String(g||'').toUpperCase();if(s.startsWith('A'))return'#16A34A';if(s.startsWith('B'))return'#D97706';return'#DC2626';}
-    document.getElementById('dash-val-result').style.display = 'block';
-    document.getElementById('dash-val-result').innerHTML = `
-      <div style="background:var(--navy);border-radius:16px;padding:20px 24px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-        <img src="${HUB_IMG}" alt="Hub" style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
-        <div style="flex:1;min-width:200px">
-          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Hub's verdict on ${productName}</div>
-          <div style="font-size:15px;color:rgba(255,255,255,.9);line-height:1.55">${data.verdict||'Analysis complete.'}</div>
-        </div>
-        <div style="background:${gradeC(data.opportunityScore)};color:#fff;border-radius:12px;padding:10px 18px;text-align:center;flex-shrink:0">
-          <div style="font-size:11px;font-weight:700;opacity:.8">Hub's Grade</div>
-          <div style="font-size:28px;font-weight:900;line-height:1">${data.opportunityScore||'—'}</div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Trend</div><div style="font-size:16px;font-weight:900;color:var(--navy)">${data.trendVelocity||'—'}</div></div>
-        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Saturation</div><div style="font-size:16px;font-weight:900;color:var(--amber)">${data.saturationRisk||'—'}</div></div>
-        <div style="background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:6px">Margin</div><div style="font-size:16px;font-weight:900;color:var(--green)">${data.margin||'—'}</div></div>
-      </div>
-      ${data.whyItCouldWork?.length ? `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px">
-          <div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:8px">✅ Why it could work</div>
-          ${data.whyItCouldWork.map(i=>`<div style="font-size:12px;color:#166534;margin-bottom:4px">· ${i}</div>`).join('')}
-        </div>
-        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px">
-          <div style="font-size:12px;font-weight:800;color:#b91c1c;margin-bottom:8px">⚠️ Risks to check</div>
-          ${(data.risks||[]).map(i=>`<div style="font-size:12px;color:#991b1b;margin-bottom:4px">· ${i}</div>`).join('')}
-        </div>
-      </div>` : ''}
-      <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;font-size:12px;color:var(--g500)">Hub's market notes: ${data.ukMarketNotes||data.whyNow||'—'}</div>
-      <button onclick="document.getElementById('dash-val-result').style.display='none';document.getElementById('dash-validator-input').value=''" style="margin-top:12px;background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>`;
-  } catch(e) {
-    clearInterval(msgTimer);
-    document.getElementById('dash-val-loading').style.display = 'none';
-    showToast('Could not reach Hub — try again');
+// Admin functions removed - use admin.html
+
+async function adminGenerate(){
+  const btn=document.getElementById('admin-gen-btn');btn.disabled=true;
+  document.getElementById('admin-gen-text').innerHTML='<span class="spinner"></span> Searching...';
+  const hubArea = document.getElementById('members-hub-area');
+  if(hubArea) { hubArea.style.display='flex'; createHubLoader('members-hub-area', 'Hub is searching for emerging products...'); startHubMessages('members-hub-area'); }
+  const statusBox=document.getElementById('status-messages');statusBox.className='status-messages show';
+  const lines=['sl-1','sl-2','sl-3','sl-4','sl-5','sl-6','sl-7','sl-8'];
+  lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line';});
+  let lineIdx=0;
+  function nextLine(){if(lineIdx>0){const prev=document.getElementById(lines[lineIdx-1]);if(prev)prev.className='status-line done show';}if(lineIdx<lines.length){const curr=document.getElementById(lines[lineIdx]);if(curr)curr.className='status-line active show';lineIdx++;}}
+  nextLine();const statusTimer=setInterval(nextLine,7000);
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging'})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error||'Generate failed');
+    const t=(d.content||[]).map(i=>i.text||'').join('');
+    let c=t.replace(/```json|```/g,'').trim();const s=c.indexOf('['),e=c.lastIndexOf(']');
+    if(s===-1||e===-1)throw new Error('No product array found');
+    let products=JSON.parse(c.slice(s,e+1));
+    pendingProducts=[...pendingProducts,...products];
+    clearInterval(statusTimer);lines.forEach(id=>{const el=document.getElementById(id);if(el)el.className='status-line done show';});
+    renderAdminProductsList();document.getElementById('admin-products-card').style.display='block';
+  }catch(e){
+    clearInterval(statusTimer);const errLine=document.createElement('div');errLine.className='status-line show';errLine.style.color='var(--red)';errLine.textContent='✕ Error: '+e.message;document.getElementById('status-messages').appendChild(errLine);
   }
+  stopHubMessages();removeHubLoader('members-hub-area');const hubA=document.getElementById('members-hub-area');if(hubA)hubA.style.display='none';
+  btn.disabled=false;document.getElementById('admin-gen-text').textContent='✨ Generate emerging products';
 }
 
-document.getElementById('dash-validator-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') runDashValidator(); });
-document.getElementById('dash-creative-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') runDashCreative(); });
-document.getElementById('dash-sim-input')?.addEventListener('keydown', e => { if (e.key === 'Enter') runDashSimulator(); });
-
-// ── DASHBOARD CREATIVE ────────────────────────────────────────────────────
-const CREATIVE_MSGS = ["Hub is writing your script...","Crafting the opening hook...","Building your creator brief...","Almost ready..."];
-
-async function runDashCreative() {
-  const productName = document.getElementById('dash-creative-input').value.trim();
-  if (!productName) { showToast('Type a product name first'); return; }
-  document.getElementById('dash-creative-loading').style.display = 'block';
-  document.getElementById('dash-creative-result').style.display = 'none';
-  let i = 0;
-  const t = setInterval(() => { i=(i+1)%CREATIVE_MSGS.length; const el=document.getElementById('dash-creative-msg'); if(el) el.textContent=CREATIVE_MSGS[i]; }, 2500);
-  try {
-    const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
-      system:`You are Hub, a straight-talking UK ecommerce researcher and creative strategist. Write ad creative in first person as Hub. Be direct, specific and action-oriented. Return ONLY valid JSON, no markdown.`,
-      messages:[{role:'user',content:`Write TikTok ad creative for: ${productName}. Return JSON: {"script":"punchy 80-word TikTok video script with hook, middle, CTA — use line breaks","hooks":["hook 1","hook 2","hook 3"],"brief":"ready-to-send creator brief with: Product, Platform, Video length, Key shots, CTA","music":"TikTok music vibe"}`}],
-      max_tokens:1000
-    })});
-    const data = await res.json();
-    clearInterval(t);
-    document.getElementById('dash-creative-loading').style.display = 'none';
-    const raw = (data.content||[]).map(i=>i.text||'').join('');
-    let parsed; try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch(e) { parsed = {script:raw,hooks:[],brief:'',music:''}; }
-    document.getElementById('dash-creative-result').style.display = 'block';
-    document.getElementById('dash-creative-result').innerHTML = `
-      <div style="background:var(--navy);border-radius:16px;padding:18px 22px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
-        <img src="${HUB_IMG}" alt="Hub" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
-        <div style="font-size:13px;color:rgba(255,255,255,.8);font-style:italic">"Here's how I'd open this ad for ${productName}."</div>
+function renderAdminProductsList(){
+  const list=document.getElementById('admin-products-list');
+  list.innerHTML=pendingProducts.map((p,i)=>`
+    <div class="admin-product-row" id="apr-${i}" style="flex-wrap:wrap;gap:10px;align-items:flex-start;padding:14px 16px">
+      <div style="font-size:32px;width:44px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div>
+      <div class="admin-product-info" style="min-width:200px">
+        <div class="admin-product-name">${p.name}</div>
+        <div class="admin-product-meta">${p.niche} · Trend: ${p.trendScore}/100 · ${p.margin} margin</div>
+        <div style="font-size:12px;color:var(--g500);margin-top:4px;font-style:italic;line-height:1.5">${p.whyNow||''}</div>
+        ${p.img?`<img src="${p.img}" alt="${p.name}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;margin-top:8px;border:1px solid var(--g200)" onerror="this.style.display='none'">`:''}
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#eff6ff;color:#2563eb;text-decoration:none;border:1px solid #bfdbfe">📺 Meta Ads</a>
+          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fff0e6;color:#c2410c;text-decoration:none;border:1px solid #fed7aa">🛒 AliExpress</a>
+          <a href="https://trends.pinterest.com/trends/explore#ideas=${encodeURIComponent(p.name)}&country=GB" target="_blank" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:#fce4ec;color:#9c27b0;text-decoration:none;border:1px solid #f48fb1">📌 Pinterest</a>
+        </div>
       </div>
-      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;padding:20px;margin-bottom:12px">
-        <div style="font-size:11px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">📹 Hub's TikTok Script</div>
-        <div style="font-size:14px;color:var(--g700);line-height:1.8;white-space:pre-wrap">${parsed.script||''}</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-left:auto">
+        <div class="admin-product-grade" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade}</div>
+        <button class="admin-product-toggle on" id="toggle-${i}" onclick="toggleProduct(${i})" title="Toggle product"></button>
+        <button onclick="deletePending(${i})" style="background:none;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--g400);cursor:pointer;font-family:inherit" title="Remove">🗑️ Remove</button>
       </div>
-      ${parsed.hooks?.length ? `<div style="background:#fff;border:1px solid var(--g200);border-radius:14px;padding:20px;margin-bottom:12px"><div style="font-size:11px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">🎣 3 Opening Hooks</div>${parsed.hooks.map((h,i)=>`<div style="padding:10px 14px;background:var(--g50);border-radius:8px;margin-bottom:6px;font-size:13px;color:var(--g700)"><strong>${i+1}.</strong> ${h}</div>`).join('')}</div>` : ''}
-      ${parsed.brief ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:20px;margin-bottom:12px"><div style="font-size:11px;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px">📨 Creator Brief</div><div style="font-size:13px;color:#166534;line-height:1.7;white-space:pre-wrap">${parsed.brief}</div></div>` : ''}
-      <button onclick="document.getElementById('dash-creative-result').style.display='none';document.getElementById('dash-creative-input').value=''" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>`;
-  } catch(e) {
-    clearInterval(t);
-    document.getElementById('dash-creative-loading').style.display = 'none';
-    showToast('Could not reach Hub — try again');
+    </div>`).join('');
+  updateSelectedCount();
+}
+
+function deletePending(i){pendingProducts.splice(i,1);renderAdminProductsList();}
+function toggleProduct(i){document.getElementById('toggle-'+i).classList.toggle('on');updateSelectedCount();}
+function renderLiveFeed(){const list=document.getElementById('admin-live-list');if(!list)return;if(!allProducts.length){list.innerHTML='<div style="font-size:13px;color:var(--g400);padding:8px 0">No products published yet.</div>';return;}list.innerHTML=allProducts.map((p,i)=>`<div class="admin-product-row" style="flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px"><div style="font-size:26px;width:36px;text-align:center;flex-shrink:0">${p.emoji||'📦'}</div><div class="admin-product-info" style="flex:1;min-width:150px"><div class="admin-product-name">${p.name}</div><div class="admin-product-meta">${p.niche} · Grade ${p.grade}</div></div><button onclick="removePublished(${i})" style="background:var(--red-bg);border:1px solid #fecaca;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;color:var(--red);font-family:inherit;white-space:nowrap">🗑️ Remove</button></div>`).join('');}
+function removePublished(i){const name=allProducts[i]?.name;allProducts.splice(i,1);buildNicheFilters();renderProductsGrid();renderLiveFeed();document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;showToast(`Removed: ${name}`);}
+function toggleAll(on){pendingProducts.forEach((_,i)=>{const btn=document.getElementById('toggle-'+i);if(btn)btn.className='admin-product-toggle'+(on?' on':'');});updateSelectedCount();}
+function selectGradeA(){pendingProducts.forEach((p,i)=>{const btn=document.getElementById('toggle-'+i);const isA=p.grade&&(p.grade==='A+'||p.grade==='A');if(btn)btn.className='admin-product-toggle'+(isA?' on':'');});updateSelectedCount();showToast('Grade A and A+ products selected');}
+function updateSelectedCount(){const total=pendingProducts.length;const selected=document.querySelectorAll('.admin-product-toggle.on').length;const el=document.getElementById('selected-count');if(el)el.textContent=selected+' of '+total+' selected';}
+
+async function publishProducts(){
+  if(!pendingProducts.length){showToast('Generate products first');return;}
+  const selected=pendingProducts.filter((_,i)=>{const btn=document.getElementById('toggle-'+i);return btn&&btn.classList.contains('on');});
+  if(!selected.length){showToast('Toggle on at least one product first');return;}
+  allProducts=[...allProducts,...selected];pendingProducts=[];
+  try{localStorage.setItem('drh_published_products',JSON.stringify(allProducts));}catch(e){}
+  try{await fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:allProducts})});}catch(e){console.log('Supabase save failed:',e.message);}
+  const now=new Date();const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('product-count-badge').textContent=`${allProducts.length} products live`;
+  document.getElementById('last-updated-badge').textContent=`Updated ${dateStr}`;
+  buildNicheFilters();renderProductsGrid();renderLiveFeed();
+  showToast(`✅ ${allProducts.length} products published to member feed!`);
+  showView('products',document.querySelector('.nav-tab'));
+}
+
+// ── LAUNCH SIMULATOR ─────────────────────────────────────────────────────
+async function runSimulator(productName) {
+  const p = allProducts.find(p => p.name === productName) || {};
+  const budget = document.getElementById('sim-budget')?.value || 20;
+  const target = document.getElementById('sim-target')?.value || 5;
+  const platform = document.getElementById('sim-platform')?.value || 'TikTok + Meta';
+  const btn = document.getElementById('sim-btn');
+  btn.disabled = true; btn.textContent = '⏳ Generating...';
+
+  const progress = document.getElementById('sim-progress');
+  progress.className = 'sim-progress show';
+  const lines = ['spl-1','spl-2','spl-3','spl-4','spl-5','spl-6'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if(idx>0){const prev=document.getElementById(lines[idx-1]);if(prev)prev.className='sim-progress-line done';}
+    if(idx<lines.length){const curr=document.getElementById(lines[idx]);if(curr)curr.className='sim-progress-line active';idx++;}
   }
-}
-
-// ── DASHBOARD SIMULATOR (LAUNCH PLAN) ────────────────────────────────────
-const SIM_MSGS = ["Hub is building your launch plan...","Designing your store concept...","Writing your week-by-week roadmap...","Calculating profit projections...","Almost ready..."];
-
-async function runDashSimulator() {
-  const productName = document.getElementById('dash-sim-input').value.trim();
-  if (!productName) { showToast('Type a product name first'); return; }
-
-  // Grab image if passed via URL param
-  const productImg = window._launchPlanImage || '';
-  window._launchPlanImage = ''; // clear after use
-
-  document.getElementById('dash-sim-loading').style.display = 'block';
-  document.getElementById('dash-sim-result').style.display = 'none';
-
-  let i = 0;
-  const t = setInterval(() => { i=(i+1)%SIM_MSGS.length; const el=document.getElementById('dash-sim-msg'); if(el) el.textContent=SIM_MSGS[i]; }, 2500);
+  nextLine();
+  const timer = setInterval(nextLine, 800);
 
   try {
     const res = await fetch('/api/simulate', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name: productName, adBudget: 20, salesTarget: 5, platform: 'TikTok + Meta' })
+      body: JSON.stringify({
+        name: productName, niche: p.niche, margin: p.margin,
+        sellingPrice: p.sellingPrice, supplierCost: p.supplierCost,
+        trendScore: p.trendScore, saturationRisk: p.saturationRisk,
+        tiktokAngle: p.tiktokAngle, metaAngle: p.metaAngle, mainAngle: p.mainAngle,
+        img: p.img, adBudget: budget, salesTarget: target, platform
+      })
     });
     const data = await res.json();
-    clearInterval(t);
-    document.getElementById('dash-sim-loading').style.display = 'none';
+    clearInterval(timer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='sim-progress-line done'; });
 
-    const cs = data.colorScheme || {bg:'#0f1f36',nav:'#091628',accent:'#F59E0B',text:'#fff',sub:'rgba(255,255,255,0.65)',btn:'#F59E0B',btnText:'#0f1f36'};
-    const weekColors = [{bg:'#DCFCE7',color:'#166534'},{bg:'#FEF3C7',color:'#92400E'},{bg:'#DBEAFE',color:'#1E40AF'},{bg:'#E1F5EE',color:'#0F6E56'}];
+    setTimeout(() => {
+      progress.className = 'sim-progress';
+      renderSimulator(data, p.img);
+    }, 400);
 
-    document.getElementById('dash-sim-result').style.display = 'block';
-    document.getElementById('dash-sim-result').innerHTML = `
-
-      <!-- WEBSITE MOCKUP -->
-      <div style="border-radius:16px;overflow:hidden;margin-bottom:20px;border:1px solid var(--g200);box-shadow:0 4px 24px rgba(0,0,0,.08)">
-
-        <!-- BROWSER CHROME -->
-        <div style="background:#e8e8e8;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #d0d0d0">
-          <div style="display:flex;gap:6px">
-            <div style="width:12px;height:12px;border-radius:50%;background:#ff5f57"></div>
-            <div style="width:12px;height:12px;border-radius:50%;background:#febc2e"></div>
-            <div style="width:12px;height:12px;border-radius:50%;background:#28c840"></div>
-          </div>
-          <div style="flex:1;background:#fff;border-radius:6px;padding:5px 12px;font-size:11px;color:#888;font-family:monospace">www.${(data.storeName||productName).toLowerCase().replace(/[^a-z0-9]/g,'')}.com</div>
-        </div>
-
-        <!-- SITE NAV -->
-        <div style="background:${cs.nav};padding:14px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08)">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:28px;height:28px;background:${cs.accent};border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:${cs.btnText}">${(data.storeName||productName).charAt(0).toUpperCase()}</div>
-            <div style="font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px">${data.storeName||productName}</div>
-          </div>
-          <div style="display:flex;gap:28px;align-items:center">
-            <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:500">Home</span>
-            <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:500">Shop</span>
-            <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:500">About</span>
-            <span style="font-size:12px;color:rgba(255,255,255,.6);font-weight:500">FAQ</span>
-            <div style="background:${cs.accent};color:${cs.btnText};font-size:12px;font-weight:800;padding:7px 16px;border-radius:8px;cursor:pointer">Cart (0)</div>
-          </div>
-        </div>
-
-        <!-- HERO SECTION -->
-        <div style="background:${cs.bg};display:grid;grid-template-columns:55% 45%;min-height:340px">
-          <!-- LEFT: Copy -->
-          <div style="padding:52px 44px;display:flex;flex-direction:column;justify-content:center">
-            <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;width:fit-content;margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase">${data.heroTag||'As seen on TikTok'}</div>
-            <div style="font-size:30px;font-weight:900;color:${cs.text};line-height:1.15;margin-bottom:14px;letter-spacing:-.6px">${data.heroHeadline||''}</div>
-            <div style="font-size:14px;color:${cs.sub};line-height:1.7;margin-bottom:28px;max-width:380px">${data.heroSubheadline||''}</div>
-            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
-              <button style="background:${cs.accent};color:${cs.btnText};font-size:15px;font-weight:900;padding:14px 30px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px">${data.heroCTA||'Shop Now →'}</button>
-              <div style="font-size:12px;color:rgba(255,255,255,.5)">⭐⭐⭐⭐⭐ <span style="color:rgba(255,255,255,.7)">4.9 · 2,847 reviews</span></div>
-            </div>
-            <div style="display:flex;gap:20px;flex-wrap:wrap">
-              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Free UK delivery over £40</div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> 30-day returns</div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Ships in 3–5 days</div>
-            </div>
-          </div>
-          <!-- RIGHT: Product Image -->
-          <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:300px">
-            ${productImg
-              ? `<img src="${productImg}" alt="${productName}" style="width:100%;height:100%;object-fit:contain;padding:32px;max-height:340px" onerror="this.style.opacity='.15'">`
-              : `<div style="font-size:96px;opacity:.15">📦</div>`}
-            <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.5px">DropResearch Hub preview</div>
-          </div>
-        </div>
-
-        <!-- TRUST BAR -->
-        <div style="background:${cs.accent};padding:12px 32px;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap">
-          <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔥 8,400+ sold this month</div>
-          <div style="font-size:12px;font-weight:800;color:${cs.btnText}">📦 UK warehouse · fast dispatch</div>
-          <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔒 Secure checkout</div>
-          <div style="font-size:12px;font-weight:800;color:${cs.btnText}">↩️ 30-day money back</div>
-        </div>
-
-      </div>
-
-      <!-- 4-WEEK PLAN -->
-      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:10px">
-          <img src="${HUB_IMG}" alt="Hub" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--gold)" onerror="this.style.display='none'">
-          <div style="font-size:14px;font-weight:800;color:var(--g900)">Hub's 4-Week Launch Plan</div>
-        </div>
-        ${(data.weeks||[]).map((w,i)=>{const wc=weekColors[i]||weekColors[0];return`<div class="sim-week"><div class="sim-week-header"><div class="sim-week-dot" style="background:${wc.bg};color:${wc.color}">${w.week}</div><div><div class="sim-week-title">${w.title}</div><div class="sim-week-sub">${w.subtitle||''}</div></div></div><div class="sim-week-items">${(w.items||[]).map(item=>`<div class="sim-week-item">${item}</div>`).join('')}</div></div>`;}).join('')}
-      </div>
-
-      <!-- VERDICT -->
-      <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;margin-bottom:12px">
-        <div style="font-size:10px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">Hub's Verdict</div>
-        <div style="font-size:13px;color:var(--g700);line-height:1.65">${data.verdict||''}</div>
-      </div>
-
-      <!-- CASES -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div style="background:var(--red-bg);border:1px solid #fecaca;border-radius:10px;padding:12px 14px"><div style="font-size:10px;font-weight:800;color:#b91c1c;text-transform:uppercase;margin-bottom:4px">⚠️ Worst Case</div><div style="font-size:12px;color:#991b1b;line-height:1.5">${data.worstCase||''}</div></div>
-        <div style="background:var(--green-bg);border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px"><div style="font-size:10px;font-weight:800;color:#15803d;text-transform:uppercase;margin-bottom:4px">✅ Best Case</div><div style="font-size:12px;color:#166534;line-height:1.5">${data.bestCase||''}</div></div>
-      </div>
-
-      <button onclick="document.getElementById('dash-sim-result').style.display='none';document.getElementById('dash-sim-input').value=''" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>
-    `;
   } catch(e) {
-    clearInterval(t);
-    document.getElementById('dash-sim-loading').style.display = 'none';
-    showToast('Could not reach Hub — try again');
+    clearInterval(timer);
+    showToast('Could not generate launch plan — try again');
+    btn.disabled = false; btn.textContent = '🚀 Generate my launch plan';
+    progress.className = 'sim-progress';
   }
 }
+
+function renderSimulator(data, productImg) {
+  const cs = data.colorScheme || { bg:'#0f1f36', nav:'#091628', accent:'#F59E0B', text:'#fff', sub:'rgba(255,255,255,0.65)', btn:'#F59E0B', btnText:'#0f1f36' };
+
+  // Build store preview
+  const storeWrap = document.getElementById('sim-store-wrap');
+  const storeInner = document.getElementById('sim-store-inner');
+  storeInner.innerHTML = `
+    <!-- NAV -->
+    <div style="background:${cs.nav};padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08)">
+      <div style="font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px">${data.storeName || 'My Store'}</div>
+      <div style="display:flex;gap:24px;align-items:center">
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Home</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">Shop</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:500">FAQ</span>
+        <div style="background:${cs.accent};color:${cs.btnText};font-size:12px;font-weight:800;padding:7px 16px;border-radius:8px">Cart (0)</div>
+      </div>
+    </div>
+    <!-- HERO -->
+    <div style="background:${cs.bg};display:grid;grid-template-columns:55% 45%;min-height:320px">
+      <div style="padding:48px 40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;width:fit-content;margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase">${data.heroTag || 'As seen on TikTok'}</div>
+        <div style="font-size:28px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:14px;letter-spacing:-.5px">${data.heroHeadline || ''}</div>
+        <div style="font-size:14px;color:${cs.sub};line-height:1.65;margin-bottom:28px;max-width:380px">${data.heroSubheadline || ''}</div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <button style="background:${cs.accent};color:${cs.btnText};font-size:15px;font-weight:900;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;letter-spacing:-.2px">${data.heroCTA || 'Shop now →'}</button>
+          <div style="font-size:12px;color:rgba(255,255,255,.4)">⭐⭐⭐⭐⭐ 4.9 (2,847 reviews)</div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:20px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Free UK shipping over £40</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> 30-day returns</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)"><span style="color:${cs.accent}">✓</span> Delivered in 3-5 days</div>
+        </div>
+      </div>
+      <div style="background:${cs.nav};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+        ${productImg ? `<img src="${productImg}" alt="" style="width:100%;height:100%;object-fit:contain;padding:24px;max-height:320px" onerror="this.style.opacity='.1'">` : '<div style="font-size:80px;opacity:.15">📦</div>'}
+        <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.5px">DropResearch Hub preview</div>
+      </div>
+    </div>
+    <!-- TRUST BAR -->
+    <div style="background:${cs.accent};padding:10px 28px;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap">
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔥 8,400+ sold this month</div>
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">📦 Ships from UK warehouse</div>
+      <div style="font-size:12px;font-weight:800;color:${cs.btnText}">🔒 Secure checkout</div>
+    </div>`;
+  storeWrap.style.display = 'block';
+
+  // Build roadmap
+  const weekColors = [
+    { bg:'#DCFCE7', color:'#166534' },
+    { bg:'#FEF3C7', color:'#92400E' },
+    { bg:'#DBEAFE', color:'#1E40AF' },
+    { bg:'#E1F5EE', color:'#0F6E56' }
+  ];
+  const roadmap = document.getElementById('sim-roadmap');
+  roadmap.innerHTML = (data.weeks || []).map((w, i) => {
+    const wc = weekColors[i] || weekColors[0];
+    return `<div class="sim-week">
+      <div class="sim-week-header">
+        <div class="sim-week-dot" style="background:${wc.bg};color:${wc.color}">${w.week}</div>
+        <div><div class="sim-week-title">${w.title}</div><div class="sim-week-sub">${w.subtitle}</div></div>
+      </div>
+      <div class="sim-week-items">${(w.items||[]).map(item=>`<div class="sim-week-item">${item}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sim-verdict-text').textContent = data.verdict || '';
+  document.getElementById('sim-worst').textContent = data.worstCase || '';
+  document.getElementById('sim-best').textContent = data.bestCase || '';
+
+  document.getElementById('sim-inputs-wrap').style.display = 'none';
+  document.getElementById('sim-result').className = 'sim-result show';
+}
+
+function resetSimulator() {
+  document.getElementById('sim-store-wrap').style.display = 'none';
+  document.getElementById('sim-inputs-wrap').style.display = 'block';
+  document.getElementById('sim-result').className = 'sim-result';
+  const btn = document.getElementById('sim-btn');
+  if(btn) { btn.disabled = false; btn.textContent = '🚀 Generate my launch plan'; }
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+
+function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
+function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
+async function goToPortal(){
+  const session=JSON.parse(sessionStorage.getItem('drh_session')||'null');if(!session?.email){closeManageModal();return;}
+  const btn=document.getElementById('portal-btn');btn.disabled=true;btn.textContent='Opening...';
+  try{const res=await fetch('/api/stripe-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:session.email})});const data=await res.json();if(data.url)window.location.href=data.url;else showToast('Could not open portal. Please try again.');}catch(e){showToast('Network error. Please try again.');}
+  finally{btn.disabled=false;btn.textContent='Open Portal →';closeManageModal();}
+}
+
+renderProductsGrid();
+
+// ── SAVED PRODUCTS ────────────────────────────────────────────────────────
+let savedProductNames = new Set();
+
+
+function getUserEmail() {
+  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  if (s?.email) return s.email;
+  // Admin bypass — use a placeholder admin email
+  const auth = sessionStorage.getItem('drh_auth');
+  if (auth === 'member') return 'admin@dropresearchhub.com';
+  return null;
+}
+
+async function loadSavedProducts() {
+  const email = getUserEmail();
+  if (!email) return;
+  try {
+    const res = await fetch(`/api/saved?email=${encodeURIComponent(email)}`);
+    const data = await res.json();
+    const saved = data.saved || [];
+    savedProductNames = new Set(saved.map(p => p.name));
+    updateAllSaveButtons();
+    renderSavedGrid(saved);
+    const badge = document.getElementById('saved-count-badge');
+    if (badge) badge.textContent = saved.length + ' saved product' + (saved.length !== 1 ? 's' : '');
+  } catch(e) { console.error('Failed to load saved:', e); }
+}
+
+function updateAllSaveButtons() {
+  allProducts.forEach((p, i) => {
+    const btn = document.getElementById('save-btn-' + i);
+    if (btn) btn.textContent = savedProductNames.has(p.name) ? '💛' : '🤍';
+  });
+}
+
+async function toggleSaveProduct(idx, btn) {
+  const p = allProducts[idx];
+  if (!p) return;
+  const email = getUserEmail();
+  if (!email) { showToast('Please log in to save products'); return; }
+
+  if (savedProductNames.has(p.name)) {
+    // Unsave
+    try {
+      await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
+      savedProductNames.delete(p.name);
+      btn.textContent = '🤍';
+      showToast('Removed from Saved Products Hub');
+      if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
+    } catch(e) { showToast('Could not unsave — try again'); }
+  } else {
+    // Save
+    try {
+      await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
+      savedProductNames.add(p.name);
+      btn.textContent = '💛';
+      showSavedMessage();
+    } catch(e) { showToast('Could not save — try again'); }
+  }
+}
+
+function showSavedMessage() {
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--navy-dark);color:#fff;padding:20px 32px;border-radius:16px;font-size:15px;font-weight:800;z-index:9999;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)';
+  msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">💛</div><div>Saved to Saved Products Hub</div>';
+  document.body.appendChild(msg);
+  setTimeout(() => { msg.style.opacity='0'; msg.style.transition='opacity .3s'; setTimeout(() => msg.remove(), 300); }, 2000);
+}
+
+function renderSavedGrid(saved) {
+  const grid = document.getElementById('saved-grid');
+  if (!saved.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
+    return;
+  }
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
+  grid.innerHTML = saved.map((p, i) => `
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
+      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\'")}', ${i})" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+      <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
+        ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
+        <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
+      </div>
+      <div style="padding:14px;display:flex;flex-direction:column;flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
+        <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche || ''} · ${p.season || 'Evergreen'}</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;flex-shrink:0">
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--g700);background:var(--blue-bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
+        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
+      </div>
+    </div>`).join('');
+
+  window._savedProducts = saved;
+  populateCompareDropdowns();
+}
+
+async function unsaveProduct(name, idx) {
+  const email = getUserEmail();
+  if (!email) return;
+  try {
+    await fetch('/api/saved', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, productName: name}) });
+    savedProductNames.delete(name);
+    updateAllSaveButtons();
+    loadSavedProducts();
+    showToast('Removed from saved products');
+  } catch(e) { showToast('Could not remove — try again'); }
+}
+
+// ── COMPARE (DROPDOWN) ───────────────────────────────────────────────────
+function populateCompareDropdowns() {
+  const saved = window._savedProducts || [];
+  ['compare-select-a', 'compare-select-b'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="" style="background:#142840;color:#fff">Select a product...</option>` +
+      saved.map((p,i) => `<option value="${i}" style="background:#142840;color:#fff">${p.emoji||'📦'} ${p.name}</option>`).join('');
+    if (current) sel.value = current;
+  });
+}
+
+function runCompare() {
+  var saved = window._savedProducts || [];
+  var selA = document.getElementById('compare-select-a');
+  var selB = document.getElementById('compare-select-b');
+  var tableEl = document.getElementById('compare-table');
+  if (!tableEl || !selA || !selB) return;
+  var idxA = selA.value, idxB = selB.value;
+  if (idxA === '' || idxB === '' || idxA === idxB) {
+    tableEl.innerHTML = '';
+    return;
+  }
+  var a = saved[parseInt(idxA)];
+  var b = saved[parseInt(idxB)];
+  if (!a || !b) return;
+
+  function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
+  function getLaunch(p) {
+    if (!p.launchReadiness) return '—';
+    return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%';
+  }
+
+  var metrics = [
+    { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
+    { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
+    { label: 'Problem Score', av: a.problemScore||'—', bv: b.problemScore||'—', higher: true },
+    { label: 'Est. Margin', av: a.margin||'—', bv: b.margin||'—', higher: true },
+    { label: 'Supplier Cost', av: a.supplierCost||'—', bv: b.supplierCost||'—', higher: false },
+    { label: 'Selling Price', av: a.sellingPrice||'—', bv: b.sellingPrice||'—', higher: false },
+    { label: 'Saturation Risk', av: a.saturationRisk||'—', bv: b.saturationRisk||'—', higher: false,
+      winFn: function(av,bv){ var m={Low:0,Medium:1,High:2}; return (m[av]||1)<(m[bv]||1)?'a':(m[bv]||1)<(m[av]||1)?'b':''; } },
+    { label: 'Launch Readiness', av: getLaunch(a), bv: getLaunch(b), higher: true },
+    { label: 'Window Closes', av: a.windowClosesWeek?'Week '+a.windowClosesWeek:'—', bv: b.windowClosesWeek?'Week '+b.windowClosesWeek:'—', higher: false },
+    { label: 'Verdict', av: a.verdict||'—', bv: b.verdict||'—', higher: false },
+    { label: 'TikTok Angle', av: a.tiktokAngle||'—', bv: b.tiktokAngle||'—', higher: false },
+    { label: 'Target Customer', av: a.targetCustomer||'—', bv: b.targetCustomer||'—', higher: false },
+  ];
+
+  var aWins = 0, bWins = 0;
+  metrics.forEach(function(m) {
+    if (m.winFn) {
+      var w = m.winFn(m.av, m.bv);
+      m.winA = w==='a'; m.winB = w==='b';
+    } else if (m.higher) {
+      var na = numVal(m.av), nb = numVal(m.bv);
+      m.winA = na>nb && na>0; m.winB = nb>na && nb>0;
+    } else {
+      m.winA = false; m.winB = false;
+    }
+    if (m.winA) aWins++;
+    if (m.winB) bWins++;
+  });
+
+  var winner = aWins > bWins ? a : bWins > aWins ? b : null;
+  var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
+  var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
+
+  var summaryText = winner
+    ? '🏆 ' + (winner===a?aName:bName) + ' wins on ' + Math.max(aWins,bWins) + ' of ' + (aWins+bWins) + ' comparable metrics'
+    : '🤝 Both products are evenly matched across all metrics';
+
+  var recReason = winner
+    ? 'Based on the scores, ' + (winner===a?aName:bName) + ' has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.')
+    : 'Both products are closely matched. Go with whichever you can source most easily or feel most confident creating content for.';
+
+  var aWinnerBadge = aWins > bWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
+  var bWinnerBadge = bWins > aWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
+
+  var labelHTML = '', aHTML = '', bHTML = '';
+  var cs = 'padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);min-height:42px;display:flex;align-items:center;';
+  metrics.forEach(function(m) {
+    labelHTML += '<div style="' + cs + 'font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">' + m.label + '</div>';
+    aHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winA?'800':'400') + ';color:' + (m.winA?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.av + (m.winA?' ✓':'') + '</div>';
+    bHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winB?'800':'400') + ';color:' + (m.winB?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.bv + (m.winB?' ✓':'') + '</div>';
+  });
+
+  var html = '';
+  html += '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">';
+  html += '<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:700;color:#fff">' + summaryText + '</div>';
+  html += '<div style="display:grid;grid-template-columns:150px 1fr 1fr;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);margin-bottom:16px">';
+  html += '<div><div style="padding:10px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</div>' + labelHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (a.emoji||'📦') + ' ' + aName + aWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxA + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + aHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (b.emoji||'📦') + ' ' + bName + bWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxB + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + bHTML + '</div>';
+  html += '</div>';
+  html += '<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:14px 16px"><div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">DropResearch Hub Recommendation</div><div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.65">' + recReason + '</div></div>';
+  html += '</div>';
+
+  tableEl.innerHTML = html;
+}
+async function loadPublishedProducts() {
+  try {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    if (data.products && data.products.length) {
+      allProducts = data.products;
+      buildNicheFilters();
+      renderProductsGrid();
+      const badge = document.getElementById('product-count-badge');
+      if (badge) badge.textContent = allProducts.length + ' products live';
+    } else {
+      renderProductsGrid();
+    }
+  } catch(e) {
+    console.error('Failed to load products:', e);
+    renderProductsGrid();
+  }
+}
+
+renderProductsGrid();
+loadPublishedProducts();
+loadSavedProducts();
+</script>
+
+<!-- Hub Mascot Component -->
+<script>
+const HUB_MESSAGES = [
+  "Hub is researching the market...",
+  "Hub is checking supplier signals...",
+  "Hub is reviewing opportunity data...",
+  "Hub is writing up your results...",
+  "Hub is scanning trend data...",
+  "Hub is crunching the numbers..."
+];
+
+const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+
+function createHubLoader(containerId, message) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const msg = message || HUB_MESSAGES[Math.floor(Math.random() * HUB_MESSAGES.length)];
+  const div = document.createElement('div');
+  div.className = 'hub-loading active';
+  div.id = containerId + '-hub';
+  div.innerHTML = `
+    <div class="hub-img-wrap">
+      <img src="${HUB_IMG}" alt="Hub is researching" onerror="this.outerHTML='<div style=\'font-size:72px\'>🤖</div>'">
+      <div class="hub-dots">
+        <div class="hub-dot"></div>
+        <div class="hub-dot"></div>
+        <div class="hub-dot"></div>
+      </div>
+    </div>
+    <div class="hub-msg">${msg}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+}
+
+function removeHubLoader(containerId) {
+  const hub = document.getElementById(containerId + '-hub');
+  if (hub) hub.remove();
+}
+
+let hubMsgInterval = null;
+function startHubMessages(containerId) {
+  let i = 0;
+  hubMsgInterval = setInterval(() => {
+    i = (i + 1) % HUB_MESSAGES.length;
+    const msgEl = document.querySelector('#' + containerId + '-hub .hub-msg');
+    if (msgEl) msgEl.textContent = HUB_MESSAGES[i];
+  }, 3500);
+}
+function stopHubMessages() {
+  if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; }
+}
+</script>
+</div>
+
+<script>
+function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");document.body.style.overflow="hidden"}
+function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");document.body.style.overflow=""}
+const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
 </script>
 </body>
 </html>
