@@ -795,6 +795,28 @@ function showToast(msg) {
 loadProducts();
 loadSaved();
 
+// ── HANDLE INCOMING LAUNCH PLAN REQUEST FROM URL PARAMS ───────────────────
+// members.html "Build My Launch Plan" links here as:
+//   dashboard.html?product=NAME&image=IMG
+// Without this, the page just loads on the default Dashboard view and the
+// click looks broken. This reads the params, switches to the simulator
+// page, pre-fills the product name, and auto-runs it.
+function handleLaunchPlanParams() {
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get('product');
+  if (!product) return;
+
+  const simNavBtn = document.querySelector('.nav-item[onclick*="simulator"]');
+  showPage('simulator', simNavBtn || null);
+
+  const input = document.getElementById('dash-sim-input');
+  if (input) {
+    input.value = decodeURIComponent(product);
+    runDashSimulator();
+  }
+}
+handleLaunchPlanParams();
+
 // ── DASHBOARD VALIDATOR ───────────────────────────────────────────────────
 function extractProductName(url) {
   try {
