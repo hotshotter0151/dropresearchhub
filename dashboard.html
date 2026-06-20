@@ -1037,21 +1037,58 @@ async function runDashSimulator() {
     clearInterval(t);
     document.getElementById('dash-sim-loading').style.display = 'none';
 
-    const cs = data.colorScheme || {bg:'#0f1f36',nav:'#091628',accent:'#F59E0B',text:'#fff',sub:'rgba(255,255,255,0.65)',btn:'#F59E0B',btnText:'#0f1f36'};
+    if (!res.ok || data.error) {
+      document.getElementById('dash-sim-result').style.display = 'block';
+      document.getElementById('dash-sim-result').innerHTML = `
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:32px;text-align:center">
+          <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+          <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:6px">${data.error || "Hub couldn't finish building the plan"}</div>
+          <div style="font-size:13px;color:var(--g500);margin-bottom:18px">This sometimes happens on a busy request — try again.</div>
+          <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Try again →</button>
+        </div>`;
+      return;
+    }
+
+    const cs = data.colorScheme || {bg:'#ffffff',nav:'#ffffff',navText:'#0f1f2e',accent:'#0f1f2e',text:'#0f1f2e',sub:'#5b6470',btn:'#0f1f2e',btnText:'#ffffff',border:'#e5e7eb'};
     const weekColors = [{bg:'#DCFCE7',color:'#166534'},{bg:'#FEF3C7',color:'#92400E'},{bg:'#DBEAFE',color:'#1E40AF'},{bg:'#E1F5EE',color:'#0F6E56'}];
+    const navLinks = (data.navLinks && data.navLinks.length) ? data.navLinks : ['Shop','Reviews','FAQ'];
+    const trustBadges = (data.trustBadges && data.trustBadges.length) ? data.trustBadges : ['Free UK delivery','30-day returns','Secure checkout'];
+    const heroImg = data.heroImage || '';
 
     document.getElementById('dash-sim-result').style.display = 'block';
     document.getElementById('dash-sim-result').innerHTML = `
-      <div style="border-radius:16px;overflow:hidden;margin-bottom:16px;border:1px solid var(--g200)">
-        <div style="background:${cs.nav};padding:12px 20px;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:14px;font-weight:900;color:#fff">${data.storeName||productName}</div>
-          <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:800;padding:5px 12px;border-radius:6px">Cart (0)</div>
+      <div style="border-radius:16px;overflow:hidden;margin-bottom:16px;border:1px solid ${cs.border};box-shadow:0 1px 3px rgba(0,0,0,.06)">
+        <div style="background:#e9ecef;padding:8px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid ${cs.border}">
+          <div style="width:9px;height:9px;border-radius:50%;background:#ff5f57"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#febc2e"></div>
+          <div style="width:9px;height:9px;border-radius:50%;background:#28c840"></div>
+          <div style="flex:1;background:#fff;border-radius:6px;padding:3px 10px;font-size:10px;color:#9CA3AF;margin-left:8px">${(data.storeName||productName).toLowerCase().replace(/[^a-z0-9]/g,'')}.com</div>
         </div>
-        <div style="background:${cs.bg};padding:32px 28px">
-          <div style="background:rgba(255,255,255,.1);color:${cs.accent};font-size:10px;font-weight:800;padding:4px 12px;border-radius:999px;width:fit-content;margin-bottom:14px;text-transform:uppercase;letter-spacing:.6px">${data.heroTag||'As seen on TikTok'}</div>
-          <div style="font-size:24px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:10px">${data.heroHeadline||''}</div>
-          <div style="font-size:13px;color:${cs.sub};line-height:1.6;margin-bottom:20px;max-width:420px">${data.heroSubheadline||''}</div>
-          <button style="background:${cs.accent};color:${cs.btnText};font-size:14px;font-weight:900;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;font-family:inherit">${data.heroCTA||'Shop now →'}</button>
+        <div style="background:${cs.nav};padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid ${cs.border}">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:8px;height:8px;border-radius:2px;background:${cs.accent};flex-shrink:0"></div>
+            <div style="font-size:17px;font-weight:900;color:${cs.navText};letter-spacing:-.3px">${data.storeName||productName}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:22px">
+            ${navLinks.slice(0,3).map(l=>`<div style="font-size:12px;font-weight:600;color:${cs.sub}">${l}</div>`).join('')}
+            <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:800;padding:6px 14px;border-radius:7px">Cart (0)</div>
+          </div>
+        </div>
+        <div style="background:${cs.bg};display:grid;grid-template-columns:1fr 1fr;min-height:280px">
+          <div style="padding:36px 32px;display:flex;flex-direction:column;justify-content:center">
+            <div style="background:${cs.accent}1a;color:${cs.accent};font-size:10px;font-weight:800;padding:5px 12px;border-radius:999px;width:fit-content;margin-bottom:16px;text-transform:uppercase;letter-spacing:.6px">${data.heroTag||'As seen on TikTok'}</div>
+            <div style="font-size:26px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:12px;letter-spacing:-.5px">${data.heroHeadline||''}</div>
+            <div style="font-size:13px;color:${cs.sub};line-height:1.6;margin-bottom:22px;max-width:380px">${data.heroSubheadline||''}</div>
+            <button style="background:${cs.btn};color:${cs.btnText};font-size:14px;font-weight:900;padding:13px 26px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;width:fit-content;margin-bottom:18px">${data.heroCTA||'Shop now →'}</button>
+            <div style="display:flex;gap:14px;flex-wrap:wrap">
+              ${trustBadges.slice(0,3).map(b=>`<div style="font-size:11px;color:${cs.sub};display:flex;align-items:center;gap:5px"><span style="color:${cs.accent}">✓</span>${b}</div>`).join('')}
+            </div>
+          </div>
+          <div style="background:${cs.bg};display:flex;align-items:center;justify-content:center;padding:24px;border-left:1px solid ${cs.border}">
+            ${heroImg
+              ? `<img src="${heroImg}" alt="${productName}" style="max-width:100%;max-height:230px;object-fit:contain" onerror="this.parentElement.innerHTML='<div style=font-size:64px>📦</div>'">`
+              : `<div style="font-size:64px">📦</div>`}
+          </div>
         </div>
       </div>
       <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px">
