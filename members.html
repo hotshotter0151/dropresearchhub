@@ -18,6 +18,7 @@ if (_auth === 'member' && !_session?.email) {
 async function verifyMemberAccess() {
   const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
   if (!session?.email) return;
+  if (session.role === 'admin') return;
   try {
     const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
     const data = await res.json();
@@ -25,7 +26,6 @@ async function verifyMemberAccess() {
     if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
   } catch(e) {}
 }
-verifyMemberAccess();
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
