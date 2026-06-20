@@ -1108,6 +1108,20 @@ async function runDashSimulator() {
           <div style="font-size:11px;color:${cs.sub};font-weight:700">${testimonial.name||''}${testimonial.location?', '+testimonial.location:''}</div>
         </div>` : ''}
       </div>
+      <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:1.5px solid #f59e0b;border-radius:14px;padding:20px 22px;margin-bottom:14px">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
+          <div style="font-size:24px;flex-shrink:0">📦</div>
+          <div>
+            <div style="font-size:14px;font-weight:900;color:#78350f;margin-bottom:2px">Step 0 — Order the product yourself, first</div>
+            <div style="font-size:12px;color:#92400e;line-height:1.6">Before you spend a penny on ads, order this product to your own address. This isn't optional — it's the foundation every product brand should be built on.</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-left:36px">
+          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Test the product.</strong> Check the real build quality, how it feels in hand, and whether it matches the listing — you can't sell what you haven't used.</div>
+          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Test the delivery time.</strong> Time it from order to arrival. That's the real number you'll need to set customer expectations and write your shipping policy.</div>
+          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Message the supplier.</strong> Ask a question and see how fast and how well they respond. If this product takes off, you'll need them for bulk orders, pricing negotiations and fast problem-solving — find out now if they're reliable.</div>
+        </div>
+      </div>
       <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px">
         <div style="padding:16px 20px;border-bottom:1px solid var(--g100);font-size:14px;font-weight:800;color:var(--g900)">📅 Hub's 4-Week Launch Plan</div>
         ${(data.weeks||[]).map((w,i)=>{const wc=weekColors[i]||weekColors[0];return`<div style="padding:16px 20px;border-bottom:1px solid var(--g100)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:26px;height:26px;border-radius:50%;background:${wc.bg};color:${wc.color};font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">${w.week}</div><div><div style="font-size:13px;font-weight:800;color:var(--g900)">${w.title}</div><div style="font-size:11px;color:var(--g400)">${w.subtitle||''}</div></div></div><div style="padding-left:36px">${(w.items||[]).map(item=>`<div style="font-size:12px;color:var(--g700);margin-bottom:4px;line-height:1.5">· ${item}</div>`).join('')}</div></div>`;}).join('')}
