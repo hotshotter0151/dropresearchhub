@@ -6,8 +6,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const ADMIN_PASSWORD = 'Billy1234.';
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -17,15 +15,6 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { action, email, password, name } = req.body;
-
-  // ── Admin shortcut ─────────────────────────────────────────────────────
-  if (action === 'login' && password === ADMIN_PASSWORD) {
-    return res.status(200).json({
-      success: true,
-      role: 'admin',
-      redirect: '/members.html',
-    });
-  }
 
   // ── Register ───────────────────────────────────────────────────────────
   if (action === 'register') {
@@ -49,6 +38,7 @@ export default async function handler(req, res) {
         name,
         password_hash,
         subscription_status: 'trial',
+        role: 'member',
         created_at: new Date().toISOString(),
       }])
       .select()
@@ -66,13 +56,16 @@ export default async function handler(req, res) {
   }
 
   // ── Login ──────────────────────────────────────────────────────────────
+  // Single unified login path for everyone, including admin.
+  // Admin status comes from the `role` column on the user's own row,
+  // checked against a real hashed password — never a hardcoded string.
   if (action === 'login') {
     if (!email || !password)
       return res.status(400).json({ error: 'Email and password required' });
 
     const { data: user, error } = await supabase
       .from('users')
-      .select('id, email, name, password_hash, subscription_status')
+      .select('id, email, name, password_hash, subscription_status, role')
       .eq('email', email)
       .single();
 
@@ -81,6 +74,17 @@ export default async function handler(req, res) {
 
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid email or password' });
+
+    if (user.role === 'admin') {
+      return res.status(200).json({
+        success: true,
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        role: 'admin',
+        redirect: '/admin.html',
+      });
+    }
 
     const redirect =
       user.subscription_status === 'active' ? '/members.html' : '/trial.html';
