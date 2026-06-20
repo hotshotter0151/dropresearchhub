@@ -65,6 +65,17 @@ Return ONLY a valid JSON object, no markdown, no backticks. EVERY field below is
   "heroCTA": "4-6 word buy button text with price e.g. Shop now — £34.99",
   "heroTag": "short trust/social proof badge e.g. As seen on TikTok or 2,000+ sold this week",
   "trustBadges": ["3 short trust badges e.g. Free UK delivery, 30-day returns, 4.8★ rated"],
+  "features": [
+    {"icon": "one single relevant emoji for this benefit e.g. 🚚 🛡️ ✨ 🌿 ⚡ ❤️ 🏆 ♻️ — pick one that fits this exact benefit", "title": "2-4 word benefit title specific to this product", "description": "one short sentence, 10-15 words, expanding on the benefit"},
+    {"icon": "different relevant emoji", "title": "2-4 word benefit title", "description": "one short sentence, 10-15 words"},
+    {"icon": "different relevant emoji", "title": "2-4 word benefit title", "description": "one short sentence, 10-15 words"}
+  ],
+  "testimonial": {
+    "quote": "a believable, specific customer review for this exact product, 20-35 words, written in a natural conversational voice — not generic, mention a specific detail or result",
+    "name": "a believable UK first name + last initial e.g. Sarah M.",
+    "location": "a UK town or city",
+    "rating": 5
+  },
   "weeks": [
     {"week": 1, "title": "Week 1 — [specific phase name]", "subtitle": "5-7 word description of what this week achieves", "items": ["specific actionable step 1", "specific actionable step 2", "specific actionable step 3"]},
     {"week": 2, "title": "Week 2 — [specific phase name]", "subtitle": "5-7 word description", "items": ["step 1", "step 2", "step 3"]},
@@ -84,7 +95,9 @@ RULES:
 - Hero headline should be compelling enough that a beginner gets excited seeing it
 - Be honest in the verdict — if the margin is tight or saturation is high, say so
 - weeks must always contain exactly 4 objects, each with exactly 3 items
-- verdict, worstCase and bestCase must never be empty strings`;
+- verdict, worstCase and bestCase must never be empty strings
+- features must always contain exactly 3 objects with distinct icons
+- testimonial must always be present with a specific, believable quote — never generic filler like "great product, would buy again"`;
 
   async function callAI() {
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -92,7 +105,7 @@ RULES:
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2800,
+        max_tokens: 3200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -114,6 +127,9 @@ RULES:
     if (!result.verdict || !result.verdict.trim()) return false;
     if (!result.worstCase || !result.worstCase.trim()) return false;
     if (!result.bestCase || !result.bestCase.trim()) return false;
+    if (!Array.isArray(result.features) || result.features.length !== 3) return false;
+    if (result.features.some(f => !f.title || !f.description)) return false;
+    if (!result.testimonial || !result.testimonial.quote || !result.testimonial.name) return false;
     return true;
   }
 
