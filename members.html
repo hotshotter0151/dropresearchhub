@@ -601,6 +601,9 @@ function buildAnalysisBody(p) {
   const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
   const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
 
+console.log('PRODUCT BEING SCORED:', p);
+console.log('SCORING OBJECT:', p.scoring);
+
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
