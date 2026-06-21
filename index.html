@@ -76,6 +76,33 @@ section{padding:96px 5%}
 .section-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;line-height:1.1;color:var(--navy);margin-bottom:16px}
 .section-sub{font-size:17px;color:var(--g500);line-height:1.65;max-width:580px}
 .center{text-align:center}.center .section-sub{margin:0 auto}
+.marquee-section{background:var(--off);padding:48px 0;overflow:hidden;border-bottom:1px solid var(--g200)}
+.marquee-track{display:flex;width:max-content;animation:marquee-scroll 38s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--g200);border-radius:999px;padding:10px 20px 10px 14px;margin:0 8px;white-space:nowrap;flex-shrink:0}
+.marquee-stars{color:var(--gold);font-size:13px;letter-spacing:1px;flex-shrink:0}
+.marquee-text{font-size:13px;color:var(--g700);font-weight:500}
+.marquee-name{font-weight:800;color:var(--navy)}
+.marquee-section{background:var(--off);padding:48px 0;overflow:hidden;border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)}
+.marquee-header{text-align:center;padding:0 5% 28px}
+.marquee-stars{color:var(--gold);font-size:16px;letter-spacing:2px;margin-bottom:8px}
+.marquee-title{font-size:13px;font-weight:800;color:var(--g500);text-transform:uppercase;letter-spacing:1px}
+.marquee-note{font-size:11px;color:var(--g400);margin-top:4px}
+.marquee-track-wrap{position:relative;width:100%}
+.marquee-track-wrap::before,.marquee-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.marquee-track-wrap::before{left:0;background:linear-gradient(90deg,var(--off),transparent)}
+.marquee-track-wrap::after{right:0;background:linear-gradient(270deg,var(--off),transparent)}
+.marquee-track{display:flex;gap:16px;width:max-content;animation:marqueeScroll 38s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-card{flex-shrink:0;width:320px;background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px 20px}
+.marquee-card-stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:10px}
+.marquee-card-text{font-size:13px;color:var(--g700);line-height:1.6;margin-bottom:14px}
+.marquee-card-person{display:flex;align-items:center;gap:9px}
+.marquee-card-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.marquee-card-name{font-size:12px;font-weight:800;color:var(--g900)}
+.marquee-card-role{font-size:10px;color:var(--g400)}
 .video-showcase{background:#fff;padding:80px 5% 0}
 .video-showcase-inner{max-width:1100px;margin:0 auto;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(30,58,95,.18);border:1px solid var(--g200)}
 .video-showcase video{width:100%;height:auto;display:block}
@@ -272,6 +299,80 @@ footer a:hover{color:#fff}
   <div class="proof-item"><span>✓</span> UK-focused research</div>
 </div>
 
+<!-- SCROLLING REVIEWS MARQUEE — added -->
+<section class="marquee-section">
+  <div class="marquee-header">
+    <div class="marquee-stars">★★★★★</div>
+    <div class="marquee-title">Early access feedback</div>
+    <div class="marquee-note">DropResearch Hub is newly launched — these are real quotes from early access testers, not yet paying members.</div>
+  </div>
+  <div class="marquee-track-wrap">
+    <div class="marquee-track">
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"This actually found something before it blew up on TikTok — that's the whole point, isn't it?"</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">J</div><div><div class="marquee-card-name">James</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"The scoring breakdown actually makes sense — made picking my next product way less stressful."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">R</div><div><div class="marquee-card-name">Ryan</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Had a full store concept and ad angles in under a minute. Would've taken me a weekend."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">S</div><div><div class="marquee-card-name">Sophie</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Being UK-focused actually matters more than I expected — other tools clearly didn't translate."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">M</div><div><div class="marquee-card-name">Michael</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"The validator caught a couple of bad picks before I wasted any ad spend on them."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">A</div><div><div class="marquee-card-name">Aisha</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Simple to use even as someone who'd never run a store before — nothing assumes prior knowledge."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">T</div><div><div class="marquee-card-name">Tom</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <!-- duplicate set for seamless loop -->
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"This actually found something before it blew up on TikTok — that's the whole point, isn't it?"</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">J</div><div><div class="marquee-card-name">James</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"The scoring breakdown actually makes sense — made picking my next product way less stressful."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">R</div><div><div class="marquee-card-name">Ryan</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Had a full store concept and ad angles in under a minute. Would've taken me a weekend."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">S</div><div><div class="marquee-card-name">Sophie</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Being UK-focused actually matters more than I expected — other tools clearly didn't translate."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">M</div><div><div class="marquee-card-name">Michael</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"The validator caught a couple of bad picks before I wasted any ad spend on them."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">A</div><div><div class="marquee-card-name">Aisha</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+      <div class="marquee-card">
+        <div class="marquee-card-stars">★★★★★</div>
+        <div class="marquee-card-text">"Simple to use even as someone who'd never run a store before — nothing assumes prior knowledge."</div>
+        <div class="marquee-card-person"><div class="marquee-card-avatar">T</div><div><div class="marquee-card-name">Tom</div><div class="marquee-card-role">Early access tester</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- HOMEPAGE DEMO VIDEO — added -->
 <section class="video-showcase">
   <div class="video-showcase-inner">
@@ -312,9 +413,9 @@ footer a:hover{color:#fff}
       <p>What Hub monitors every week to find emerging products before they peak</p>
       <div class="how-signal"><div class="how-signal-icon" style="background:rgba(0,0,0,.3)">🎵</div><div><div class="how-signal-label">TikTok Shop UK</div><div class="how-signal-sub">Trending products & creator activity</div></div><div class="how-signal-badge">Live</div></div>
       <div class="how-signal"><div class="how-signal-icon" style="background:rgba(245,158,11,.2)">📦</div><div><div class="how-signal-label">Amazon Movers & Shakers</div><div class="how-signal-sub">Products gaining rank fast</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(239,68,68,.2)">🛒</div><div><div class="how-signal-label">AliExpress Order Growth</div><div class="how-signal-sub">Supplier demand signals</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(239,68,68,.2)">🛒</div><div><div class="how-signal-label">AliExpress Product Data</div><div class="how-signal-sub">Live pricing & order counts</div></div><div class="how-signal-badge">Live</div></div>
       <div class="how-signal"><div class="how-signal-icon" style="background:rgba(59,130,246,.2)">📊</div><div><div class="how-signal-label">Google Trends UK</div><div class="how-signal-sub">Search demand movements</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(99,102,241,.2)">📺</div><div><div class="how-signal-label">Meta Ads Library</div><div class="how-signal-sub">Competition level check</div></div><div class="how-signal-badge">Live</div></div>
+      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(99,102,241,.2)">📺</div><div><div class="how-signal-label">Research Hub Links</div><div class="how-signal-sub">Pre-searched Meta, TikTok & Amazon</div></div><div class="how-signal-badge">Live</div></div>
       <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px">
         <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px">12-point scoring framework</div>
         <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Problem solving · Video potential · Margin strength · Competition level · Saturation risk · Audience size · and 6 more criteria</div>
