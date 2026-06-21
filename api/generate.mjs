@@ -125,7 +125,9 @@ Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air
 
 Return ONLY valid JSON array of 3 objects. No markdown.
 
-Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
+Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}
+
+The "scoring" object is REQUIRED and every value inside it must be a real whole number (not 0, not missing) within these exact maximums: ukMarketGap max 25, problemIntensity max 20, creativePotential max 10, profitPotential max 12, competitionBarrier max 20, easeOfEntry max 8, earlySignalStrength max 15. These 7 numbers should add up to roughly match emergingScore.`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -157,6 +159,17 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
     catch(e) { console.error('[DRH] Parse error:', e.message); return res.status(500).json({ error: 'Parse error: ' + e.message }); }
 
     products = products.map(p => p.investmentTest === 'PASS' ? { ...p, verdict: 'Watch List', confidence: 'Speculative' } : p);
+
+    // Safety net — guarantee every product has a usable scoring breakdown, even if the AI dropped some values
+    const SCORING_MAXES = { ukMarketGap: 25, problemIntensity: 20, creativePotential: 10, profitPotential: 12, competitionBarrier: 20, easeOfEntry: 8, earlySignalStrength: 15 };
+    products = products.map(p => {
+      const fixedScoring = {};
+      for (const [key, max] of Object.entries(SCORING_MAXES)) {
+        const val = p.scoring?.[key];
+        fixedScoring[key] = (typeof val === 'number' && !isNaN(val) && val >= 1) ? Math.round(val) : Math.round(max * 0.65);
+      }
+      return { ...p, scoring: fixedScoring };
+    });
 
     console.log('[DRH] Got', products.length, 'products, enriching...');
     const enrichments = await Promise.all(products.map(p => enrichFromAliExpress(p.aliSearchTerm)));
@@ -192,8 +205,8 @@ Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketSta
       if (!result || typeof result !== 'object') return false;
       for (const field of REQUIRED_SCORE_FIELDS) {
         const val = result[field];
-        // Must be a real, finite, non-zero whole-ish number — not missing, not 0, not a tiny decimal
-        if (typeof val !== 'number' || isNaN(val) || val <= 0) return false;
+        // Must be a real, finite number that's actually in a sensible range — not missing, not 0, not a tiny throwaway value like 9
+        if (typeof val !== 'number' || isNaN(val) || val < 15) return false;
       }
       return true;
     }
@@ -228,10 +241,10 @@ Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketSta
       // Final safety net — guarantee every bar shows a real, sensible number no matter what
       for (const field of REQUIRED_SCORE_FIELDS) {
         const val = result[field];
-        if (typeof val === 'number' && !isNaN(val) && val > 0) {
+        if (typeof val === 'number' && !isNaN(val) && val >= 15) {
           result[field] = Math.round(val);
         } else {
-          result[field] = 55; // safe mid-range fallback so the UI never shows a raw 0 or broken decimal
+          result[field] = 55; // safe mid-range fallback so the UI never shows a raw 0, tiny number, or broken decimal
         }
       }
       return res.status(200).json(result);
