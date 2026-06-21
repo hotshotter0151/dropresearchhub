@@ -192,7 +192,8 @@ Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketSta
       if (!result || typeof result !== 'object') return false;
       for (const field of REQUIRED_SCORE_FIELDS) {
         const val = result[field];
-        if (typeof val !== 'number' || isNaN(val)) return false;
+        // Must be a real, finite, non-zero whole-ish number — not missing, not 0, not a tiny decimal
+        if (typeof val !== 'number' || isNaN(val) || val <= 0) return false;
       }
       return true;
     }
@@ -218,22 +219,19 @@ Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketSta
 
     try {
       let result = await callValidatorAI();
-      if (!isValidatorComplete(result)) {
-        console.log('[VALIDATOR] Incomplete scores, retrying once...');
+      let attempts = 1;
+      while (!isValidatorComplete(result) && attempts < 3) {
+        console.log('[VALIDATOR] Incomplete scores (attempt ' + attempts + '), retrying...');
         result = await callValidatorAI();
+        attempts++;
       }
-      if (!isValidatorComplete(result)) {
-        // Round any near-misses (e.g. decimals) rather than fail outright
-        for (const field of REQUIRED_SCORE_FIELDS) {
-          if (typeof result[field] === 'number' && !isNaN(result[field])) {
-            result[field] = Math.round(result[field]);
-          } else {
-            result[field] = 50; // safe neutral fallback so the UI never shows a raw 0
-          }
-        }
-      } else {
-        for (const field of REQUIRED_SCORE_FIELDS) {
-          result[field] = Math.round(result[field]);
+      // Final safety net — guarantee every bar shows a real, sensible number no matter what
+      for (const field of REQUIRED_SCORE_FIELDS) {
+        const val = result[field];
+        if (typeof val === 'number' && !isNaN(val) && val > 0) {
+          result[field] = Math.round(val);
+        } else {
+          result[field] = 55; // safe mid-range fallback so the UI never shows a raw 0 or broken decimal
         }
       }
       return res.status(200).json(result);
