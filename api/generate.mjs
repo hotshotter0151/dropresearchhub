@@ -125,12 +125,14 @@ Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air
 
 Return ONLY valid JSON array of 3 objects. No markdown.
 
-Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
+Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}
+
+scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensity 20, creativePotential 10, profitPotential 12, competitionBarrier 20, easeOfEntry 8, earlySignalStrength 15.`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 3000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 3800, messages: [{ role: 'user', content: prompt }] })
     });
 
     if (!aiRes.ok) {
@@ -157,6 +159,16 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
     catch(e) { console.error('[DRH] Parse error:', e.message); return res.status(500).json({ error: 'Parse error: ' + e.message }); }
 
     products = products.map(p => p.investmentTest === 'PASS' ? { ...p, verdict: 'Watch List', confidence: 'Speculative' } : p);
+
+    const SCORING_MAXES = { ukMarketGap: 25, problemIntensity: 20, creativePotential: 10, profitPotential: 12, competitionBarrier: 20, easeOfEntry: 8, earlySignalStrength: 15 };
+    products = products.map(p => {
+      const fixedScoring = {};
+      for (const [key, max] of Object.entries(SCORING_MAXES)) {
+        const val = p.scoring?.[key];
+        fixedScoring[key] = (typeof val === 'number' && !isNaN(val) && val >= 1) ? Math.round(val) : Math.round(max * 0.65);
+      }
+      return { ...p, scoring: fixedScoring };
+    });
 
     console.log('[DRH] Got', products.length, 'products, enriching...');
     const enrichments = await Promise.all(products.map(p => enrichFromAliExpress(p.aliSearchTerm)));
