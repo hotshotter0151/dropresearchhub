@@ -179,24 +179,67 @@ Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-lau
   }
 
   if (body.productName) {
-    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
-        system: `UK ecommerce product analyst. Return ONLY valid JSON object, no markdown.\nFields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketStage":"string","growthScore":number,"competitionScore":number,"saturationRisk":"Low|Medium|High|Very High","verdict":"string","sellingPrice":"£X-£X","supplierCost":"£X-£X","margin":"XX%","opportunityWindow":"X-Y weeks","ukMarketNotes":"string","confidence":"High|Medium|Speculative","trendVelocity":"Accelerating|Rising|Stable|Declining","creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number,"subscriberExcitement":number,"opportunityMultiplier":number,"whyNow":"string","investmentTest":"TEST|PASS","whyItCouldWork":["s","s","s"],"risks":["s","s","s"],"creativeAngles":["s","s","s"],"growthGraph":[{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]}`,
-        messages: [{ role: 'user', content: `Analyse for UK dropshipping 2026: ${body.productName}` }]
-      })
-    });
-    const aiData = await aiRes.json();
-    const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    try {
+    const validatorSystemPrompt = `UK ecommerce product analyst. Return ONLY valid JSON object, no markdown, no preamble.
+
+Every numeric field below is REQUIRED and must be a whole number (integer) between 0 and 100. Do not omit any of them, do not return decimals, do not return null, do not return strings for these fields:
+growthScore, competitionScore, creativePotential, brandability, retailGap, contentLongevity, subscriberExcitement, opportunityMultiplier
+
+Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketStage":"string","growthScore":number,"competitionScore":number,"saturationRisk":"Low|Medium|High|Very High","verdict":"string","sellingPrice":"£X-£X","supplierCost":"£X-£X","margin":"XX%","opportunityWindow":"X-Y weeks","ukMarketNotes":"string","confidence":"High|Medium|Speculative","trendVelocity":"Accelerating|Rising|Stable|Declining","creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number,"subscriberExcitement":number,"opportunityMultiplier":number,"whyNow":"string","investmentTest":"TEST|PASS","whyItCouldWork":["s","s","s"],"risks":["s","s","s"],"creativeAngles":["s","s","s"],"growthGraph":[{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]}`;
+
+    const REQUIRED_SCORE_FIELDS = ['growthScore','competitionScore','creativePotential','brandability','retailGap','contentLongevity','subscriberExcitement','opportunityMultiplier'];
+
+    function isValidatorComplete(result) {
+      if (!result || typeof result !== 'object') return false;
+      for (const field of REQUIRED_SCORE_FIELDS) {
+        const val = result[field];
+        if (typeof val !== 'number' || isNaN(val)) return false;
+      }
+      return true;
+    }
+
+    async function callValidatorAI() {
+      const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
+          system: validatorSystemPrompt,
+          messages: [{ role: 'user', content: `Analyse for UK dropshipping 2026: ${body.productName}` }]
+        })
+      });
+      const aiData = await aiRes.json();
+      const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
       let cleaned = raw.replace(/```json|```/g,'').trim();
       const s = cleaned.indexOf('{');
       const e = cleaned.lastIndexOf('}');
       if (s !== -1 && e !== -1) cleaned = cleaned.slice(s, e+1);
-      return res.status(200).json(JSON.parse(cleaned));
-    } catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
+      return JSON.parse(cleaned);
+    }
+
+    try {
+      let result = await callValidatorAI();
+      if (!isValidatorComplete(result)) {
+        console.log('[VALIDATOR] Incomplete scores, retrying once...');
+        result = await callValidatorAI();
+      }
+      if (!isValidatorComplete(result)) {
+        // Round any near-misses (e.g. decimals) rather than fail outright
+        for (const field of REQUIRED_SCORE_FIELDS) {
+          if (typeof result[field] === 'number' && !isNaN(result[field])) {
+            result[field] = Math.round(result[field]);
+          } else {
+            result[field] = 50; // safe neutral fallback so the UI never shows a raw 0
+          }
+        }
+      } else {
+        for (const field of REQUIRED_SCORE_FIELDS) {
+          result[field] = Math.round(result[field]);
+        }
+      }
+      return res.status(200).json(result);
+    } catch(e) {
+      return res.status(500).json({ error: 'Validator parse error' });
+    }
   }
 
   if (body.system && body.messages) {
