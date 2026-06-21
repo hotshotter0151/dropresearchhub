@@ -167,7 +167,9 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
         const val = p.scoring?.[key];
         fixedScoring[key] = (typeof val === 'number' && !isNaN(val) && val >= 1) ? Math.round(val) : Math.round(max * 0.65);
       }
-      return { ...p, scoring: fixedScoring };
+      const scoringTotal = Object.values(fixedScoring).reduce((a,b)=>a+b,0);
+      const fixedEmergingScore = (typeof p.emergingScore === 'number' && !isNaN(p.emergingScore) && p.emergingScore >= 15) ? Math.round(p.emergingScore) : scoringTotal;
+      return { ...p, scoring: fixedScoring, emergingScore: fixedEmergingScore };
     });
 
     console.log('[DRH] Got', products.length, 'products, enriching...');
