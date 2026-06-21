@@ -125,9 +125,7 @@ Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air
 
 Return ONLY valid JSON array of 3 objects. No markdown.
 
-Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}
-
-The "scoring" object is REQUIRED and every value inside it must be a real whole number (not 0, not missing) within these exact maximums: ukMarketGap max 25, problemIntensity max 20, creativePotential max 10, profitPotential max 12, competitionBarrier max 20, easeOfEntry max 8, earlySignalStrength max 15. These 7 numbers should add up to roughly match emergingScore.`;
+Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}`;
 
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -160,17 +158,6 @@ The "scoring" object is REQUIRED and every value inside it must be a real whole 
 
     products = products.map(p => p.investmentTest === 'PASS' ? { ...p, verdict: 'Watch List', confidence: 'Speculative' } : p);
 
-    // Safety net — guarantee every product has a usable scoring breakdown, even if the AI dropped some values
-    const SCORING_MAXES = { ukMarketGap: 25, problemIntensity: 20, creativePotential: 10, profitPotential: 12, competitionBarrier: 20, easeOfEntry: 8, earlySignalStrength: 15 };
-    products = products.map(p => {
-      const fixedScoring = {};
-      for (const [key, max] of Object.entries(SCORING_MAXES)) {
-        const val = p.scoring?.[key];
-        fixedScoring[key] = (typeof val === 'number' && !isNaN(val) && val >= 1) ? Math.round(val) : Math.round(max * 0.65);
-      }
-      return { ...p, scoring: fixedScoring };
-    });
-
     console.log('[DRH] Got', products.length, 'products, enriching...');
     const enrichments = await Promise.all(products.map(p => enrichFromAliExpress(p.aliSearchTerm)));
     const serpImages = await Promise.all(products.map((p,i) => (enrichments[i]?.img) ? Promise.resolve('') : fetchProductImage(p.name)));
@@ -192,65 +179,24 @@ The "scoring" object is REQUIRED and every value inside it must be a real whole 
   }
 
   if (body.productName) {
-    const validatorSystemPrompt = `UK ecommerce product analyst. Return ONLY valid JSON object, no markdown, no preamble.
-
-Every numeric field below is REQUIRED and must be a whole number (integer) between 0 and 100. Do not omit any of them, do not return decimals, do not return null, do not return strings for these fields:
-growthScore, competitionScore, creativePotential, brandability, retailGap, contentLongevity, subscriberExcitement, opportunityMultiplier
-
-Fields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketStage":"string","growthScore":number,"competitionScore":number,"saturationRisk":"Low|Medium|High|Very High","verdict":"string","sellingPrice":"£X-£X","supplierCost":"£X-£X","margin":"XX%","opportunityWindow":"X-Y weeks","ukMarketNotes":"string","confidence":"High|Medium|Speculative","trendVelocity":"Accelerating|Rising|Stable|Declining","creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number,"subscriberExcitement":number,"opportunityMultiplier":number,"whyNow":"string","investmentTest":"TEST|PASS","whyItCouldWork":["s","s","s"],"risks":["s","s","s"],"creativeAngles":["s","s","s"],"growthGraph":[{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]}`;
-
-    const REQUIRED_SCORE_FIELDS = ['growthScore','competitionScore','creativePotential','brandability','retailGap','contentLongevity','subscriberExcitement','opportunityMultiplier'];
-
-    function isValidatorComplete(result) {
-      if (!result || typeof result !== 'object') return false;
-      for (const field of REQUIRED_SCORE_FIELDS) {
-        const val = result[field];
-        // Must be a real, finite number that's actually in a sensible range — not missing, not 0, not a tiny throwaway value like 9
-        if (typeof val !== 'number' || isNaN(val) || val < 15) return false;
-      }
-      return true;
-    }
-
-    async function callValidatorAI() {
-      const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
-          system: validatorSystemPrompt,
-          messages: [{ role: 'user', content: `Analyse for UK dropshipping 2026: ${body.productName}` }]
-        })
-      });
-      const aiData = await aiRes.json();
-      const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
+        system: `UK ecommerce product analyst. Return ONLY valid JSON object, no markdown.\nFields: {"productName":"string","opportunityScore":"A+|A|B+|B|C+|C|D","marketStage":"string","growthScore":number,"competitionScore":number,"saturationRisk":"Low|Medium|High|Very High","verdict":"string","sellingPrice":"£X-£X","supplierCost":"£X-£X","margin":"XX%","opportunityWindow":"X-Y weeks","ukMarketNotes":"string","confidence":"High|Medium|Speculative","trendVelocity":"Accelerating|Rising|Stable|Declining","creativePotential":number,"brandability":number,"retailGap":number,"contentLongevity":number,"subscriberExcitement":number,"opportunityMultiplier":number,"whyNow":"string","investmentTest":"TEST|PASS","whyItCouldWork":["s","s","s"],"risks":["s","s","s"],"creativeAngles":["s","s","s"],"growthGraph":[{"label":"W1","value":number},{"label":"W2","value":number},{"label":"W3","value":number},{"label":"W4","value":number},{"label":"W5","value":number},{"label":"W6","value":number}]}`,
+        messages: [{ role: 'user', content: `Analyse for UK dropshipping 2026: ${body.productName}` }]
+      })
+    });
+    const aiData = await aiRes.json();
+    const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    try {
       let cleaned = raw.replace(/```json|```/g,'').trim();
       const s = cleaned.indexOf('{');
       const e = cleaned.lastIndexOf('}');
       if (s !== -1 && e !== -1) cleaned = cleaned.slice(s, e+1);
-      return JSON.parse(cleaned);
-    }
-
-    try {
-      let result = await callValidatorAI();
-      let attempts = 1;
-      while (!isValidatorComplete(result) && attempts < 3) {
-        console.log('[VALIDATOR] Incomplete scores (attempt ' + attempts + '), retrying...');
-        result = await callValidatorAI();
-        attempts++;
-      }
-      // Final safety net — guarantee every bar shows a real, sensible number no matter what
-      for (const field of REQUIRED_SCORE_FIELDS) {
-        const val = result[field];
-        if (typeof val === 'number' && !isNaN(val) && val >= 15) {
-          result[field] = Math.round(val);
-        } else {
-          result[field] = 55; // safe mid-range fallback so the UI never shows a raw 0, tiny number, or broken decimal
-        }
-      }
-      return res.status(200).json(result);
-    } catch(e) {
-      return res.status(500).json({ error: 'Validator parse error' });
-    }
+      return res.status(200).json(JSON.parse(cleaned));
+    } catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
   }
 
   if (body.system && body.messages) {
