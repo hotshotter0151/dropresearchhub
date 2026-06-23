@@ -93,10 +93,6 @@ select.filter-input{min-width:140px}
 #toast.show{opacity:1;transform:translateY(0)}
 #toast.success{background:#166534}
 #toast.error{background:var(--red)}
-
-50%{transform:translateY(-6px)}}
-
-/* Stage progress */
 .stage-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;transition:all .3s;opacity:.4}
 .stage-row.active{opacity:1;background:#fff;border-color:var(--navy);box-shadow:0 2px 12px rgba(30,58,95,.08)}
 .stage-row.done{opacity:1;background:#f0fdf4;border-color:#bbf7d0}
@@ -107,10 +103,7 @@ select.filter-input{min-width:140px}
 .stage-sub{font-size:12px;color:var(--g500);margin-top:2px}
 .stage-status{font-size:12px;font-weight:700;flex-shrink:0}
 .stage-row.active .stage-status::before{content:'';display:inline-block;width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-.stage-row.done .stage-status{color:var(--green)}
 .stage-row.done .stage-status{color:var(--green);font-weight:800}.stage-row.done .stage-status::after{content:' ✓';font-size:14px;color:var(--green)}
-
-/* Products */
 .gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
 .gen-btn:hover:not(:disabled){background:var(--navy-light)}
 .gen-btn:disabled{opacity:.5;cursor:not-allowed}
@@ -134,13 +127,11 @@ select.filter-input{min-width:140px}
 .product-thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--g200);margin-top:6px;display:block}
 .product-controls{display:flex;flex-direction:column;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
 .grade-badge{border-radius:8px;padding:5px 12px;font-size:12px;font-weight:900;text-align:center}
-/* Toggle */
 .toggle-btn{width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;background:var(--g300);position:relative;transition:background .2s;flex-shrink:0}
 .toggle-btn::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .toggle-btn.on{background:var(--green)}
 .toggle-btn.on::after{left:22px}
 .toggle-label{font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
 </style>
@@ -223,7 +214,6 @@ select.filter-input{min-width:140px}
         <div class="card-pad">
           <div class="status-messages" id="status-messages">
             <div style="display:flex;flex-direction:column;gap:12px" id="stage-list">
-
               <div class="stage-row" id="stage-1">
                 <div class="stage-icon" id="stage-1-icon">⠿</div>
                 <div class="stage-content">
@@ -232,7 +222,6 @@ select.filter-input{min-width:140px}
                 </div>
                 <div class="stage-status" id="stage-1-status"></div>
               </div>
-
               <div class="stage-row" id="stage-2">
                 <div class="stage-icon" id="stage-2-icon">🧠</div>
                 <div class="stage-content">
@@ -241,7 +230,6 @@ select.filter-input{min-width:140px}
                 </div>
                 <div class="stage-status" id="stage-2-status"></div>
               </div>
-
               <div class="stage-row" id="stage-3">
                 <div class="stage-icon" id="stage-3-icon">🛒</div>
                 <div class="stage-content">
@@ -250,7 +238,6 @@ select.filter-input{min-width:140px}
                 </div>
                 <div class="stage-status" id="stage-3-status"></div>
               </div>
-
               <div class="stage-row" id="stage-4">
                 <div class="stage-icon" id="stage-4-icon">✅</div>
                 <div class="stage-content">
@@ -259,7 +246,6 @@ select.filter-input{min-width:140px}
                 </div>
                 <div class="stage-status" id="stage-4-status"></div>
               </div>
-
             </div>
           </div>
         </div>
@@ -269,12 +255,13 @@ select.filter-input{min-width:140px}
       <div class="card" id="pending-card" style="display:none;margin-bottom:16px">
         <div class="panel-head">
           <div><div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on what you want to publish. Generate more batches to keep adding.</div></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
             <button class="btn" onclick="toggleAllPending(true)">✓ All on</button>
             <button class="btn" onclick="toggleAllPending(false)">✕ All off</button>
             <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
             <button class="btn danger" onclick="clearPending()">🗑️ Clear queue</button>
             <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishSelected()">🚀 Publish selected</button>
+            <button class="gen-btn" style="background:#7C3AED;padding:8px 16px;font-size:13px" id="notify-btn" onclick="notifyMembers()">📧 Notify members</button>
           </div>
         </div>
         <div id="pending-list"></div>
@@ -315,38 +302,32 @@ select.filter-input{min-width:140px}
     </section>
 
     <!-- MARKET PULSE -->
-<div id="pulse" class="section">
-
-  <!-- Generate button -->
-  <div class="card" style="margin-bottom:16px">
-    <div class="panel-head">
-      <div><div class="panel-title">🌍 Hub's UK Market Pulse</div><div class="panel-sub">Generate Hub's weekly market intelligence — UK trends, opportunities and signals</div></div>
-      <button class="gen-btn" id="pulse-gen-btn" onclick="generatePulse()"><span id="pulse-gen-text">🌍 Generate Market Pulse</span></button>
-    </div>
-    <div id="pulse-status" style="display:none;padding:12px 16px;border-radius:10px;font-size:13px;margin-top:12px"></div>
-  </div>
-
-  <!-- Review queue -->
-  <div class="card" id="pulse-review-card" style="display:none;margin-bottom:16px">
-    <div class="panel-head">
-      <div><div class="panel-title">📋 Pulse Review Queue <span id="pulse-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on the opportunities you want to publish.</div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" onclick="toggleAllPulse(true)">✓ All on</button>
-        <button class="btn" onclick="toggleAllPulse(false)">✕ All off</button>
-        <button class="btn danger" onclick="clearPulseQueue()">🗑️ Clear</button>
-        <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishPulse()">🚀 Publish selected</button>
+    <div id="pulse" class="section">
+      <div class="card" style="margin-bottom:16px">
+        <div class="panel-head">
+          <div><div class="panel-title">🌍 Hub's UK Market Pulse</div><div class="panel-sub">Generate Hub's weekly market intelligence — UK trends, opportunities and signals</div></div>
+          <button class="gen-btn" id="pulse-gen-btn" onclick="generatePulse()"><span id="pulse-gen-text">🌍 Generate Market Pulse</span></button>
+        </div>
+        <div id="pulse-status" style="display:none;padding:12px 16px;border-radius:10px;font-size:13px;margin-top:12px"></div>
+      </div>
+      <div class="card" id="pulse-review-card" style="display:none;margin-bottom:16px">
+        <div class="panel-head">
+          <div><div class="panel-title">📋 Pulse Review Queue <span id="pulse-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on the opportunities you want to publish.</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" onclick="toggleAllPulse(true)">✓ All on</button>
+            <button class="btn" onclick="toggleAllPulse(false)">✕ All off</button>
+            <button class="btn danger" onclick="clearPulseQueue()">🗑️ Clear</button>
+            <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishPulse()">🚀 Publish selected</button>
+          </div>
+        </div>
+        <div id="pulse-review-list"></div>
+      </div>
+      <div style="padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:#1e40af;line-height:1.6">
+        💡 Generate every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
       </div>
     </div>
-    <div id="pulse-review-list"></div>
-  </div>
 
-  <!-- Tip -->
-  <div style="padding:14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;font-size:13px;color:#1e40af;line-height:1.6">
-    💡 Generate every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
-  </div>
-</div>
-
-<!-- CUSTOMERS -->
+    <!-- CUSTOMERS -->
     <section id="customers" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
@@ -417,15 +398,12 @@ select.filter-input{min-width:140px}
   </div>
 </div>
 
-
-
 <div id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
 
-// Auth — checks the real session created by admin-login.html
 (function() {
   let session = null;
   try { session = JSON.parse(sessionStorage.getItem('drh_session') || 'null'); } catch(e) {}
@@ -447,7 +425,6 @@ async function generatePulse() {
   statusEl.style.color = 'var(--g600)';
   statusEl.style.padding = '12px 16px';
   statusEl.textContent = 'Hub is scanning UK market signals...';
-
   try {
     const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({preview: true}) });
     const data = await res.json();
@@ -485,53 +462,24 @@ function renderPulseQueue() {
     </div>`).join('');
 }
 
-function deletePulseOpp(i) {
-  pendingPulse.opportunities.splice(i, 1);
-  renderPulseQueue();
-}
-
-function toggleAllPulse(on) {
-  document.querySelectorAll('[id^="ptoggle-pulse-"]').forEach(b => {
-    b.className = 'toggle-btn' + (on ? ' on' : '');
-  });
-}
-
-function clearPulseQueue() {
-  if (!confirm('Clear the pulse review queue?')) return;
-  pendingPulse = null;
-  document.getElementById('pulse-review-card').style.display = 'none';
-  document.getElementById('pulse-review-list').innerHTML = '';
-}
+function deletePulseOpp(i) { pendingPulse.opportunities.splice(i, 1); renderPulseQueue(); }
+function toggleAllPulse(on) { document.querySelectorAll('[id^="ptoggle-pulse-"]').forEach(b => { b.className = 'toggle-btn' + (on ? ' on' : ''); }); }
+function clearPulseQueue() { if (!confirm('Clear the pulse review queue?')) return; pendingPulse = null; document.getElementById('pulse-review-card').style.display = 'none'; document.getElementById('pulse-review-list').innerHTML = ''; }
 
 async function publishPulse() {
   if (!pendingPulse) return;
-  const selected = pendingPulse.opportunities.filter((_, i) => {
-    const btn = document.getElementById('ptoggle-pulse-' + i);
-    return btn && btn.classList.contains('on');
-  });
+  const selected = pendingPulse.opportunities.filter((_, i) => { const btn = document.getElementById('ptoggle-pulse-' + i); return btn && btn.classList.contains('on'); });
   if (!selected.length) { toast('Toggle on at least one opportunity', 'error'); return; }
-
   const publishData = { ...pendingPulse, opportunities: selected };
-
   try {
-    const res = await fetch('/api/pulse', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ publish: true, pulse: publishData })
-    });
+    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ publish: true, pulse: publishData }) });
     if (!res.ok) throw new Error('Publish failed');
     toast('Market Pulse published! Members can see it now.', 'success');
     clearPulseQueue();
-  } catch(e) {
-    toast('Error: ' + e.message, 'error');
-  }
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
 }
 
-function logout() {
-  sessionStorage.removeItem('drh_session');
-  sessionStorage.removeItem('drh_auth');
-  window.location.href = 'admin-login.html';
-}
+function logout() { sessionStorage.removeItem('drh_session'); sessionStorage.removeItem('drh_auth'); window.location.href = 'admin-login.html'; }
 
 async function sbFetch(path, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -542,7 +490,6 @@ async function sbFetch(path, options = {}) {
   return res.json();
 }
 
-// Nav
 const sectionTitles = {
   overview: ['Overview','Live data from Supabase & Stripe'],
   pulse: ['Market Pulse','Generate Hub weekly UK market intelligence'],
@@ -560,7 +507,6 @@ function show(id, btn) {
   document.getElementById('section-sub').textContent = sub;
 }
 
-// ── USERS ─────────────────────────────────────────────────────────────────
 let allUsers = [];
 async function loadUsers() {
   try {
@@ -639,7 +585,6 @@ function renderBilling(users) {
   </div>`;
 }
 
-// ── PRODUCTS ──────────────────────────────────────────────────────────────
 let pendingProducts = [];
 
 async function adminGenerate() {
@@ -649,7 +594,7 @@ async function adminGenerate() {
   const statusBox = document.getElementById('status-messages');
   statusBox.className = 'status-messages show';
 
-  function setStage(n, state) {
+  function setStage(n) {
     for(let i=1;i<=4;i++) {
       const row = document.getElementById('stage-'+i);
       const status = document.getElementById('stage-'+i+'-status');
@@ -660,12 +605,9 @@ async function adminGenerate() {
     }
   }
 
-  // Stage 1 — signals (runs for ~5s then Claude kicks in)
   setStage(1);
   const stage2Timer = setTimeout(() => setStage(2), 5500);
-  // Stage 2 — Claude researching (runs for ~20s)
   const stage3Timer = setTimeout(() => setStage(3), 22000);
-  // Stage 3 — AliExpress enrichment (~4s)
   const allTimers = [stage2Timer, stage3Timer];
   try {
     const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({mode:'emerging'}) });
@@ -684,7 +626,6 @@ async function adminGenerate() {
       const s4status = document.getElementById('stage-4-status');
       if(s4) s4.className='stage-row done';
       if(s4status) s4status.textContent='Done';
-
     }, 400);
     renderPendingList();
     document.getElementById('pending-card').style.display = 'block';
@@ -748,7 +689,24 @@ async function publishSelected() {
   } catch(e) { toast('Publish failed: ' + e.message, 'error'); }
 }
 
-// ── ALL PRODUCTS (historical with toggle + remove) ─────────────────────
+// ── NOTIFY MEMBERS ────────────────────────────────────────────────────────
+async function notifyMembers() {
+  const btn = document.getElementById('notify-btn');
+  if (!confirm('Send the weekly product notification email to all active members now?')) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+  try {
+    const res = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    toast(`✅ Sent to ${data.sent} member${data.sent !== 1 ? 's' : ''} — ${data.totalProducts} products previewed`, 'success');
+  } catch(e) {
+    toast('Notify failed: ' + e.message, 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = '📧 Notify members';
+}
+
 async function loadAllProducts() {
   const list = document.getElementById('all-products-list');
   list.innerHTML = '<div class="table-empty"><span class="spinner"></span>Loading...</div>';
@@ -793,7 +751,6 @@ async function toggleLiveProduct(name, idx) {
     const r = await fetch('/api/products', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name, is_live: newState}) });
     if (!r.ok) throw new Error('Toggle failed');
     toast(newState ? `✅ "${name}" is now live` : `"${name}" hidden from feed`, newState?'success':'');
-    // Update the label and badge in the row
     const row = document.getElementById('allrow-'+idx);
     if (row) {
       const label = row.querySelector('.toggle-label');
@@ -814,7 +771,6 @@ async function deleteProduct(name, idx) {
   } catch(e) { toast('Delete failed: ' + e.message, 'error'); }
 }
 
-// ── ADMIN VALIDATOR ──────────────────────────────────────────────────────
 async function runAdminValidator() {
   const input = document.getElementById('admin-validator-input').value.trim();
   const result = document.getElementById('admin-validator-result');
@@ -847,14 +803,10 @@ async function runAdminValidator() {
   }
 }
 
-// Grade colors
 function gradeColor(g) { if(!g)return'#374151'; if(g==='A+'||g==='A')return'#166534'; if(g==='B+'||g==='B')return'#92400E'; return'#991B1B'; }
 function gradeColorBg(g) { if(!g)return'#F3F4F6'; if(g==='A+'||g==='A')return'#DCFCE7'; if(g==='B+'||g==='B')return'#FEF3C7'; return'#FEE2E2'; }
 
-// ── MASS SELECT/DELETE ───────────────────────────────────────────────────
-function selectAllProducts(check) {
-  document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = check);
-}
+function selectAllProducts(check) { document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = check); }
 
 async function massDeleteProducts() {
   const checked = [...document.querySelectorAll('.product-checkbox:checked')];
@@ -871,7 +823,6 @@ async function massDeleteProducts() {
   loadAllProducts();
 }
 
-// ── HEALTH ────────────────────────────────────────────────────────────────
 async function loadHealth() {
   ['supabase','claude','stripe'].forEach(k => setHealth(k,'gold','Checking…','…'));
   try { await sbFetch('users?select=id&limit=1'); setHealth('supabase','green','Connected','Online'); } catch { setHealth('supabase','red','Connection failed','Error'); }
@@ -885,7 +836,6 @@ function setHealth(key,color,sub,badge) {
   if(badgeEl) { badgeEl.textContent=badge; badgeEl.className=`badge ${color==='green'?'green':color==='red'?'red':'gold'}`; }
 }
 
-// ── MODALS ────────────────────────────────────────────────────────────────
 let modalEmail='';
 function openStatusModal(email,status) { modalEmail=email; document.getElementById('modal-email').value=email; document.getElementById('modal-status').value=status||'trial'; document.getElementById('status-modal').classList.add('open'); }
 function closeModal() { document.getElementById('status-modal').classList.remove('open'); }
@@ -901,7 +851,6 @@ async function confirmDelete() {
 }
 ['status-modal','delete-modal'].forEach(id => { document.getElementById(id).addEventListener('click',e=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); }); });
 
-// ── HELPERS ───────────────────────────────────────────────────────────────
 function statusBadge(s) { const map={active:'green',trial:'gold',cancelled:'red'}; return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`; }
 function formatDate(d) { if(!d)return'—'; return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
