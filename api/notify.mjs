@@ -103,10 +103,9 @@ export default async function handler(req, res) {
 
   try {
     const { data: products, error: prodError } = await supabase
-      .from('products')
-      .select('data, is_live')
-      .eq('is_live', true)
-      .order('created_at', { ascending: false });
+  .from('products')
+  .select('data, is_live')
+  .eq('is_live', true);
 
     if (prodError) throw new Error('Could not load products: ' + prodError.message);
     if (!products || products.length === 0) {
