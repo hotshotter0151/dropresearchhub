@@ -26,6 +26,7 @@ async function verifyMemberAccess() {
     if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
   } catch(e) {}
 }
+verifyMemberAccess();
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
