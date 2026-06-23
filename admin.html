@@ -261,7 +261,6 @@ select.filter-input{min-width:140px}
             <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
             <button class="btn danger" onclick="clearPending()">🗑️ Clear queue</button>
             <button class="gen-btn" style="background:var(--green);padding:8px 16px;font-size:13px" onclick="publishSelected()">🚀 Publish selected</button>
-            <button class="gen-btn" style="background:#7C3AED;padding:8px 16px;font-size:13px" id="notify-btn" onclick="notifyMembers()">📧 Notify members</button>
           </div>
         </div>
         <div id="pending-list"></div>
@@ -276,6 +275,7 @@ select.filter-input{min-width:140px}
             <button class="btn" onclick="selectAllProducts(false)">✕ All hidden</button>
             <button class="btn danger" onclick="massDeleteProducts()">🗑️ Delete selected</button>
             <button class="btn" onclick="loadAllProducts()">↻ Refresh</button>
+            <button class="gen-btn" style="background:#7C3AED;padding:8px 16px;font-size:13px" id="notify-btn" onclick="notifyMembers()">📧 Notify members</button>
           </div>
         </div>
         <div id="all-products-list"><div class="table-empty"><span class="spinner"></span>Loading...</div></div>
