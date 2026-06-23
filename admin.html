@@ -510,7 +510,10 @@ function show(id, btn) {
 let allUsers = [];
 async function loadUsers() {
   try {
-    const users = await sbFetch('users?select=id,name,email,subscription_status,stripe_customer_id,created_at&order=created_at.desc');
+    const res = await fetch('/api/admin-users');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load users');
+    const users = data.users || [];
     allUsers = users;
     renderUsersTable(users);
     renderRecentSignups(users.slice(0,10));
