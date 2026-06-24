@@ -230,6 +230,18 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .compare-table td{padding:10px 14px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table .winner{background:#f0fdf4;font-weight:800;color:var(--green)}
+
+.saved-status-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px 0}
+.saved-status-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;color:var(--g700);box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.saved-status-pill.saved{color:var(--navy);border-color:#bfdbfe;background:#eff6ff}
+.saved-status-pill.testing{color:#7c3aed;border-color:#ddd6fe;background:#f5f3ff}
+.saved-status-pill.launched{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+.saved-status-pill.dropped{color:#991b1b;border-color:#fecaca;background:#fff1f2}
+.saved-status-control{width:100%;border:1px solid var(--g200);border-radius:10px;padding:9px 10px;font-size:12px;font-weight:800;font-family:inherit;background:#fff;color:var(--g700);outline:none;cursor:pointer;margin-bottom:10px}
+.saved-status-control:focus{border-color:var(--navy)}
+.saved-card-dropped{opacity:.55;filter:grayscale(.45)}
+.saved-card-dropped .saved-product-title{text-decoration:line-through;color:var(--g500)!important}
+.saved-card-status-badge{position:absolute;bottom:8px;left:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px;color:var(--g700);z-index:3}
 .hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
 .hub-loading.active{display:flex}
 .hub-img-wrap{position:relative;width:140px;height:140px}
@@ -453,6 +465,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       </div>
       <div id="compare-table"></div>
     </div>
+    <div id="saved-status-summary" class="saved-status-summary"></div>
     <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
     <div id="saved-grid">
       <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product card to save it here.</p></div>
@@ -1088,6 +1101,7 @@ async function toggleSaveProduct(idx, btn) {
     try {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
+      localStorage.removeItem(savedStatusKey(p.name));
       btn.textContent = '🤍';
       showToast('Removed from Saved Products Hub');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
@@ -1110,23 +1124,84 @@ function showSavedMessage() {
   setTimeout(() => { msg.style.opacity='0'; msg.style.transition='opacity .3s'; setTimeout(() => msg.remove(), 300); }, 2000);
 }
 
+
+function savedStatusKey(name) {
+  return 'drh_saved_status_' + String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+}
+function getSavedProductStatus(name) {
+  return localStorage.getItem(savedStatusKey(name)) || 'Saved';
+}
+function setSavedProductStatus(name, status) {
+  localStorage.setItem(savedStatusKey(name), status || 'Saved');
+}
+function getStatusMeta(status) {
+  const s = status || 'Saved';
+  const map = {
+    Saved: { label: 'Saved', emoji: '💛', className: 'saved' },
+    Testing: { label: 'Testing', emoji: '🧪', className: 'testing' },
+    Launched: { label: 'Launched', emoji: '🚀', className: 'launched' },
+    Dropped: { label: 'Dropped', emoji: '🗑️', className: 'dropped' }
+  };
+  return map[s] || map.Saved;
+}
+function updateSavedStatusSummary(saved) {
+  const el = document.getElementById('saved-status-summary');
+  if (!el) return;
+  saved = saved || [];
+  if (!saved.length) { el.innerHTML = ''; return; }
+  const counts = { Saved: 0, Testing: 0, Launched: 0, Dropped: 0 };
+  saved.forEach(p => { counts[getSavedProductStatus(p.name)] = (counts[getSavedProductStatus(p.name)] || 0) + 1; });
+  el.innerHTML = ['Saved','Testing','Launched','Dropped'].map(status => {
+    const meta = getStatusMeta(status);
+    const count = counts[status] || 0;
+    return `<div class="saved-status-pill ${meta.className}">${meta.emoji} ${count} ${status.toLowerCase()}</div>`;
+  }).join('');
+}
+function changeSavedProductStatus(index, status) {
+  const saved = window._savedProducts || [];
+  const p = saved[index];
+  if (!p) return;
+  setSavedProductStatus(p.name, status);
+  p._status = status;
+  renderSavedGrid(saved);
+  populateCompareDropdowns();
+  runCompare();
+  showToast(`${p.name} moved to ${status}`);
+}
+
 function renderSavedGrid(saved) {
   const grid = document.getElementById('saved-grid');
+  updateSavedStatusSummary(saved || []);
   if (!saved.length) {
+    window._savedProducts = [];
+    populateCompareDropdowns();
+    const compareTable = document.getElementById('compare-table');
+    if (compareTable) compareTable.innerHTML = '';
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
     return;
   }
+  saved = saved.map(p => ({ ...p, _status: getSavedProductStatus(p.name) }));
+  window._savedProducts = saved;
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
-  grid.innerHTML = saved.map((p, i) => `
-    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
-      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\\'")}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+  grid.innerHTML = saved.map((p, i) => {
+    const status = p._status || 'Saved';
+    const meta = getStatusMeta(status);
+    const droppedClass = status === 'Dropped' ? ' saved-card-dropped' : '';
+    const safeName = String(p.name || '').replace(/'/g,"\\'").replace(/\n/g,' ');
+    return `
+    <div class="${droppedClass.trim()}" style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
+      <button onclick="unsaveProduct('${safeName}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
       <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
         ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
         <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
+        <div class="saved-card-status-badge">${meta.emoji} ${meta.label}</div>
       </div>
       <div style="padding:14px;display:flex;flex-direction:column;flex:1">
-        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
+        <div class="saved-product-title" style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
         <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche || ''} · ${p.season || 'Evergreen'}</div>
+        <select class="saved-status-control" onchange="changeSavedProductStatus(${i},this.value)">
+          ${['Saved','Testing','Launched','Dropped'].map(opt => `<option value="${opt}" ${status===opt?'selected':''}>${getStatusMeta(opt).emoji} ${opt}</option>`).join('')}
+        </select>
         <div style="display:flex;gap:6px;margin-bottom:10px;flex-shrink:0">
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
@@ -1135,17 +1210,17 @@ function renderSavedGrid(saved) {
         <div style="font-size:12px;color:var(--g700);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;background:var(--g50);flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
         <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
       </div>
-    </div>`).join('');
-  window._savedProducts = saved;
+    </div>`;
+  }).join('');
   populateCompareDropdowns();
 }
-
 async function unsaveProduct(name) {
   const email = getUserEmail();
   if (!email) return;
   try {
     await fetch('/api/saved', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, productName: name}) });
     savedProductNames.delete(name);
+    localStorage.removeItem(savedStatusKey(name));
     updateAllSaveButtons();
     loadSavedProducts();
     showToast('Removed from saved products');
@@ -1159,7 +1234,7 @@ function populateCompareDropdowns() {
     if (!sel) return;
     const current = sel.value;
     sel.innerHTML = `<option value="" style="background:#142840;color:#fff">Select a product...</option>` +
-      saved.map((p,i) => `<option value="${i}" style="background:#142840;color:#fff">${p.emoji||'📦'} ${p.name}</option>`).join('');
+      saved.map((p,i) => { const st = getStatusMeta(p._status || getSavedProductStatus(p.name)); return `<option value="${i}" style="background:#142840;color:#fff">${st.emoji} ${p.name} — ${st.label}</option>`; }).join('');
     if (current) sel.value = current;
   });
 }
@@ -1178,6 +1253,7 @@ function runCompare() {
   function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
   function getLaunch(p) { if (!p.launchReadiness) return '—'; return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%'; }
   var metrics = [
+    { label: 'Status', av: getSavedProductStatus(a.name), bv: getSavedProductStatus(b.name), higher: false },
     { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
     { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
     { label: 'Problem Score', av: a.problemScore||'—', bv: b.problemScore||'—', higher: true },
