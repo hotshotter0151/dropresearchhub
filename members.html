@@ -28,3 +28,1292 @@ async function verifyMemberAccess() {
 }
 verifyMemberAccess();
 </script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;
+  --white:#fff;--off:#F8FAFF;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
+  --green:#16A34A;--green-bg:#DCFCE7;
+  --red:#DC2626;--red-bg:#FEE2E2;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6;overflow-x:hidden}
+.topnav{position:sticky;top:0;z-index:100;background:var(--navy-dark);height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 3%;box-shadow:0 2px 20px rgba(0,0,0,.18)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px}
+.nav-logo-bar{width:5px;border-radius:2px;background:var(--navy)}
+.nav-logo-bar.g{background:var(--gold)}
+.nav-logo-text{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.nav-logo-text span{color:var(--gold)}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{background:none;border:none;color:rgba(255,255,255,.6);font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .15s}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-tab.active{background:#fff;color:var(--navy)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-user{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.nav-signout{color:rgba(255,255,255,.5);font-size:12px;background:none;border:none;cursor:pointer;font-family:inherit}
+.nav-signout:hover{color:#fff}
+.view{display:none}.view.active{display:block}
+.page-header{background:var(--navy);padding:40px 3% 36px;color:#fff}
+.page-header h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+.page-header p{color:rgba(255,255,255,.7);font-size:15px;max-width:560px}
+.header-meta{display:flex;align-items:center;gap:16px;margin-top:16px;flex-wrap:wrap}
+.header-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700}
+.header-badge.green{background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4);color:#86efac}
+.products-section{padding:28px 3%}
+.products-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-btn{background:#fff;border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.filter-btn:hover:not(.active){border-color:var(--navy);color:var(--navy)}
+.toolbar-right{font-size:13px;color:var(--g400)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.product-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;transition:all .18s;cursor:pointer;display:flex;flex-direction:column;height:100%}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(30,58,95,.1);border-color:var(--g300)}
+.product-card-img{height:200px;background:#fff;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:52px;border-bottom:1px solid var(--g100);flex-shrink:0}
+.product-card-img img{max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:12px}
+.trend-badge{position:absolute;top:12px;left:12px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;padding:5px 10px;z-index:2}
+.stage-badge{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;color:var(--navy);font-size:11px;font-weight:800;padding:5px 9px;z-index:2}
+.product-card-body{padding:16px;display:flex;flex-direction:column;flex:1;gap:0}
+.product-card-name{font-size:15px;font-weight:800;color:var(--g900);letter-spacing:-.2px;margin-bottom:3px}
+.product-card-niche{font-size:12px;color:var(--g400);margin-bottom:12px}
+.product-card-why{font-size:12px;color:var(--g600);line-height:1.55;padding:10px;background:var(--g50);border-radius:10px;border-left:3px solid var(--gold)}
+.mini-scores{display:flex;gap:8px;margin-bottom:14px;margin-top:12px}
+.mini-score{flex:1;text-align:center;background:var(--g50);border-radius:10px;padding:8px 4px;border:1px solid var(--g100)}
+.mini-score-label{font-size:9px;color:var(--g400);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.mini-score-val{font-size:14px;font-weight:900;color:var(--g900);margin-top:2px}
+.analyse-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto}
+.analyse-btn:hover{background:var(--navy-light)}
+.analyse-btn svg{width:16px;height:16px}
+.empty-state{text-align:center;padding:80px 20px;color:var(--g400)}
+.empty-state h3{font-size:20px;color:var(--g600);margin-bottom:8px}
+.empty-state p{font-size:14px;margin-bottom:24px}
+.analysis-header{background:var(--navy);padding:28px 3%;color:#fff;display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.back-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.back-btn:hover{background:rgba(255,255,255,.18)}
+.analysis-header-info{flex:1}
+.analysis-header-info h1{font-size:28px;font-weight:900;letter-spacing:-.8px;margin-bottom:4px}
+.analysis-header-info p{color:rgba(255,255,255,.65);font-size:14px}
+.analysis-body{padding:28px 3%;display:flex;flex-direction:column;gap:20px;max-width:1200px;margin:0 auto}
+.score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
+.score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
+.score-card-value{font-size:36px;font-weight:900;letter-spacing:-1px}
+.score-card-sub{font-size:12px;color:var(--g400);margin-top:4px}
+.analysis-panel{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden}
+.analysis-panel-head{padding:18px 22px;border-bottom:1px solid var(--g200);display:flex;align-items:center;gap:10px}
+.analysis-panel-head h2{font-size:17px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
+.analysis-panel-body{padding:20px 22px}
+.growth-panel-inner{background:var(--navy-dark);border-radius:16px;padding:20px 22px 16px;position:relative;overflow:hidden}
+.growth-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
+.growth-title{font-size:14px;font-weight:800;color:#fff}
+.growth-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.growth-window-badge{background:rgba(216,90,48,.15);border:1px solid rgba(216,90,48,.3);color:#f87171;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;align-self:flex-start}
+.growth-chart-wrap{position:relative;height:200px;margin:16px 0 8px}
+.growth-legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.growth-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)}
+.growth-legend-dot{width:8px;height:8px;border-radius:50%}
+.growth-why{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:12px 14px;margin-top:4px;border-radius:0 10px 10px 0}
+.growth-why-label{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:4px}
+.growth-why-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.65}
+.growth-progress-line{font-size:13px;color:rgba(255,255,255,.3);padding:5px 0;display:flex;align-items:center;gap:10px;transition:all .3s}
+.growth-progress-line.active{color:rgba(255,255,255,.9)}
+.growth-progress-line.active::before{content:'→ ';color:var(--gold)}
+.growth-progress-line.done{color:rgba(255,255,255,.5)}
+.growth-progress-line.done::before{content:'✓ ';color:#1D9E75}
+.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
+.research-link:hover{background:var(--off);border-color:var(--navy);transform:translateY(-1px)}
+.research-link-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.research-info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--g200);border:none;cursor:pointer;font-size:10px;font-weight:900;color:var(--g500);display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit;line-height:1;z-index:2}
+.research-info-btn:hover{background:var(--navy);color:#fff}
+.research-tooltip{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:230px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
+.research-tooltip::after{content:'';position:absolute;bottom:-5px;right:10px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
+.research-info-btn.open + .research-tooltip{display:block}
+.launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
+.launch-item.pass{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.launch-item.fail{background:var(--red-bg);border:1px solid #fecaca;color:#991b1b}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.calc-field{display:flex;flex-direction:column;gap:5px}
+.calc-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.calc-input-wrap{display:flex;align-items:center;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.calc-input-wrap:focus-within{border-color:var(--navy)}
+.calc-prefix{padding:10px 8px 10px 14px;font-size:14px;color:var(--g400);font-weight:700;flex-shrink:0}
+.calc-input{border:none;background:transparent;padding:10px 14px 10px 0;font-size:14px;font-family:inherit;color:var(--g900);outline:none;width:100%}
+.calc-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;width:100%}
+.calc-btn:hover{background:var(--navy-light)}
+.calc-results{display:none;margin-top:16px}
+.calc-results.show{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.calc-result-card{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;text-align:center}
+.calc-result-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:6px}
+.calc-result-val{font-size:20px;font-weight:900;color:var(--g900)}
+.calc-verdict-row{margin-top:10px;display:none}
+.calc-verdict-row.show{display:block}
+.calc-verdict{padding:14px 16px;border-radius:12px;font-size:13px;font-weight:700;text-align:center}
+.calc-verdict.good{background:var(--green-bg);color:#166534;border:1px solid #bbf7d0}
+.calc-verdict.tight{background:var(--amber-bg);color:#92400e;border:1px solid #fde68a}
+.calc-verdict.bad{background:var(--red-bg);color:#991b1b;border:1px solid #fecaca}
+.supplier-terms{display:flex;flex-direction:column;gap:8px}
+.supplier-term{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px 14px}
+.supplier-term-num{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.supplier-term-text{font-size:13px;font-weight:600;color:var(--g700);flex:1}
+.supplier-term-link{background:var(--navy);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:all .15s;display:inline-block}
+.supplier-term-link:hover{background:var(--navy-light)}
+.insight-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.insight-col{border-radius:14px;padding:16px}
+.insight-col.green{background:var(--green-bg);border:1px solid #bbf7d0}
+.insight-col.red{background:var(--red-bg);border:1px solid #fecaca}
+.insight-col.blue{background:#eff6ff;border:1px solid #bfdbfe}
+.insight-col h3{font-size:13px;font-weight:800;margin-bottom:10px}
+.insight-col.green h3{color:#15803d}
+.insight-col.red h3{color:#b91c1c}
+.insight-col.blue h3{color:#1d4ed8}
+.insight-col ul{padding-left:16px;font-size:13px;line-height:1.75}
+.insight-col.green ul{color:#166534}
+.insight-col.red ul{color:#991b1b}
+.insight-col.blue ul{color:#1e40af}
+.creative-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.creative-label{font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:.6px;font-weight:700;display:block;margin-bottom:5px}
+.creative-select{width:100%;border:1px solid var(--g200);border-radius:10px;padding:11px 12px;font-size:14px;font-family:inherit;background:#fff;color:var(--g900);outline:none}
+.creative-select:focus{border-color:var(--navy)}
+.generate-creative-btn{background:var(--gold);color:var(--navy);border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:8px}
+.generate-creative-btn:hover{background:var(--gold-light)}
+.generate-creative-btn:disabled{background:var(--g200);color:var(--g400);cursor:default}
+.creative-output{display:none;margin-top:18px}
+.creative-output.show{display:block}
+.variation-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.var-tab{background:var(--g100);border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.var-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.script-tabs{display:flex;gap:6px;margin-bottom:12px}
+.script-tab{background:none;border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.script-tab.active{background:var(--navy-dark);color:#fff;border-color:var(--navy-dark)}
+.script-box{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;font-size:13px;color:var(--g700);line-height:1.8;white-space:pre-wrap;min-height:120px}
+.brief-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;font-size:13px;color:#166534;line-height:1.8;white-space:pre-wrap}
+.copy-row{display:flex;gap:8px;margin-top:10px}
+.copy-btn{background:#fff;border:1px solid var(--g200);color:var(--g700);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.copy-btn:hover{border-color:var(--navy);color:var(--navy)}
+.meta-info-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.meta-info-card{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:12px}
+.meta-info-card-label{font-size:10px;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:4px}
+.meta-info-card-val{font-size:13px;color:var(--g700);font-weight:500}
+.validator-hero{background:var(--navy);padding:48px 3%;text-align:center;color:#fff}
+.validator-hero h1{font-size:34px;font-weight:900;letter-spacing:-1px;margin-bottom:10px}
+.validator-hero p{color:rgba(255,255,255,.7);font-size:15px;max-width:520px;margin:0 auto 28px}
+.validator-input-wrap{display:flex;gap:0;background:#fff;border-radius:14px;padding:6px;max-width:640px;margin:0 auto 12px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.validator-input{flex:1;border:none;outline:none;padding:12px 14px;font-size:14px;font-family:inherit;color:var(--g900);background:transparent;border-radius:10px}
+.validator-submit{background:var(--gold);color:var(--navy);border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.validator-submit:hover{background:var(--gold-light)}
+.validator-hint{color:rgba(255,255,255,.5);font-size:12px}
+.validator-supported{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.supported-tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.8);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700}
+.validator-result-area{padding:28px 3%;max-width:1200px;margin:0 auto}
+.validator-empty{text-align:center;padding:60px 20px;color:var(--g400)}
+.validator-empty h3{font-size:18px;color:var(--g600);margin-bottom:8px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-messages{margin-top:14px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px;display:none}
+.status-messages.show{display:block}
+.status-line{font-size:13px;color:var(--g500);padding:3px 0;display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .4s}
+.status-line.show{opacity:1}
+.status-line.done{color:var(--green)}
+.status-line.done::before{content:'✓ '}
+.status-line.active::before{content:'→ ';color:var(--navy)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
+.compare-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.compare-table th{background:var(--g50);padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);font-weight:700;border-bottom:1px solid var(--g200)}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .winner{background:#f0fdf4;font-weight:800;color:var(--green)}
+.hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
+.hub-loading.active{display:flex}
+.hub-img-wrap{position:relative;width:140px;height:140px}
+.hub-img-wrap img{width:140px;height:140px;object-fit:contain;animation:hubFloat 3s ease-in-out infinite}
+.hub-dots{position:absolute;top:-10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.hub-dot{width:6px;height:6px;border-radius:50%;background:var(--gold,#F59E0B);animation:hubDot 1.4s ease-in-out infinite}
+.hub-dot:nth-child(2){animation-delay:.2s;background:#3B82F6}
+.hub-dot:nth-child(3){animation-delay:.4s;background:#10B981}
+.hub-msg{font-size:14px;font-weight:600;color:var(--g600,#4B5563);animation:hubPulse 2s ease-in-out infinite}
+@keyframes hubFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
+@keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+@keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;transition:transform .25s ease;overflow-y:auto}
+.sb-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.sb-logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.sb-logo-bar.g{background:var(--gold)}
+.sb-logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}
+.sb-logo-text span{color:var(--gold)}
+.sb-hub{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sb-hub-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.sb-hub-avatar img{width:100%;height:100%;object-fit:cover}
+.sb-hub-name{font-size:13px;font-weight:800;color:#fff}
+.sb-hub-status{font-size:11px;color:rgba(255,255,255,.5)}
+.sb-hub-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+.sb-nav{padding:12px;flex:1}
+.sb-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
+.sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.12);color:#fff}
+.sb-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
+.sb-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+.sb-overlay.show{display:block}
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px}
+.mobile-logo-text{font-size:15px;font-weight:800;color:#fff}
+.mobile-logo-text span{color:var(--gold)}
+.members-main{margin-left:240px;min-height:100vh;transition:margin .25s ease}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .members-main{margin-left:0}
+  .mobile-topbar{display:flex}
+  .topnav{display:none}
+  #header-top-card{display:none!important}
+  .score-row{grid-template-columns:repeat(2,1fr)}
+  .insight-cols{grid-template-columns:1fr}
+  .research-grid{grid-template-columns:repeat(2,1fr)}
+  .creative-form{grid-template-columns:1fr}
+  .meta-info-row{grid-template-columns:1fr}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .calc-results.show{grid-template-columns:1fr 1fr}
+  .launch-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .products-grid{grid-template-columns:1fr}
+  .score-row{grid-template-columns:repeat(2,1fr)}
+  .research-grid{grid-template-columns:1fr}
+  .nav-tabs{display:none}
+  .analysis-header{flex-direction:column}
+  .calc-results.show{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="members-main" id="members-main">
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
+<div class="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+  <div class="mobile-logo-text">Drop<span>Research</span> Hub</div>
+  <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <a class="sb-logo-wrap" href="dashboard.html">
+      <div class="sb-logo-icon">
+        <div class="sb-logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="sb-logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="sb-logo-bar" style="height:20px"></div>
+        <div class="sb-logo-bar g" style="height:15px"></div>
+      </div>
+      <div class="sb-logo-text">Drop<span>Research</span> Hub</div>
+    </a>
+  </div>
+  <div class="sb-hub">
+    <div class="sb-hub-avatar">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="sb-hub-name">Hub</div>
+      <div class="sb-hub-status" id="sb-hub-status">Ready to research</div>
+    </div>
+    <div class="sb-hub-dot"></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">This Week</div>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🏠</span> Dashboard</a>
+    <a class="sb-item" href="dashboard.html#weekly"><span class="sb-item-icon">📦</span> Weekly Picks</a>
+    <button class="sb-item active" onclick="showView('products',this);closeSidebar()"><span class="sb-item-icon">📈</span> Emerging Products</button>
+    <div class="sb-section" style="margin-top:8px">Hub's Research</div>
+    <a class="sb-item" href="pulse.html"><span class="sb-item-icon">🌍</span> UK Market Pulse</a>
+    <div class="sb-section" style="margin-top:8px">Ask Hub</div>
+    <button class="sb-item" onclick="showView('validator',this);closeSidebar()"><span class="sb-item-icon">🔍</span> About A Product</button>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
+    <div class="sb-section" style="margin-top:8px">Your Research</div>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">💛</span> Saved Products</button>
+    <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">⚖️</span> Compare Products</button>
+  </nav>
+  <div class="sb-bottom">
+    <div class="sb-user" id="sb-user-email">Members area</div>
+    <button class="sb-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+  </div>
+</aside>
+
+<div class="view active" id="view-products">
+  <div style="background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);padding:32px 3% 28px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-60px;right:200px;width:300px;height:300px;background:rgba(245,158,11,.06);border-radius:50%;pointer-events:none"></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;max-width:1200px;margin:0 auto">
+
+      <!-- LEFT: Hub + info -->
+      <div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <div style="position:relative;flex-shrink:0">
+            <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:52px;height:52px;border-radius:50%;border:2px solid rgba(245,158,11,.5);display:block" onerror="this.outerHTML='<div style=width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:24px>🤖</div>'">
+            <div style="position:absolute;bottom:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--navy-dark);box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">Hub's emerging products</div>
+            <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1">Find them first.<br>Move before the window closes.</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:20px;max-width:560px">
+          <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-style:italic">"I've gone through hundreds of products this week. These are the ones that passed my 12-point framework — early signal, strong margin, low saturation. Get in before the window closes."</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:999px;padding:6px 14px">
+            <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+            <span style="font-size:12px;font-weight:700;color:#86efac">Feed live</span>
+          </div>
+          <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff" id="product-count-badge">Loading...</div>
+          <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:rgba(255,255,255,.7)" id="last-updated-badge">Updated by admin</div>
+          <div style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gold)" id="top-grade-badge" style="display:none"></div>
+          <div style="background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#86efac" id="avg-margin-badge" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Top product card -->
+      <div id="header-top-card" style="display:none;width:240px;flex-shrink:0">
+        <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.35)">
+          <div style="height:160px;position:relative;overflow:hidden;background:var(--g50);display:flex;align-items:center;justify-content:center" id="header-card-img-wrap">
+            <span style="font-size:48px">📦</span>
+          </div>
+          <div style="padding:14px">
+            <div style="font-size:13px;font-weight:800;color:var(--g900);margin-bottom:2px;line-height:1.3" id="header-card-name">—</div>
+            <div style="font-size:11px;color:var(--g400);margin-bottom:10px" id="header-card-niche">—</div>
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <div style="flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:6px 4px;border:1px solid var(--g100)"><div style="font-size:8px;color:var(--g400);text-transform:uppercase;font-weight:700">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)" id="header-card-trend">—</div></div>
+              <div style="flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:6px 4px;border:1px solid var(--g100)"><div style="font-size:8px;color:var(--g400);text-transform:uppercase;font-weight:700">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)" id="header-card-margin">—</div></div>
+              <div style="flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:6px 4px;border:1px solid var(--g100)"><div style="font-size:8px;color:var(--g400);text-transform:uppercase;font-weight:700">Sat.</div><div style="font-size:11px;font-weight:900;color:var(--green)" id="header-card-sat">—</div></div>
+            </div>
+            <div style="font-size:11px;color:var(--g500);line-height:1.5;font-style:italic;padding:8px 10px;background:var(--g50);border-left:2px solid var(--gold);border-radius:0 6px 6px 0" id="header-card-why"></div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:8px;font-size:11px;color:rgba(255,255,255,.35);font-weight:600">⭐ Hub's top pick this week</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="products-section">
+    <div class="products-toolbar">
+      <div class="toolbar-left" id="niche-filters"></div>
+      <div class="toolbar-right" id="toolbar-count"></div>
+    </div>
+    <div id="members-hub-area" class="hub-loading" style="display:none;grid-column:1/-1"></div>
+    <div class="products-grid" id="products-grid">
+      <div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-analysis">
+  <div class="analysis-header">
+    <button class="back-btn" onclick="showView('products',null)">← Back to products</button>
+    <div class="analysis-header-info">
+      <h1 id="analysis-product-name">Product Analysis</h1>
+      <p id="analysis-product-niche">Loading...</p>
+    </div>
+  </div>
+  <div class="analysis-body" id="analysis-body"></div>
+</div>
+
+<div class="view" id="view-saved">
+  <div class="page-header">
+    <h1>💛 Saved Products Hub</h1>
+    <p>Your saved products — compare any two side by side to find your best opportunity.</p>
+    <div class="header-meta">
+      <div class="header-badge green" id="saved-count-badge">Loading...</div>
+    </div>
+  </div>
+  <div style="padding:28px 3%">
+    <div style="background:var(--navy-dark);border-radius:20px;padding:24px;margin-bottom:28px">
+      <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:4px">⚖️ Compare Two Products</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px">Select two saved products to compare them side by side</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:20px">
+        <select id="compare-select-a" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product A...</option>
+        </select>
+        <div style="font-size:20px;color:rgba(255,255,255,.4);font-weight:700;text-align:center">vs</div>
+        <select id="compare-select-b" onchange="runCompare()" style="width:100%;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;background:rgba(255,255,255,.08);color:#fff;outline:none;cursor:pointer">
+          <option value="" style="background:#142840;color:#fff">Select product B...</option>
+        </select>
+      </div>
+      <div id="compare-table"></div>
+    </div>
+    <div style="font-size:18px;font-weight:800;color:var(--g900);margin-bottom:16px">Your Saved Products</div>
+    <div id="saved-grid">
+      <div class="empty-state"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product card to save it here.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-validator">
+  <div class="validator-hero">
+    <h1>Is it worth building a brand around?</h1>
+    <p>Paste the link below and we'll tell you whether it's worth your time and money.</p>
+    <div class="validator-input-wrap">
+      <input class="validator-input" id="validator-input" placeholder="Paste AliExpress, Temu or Alibaba product URL...">
+      <button class="validator-submit" onclick="runValidator()">Analyse →</button>
+    </div>
+    <div class="validator-hint">We extract the product details from your link and give you a full brand-readiness assessment</div>
+    <div class="validator-supported">
+      <span class="supported-tag">AliExpress</span>
+      <span class="supported-tag">Temu</span>
+      <span class="supported-tag">Alibaba</span>
+    </div>
+  </div>
+  <div class="validator-result-area" id="validator-result">
+    <div class="validator-empty"><h3>Paste a product URL above to get started</h3><p>We'll analyse market demand, competition level, brand potential and give you a clear verdict.</p></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="manage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
+    <h2 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px">Manage Subscription</h2>
+    <p style="font-size:14px;color:var(--g500);margin-bottom:24px;line-height:1.6">You'll be taken to the Stripe customer portal where you can update your payment method, view invoices or cancel your subscription.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="closeManageModal()" style="border:1px solid var(--g200);background:#fff;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>
+      <button id="portal-btn" onclick="goToPortal()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer">Open Portal →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let allProducts = [];
+let activeNiche = 'all';
+let creativeVariations = [];
+let currentVariation = 0;
+let activeGrowthChart = null;
+
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function gradeColor(g) {
+  if (!g) return '#6B7280';
+  const s = String(g).toUpperCase();
+  if (s.startsWith('A')) return '#16A34A';
+  if (s === 'B') return '#D97706';
+  if (s === 'C') return '#EA580C';
+  return '#DC2626';
+}
+function gradeColorBg(g) {
+  const s = String(g || '').toUpperCase();
+  if (s.startsWith('A')) return '#DCFCE7';
+  if (s === 'B') return '#FEF3C7';
+  if (s === 'C') return '#FEE2E2';
+  return '#FEE2E2';
+}
+
+function renderProductsGrid() {
+  const grid = document.getElementById('products-grid');
+  const list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche||'').toLowerCase() === activeNiche.toLowerCase());
+  document.getElementById('toolbar-count').textContent = `${list.length} product${list.length!==1?'s':''}`;
+  if (!list.length) { grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back Monday when new products drop.</p></div>`; return; }
+  grid.innerHTML = list.map((p,i) => `
+    <div class="product-card" onclick="openAnalysis(${i})">
+      <div class="product-card-img" style="background:#fff">
+        ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
+        <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
+        <div class="stage-badge">${p.verdict||p.stage||'Emerging'}</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-card-name">${p.name}</div>
+        <div class="product-card-niche">${p.niche} · ${p.season||'Evergreen'}</div>
+        <div class="product-card-why" style="flex:1;margin-bottom:12px">${p.whyEmerging||p.whyNow||'Early growth signal detected.'}</div>
+        <div class="mini-scores" style="margin-bottom:14px">
+          <div class="mini-score"><div class="mini-score-label">Trend</div><div class="mini-score-val" style="color:var(--navy)">${p.trendScore||'—'}</div></div>
+          <div class="mini-score"><div class="mini-score-label">Problem</div><div class="mini-score-val" style="color:var(--green)">${p.problemScore||'—'}</div></div>
+          <div class="mini-score"><div class="mini-score-label">Sat. Risk</div><div class="mini-score-val" style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 48px;gap:8px">
+          <button class="analyse-btn" style="height:48px;margin:0" onclick="event.stopPropagation();openAnalysis(${i})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Analyse
+          </button>
+          <button onclick="event.stopPropagation();toggleSaveProduct(${i},this)" id="save-btn-${i}" title="Save to Saved Products Hub" style="height:48px;width:48px;background:#fff;border:1px solid var(--g200);border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">🤍</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function buildNicheFilters() {
+  const niches=[...new Set(allProducts.map(p=>p.niche).filter(Boolean))];
+  const wrap=document.getElementById('niche-filters');
+  wrap.innerHTML=`<select id="niche-select" onchange="setNicheFilter(this.value)" style="background:#fff;border:1px solid var(--g200);color:var(--g700);border-radius:10px;padding:8px 36px 8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;outline:none;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236B7280%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 12px center;transition:border-color .15s"><option value="all">All niches</option>${niches.map(n=>`<option value="${n}">${n}</option>`).join('')}</select>`;
+}
+function setNicheFilter(niche){activeNiche=niche;renderProductsGrid();}
+
+function openAnalysis(idx) {
+  const p=allProducts[idx];if(!p)return;
+  showView('analysis',null);
+  document.getElementById('analysis-product-name').textContent=p.name;
+  document.getElementById('analysis-product-niche').textContent=`${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`;
+  buildAnalysisBody(p);
+}
+
+function openAnalysisFromSaved(idx) {
+  const saved = window._savedProducts || [];
+  const p = saved[idx];
+  if (!p) return;
+  showView('analysis', null);
+  document.getElementById('analysis-product-name').textContent = p.name;
+  document.getElementById('analysis-product-niche').textContent = `${p.niche||''} · Saved product`;
+  buildAnalysisBody(p);
+}
+
+function buildAnalysisBody(p) {
+  const body=document.getElementById('analysis-body');
+  const aliQ=encodeURIComponent(p.aliSearchTerm||p.name);
+  const metaQ=encodeURIComponent(p.name);
+  const tiktokQ=encodeURIComponent(p.name);
+  const pinterestQ=encodeURIComponent(p.googleTrendsKeyword||p.name);
+  const launchItems=p.launchReadiness||[
+    {check:'Demonstrable in under 10 seconds of video',pass:true},
+    {check:'Solves a problem most people recognise instantly',pass:true},
+    {check:'Available on AliExpress under £10',pass:true},
+    {check:'Sellable between £20–£60',pass:true},
+    {check:'Not already saturating UK TikTok feeds',pass:true},
+    {check:'Strong impulse-buy angle',pass:true},
+    {check:'Lightweight and easy to ship',pass:true},
+    {check:'No legal or compliance issues',pass:true}
+  ];
+  const passCount=launchItems.filter(i=>i.pass).length;
+  const launchPct=Math.round((passCount/launchItems.length)*100);
+  const launchColor=launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+  const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+  const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
+
+console.log('PRODUCT BEING SCORED:', p);
+console.log('SCORING OBJECT:', p.scoring);
+
+  // Build launch plan URL with product name and image
+  const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
+
+  body.innerHTML=`
+    <div class="score-row">
+      <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.emergingScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
+      <div class="score-card"><div class="score-card-label">Trend Score</div><div class="score-card-value" style="color:var(--navy)">${p.trendScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Growth signal strength</div></div>
+      <div class="score-card"><div class="score-card-label">Sat. Risk</div><div class="score-card-value" style="font-size:22px;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div><div class="score-card-sub">Competition level</div></div>
+      <div class="score-card"><div class="score-card-label">Est. Margin</div><div class="score-card-value" style="color:var(--green)">${p.margin||'—'}</div><div class="score-card-sub">${p.supplierCost?`Cost: ${p.supplierCost}`:'Estimated margin'}</div></div>
+    </div>
+
+    <div style="background:${p.verdict==='Strong Opportunity'?'var(--green-bg)':p.verdict==='Watch List'?'var(--amber-bg)':'var(--red-bg)'};border:1px solid ${p.verdict==='Strong Opportunity'?'#bbf7d0':p.verdict==='Watch List'?'#fde68a':'#fecaca'};border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="font-size:28px">${p.verdict==='Strong Opportunity'?'✅':p.verdict==='Watch List'?'👀':'❌'}</div>
+      <div style="flex:1"><div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict||'Under Review'}</div><div style="font-size:13px;color:var(--g700);margin-top:3px">${p.verdictReason||''}</div></div>
+      <div style="text-align:right"><div style="font-size:11px;color:var(--g400);text-transform:uppercase;font-weight:700">Selling Price</div><div style="font-size:18px;font-weight:900;color:var(--navy)">${p.sellingPrice||p.margin||'—'}</div></div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">📊</span><h2>Scoring breakdown</h2></div>
+      <div class="analysis-panel-body">
+        ${[{label:'UK Market Gap',key:'ukMarketGap',max:25,color:'var(--navy)'},{label:'Problem Intensity',key:'problemIntensity',max:20,color:'var(--green)'},{label:'Creative Potential',key:'creativePotential',max:10,color:'#8B5CF6'},{label:'Profit Potential',key:'profitPotential',max:12,color:'var(--gold)'},{label:'Competition Barrier',key:'competitionBarrier',max:20,color:'var(--amber)'},{label:'Ease of Entry',key:'easeOfEntry',max:8,color:'#06B6D4'},{label:'Signal Strength',key:'earlySignalStrength',max:15,color:'#10B981'}].map(s=>{const val=p.scoring?.[s.key]||0;const pct=Math.round((val/s.max)*100);return`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:700;color:var(--g700)">${s.label}</span><span style="font-size:13px;font-weight:900;color:${s.color}">${val}/${s.max}</span></div><div style="background:var(--g100);border-radius:999px;height:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${s.color};border-radius:999px;transition:width .6s"></div></div></div>`;}).join('')}
+        <div style="border-top:2px solid var(--g200);padding-top:14px;margin-top:4px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px;font-weight:800;color:var(--g900)">Total Score</span><span style="font-size:24px;font-weight:900;color:${gradeColor(p.grade)}">${p.emergingScore||Object.values(p.scoring||{}).reduce((a,b)=>a+b,0)}/100</span></div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">📈</span><h2>Growth projection — ${p.name} — next 12 weeks</h2></div>
+      <div class="analysis-panel-body" style="padding:0">
+        <div class="growth-panel-inner" style="border-radius:0 0 20px 20px">
+          <div id="growth-generate-state">
+            <div style="text-align:center;padding:40px 20px">
+              <div style="font-size:40px;margin-bottom:16px">📊</div>
+              <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px">Generate Growth Projection</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:24px;line-height:1.6">Our research engine will analyse this product across<br>TikTok, Meta, AliExpress and more to build your projection.</div>
+              <button id="growth-gen-btn" data-product="${encodeURIComponent(JSON.stringify({name:p.name,niche:p.niche||'',trendScore:p.trendScore||50,saturationRisk:p.saturationRisk||'Medium',emergingScore:p.emergingScore||60,competitionLevel:p.competitionLevel||'Medium',scoring:p.scoring||{}}))}" onclick="generateProjection(this)" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">
+                ✨ Generate Growth Projection
+              </button>
+            </div>
+          </div>
+          <div id="growth-loading-state" style="display:none;padding:28px 0 20px">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:16px;text-transform:uppercase;letter-spacing:.8px">Analysing your product...</div>
+            <div id="growth-progress-lines">
+              <div class="growth-progress-line" id="gpl-1">Analysing TikTok Shop UK saturation...</div>
+              <div class="growth-progress-line" id="gpl-2">Checking Meta Ads Library activity...</div>
+              <div class="growth-progress-line" id="gpl-3">Assessing AliExpress order velocity...</div>
+              <div class="growth-progress-line" id="gpl-4">Reviewing Amazon UK review growth...</div>
+              <div class="growth-progress-line" id="gpl-5">Checking Pinterest trend signals...</div>
+              <div class="growth-progress-line" id="gpl-6">Calculating your entry window...</div>
+              <div class="growth-progress-line" id="gpl-7">Building growth projection...</div>
+              <div class="growth-progress-line" id="gpl-8">Done — your projection is ready</div>
+            </div>
+          </div>
+          <div id="growth-chart-state" style="display:none">
+            <div class="growth-header">
+              <div>
+                <div class="growth-title">DropResearch Hub estimated projection</div>
+                <div class="growth-sub">Based on market signals and product analysis</div>
+              </div>
+              <div class="growth-window-badge" id="growth-window-label">⚠️ Window closes — week 8</div>
+            </div>
+            <div class="growth-chart-wrap"><canvas id="growthChart" role="img" aria-label="Growth projection chart">Growth projection over 12 weeks.</canvas></div>
+            <div class="growth-legend">
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#1D9E75"></div>Entry window — get in now</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="background:#D85A30"></div>Social feeds fill up</div>
+              <div class="growth-legend-item"><div class="growth-legend-dot" style="width:3px;height:12px;border-radius:1px;background:#378ADD"></div>Today</div>
+            </div>
+            <div class="growth-why">
+              <div class="growth-why-label">DropResearch Hub assessment</div>
+              <div class="growth-why-text" id="growth-why-text">Generating...</div>
+            </div>
+            <div id="growth-summary" style="margin-top:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:var(--gold)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Launch readiness checklist</h2></div>
+      <div class="analysis-panel-body">
+        <div class="launch-grid">${launchItems.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('')}</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;background:var(--g50);border-radius:10px;border:1px solid var(--g200)">
+          <span style="font-size:13px;color:var(--g500);flex:1">Launch readiness</span>
+          <span style="font-size:18px;font-weight:900;color:${launchColor}">${launchPct}%</span>
+          <span style="font-size:13px;font-weight:700;color:${launchColor};margin-left:8px">${launchVerdict}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🎯</span><h2>Product intelligence</h2></div>
+      <div class="analysis-panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Target Customer</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.targetCustomer||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Problem Solved</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.problemSolved||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Main Angle</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.mainAngle||'—'}</div></div>
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px"><div style="font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;letter-spacing:.6px;margin-bottom:5px">Bundle / Upsell</div><div style="font-size:13px;color:var(--g700);font-weight:500">${p.bundleIdea||'—'}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px"><div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:6px">🎵 TikTok Angle</div><div style="font-size:13px;color:#1e40af">${p.tiktokAngle||'—'}</div></div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px">📘 Meta Angle</div><div style="font-size:13px;color:#166534">${p.metaAngle||'—'}</div></div>
+        </div>
+        ${p.redFlags&&p.redFlags!=='None'?`<div style="background:var(--red-bg);border:1px solid #fecaca;border-radius:12px;padding:14px;margin-top:12px"><div style="font-size:11px;font-weight:800;color:var(--red);margin-bottom:4px">⚠️ Red Flags</div><div style="font-size:13px;color:#991b1b">${p.redFlags}</div></div>`:''}
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🔍</span><h2>Opportunity breakdown</h2></div>
+      <div class="analysis-panel-body">
+        <div class="insight-cols">
+          <div class="insight-col green"><h3>✅ Why it could work</h3><ul>${(p.whyItCouldWork||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Strong early trend signal</li>'}</ul></div>
+          <div class="insight-col red"><h3>⚠️ Risks to check</h3><ul>${(p.risks||[]).map(i=>`<li>${i}</li>`).join('')||'<li>Research competition before launching</li>'}</ul></div>
+          <div class="insight-col blue"><h3>🎬 Creative angles</h3><ul>${(p.creativeAngles||[p.tiktokAngle,p.metaAngle,p.mainAngle]).filter(Boolean).map(i=>`<li>${i}</li>`).join('')||'<li>Problem → solution demo</li>'}</ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">💰</span><h2>Profit calculator</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your real numbers to see if this product is worth launching at your budget.</p>
+        <div class="calc-grid">
+          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}"></div></div>
+          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}"></div></div>
+          <div class="calc-field"><label class="calc-label">Shipping cost per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50"></div></div>
+          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20"></div></div>
+        </div>
+        <button class="calc-btn" onclick="runCalc()">Calculate profit →</button>
+        <div class="calc-results" id="calc-results">
+          <div class="calc-result-card"><div class="calc-result-label">Profit per unit</div><div class="calc-result-val" id="calc-profit-unit">—</div></div>
+          <div class="calc-result-card"><div class="calc-result-label">Break even per day</div><div class="calc-result-val" id="calc-breakeven">—</div></div>
+          <div class="calc-result-card"><div class="calc-result-label">Est. monthly profit</div><div class="calc-result-val" id="calc-monthly">—</div></div>
+        </div>
+        <div class="calc-verdict-row" id="calc-verdict-row">
+          <div class="calc-verdict" id="calc-verdict"></div>
+          <div style="font-size:12px;color:var(--g400);margin-top:8px;text-align:center">Based on 2× break even sales daily · ROAS needed: <span id="calc-roas" style="font-weight:700;color:var(--g700)">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🛒</span><h2>Supplier search terms</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Use these exact search terms on AliExpress to find the best suppliers. Try all three — results vary.</p>
+        <div class="supplier-terms">
+          ${supplierTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('')}
+        </div>
+        <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">
+          💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🔗</span><h2>Research hub — verify it yourself</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Our analysis is AI-powered — use these tools to verify with live data before you commit your ad budget.</p>
+        <div class="research-grid">
+          <a class="research-link" href="https://trends.pinterest.com/trends/explore#ideas=${pinterestQ}&country=GB" target="_blank">
+            <div class="research-link-icon" style="background:#fce4ec">📌</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">PINTEREST TRENDS</div>Early lifestyle demand</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">See if the lifestyle audience is already searching for this. Rising saves on Pinterest is one of the earliest signals a product is about to go mainstream — often 2-3 months before TikTok picks it up.</div>
+          </a>
+          <a class="research-link" href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${metaQ}" target="_blank">
+            <div class="research-link-icon" style="background:#e7f3ff">📺</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">META ADS LIBRARY</div>Who's running ads</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Spy on brands already running ads on this product. A few ads = validated but not crowded. Hundreds of ads = you're late. Look for ads running longer than 2 weeks — that means they're converting.</div>
+          </a>
+          <a class="research-link" href="https://www.tiktok.com/shop/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Shows what's actually selling on TikTok Shop right now — not just what has views. Low seller count with sales = your entry window. High seller count = already crowded.</div>
+          </a>
+          <a class="research-link" href="https://www.aliexpress.com/wholesale?SearchText=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🛒</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Find your supplier here. Filter by 4★ minimum and 100+ orders. Check shipping times — anything over 3 weeks will hurt your reviews. Read negative reviews to find quality issues to fix in your brand.</div>
+          </a>
+          <a class="research-link" href="https://www.amazon.co.uk/s?k=${aliQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff8e6">📦</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">AMAZON UK</div>Demand & reviews</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">Check real buyer demand and pricing. Under 200 reviews on the top listing means the market is still early. Read the 3★ reviews — they tell you exactly what to improve in your brand version.</div>
+          </a>
+          <a class="research-link" href="https://www.etsy.com/search?q=${tiktokQ}" target="_blank">
+            <div class="research-link-icon" style="background:#fff0e6">🧶</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ETSY</div>Handmade going mainstream</div>
+            <button class="research-info-btn" onclick="event.preventDefault();toggleTooltip(this)">i</button>
+            <div class="research-tooltip">If a product is already selling handmade on Etsy, it's typically 3-6 months away from hitting AliExpress at scale. Etsy demand signals what lifestyle buyers want before mass market catches up.</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAUNCH PLAN CTA — replaces old simulator -->
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚀</span><h2>Build My Launch Plan</h2></div>
+      <div class="analysis-panel-body">
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:6px">Ready to launch ${p.name}?</div>
+            <div style="font-size:13px;color:var(--g500);line-height:1.6">Hub will build your store concept, week-by-week launch roadmap and show you what your homepage could look like — all in one place.</div>
+          </div>
+          <a href="${launchUrl}" style="display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:14px;padding:16px 28px;font-size:15px;font-weight:900;text-decoration:none;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+            🚀 Build My Launch Plan →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🎬</span><h2>Ad creative generator — 3 variations</h2></div>
+      <div class="analysis-panel-body">
+        <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Generate 3 complete video ad scripts with hooks, shot list and a ready-to-send production brief.</p>
+        <div class="creative-form">
+          <div><label class="creative-label">Platform</label><select class="creative-select" id="creative-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
+          <div><label class="creative-label">Primary angle</label><select class="creative-select" id="creative-angle"><option>Problem → Solution</option><option>Curiosity / Pattern interrupt</option><option>Social proof / Testimonial</option><option>Lifestyle / Aspirational</option><option>Before & After</option></select></div>
+        </div>
+        <button class="generate-creative-btn" id="creative-gen-btn" onclick="generateCreative('${p.name.replace(/'/g,"\\'")}')">✨ Generate 3 creative variations</button>
+        <div class="creative-output" id="creative-output">
+          <div class="variation-tabs" id="variation-tabs"></div>
+          <div class="script-tabs">
+            <button class="script-tab active" onclick="setScriptTab('script',this)">Video script</button>
+            <button class="script-tab" onclick="setScriptTab('hooks',this)">5 hooks</button>
+            <button class="script-tab" onclick="setScriptTab('brief',this)">Brief to send</button>
+          </div>
+          <div id="tab-script"><div class="script-box" id="script-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('script-content')">📋 Copy script</button></div></div>
+          <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy hooks</button></div></div>
+          <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy brief</button></div></div>
+          <div class="meta-info-row">
+            <div class="meta-info-card"><div class="meta-info-card-label">🎵 TikTok music vibe</div><div class="meta-info-card-val" id="music-val">—</div></div>
+            <div class="meta-info-card"><div class="meta-info-card-label">🎯 Meta target audience</div><div class="meta-info-card-val" id="audience-val">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function generateProjection(btn) {
+  const p = JSON.parse(decodeURIComponent(btn.dataset.product));
+  const { name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring } = p;
+  document.getElementById('growth-generate-state').style.display = 'none';
+  document.getElementById('growth-loading-state').style.display = 'block';
+  const lines = ['gpl-1','gpl-2','gpl-3','gpl-4','gpl-5','gpl-6','gpl-7','gpl-8'];
+  lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line'; });
+  let idx = 0;
+  function nextLine() {
+    if (idx > 0) { const prev=document.getElementById(lines[idx-1]); if(prev) prev.className='growth-progress-line done'; }
+    if (idx < lines.length) { const curr=document.getElementById(lines[idx]); if(curr) curr.className='growth-progress-line active'; idx++; }
+  }
+  nextLine();
+  const progressTimer = setInterval(nextLine, 800);
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, niche, trendScore, saturationRisk, emergingScore, competitionLevel, scoring })
+    });
+    const data = await res.json();
+    clearInterval(progressTimer);
+    lines.forEach(id => { const el=document.getElementById(id); if(el) el.className='growth-progress-line done'; });
+    setTimeout(() => {
+      document.getElementById('growth-loading-state').style.display = 'none';
+      document.getElementById('growth-chart-state').style.display = 'block';
+      document.getElementById('growth-why-text').textContent = data.whyNowDetailed || 'Analysis complete.';
+      document.getElementById('growth-window-label').textContent = `⚠️ Window closes — week ${data.windowClosesWeek || 8}`;
+      const summary = document.getElementById('growth-summary');
+      if (data.projectionSummary) { summary.textContent = '💡 ' + data.projectionSummary; summary.style.display='block'; }
+      if (data.launchReadiness) {
+        const passCount = data.launchReadiness.filter(i=>i.pass).length;
+        const launchPct = Math.round((passCount/data.launchReadiness.length)*100);
+        const launchColor = launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
+        const launchVerdict = launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
+        const grid = document.querySelector('.launch-grid');
+        if (grid) grid.innerHTML = data.launchReadiness.map(item=>`<div class="launch-item ${item.pass?'pass':'fail'}">${item.pass?'✅':'⚠️'} ${item.check}</div>`).join('');
+      }
+      if (data.supplierSearchTerms) {
+        const wrap = document.querySelector('.supplier-terms');
+        if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
+      }
+      buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
+    }, 600);
+  } catch(e) {
+    clearInterval(progressTimer);
+    document.getElementById('growth-loading-state').style.display = 'none';
+    document.getElementById('growth-generate-state').style.display = 'block';
+    showToast('Could not generate projection — try again');
+  }
+}
+
+function buildGrowthChart(rawCurve, windowClosesWeek) {
+  if (activeGrowthChart) { activeGrowthChart.destroy(); activeGrowthChart=null; }
+  const canvas=document.getElementById('growthChart');
+  if (!canvas) return;
+  const labels=['Today','2w','4w','6w','8w','10w','12w'];
+  const closeIdx=Math.min(Math.max(Math.round(windowClosesWeek/2),1),6);
+  const greenData=rawCurve.map((v,i)=>i<=closeIdx?v:null);
+  const redData=rawCurve.map((v,i)=>i>=closeIdx?v:null);
+  const ctx=canvas.getContext('2d');
+  const greenGrad=ctx.createLinearGradient(0,0,0,180);
+  greenGrad.addColorStop(0,'rgba(29,158,117,0.3)');greenGrad.addColorStop(1,'rgba(29,158,117,0)');
+  const redGrad=ctx.createLinearGradient(0,0,0,180);
+  redGrad.addColorStop(0,'rgba(216,90,48,0.2)');redGrad.addColorStop(1,'rgba(216,90,48,0)');
+  const windowPlugin={id:'wl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(closeIdx);ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle='#f87171';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,scales.y.top-2);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.setLineDash([]);ctx.restore();}};
+  const todayPlugin={id:'tl',afterDraw(chart){const{ctx,scales}=chart;const x=scales.x.getPixelForValue(0);ctx.save();ctx.strokeStyle='#378ADD';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,scales.y.top);ctx.lineTo(x,scales.y.bottom);ctx.stroke();ctx.restore();}};
+  activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
+}
+
+function toggleTooltip(btn){const isOpen=btn.classList.contains('open');document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));if(!isOpen)btn.classList.add('open');}
+document.addEventListener('click',e=>{if(!e.target.classList.contains('research-info-btn'))document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));});
+
+function runCalc(){
+  const sell=parseFloat(document.getElementById('calc-sell').value)||0;
+  const supplier=parseFloat(document.getElementById('calc-supplier').value)||0;
+  const shipping=parseFloat(document.getElementById('calc-shipping').value)||0;
+  const ads=parseFloat(document.getElementById('calc-ads').value)||0;
+  if(!sell||!supplier){showToast('Enter at least selling price and supplier cost');return;}
+  const profitPerUnit=sell-supplier-shipping;
+  const breakevenUnits=ads>0&&profitPerUnit>0?Math.ceil(ads/profitPerUnit):0;
+  const monthlyProfit=profitPerUnit>0?Math.round((breakevenUnits*2*profitPerUnit-ads)*30):0;
+  const roas=sell>0&&ads>0&&breakevenUnits>0?((breakevenUnits*sell)/ads).toFixed(2):'—';
+  document.getElementById('calc-profit-unit').textContent=profitPerUnit>=0?`£${profitPerUnit.toFixed(2)}`:`-£${Math.abs(profitPerUnit).toFixed(2)}`;
+  document.getElementById('calc-breakeven').textContent=breakevenUnits>0?`${breakevenUnits} sales`:'—';
+  document.getElementById('calc-monthly').textContent=monthlyProfit>0?`£${monthlyProfit.toLocaleString()}`:profitPerUnit<=0?'Loss':'—';
+  document.getElementById('calc-roas').textContent=roas;
+  document.getElementById('calc-results').classList.add('show');
+  document.getElementById('calc-verdict-row').classList.add('show');
+  const verdict=document.getElementById('calc-verdict');
+  const marginPct=sell>0?(profitPerUnit/sell)*100:0;
+  if(profitPerUnit<=0){verdict.className='calc-verdict bad';verdict.textContent='❌ Not profitable at these numbers — reduce supplier cost or increase selling price';}
+  else if(marginPct<40){verdict.className='calc-verdict tight';verdict.textContent=`⚠️ Tight margin (${Math.round(marginPct)}%) — workable but leaves little room for ad testing.`;}
+  else{verdict.className='calc-verdict good';verdict.textContent=`✅ Strong margin (${Math.round(marginPct)}%) — good foundation for paid ads. Hit ${breakevenUnits} sales/day to break even.`;}
+}
+
+async function generateCreative(productName){
+  const btn=document.getElementById('creative-gen-btn');
+  const platform=document.getElementById('creative-platform').value;
+  const angle=document.getElementById('creative-angle').value;
+  btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
+  createHubLoader('creative-output', 'Hub is crafting your ad angles...'); startHubMessages('creative-output');
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
+    const data=await res.json();
+    const text=(data.content||[]).map(i=>i.text||'').join('');
+    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
+    creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
+  }catch(e){showToast('Could not generate creatives — try again');}
+  stopHubMessages();removeHubLoader('creative-output');
+  btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
+}
+function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
+function setVariation(idx,btn){currentVariation=idx;document.querySelectorAll('.var-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadVariation(idx);setScriptTab('script',document.querySelector('.script-tab'));}
+function loadVariation(idx){const v=creativeVariations[idx];if(!v)return;document.getElementById('script-content').textContent=v.script||'';document.getElementById('hooks-content').textContent=v.hooks||'';document.getElementById('brief-content').textContent=v.brief||'';document.getElementById('music-val').textContent=v.music||'—';document.getElementById('audience-val').textContent=v.audience||'—';}
+function setScriptTab(tab,btn){document.querySelectorAll('.script-tab').forEach(b=>b.classList.remove('active'));['tab-script','tab-hooks','tab-brief'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});if(btn)btn.classList.add('active');const el=document.getElementById('tab-'+tab);if(el)el.style.display='block';}
+function copyEl(id){const text=document.getElementById(id)?.textContent||'';navigator.clipboard.writeText(text).then(()=>showToast('Copied ✓'));}
+
+async function runValidator(){
+  const input=document.getElementById('validator-input').value.trim();
+  const resultArea=document.getElementById('validator-result');
+  if(!input){showToast('Paste a product URL first');return;}
+  let productName;
+  const isAliExpressItem = input.includes('aliexpress.com/item/');
+  const isUrl = input.includes('http') || input.includes('.com/');
+  if (isAliExpressItem) {
+    resultArea.innerHTML = `<div style="background:var(--navy);border-radius:16px;padding:28px;text-align:center;color:#fff">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:60px;height:60px;border-radius:50%;margin-bottom:14px;border:2px solid rgba(255,255,255,.2)" onerror="this.style.display='none'">
+      <div style="font-size:16px;font-weight:800;margin-bottom:8px">One quick thing</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;margin-bottom:20px;max-width:460px;margin-left:auto;margin-right:auto">AliExpress links don't include the product name. Copy the product title from the top of the AliExpress page and paste it below — Hub will do the rest.</div>
+      <div style="display:flex;gap:0;background:#fff;border-radius:10px;overflow:hidden;max-width:500px;margin:0 auto">
+        <input id="validator-name-fallback" placeholder="e.g. WOLFBOX DF200 Electric Air Duster..." style="flex:1;border:none;padding:12px 14px;font-size:14px;font-family:inherit;color:#111;outline:none">
+        <button onclick="runValidatorWithName(document.getElementById('validator-name-fallback').value)" style="background:var(--gold);color:var(--navy);border:none;padding:12px 18px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">Ask Hub →</button>
+      </div>
+    </div>`;
+    return;
+  } else if (isUrl) {
+    productName = extractProductName(input);
+    if (!productName || productName.length < 5) productName = input;
+  } else {
+    productName = input.trim();
+  }
+  createHubLoader('validator-result', 'Hub is analysing your product...');
+  startHubMessages('validator-result');
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
+    stopHubMessages();removeHubLoader('validator-result');
+    const p={
+      name:data.productName||productName,niche:data.marketStage||'Validator result',stage:'Assessed',season:'Assessed',
+      grade:data.opportunityScore||'B',trendScore:data.growthScore||50,problemScore:data.competitionScore||50,
+      saturationRisk:data.saturationRisk||'Medium',competitionLevel:data.saturationRisk||'Medium',
+      margin:data.margin||'—',sellingPrice:data.sellingPrice||'—',supplierCost:data.supplierCost||'—',
+      emergingScore:data.growthScore||50,verdict:data.verdict||'',verdictReason:data.verdict||'',
+      targetCustomer:'UK dropshipping market',mainAngle:data.creativeAngles?.[0]||'',
+      tiktokAngle:data.creativeAngles?.[0]||'',metaAngle:data.creativeAngles?.[1]||'',
+      whyEmerging:data.ukMarketNotes||data.whyNow||'',whyItCouldWork:data.whyItCouldWork||[],
+      risks:data.risks||[],creativeAngles:data.creativeAngles||[],
+      aliSearchTerm:productName,googleTrendsKeyword:productName,
+      bundleIdea:'',problemSolved:data.ukMarketNotes||'',emoji:'🔍',
+      scoring:{ukMarketGap:data.growthScore?Math.round(data.growthScore*0.25):0,competitionBarrier:data.competitionScore?Math.round(data.competitionScore*0.2):0,problemIntensity:data.creativePotential?Math.round(data.creativePotential*2):0,earlySignalStrength:data.subscriberExcitement?Math.round(data.subscriberExcitement*1.5):0,profitPotential:data.brandability?Math.round(data.brandability*1.2):0,easeOfEntry:data.retailGap?Math.round(data.retailGap*0.8):0,creativePotential:data.creativePotential||0,coreTotal:data.growthScore||0}
+    };
+    resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:16px;background:var(--navy);border-radius:16px;color:#fff"><div><div style="font-size:18px;font-weight:800">${p.name}</div><div style="font-size:13px;color:rgba(255,255,255,.6)">Brand readiness assessment</div></div><div style="margin-left:auto;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;padding:8px 18px;font-size:18px;font-weight:900">${p.grade}</div></div>`;
+    const tempBody=document.createElement('div');tempBody.className='analysis-body';resultArea.appendChild(tempBody);
+    const origBody=document.getElementById('analysis-body');
+    origBody.id='analysis-body-bak';
+    tempBody.id='analysis-body';
+    buildAnalysisBody(p);
+    tempBody.id='validator-analysis-body';
+    origBody.id='analysis-body';
+  }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+}
+async function runValidatorWithName(name) {
+  if (!name || name.trim().length < 3) { showToast('Please type the product name'); return; }
+  document.getElementById('validator-input').value = name;
+  await runValidator();
+}
+
+function extractProductName(url){
+  if(!url.includes('http')&&!url.includes('.com')){return url.trim().slice(0,80);}
+  try{
+    const aliMatch = url.match(/\/([^/]+)\.html/);
+    if(aliMatch){const raw=decodeURIComponent(aliMatch[1]);const cleaned=raw.replace(/[-_]/g,' ').replace(/\d{8,}/g,' ').replace(/\s+/g,' ').trim();if(cleaned.length>5)return cleaned.slice(0,80);}
+    const decoded=decodeURIComponent(url);
+    const words=decoded.replace(/[-_+]/g,' ').split(/[\/\?&#]/).filter(s=>s.length>5&&!/^\d+$/.test(s)&&!['http','https','www','com','aliexpress','alibaba','temu','item','product','p','pd','goods','html'].includes(s.toLowerCase())).sort((a,b)=>b.length-a.length);
+    if(words.length)return words[0].replace(/[^a-zA-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
+  }catch(e){}
+  return 'Product from URL';
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+function openManageModal(){document.getElementById('manage-modal').style.display='flex';}
+function closeManageModal(){document.getElementById('manage-modal').style.display='none';}
+async function goToPortal(){
+  const session=JSON.parse(sessionStorage.getItem('drh_session')||'null');if(!session?.email){closeManageModal();return;}
+  const btn=document.getElementById('portal-btn');btn.disabled=true;btn.textContent='Opening...';
+  try{const res=await fetch('/api/stripe-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:session.email})});const data=await res.json();if(data.url)window.location.href=data.url;else showToast('Could not open portal. Please try again.');}catch(e){showToast('Network error. Please try again.');}
+  finally{btn.disabled=false;btn.textContent='Open Portal →';closeManageModal();}
+}
+
+// ── SAVED PRODUCTS ────────────────────────────────────────────────────────
+let savedProductNames = new Set();
+
+function getUserEmail() {
+  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  if (s?.email) return s.email;
+  const auth = sessionStorage.getItem('drh_auth');
+  if (auth === 'member') return 'admin@dropresearchhub.com';
+  return null;
+}
+
+async function loadSavedProducts() {
+  const email = getUserEmail();
+  if (!email) return;
+  try {
+    const res = await fetch(`/api/saved?email=${encodeURIComponent(email)}`);
+    const data = await res.json();
+    const saved = data.saved || [];
+    savedProductNames = new Set(saved.map(p => p.name));
+    updateAllSaveButtons();
+    renderSavedGrid(saved);
+    const badge = document.getElementById('saved-count-badge');
+    if (badge) badge.textContent = saved.length + ' saved product' + (saved.length !== 1 ? 's' : '');
+  } catch(e) { console.error('Failed to load saved:', e); }
+}
+
+function updateAllSaveButtons() {
+  allProducts.forEach((p, i) => {
+    const btn = document.getElementById('save-btn-' + i);
+    if (btn) btn.textContent = savedProductNames.has(p.name) ? '💛' : '🤍';
+  });
+}
+
+async function toggleSaveProduct(idx, btn) {
+  const p = allProducts[idx];
+  if (!p) return;
+  const email = getUserEmail();
+  if (!email) { showToast('Please log in to save products'); return; }
+  if (savedProductNames.has(p.name)) {
+    try {
+      await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
+      savedProductNames.delete(p.name);
+      btn.textContent = '🤍';
+      showToast('Removed from Saved Products Hub');
+      if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
+    } catch(e) { showToast('Could not unsave — try again'); }
+  } else {
+    try {
+      await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
+      savedProductNames.add(p.name);
+      btn.textContent = '💛';
+      showSavedMessage();
+    } catch(e) { showToast('Could not save — try again'); }
+  }
+}
+
+function showSavedMessage() {
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--navy-dark);color:#fff;padding:20px 32px;border-radius:16px;font-size:15px;font-weight:800;z-index:9999;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)';
+  msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">💛</div><div>Saved to Saved Products Hub</div>';
+  document.body.appendChild(msg);
+  setTimeout(() => { msg.style.opacity='0'; msg.style.transition='opacity .3s'; setTimeout(() => msg.remove(), 300); }, 2000);
+}
+
+function renderSavedGrid(saved) {
+  const grid = document.getElementById('saved-grid');
+  if (!saved.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
+    return;
+  }
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
+  grid.innerHTML = saved.map((p, i) => `
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
+      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\\'")}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+      <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
+        ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
+        <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
+      </div>
+      <div style="padding:14px;display:flex;flex-direction:column;flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
+        <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche || ''} · ${p.season || 'Evergreen'}</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;flex-shrink:0">
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
+          <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Sat.</div><div style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--g700);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;background:var(--g50);flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
+        <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
+      </div>
+    </div>`).join('');
+  window._savedProducts = saved;
+  populateCompareDropdowns();
+}
+
+async function unsaveProduct(name) {
+  const email = getUserEmail();
+  if (!email) return;
+  try {
+    await fetch('/api/saved', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, productName: name}) });
+    savedProductNames.delete(name);
+    updateAllSaveButtons();
+    loadSavedProducts();
+    showToast('Removed from saved products');
+  } catch(e) { showToast('Could not remove — try again'); }
+}
+
+function populateCompareDropdowns() {
+  const saved = window._savedProducts || [];
+  ['compare-select-a', 'compare-select-b'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="" style="background:#142840;color:#fff">Select a product...</option>` +
+      saved.map((p,i) => `<option value="${i}" style="background:#142840;color:#fff">${p.emoji||'📦'} ${p.name}</option>`).join('');
+    if (current) sel.value = current;
+  });
+}
+
+function runCompare() {
+  var saved = window._savedProducts || [];
+  var selA = document.getElementById('compare-select-a');
+  var selB = document.getElementById('compare-select-b');
+  var tableEl = document.getElementById('compare-table');
+  if (!tableEl || !selA || !selB) return;
+  var idxA = selA.value, idxB = selB.value;
+  if (idxA === '' || idxB === '' || idxA === idxB) { tableEl.innerHTML = ''; return; }
+  var a = saved[parseInt(idxA)];
+  var b = saved[parseInt(idxB)];
+  if (!a || !b) return;
+  function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
+  function getLaunch(p) { if (!p.launchReadiness) return '—'; return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%'; }
+  var metrics = [
+    { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
+    { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
+    { label: 'Problem Score', av: a.problemScore||'—', bv: b.problemScore||'—', higher: true },
+    { label: 'Est. Margin', av: a.margin||'—', bv: b.margin||'—', higher: true },
+    { label: 'Supplier Cost', av: a.supplierCost||'—', bv: b.supplierCost||'—', higher: false },
+    { label: 'Selling Price', av: a.sellingPrice||'—', bv: b.sellingPrice||'—', higher: false },
+    { label: 'Saturation Risk', av: a.saturationRisk||'—', bv: b.saturationRisk||'—', higher: false, winFn: function(av,bv){ var m={Low:0,Medium:1,High:2}; return (m[av]||1)<(m[bv]||1)?'a':(m[bv]||1)<(m[av]||1)?'b':''; } },
+    { label: 'Launch Readiness', av: getLaunch(a), bv: getLaunch(b), higher: true },
+    { label: 'Verdict', av: a.verdict||'—', bv: b.verdict||'—', higher: false },
+    { label: 'TikTok Angle', av: a.tiktokAngle||'—', bv: b.tiktokAngle||'—', higher: false },
+    { label: 'Target Customer', av: a.targetCustomer||'—', bv: b.targetCustomer||'—', higher: false },
+  ];
+  var aWins = 0, bWins = 0;
+  metrics.forEach(function(m) {
+    if (m.winFn) { var w = m.winFn(m.av, m.bv); m.winA = w==='a'; m.winB = w==='b'; }
+    else if (m.higher) { var na = numVal(m.av), nb = numVal(m.bv); m.winA = na>nb && na>0; m.winB = nb>na && nb>0; }
+    else { m.winA = false; m.winB = false; }
+    if (m.winA) aWins++; if (m.winB) bWins++;
+  });
+  var winner = aWins > bWins ? a : bWins > aWins ? b : null;
+  var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
+  var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
+  var summaryText = winner ? '🏆 ' + (winner===a?aName:bName) + ' wins on ' + Math.max(aWins,bWins) + ' of ' + (aWins+bWins) + ' comparable metrics' : '🤝 Both products are evenly matched across all metrics';
+  var recReason = winner ? 'Based on the scores, ' + (winner===a?aName:bName) + ' has the stronger overall opportunity. ' + (winner.saturationRisk==='Low'?'Low saturation risk means more room to enter the market now.':winner.saturationRisk==='Medium'?'Medium saturation — move fast before the window closes.':'High saturation — test with a small budget before scaling.') : 'Both products are closely matched. Go with whichever you can source most easily or feel most confident creating content for.';
+  var aWinnerBadge = aWins > bWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
+  var bWinnerBadge = bWins > aWins ? ' <span style="background:rgba(74,222,128,.2);color:#4ade80;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800">WINNER</span>' : '';
+  var labelHTML = '', aHTML = '', bHTML = '';
+  var cs = 'padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);min-height:42px;display:flex;align-items:center;';
+  metrics.forEach(function(m) {
+    labelHTML += '<div style="' + cs + 'font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">' + m.label + '</div>';
+    aHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winA?'800':'400') + ';color:' + (m.winA?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.av + (m.winA?' ✓':'') + '</div>';
+    bHTML += '<div style="' + cs + 'justify-content:center;text-align:center;font-size:13px;font-weight:' + (m.winB?'800':'400') + ';color:' + (m.winB?'#4ade80':'rgba(255,255,255,.8)') + '">' + m.bv + (m.winB?' ✓':'') + '</div>';
+  });
+  var html = '<div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px">';
+  html += '<div style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14px;font-weight:700;color:#fff">' + summaryText + '</div>';
+  html += '<div style="display:grid;grid-template-columns:150px 1fr 1fr;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.04);margin-bottom:16px">';
+  html += '<div><div style="padding:10px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.15)">Metric</div>' + labelHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (a.emoji||'📦') + ' ' + aName + aWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxA + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + aHTML + '</div>';
+  html += '<div style="border-left:1px solid rgba(255,255,255,.08)"><div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.15)"><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:5px">' + (b.emoji||'📦') + ' ' + bName + bWinnerBadge + '</div><button onclick="openAnalysisFromSaved(' + idxB + ')" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Full analysis</button></div>' + bHTML + '</div>';
+  html += '</div>';
+  html += '<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:14px 16px"><div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">DropResearch Hub Recommendation</div><div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.65">' + recReason + '</div></div>';
+  html += '</div>';
+  tableEl.innerHTML = html;
+}
+
+async function loadPublishedProducts() {
+  try {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    if (data.products && data.products.length) {
+      allProducts = data.products;
+      buildNicheFilters();
+      renderProductsGrid();
+      const badge = document.getElementById('product-count-badge');
+      if (badge) badge.textContent = allProducts.length + ' products live';
+
+      // Populate header stats
+      const margins = allProducts.map(p=>parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
+      const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
+      const topGrade = allProducts.map(p=>p.grade).sort((a,b)=>({'A+':0,'A':1,'B+':2,'B':3,'C':4}[a]||5)-({'A+':0,'A':1,'B+':2,'B':3,'C':4}[b]||5))[0];
+      const gradeEl = document.getElementById('top-grade-badge');
+      if (gradeEl && topGrade) { gradeEl.textContent = '🏆 Top grade: ' + topGrade; gradeEl.style.display=''; }
+      const marginEl = document.getElementById('avg-margin-badge');
+      if (marginEl && avgMargin) { marginEl.textContent = 'Avg margin: ' + avgMargin + '%'; marginEl.style.display=''; }
+
+      // Populate header top card with best product
+      const top = allProducts.find(p=>p.grade==='A+')||allProducts.find(p=>p.grade==='A')||allProducts[0];
+      if (top) {
+        const cardEl = document.getElementById('header-top-card');
+        if (cardEl) cardEl.style.display = 'block';
+        const imgWrap = document.getElementById('header-card-img-wrap');
+        if (imgWrap) imgWrap.innerHTML = top.img
+          ? `<img src="${top.img}" alt="${top.name}" style="max-width:100%;max-height:156px;object-fit:contain;padding:8px" onerror="this.style.display='none'"><div style="position:absolute;top:8px;left:8px;background:${gradeColor(top.grade)};color:#fff;border-radius:999px;font-size:10px;font-weight:900;padding:3px 9px">Grade ${top.grade}</div>`
+          : `<span style="font-size:48px">${top.emoji||'📦'}</span><div style="position:absolute;top:8px;left:8px;background:${gradeColor(top.grade)};color:#fff;border-radius:999px;font-size:10px;font-weight:900;padding:3px 9px">Grade ${top.grade}</div>`;
+        const el = id => document.getElementById(id);
+        if(el('header-card-name')) el('header-card-name').textContent = top.name;
+        if(el('header-card-niche')) el('header-card-niche').textContent = (top.niche||'') + ' · ' + (top.season||'Evergreen');
+        if(el('header-card-trend')) el('header-card-trend').textContent = top.trendScore||'—';
+        if(el('header-card-margin')) el('header-card-margin').textContent = top.margin||'—';
+        if(el('header-card-sat')) { el('header-card-sat').textContent = top.saturationRisk||'—'; el('header-card-sat').style.color = top.saturationRisk==='Low'?'var(--green)':top.saturationRisk==='Medium'?'var(--amber)':'var(--red)'; }
+        if(el('header-card-why')) el('header-card-why').textContent = (top.whyEmerging||top.whyNow||'').slice(0,100)+(top.whyEmerging?.length>100?'...':'');
+      }
+    } else {
+      renderProductsGrid();
+    }
+  } catch(e) {
+    console.error('Failed to load products:', e);
+    renderProductsGrid();
+  }
+}
+
+renderProductsGrid();
+loadPublishedProducts();
+loadSavedProducts();
+</script>
+
+<!-- Hub Mascot Component -->
+<script>
+const HUB_MESSAGES = [
+  "Hub is researching the market...",
+  "Hub is checking supplier signals...",
+  "Hub is reviewing opportunity data...",
+  "Hub is writing up your results...",
+  "Hub is scanning trend data...",
+  "Hub is crunching the numbers..."
+];
+const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+function createHubLoader(containerId, message) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const msg = message || HUB_MESSAGES[Math.floor(Math.random() * HUB_MESSAGES.length)];
+  const div = document.createElement('div');
+  div.className = 'hub-loading active';
+  div.id = containerId + '-hub';
+  div.innerHTML = `<div class="hub-img-wrap"><img src="${HUB_IMG}" alt="Hub is researching" onerror="this.outerHTML='<div style=\'font-size:72px\'>🤖</div>'"><div class="hub-dots"><div class="hub-dot"></div><div class="hub-dot"></div><div class="hub-dot"></div></div></div><div class="hub-msg">${msg}</div>`;
+  container.innerHTML = '';
+  container.appendChild(div);
+}
+function removeHubLoader(containerId) { const hub = document.getElementById(containerId + '-hub'); if (hub) hub.remove(); }
+let hubMsgInterval = null;
+function startHubMessages(containerId) {
+  let i = 0;
+  hubMsgInterval = setInterval(() => {
+    i = (i + 1) % HUB_MESSAGES.length;
+    const msgEl = document.querySelector('#' + containerId + '-hub .hub-msg');
+    if (msgEl) msgEl.textContent = HUB_MESSAGES[i];
+  }, 3500);
+}
+function stopHubMessages() { if (hubMsgInterval) { clearInterval(hubMsgInterval); hubMsgInterval = null; } }
+</script>
+
+<script>
+function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");document.body.style.overflow="hidden"}
+function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");document.body.style.overflow=""}
+const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
+</script>
+</div>
+</body>
+</html>
