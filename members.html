@@ -130,8 +130,8 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .research-link-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .research-info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--g200);border:none;cursor:pointer;font-size:10px;font-weight:900;color:var(--g500);display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit;line-height:1;z-index:2}
 .research-info-btn:hover{background:var(--navy);color:#fff}
-.research-tooltip{position:absolute;top:0;right:calc(100% + 8px);background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:230px;z-index:50;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
-.research-tooltip::after{content:'';position:absolute;top:10px;right:-5px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
+.research-tooltip{position:fixed;background:var(--navy-dark);color:rgba(255,255,255,.85);font-size:12px;font-weight:400;line-height:1.55;padding:12px 14px;border-radius:10px;width:240px;z-index:9999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
+.research-tooltip::after{content:'';position:absolute;bottom:-5px;right:10px;width:10px;height:10px;background:var(--navy-dark);transform:rotate(45deg)}
 .research-info-btn.open + .research-tooltip{display:block}
 .launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
@@ -971,64 +971,25 @@ function buildGrowthChart(rawCurve, windowClosesWeek) {
   activeGrowthChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data:greenData,borderColor:'#1D9E75',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===0?6:i===closeIdx?5:0),pointBackgroundColor:rawCurve.map((_,i)=>i===0?'#1D9E75':'#D85A30'),pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:greenGrad,spanGaps:false},{data:redData,borderColor:'#D85A30',borderWidth:2.5,pointRadius:rawCurve.map((_,i)=>i===6?4:0),pointBackgroundColor:'#D85A30',pointBorderColor:'#142840',pointBorderWidth:2,tension:0.42,fill:true,backgroundColor:redGrad,spanGaps:false,borderDash:[6,3]}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeInOutCubic'},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Demand index: ${ctx.parsed.y}`},backgroundColor:'#0d1f38',titleColor:'#fff',bodyColor:'rgba(255,255,255,0.7)',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,padding:10,cornerRadius:8}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}},border:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11},stepSize:25,callback:v=>({0:'',25:'Low',50:'Medium',75:'High',100:'Peak'}[v]||'')},border:{display:false}}}},plugins:[windowPlugin,todayPlugin]});
 }
 
-function toggleTooltip(btn){const tip=btn.nextElementSibling;if(tip)alert(tip.textContent.trim());}
-document.addEventListener('click',e=>{if(!e.target.classList.contains('research-info-btn'))document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));});
-
-let _calcState = { sell:0, supplier:0, shipping:0, ads:0 };
-
-function liveCalc() {
-  const sell = parseFloat(document.getElementById('calc-sell')?.value) || 0;
-  const supplier = parseFloat(document.getElementById('calc-supplier')?.value) || 0;
-  const shipping = parseFloat(document.getElementById('calc-shipping')?.value) || 0;
-  const ads = parseFloat(document.getElementById('calc-ads')?.value) || 0;
-  _calcState = { sell, supplier, shipping, ads };
-  if (!sell || !supplier) return;
-  const profit = sell - supplier - shipping;
-  const marginPct = sell > 0 ? (profit / sell) * 100 : 0;
-  const alertEl = document.getElementById('margin-alert');
-  const alertText = document.getElementById('margin-alert-text');
-  if (alertEl && alertText) {
-    if (profit <= 0) {
-      alertEl.style.display='block'; alertEl.style.background='#FEE2E2'; alertEl.style.borderColor='#FECACA'; alertEl.style.color='#991B1B';
-      alertText.textContent="Your costs exceed your selling price — you'd lose money on every sale. Increase the price or find a cheaper supplier.";
-    } else if (marginPct < 35) {
-      alertEl.style.display='block'; alertEl.style.background='#FEF3C7'; alertEl.style.borderColor='#FDE68A'; alertEl.style.color='#92400E';
-      alertText.textContent=`Only a ${Math.round(marginPct)}% margin — very tight for paid ads. Try to get supplier cost below £${(sell*0.35).toFixed(2)} first.`;
-    } else { alertEl.style.display='none'; }
+function toggleTooltip(btn){
+  event.preventDefault();
+  event.stopPropagation();
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.research-info-btn.open').forEach(b => {
+    b.classList.remove('open');
+    const t = b.nextElementSibling;
+    if(t) t.style.display = 'none';
+  });
+  if(!isOpen){
+    btn.classList.add('open');
+    const tip = btn.nextElementSibling;
+    if(tip){
+      const rect = btn.getBoundingClientRect();
+      tip.style.display = 'block';
+      tip.style.top = (rect.bottom + 8) + 'px';
+      tip.style.left = Math.min(rect.left, window.innerWidth - 260) + 'px';
+    }
   }
-  function calcScenario(salesPerDay) {
-    const netProfit = (sell * salesPerDay * 30) - ((supplier + shipping) * salesPerDay * 30) - (ads * 30);
-    const roas = ads > 0 ? ((sell * salesPerDay) / ads).toFixed(2) : '—';
-    const daysToProfit = ads > 0 && profit > 0 ? Math.ceil(ads / (profit * salesPerDay)) : '—';
-    return { netProfit, roas, daysToProfit };
-  }
-  const cons = calcScenario(1), real = calcScenario(3), agg = calcScenario(7);
-  const fmt = n => Math.round(n) >= 0 ? `£${Math.round(n).toLocaleString()}` : `-£${Math.abs(Math.round(n)).toLocaleString()}`;
-  const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
-  const setCol = (id, c) => { const el=document.getElementById(id); if(el) el.style.color=c; };
-  setEl('sc-cons-profit', fmt(cons.netProfit)); setCol('sc-cons-profit', cons.netProfit>=0?'var(--green)':'var(--red)');
-  setEl('sc-cons-roas', `ROAS: ${cons.roas}x`); setEl('sc-cons-days', cons.daysToProfit!=='—'?`Break-even: day ${cons.daysToProfit}`:'Break-even: —');
-  setEl('sc-real-profit', fmt(real.netProfit));
-  setEl('sc-real-roas', `ROAS: ${real.roas}x`); setEl('sc-real-days', real.daysToProfit!=='—'?`Break-even: day ${real.daysToProfit}`:'Break-even: —');
-  setEl('sc-agg-profit', fmt(agg.netProfit)); setCol('sc-agg-profit', agg.netProfit>=0?'var(--green)':'var(--red)');
-  setEl('sc-agg-roas', `ROAS: ${agg.roas}x`); setEl('sc-agg-days', agg.daysToProfit!=='—'?`Break-even: day ${agg.daysToProfit}`:'Break-even: —');
-  const slider = document.getElementById('sales-slider');
-  updateSlider(slider ? slider.value : 3);
-  if (ads > 0 && sell > 0) {
-    setEl('plat-tiktok', String(Math.max(1, Math.round((ads/6)*1000/sell*0.02))));
-    setEl('plat-meta', String(Math.max(1, Math.round((ads/11)*1000/sell*0.015))));
-    setEl('plat-google', String(Math.max(1, Math.round((ads/0.8)*0.03))));
-  }
-  const verdictEl = document.getElementById('hub-calc-verdict');
-  const verdictText = document.getElementById('hub-calc-text');
-  if (verdictEl && verdictText && profit > 0) {
-    verdictEl.style.display = 'block';
-    let v = '';
-    if (marginPct >= 60) v = `Strong margin at ${Math.round(marginPct)}% — real room to test and iterate. At ${ads?`£${ads}/day`:'your budget'}, you need a ${real.roas}x ROAS at 3 sales/day. That's achievable. Start with £${ads||20}/day for 7 days, find your best creative, then scale.`;
-    else if (marginPct >= 40) v = `Decent margin at ${Math.round(marginPct)}% — workable but you need efficient ad spend. At 3 sales/day you need ${real.roas}x ROAS which leaves little room for bad creative. Test tight, then scale.`;
-    else v = `Tight margin at ${Math.round(marginPct)}% — risky for paid ads. You need ${real.roas}x ROAS just to break even at 3 sales/day. Bring supplier cost down to £${(sell*0.35).toFixed(2)} or try organic TikTok first.`;
-    verdictText.textContent = v;
-  } else if (verdictEl) { verdictEl.style.display = 'none'; }
 }
 
 function updateSlider(val) {
