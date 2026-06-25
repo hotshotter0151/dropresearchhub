@@ -18,7 +18,6 @@ if (_auth === 'member' && !_session?.email) {
 async function verifyMemberAccess() {
   const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
   if (!session?.email) return;
-  if (session.role === 'admin') return;
   try {
     const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
     const data = await res.json();
@@ -230,18 +229,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .compare-table td{padding:10px 14px;border-bottom:1px solid var(--g100);color:var(--g700);vertical-align:middle}
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table .winner{background:#f0fdf4;font-weight:800;color:var(--green)}
-
-.saved-status-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px 0}
-.saved-status-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;color:var(--g700);box-shadow:0 1px 2px rgba(15,23,42,.04)}
-.saved-status-pill.saved{color:var(--navy);border-color:#bfdbfe;background:#eff6ff}
-.saved-status-pill.testing{color:#7c3aed;border-color:#ddd6fe;background:#f5f3ff}
-.saved-status-pill.launched{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
-.saved-status-pill.dropped{color:#991b1b;border-color:#fecaca;background:#fff1f2}
-.saved-status-control{width:100%;border:1px solid var(--g200);border-radius:10px;padding:9px 10px;font-size:12px;font-weight:800;font-family:inherit;background:#fff;color:var(--g700);outline:none;cursor:pointer;margin-bottom:10px}
-.saved-status-control:focus{border-color:var(--navy)}
-.saved-card-dropped{opacity:.55;filter:grayscale(.45)}
-.saved-card-dropped .saved-product-title{text-decoration:line-through;color:var(--g500)!important}
-.saved-card-status-badge{position:absolute;bottom:8px;left:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px;color:var(--g700);z-index:3}
 .hub-loading{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 20px;text-align:center}
 .hub-loading.active{display:flex}
 .hub-img-wrap{position:relative;width:140px;height:140px}
@@ -309,6 +296,19 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   .analysis-header{flex-direction:column}
   .calc-results.show{grid-template-columns:1fr}
 }
+
+/* STATUS TRACKER */
+.saved-status-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px 0}
+.saved-status-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;color:var(--g700)}
+.saved-status-pill.saved{color:var(--navy);border-color:#bfdbfe;background:#eff6ff}
+.saved-status-pill.testing{color:#7c3aed;border-color:#ddd6fe;background:#f5f3ff}
+.saved-status-pill.launched{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+.saved-status-pill.dropped{color:#991b1b;border-color:#fecaca;background:#fff1f2}
+.saved-status-control{width:100%;border:1px solid var(--g200);border-radius:10px;padding:9px 10px;font-size:12px;font-weight:800;font-family:inherit;background:#fff;color:var(--g700);outline:none;cursor:pointer;margin-bottom:10px}
+.saved-status-control:focus{border-color:var(--navy)}
+.saved-card-dropped{opacity:.55;filter:grayscale(.45)}
+.saved-card-dropped .saved-product-title{text-decoration:line-through;color:var(--g500)!important}
+.saved-card-status-badge{position:absolute;bottom:8px;left:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px;color:var(--g700);z-index:3}
 </style>
 </head>
 <body>
@@ -615,9 +615,6 @@ function buildAnalysisBody(p) {
   const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
   const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
 
-console.log('PRODUCT BEING SCORED:', p);
-console.log('SCORING OBJECT:', p.scoring);
-
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
@@ -734,25 +731,70 @@ console.log('SCORING OBJECT:', p.scoring);
       </div>
     </div>
 
-    <div class="analysis-panel">
-      <div class="analysis-panel-head"><span style="font-size:20px">💰</span><h2>Profit calculator</h2></div>
+        <div class="analysis-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">💰</span><h2>Unit Economics Engine</h2><span style="background:#EFF6FF;color:#1D4ED8;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;margin-left:auto">Hub exclusive</span></div>
       <div class="analysis-panel-body">
-        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your real numbers to see if this product is worth launching at your budget.</p>
-        <div class="calc-grid">
-          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}"></div></div>
-          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}"></div></div>
-          <div class="calc-field"><label class="calc-label">Shipping cost per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50"></div></div>
-          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20"></div></div>
+        <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your numbers — Hub models three scenarios and tells you exactly what success looks like before you spend a penny.</p>
+        <div class="calc-grid" style="margin-bottom:12px">
+          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Shipping per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20" oninput="liveCalc()"></div></div>
         </div>
-        <button class="calc-btn" onclick="runCalc()">Calculate profit →</button>
-        <div class="calc-results" id="calc-results">
-          <div class="calc-result-card"><div class="calc-result-label">Profit per unit</div><div class="calc-result-val" id="calc-profit-unit">—</div></div>
-          <div class="calc-result-card"><div class="calc-result-label">Break even per day</div><div class="calc-result-val" id="calc-breakeven">—</div></div>
-          <div class="calc-result-card"><div class="calc-result-label">Est. monthly profit</div><div class="calc-result-val" id="calc-monthly">—</div></div>
+        <div id="margin-alert" style="display:none;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.5;border:1px solid">⚠️ <strong>Hub says:</strong> <span id="margin-alert-text"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+          <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:14px;text-align:center">
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:6px">Conservative</div>
+            <div style="font-size:11px;color:var(--g500);margin-bottom:10px">1 sale/day</div>
+            <div style="font-size:11px;color:var(--g400);font-weight:700;margin-bottom:3px">Monthly profit</div>
+            <div style="font-size:20px;font-weight:900;margin-bottom:5px" id="sc-cons-profit">—</div>
+            <div style="font-size:10px;color:var(--g400)" id="sc-cons-roas">ROAS: —</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-cons-days">Break-even: —</div>
+          </div>
+          <div style="background:var(--navy);border:1.5px solid var(--navy);border-radius:14px;padding:14px;text-align:center;position:relative">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);border-radius:999px;padding:2px 10px;font-size:10px;font-weight:900;white-space:nowrap">REALISTIC</div>
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.5);margin-bottom:6px">Realistic</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px">3 sales/day</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:3px">Monthly profit</div>
+            <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:5px" id="sc-real-profit">—</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5)" id="sc-real-roas">ROAS: —</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px" id="sc-real-days">Break-even: —</div>
+          </div>
+          <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:14px;text-align:center">
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:6px">Aggressive</div>
+            <div style="font-size:11px;color:var(--g500);margin-bottom:10px">7 sales/day</div>
+            <div style="font-size:11px;color:var(--g400);font-weight:700;margin-bottom:3px">Monthly profit</div>
+            <div style="font-size:20px;font-weight:900;margin-bottom:5px" id="sc-agg-profit">—</div>
+            <div style="font-size:10px;color:var(--g400)" id="sc-agg-roas">ROAS: —</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-agg-days">Break-even: —</div>
+          </div>
         </div>
-        <div class="calc-verdict-row" id="calc-verdict-row">
-          <div class="calc-verdict" id="calc-verdict"></div>
-          <div style="font-size:12px;color:var(--g400);margin-top:8px;text-align:center">Based on 2× break even sales daily · ROAS needed: <span id="calc-roas" style="font-weight:700;color:var(--g700)">—</span></div>
+        <div style="background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:700;color:var(--g700)">Break-even simulator</div>
+            <div style="font-size:13px;font-weight:900;color:var(--navy)"><span id="slider-sales">3</span> sales/day</div>
+          </div>
+          <input type="range" id="sales-slider" min="1" max="20" value="3" step="1" oninput="updateSlider(this.value)" style="width:100%;accent-color:var(--navy);cursor:pointer;margin-bottom:12px">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div style="text-align:center;background:#fff;border:1px solid var(--g200);border-radius:10px;padding:10px 6px"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Revenue/mo</div><div style="font-size:14px;font-weight:900;color:var(--navy)" id="slider-revenue">—</div></div>
+            <div style="text-align:center;background:#fff;border:1px solid var(--g200);border-radius:10px;padding:10px 6px"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Ads/mo</div><div style="font-size:14px;font-weight:900;color:var(--amber)" id="slider-adspend">—</div></div>
+            <div style="text-align:center;background:#fff;border:1px solid var(--g200);border-radius:10px;padding:10px 6px"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">Net profit</div><div style="font-size:14px;font-weight:900" id="slider-profit">—</div></div>
+            <div style="text-align:center;background:#fff;border:1px solid var(--g200);border-radius:10px;padding:10px 6px"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase;margin-bottom:4px">ROAS needed</div><div style="font-size:14px;font-weight:900;color:var(--g900)" id="slider-roas">—</div></div>
+          </div>
+        </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--g700);margin-bottom:10px">Platform comparison — same budget, different economics</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:12px;text-align:center"><div style="font-size:12px;font-weight:800;color:#1D4ED8;margin-bottom:4px">📱 TikTok</div><div style="font-size:10px;color:#3B82F6;margin-bottom:6px">CPM ~£4–8</div><div style="font-size:11px;color:#1E40AF;font-weight:700">Est. sales/day</div><div style="font-size:18px;font-weight:900;color:#1D4ED8" id="plat-tiktok">—</div></div>
+            <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:12px;padding:12px;text-align:center"><div style="font-size:12px;font-weight:800;color:#C2410C;margin-bottom:4px">📘 Meta</div><div style="font-size:10px;color:#EA580C;margin-bottom:6px">CPM ~£8–14</div><div style="font-size:11px;color:#C2410C;font-weight:700">Est. sales/day</div><div style="font-size:18px;font-weight:900;color:#C2410C" id="plat-meta">—</div></div>
+            <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:12px;text-align:center"><div style="font-size:12px;font-weight:800;color:#15803D;margin-bottom:4px">🔍 Google</div><div style="font-size:10px;color:#16A34A;margin-bottom:6px">CPC ~£0.40–1.20</div><div style="font-size:11px;color:#15803D;font-weight:700">Est. sales/day</div><div style="font-size:18px;font-weight:900;color:#15803D" id="plat-google">—</div></div>
+          </div>
+        </div>
+        <div id="hub-calc-verdict" style="display:none;background:var(--navy-dark);border-radius:14px;padding:16px">
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:36px;height:36px;border-radius:50%;border:2px solid rgba(245,158,11,.4);flex-shrink:0">
+            <div><div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">Hub's verdict on these numbers</div><div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.7" id="hub-calc-text">—</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -932,28 +974,83 @@ function buildGrowthChart(rawCurve, windowClosesWeek) {
 function toggleTooltip(btn){const isOpen=btn.classList.contains('open');document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));if(!isOpen)btn.classList.add('open');}
 document.addEventListener('click',e=>{if(!e.target.classList.contains('research-info-btn'))document.querySelectorAll('.research-info-btn.open').forEach(b=>b.classList.remove('open'));});
 
-function runCalc(){
-  const sell=parseFloat(document.getElementById('calc-sell').value)||0;
-  const supplier=parseFloat(document.getElementById('calc-supplier').value)||0;
-  const shipping=parseFloat(document.getElementById('calc-shipping').value)||0;
-  const ads=parseFloat(document.getElementById('calc-ads').value)||0;
-  if(!sell||!supplier){showToast('Enter at least selling price and supplier cost');return;}
-  const profitPerUnit=sell-supplier-shipping;
-  const breakevenUnits=ads>0&&profitPerUnit>0?Math.ceil(ads/profitPerUnit):0;
-  const monthlyProfit=profitPerUnit>0?Math.round((breakevenUnits*2*profitPerUnit-ads)*30):0;
-  const roas=sell>0&&ads>0&&breakevenUnits>0?((breakevenUnits*sell)/ads).toFixed(2):'—';
-  document.getElementById('calc-profit-unit').textContent=profitPerUnit>=0?`£${profitPerUnit.toFixed(2)}`:`-£${Math.abs(profitPerUnit).toFixed(2)}`;
-  document.getElementById('calc-breakeven').textContent=breakevenUnits>0?`${breakevenUnits} sales`:'—';
-  document.getElementById('calc-monthly').textContent=monthlyProfit>0?`£${monthlyProfit.toLocaleString()}`:profitPerUnit<=0?'Loss':'—';
-  document.getElementById('calc-roas').textContent=roas;
-  document.getElementById('calc-results').classList.add('show');
-  document.getElementById('calc-verdict-row').classList.add('show');
-  const verdict=document.getElementById('calc-verdict');
-  const marginPct=sell>0?(profitPerUnit/sell)*100:0;
-  if(profitPerUnit<=0){verdict.className='calc-verdict bad';verdict.textContent='❌ Not profitable at these numbers — reduce supplier cost or increase selling price';}
-  else if(marginPct<40){verdict.className='calc-verdict tight';verdict.textContent=`⚠️ Tight margin (${Math.round(marginPct)}%) — workable but leaves little room for ad testing.`;}
-  else{verdict.className='calc-verdict good';verdict.textContent=`✅ Strong margin (${Math.round(marginPct)}%) — good foundation for paid ads. Hit ${breakevenUnits} sales/day to break even.`;}
+let _calcState = { sell:0, supplier:0, shipping:0, ads:0 };
+
+function liveCalc() {
+  const sell = parseFloat(document.getElementById('calc-sell')?.value) || 0;
+  const supplier = parseFloat(document.getElementById('calc-supplier')?.value) || 0;
+  const shipping = parseFloat(document.getElementById('calc-shipping')?.value) || 0;
+  const ads = parseFloat(document.getElementById('calc-ads')?.value) || 0;
+  _calcState = { sell, supplier, shipping, ads };
+  if (!sell || !supplier) return;
+  const profit = sell - supplier - shipping;
+  const marginPct = sell > 0 ? (profit / sell) * 100 : 0;
+  const alertEl = document.getElementById('margin-alert');
+  const alertText = document.getElementById('margin-alert-text');
+  if (alertEl && alertText) {
+    if (profit <= 0) {
+      alertEl.style.display='block'; alertEl.style.background='#FEE2E2'; alertEl.style.borderColor='#FECACA'; alertEl.style.color='#991B1B';
+      alertText.textContent="Your costs exceed your selling price — you'd lose money on every sale. Increase the price or find a cheaper supplier.";
+    } else if (marginPct < 35) {
+      alertEl.style.display='block'; alertEl.style.background='#FEF3C7'; alertEl.style.borderColor='#FDE68A'; alertEl.style.color='#92400E';
+      alertText.textContent=`Only a ${Math.round(marginPct)}% margin — very tight for paid ads. Try to get supplier cost below £${(sell*0.35).toFixed(2)} first.`;
+    } else { alertEl.style.display='none'; }
+  }
+  function calcScenario(salesPerDay) {
+    const netProfit = (sell * salesPerDay * 30) - ((supplier + shipping) * salesPerDay * 30) - (ads * 30);
+    const roas = ads > 0 ? ((sell * salesPerDay) / ads).toFixed(2) : '—';
+    const daysToProfit = ads > 0 && profit > 0 ? Math.ceil(ads / (profit * salesPerDay)) : '—';
+    return { netProfit, roas, daysToProfit };
+  }
+  const cons = calcScenario(1), real = calcScenario(3), agg = calcScenario(7);
+  const fmt = n => Math.round(n) >= 0 ? `£${Math.round(n).toLocaleString()}` : `-£${Math.abs(Math.round(n)).toLocaleString()}`;
+  const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  const setCol = (id, c) => { const el=document.getElementById(id); if(el) el.style.color=c; };
+  setEl('sc-cons-profit', fmt(cons.netProfit)); setCol('sc-cons-profit', cons.netProfit>=0?'var(--green)':'var(--red)');
+  setEl('sc-cons-roas', `ROAS: ${cons.roas}x`); setEl('sc-cons-days', cons.daysToProfit!=='—'?`Break-even: day ${cons.daysToProfit}`:'Break-even: —');
+  setEl('sc-real-profit', fmt(real.netProfit));
+  setEl('sc-real-roas', `ROAS: ${real.roas}x`); setEl('sc-real-days', real.daysToProfit!=='—'?`Break-even: day ${real.daysToProfit}`:'Break-even: —');
+  setEl('sc-agg-profit', fmt(agg.netProfit)); setCol('sc-agg-profit', agg.netProfit>=0?'var(--green)':'var(--red)');
+  setEl('sc-agg-roas', `ROAS: ${agg.roas}x`); setEl('sc-agg-days', agg.daysToProfit!=='—'?`Break-even: day ${agg.daysToProfit}`:'Break-even: —');
+  const slider = document.getElementById('sales-slider');
+  updateSlider(slider ? slider.value : 3);
+  if (ads > 0 && sell > 0) {
+    setEl('plat-tiktok', String(Math.max(1, Math.round((ads/6)*1000/sell*0.02))));
+    setEl('plat-meta', String(Math.max(1, Math.round((ads/11)*1000/sell*0.015))));
+    setEl('plat-google', String(Math.max(1, Math.round((ads/0.8)*0.03))));
+  }
+  const verdictEl = document.getElementById('hub-calc-verdict');
+  const verdictText = document.getElementById('hub-calc-text');
+  if (verdictEl && verdictText && profit > 0) {
+    verdictEl.style.display = 'block';
+    let v = '';
+    if (marginPct >= 60) v = `Strong margin at ${Math.round(marginPct)}% — real room to test and iterate. At ${ads?`£${ads}/day`:'your budget'}, you need a ${real.roas}x ROAS at 3 sales/day. That's achievable. Start with £${ads||20}/day for 7 days, find your best creative, then scale.`;
+    else if (marginPct >= 40) v = `Decent margin at ${Math.round(marginPct)}% — workable but you need efficient ad spend. At 3 sales/day you need ${real.roas}x ROAS which leaves little room for bad creative. Test tight, then scale.`;
+    else v = `Tight margin at ${Math.round(marginPct)}% — risky for paid ads. You need ${real.roas}x ROAS just to break even at 3 sales/day. Bring supplier cost down to £${(sell*0.35).toFixed(2)} or try organic TikTok first.`;
+    verdictText.textContent = v;
+  } else if (verdictEl) { verdictEl.style.display = 'none'; }
 }
+
+function updateSlider(val) {
+  const { sell, supplier, shipping, ads } = _calcState;
+  const sales = parseInt(val);
+  const el = document.getElementById('slider-sales'); if(el) el.textContent = sales;
+  if (!sell || !supplier) return;
+  const monthlyRev = sell * sales * 30;
+  const monthlyAdSpend = (ads||0) * 30;
+  const netProfit = monthlyRev - ((supplier+shipping)*sales*30) - monthlyAdSpend;
+  const roas = ads > 0 ? ((sell*sales)/ads).toFixed(2) : '—';
+  const fmt = n => n>=0 ? `£${Math.round(n).toLocaleString()}` : `-£${Math.abs(Math.round(n)).toLocaleString()}`;
+  const setEl = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  setEl('slider-revenue', fmt(monthlyRev));
+  setEl('slider-adspend', fmt(monthlyAdSpend));
+  const profEl = document.getElementById('slider-profit');
+  if(profEl){ profEl.textContent=fmt(netProfit); profEl.style.color=netProfit>=0?'var(--green)':'var(--red)'; }
+  setEl('slider-roas', roas+(roas!=='—'?'x':''));
+}
+
+function runCalc(){liveCalc();}
+
 
 async function generateCreative(productName){
   const btn=document.getElementById('creative-gen-btn');
@@ -1070,6 +1167,49 @@ function getUserEmail() {
   return null;
 }
 
+// ── STATUS TRACKER ────────────────────────────────────────────────────────
+function savedStatusKey(name) {
+  return 'drh_saved_status_' + String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+}
+function getSavedProductStatus(name) {
+  return localStorage.getItem(savedStatusKey(name)) || 'Saved';
+}
+function setSavedProductStatus(name, status) {
+  localStorage.setItem(savedStatusKey(name), status || 'Saved');
+}
+function getStatusMeta(status) {
+  const map = {
+    Saved: { label: 'Saved', emoji: '💛', className: 'saved' },
+    Testing: { label: 'Testing', emoji: '🧪', className: 'testing' },
+    Launched: { label: 'Launched', emoji: '🚀', className: 'launched' },
+    Dropped: { label: 'Dropped', emoji: '🗑️', className: 'dropped' }
+  };
+  return map[status] || map.Saved;
+}
+function updateSavedStatusSummary(saved) {
+  const el = document.getElementById('saved-status-summary');
+  if (!el) return;
+  if (!saved || !saved.length) { el.innerHTML = ''; return; }
+  const counts = { Saved: 0, Testing: 0, Launched: 0, Dropped: 0 };
+  saved.forEach(p => { const s = getSavedProductStatus(p.name); counts[s] = (counts[s]||0) + 1; });
+  el.innerHTML = ['Saved','Testing','Launched','Dropped'].map(status => {
+    const meta = getStatusMeta(status);
+    return `<div class="saved-status-pill ${meta.className}">${meta.emoji} ${counts[status]||0} ${status.toLowerCase()}</div>`;
+  }).join('');
+}
+function changeSavedProductStatus(index, status) {
+  const saved = window._savedProducts || [];
+  const p = saved[index];
+  if (!p) return;
+  setSavedProductStatus(p.name, status);
+  p._status = status;
+  renderSavedGrid(saved);
+  populateCompareDropdowns();
+  runCompare();
+  showToast(`${p.name} moved to ${status}`);
+}
+
+
 async function loadSavedProducts() {
   const email = getUserEmail();
   if (!email) return;
@@ -1101,7 +1241,6 @@ async function toggleSaveProduct(idx, btn) {
     try {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
-      localStorage.removeItem(savedStatusKey(p.name));
       btn.textContent = '🤍';
       showToast('Removed from Saved Products Hub');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
@@ -1124,84 +1263,23 @@ function showSavedMessage() {
   setTimeout(() => { msg.style.opacity='0'; msg.style.transition='opacity .3s'; setTimeout(() => msg.remove(), 300); }, 2000);
 }
 
-
-function savedStatusKey(name) {
-  return 'drh_saved_status_' + String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
-}
-function getSavedProductStatus(name) {
-  return localStorage.getItem(savedStatusKey(name)) || 'Saved';
-}
-function setSavedProductStatus(name, status) {
-  localStorage.setItem(savedStatusKey(name), status || 'Saved');
-}
-function getStatusMeta(status) {
-  const s = status || 'Saved';
-  const map = {
-    Saved: { label: 'Saved', emoji: '💛', className: 'saved' },
-    Testing: { label: 'Testing', emoji: '🧪', className: 'testing' },
-    Launched: { label: 'Launched', emoji: '🚀', className: 'launched' },
-    Dropped: { label: 'Dropped', emoji: '🗑️', className: 'dropped' }
-  };
-  return map[s] || map.Saved;
-}
-function updateSavedStatusSummary(saved) {
-  const el = document.getElementById('saved-status-summary');
-  if (!el) return;
-  saved = saved || [];
-  if (!saved.length) { el.innerHTML = ''; return; }
-  const counts = { Saved: 0, Testing: 0, Launched: 0, Dropped: 0 };
-  saved.forEach(p => { counts[getSavedProductStatus(p.name)] = (counts[getSavedProductStatus(p.name)] || 0) + 1; });
-  el.innerHTML = ['Saved','Testing','Launched','Dropped'].map(status => {
-    const meta = getStatusMeta(status);
-    const count = counts[status] || 0;
-    return `<div class="saved-status-pill ${meta.className}">${meta.emoji} ${count} ${status.toLowerCase()}</div>`;
-  }).join('');
-}
-function changeSavedProductStatus(index, status) {
-  const saved = window._savedProducts || [];
-  const p = saved[index];
-  if (!p) return;
-  setSavedProductStatus(p.name, status);
-  p._status = status;
-  renderSavedGrid(saved);
-  populateCompareDropdowns();
-  runCompare();
-  showToast(`${p.name} moved to ${status}`);
-}
-
 function renderSavedGrid(saved) {
   const grid = document.getElementById('saved-grid');
-  updateSavedStatusSummary(saved || []);
   if (!saved.length) {
-    window._savedProducts = [];
-    populateCompareDropdowns();
-    const compareTable = document.getElementById('compare-table');
-    if (compareTable) compareTable.innerHTML = '';
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No saved products yet</h3><p>Hit the 🤍 button on any product to save it here.</p></div>';
     return;
   }
-  saved = saved.map(p => ({ ...p, _status: getSavedProductStatus(p.name) }));
-  window._savedProducts = saved;
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px';
-  grid.innerHTML = saved.map((p, i) => {
-    const status = p._status || 'Saved';
-    const meta = getStatusMeta(status);
-    const droppedClass = status === 'Dropped' ? ' saved-card-dropped' : '';
-    const safeName = String(p.name || '').replace(/'/g,"\\'").replace(/\n/g,' ');
-    return `
-    <div class="${droppedClass.trim()}" style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
-      <button onclick="unsaveProduct('${safeName}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
+  grid.innerHTML = saved.map((p, i) => `
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column" id="saved-card-${i}">
+      <button onclick="unsaveProduct('${p.name.replace(/'/g,"\\'")}')" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;color:var(--red);z-index:3">✕ Remove</button>
       <div style="height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--g100);position:relative;flex-shrink:0">
         ${p.img ? `<img src="${p.img}" style="max-width:100%;max-height:146px;object-fit:contain;padding:8px" onerror="this.style.display='none'">` : `<div style="font-size:42px">${p.emoji || '📦'}</div>`}
         <div style="position:absolute;top:8px;left:8px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 9px">Grade ${p.grade || '?'}</div>
-        <div class="saved-card-status-badge">${meta.emoji} ${meta.label}</div>
       </div>
       <div style="padding:14px;display:flex;flex-direction:column;flex:1">
-        <div class="saved-product-title" style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px">${p.name}</div>
         <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche || ''} · ${p.season || 'Evergreen'}</div>
-        <select class="saved-status-control" onchange="changeSavedProductStatus(${i},this.value)">
-          ${['Saved','Testing','Launched','Dropped'].map(opt => `<option value="${opt}" ${status===opt?'selected':''}>${getStatusMeta(opt).emoji} ${opt}</option>`).join('')}
-        </select>
         <div style="display:flex;gap:6px;margin-bottom:10px;flex-shrink:0">
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Trend</div><div style="font-size:13px;font-weight:900;color:var(--navy)">${p.trendScore || '—'}</div></div>
           <div style="flex:1;background:var(--g50);border-radius:8px;padding:6px;text-align:center;border:1px solid var(--g100)"><div style="font-size:9px;color:var(--g400);font-weight:700;text-transform:uppercase">Margin</div><div style="font-size:13px;font-weight:900;color:var(--green)">${p.margin || '—'}</div></div>
@@ -1210,10 +1288,11 @@ function renderSavedGrid(saved) {
         <div style="font-size:12px;color:var(--g700);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;background:var(--g50);flex:1">${p.whyEmerging || p.mainAngle || ''}</div>
         <button onclick="openAnalysisFromSaved(${i})" style="width:100%;height:48px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;flex-shrink:0">🔍 Analyse</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
+  window._savedProducts = saved;
   populateCompareDropdowns();
 }
+
 async function unsaveProduct(name) {
   const email = getUserEmail();
   if (!email) return;
@@ -1234,7 +1313,7 @@ function populateCompareDropdowns() {
     if (!sel) return;
     const current = sel.value;
     sel.innerHTML = `<option value="" style="background:#142840;color:#fff">Select a product...</option>` +
-      saved.map((p,i) => { const st = getStatusMeta(p._status || getSavedProductStatus(p.name)); return `<option value="${i}" style="background:#142840;color:#fff">${st.emoji} ${p.name} — ${st.label}</option>`; }).join('');
+      saved.map((p,i) => `<option value="${i}" style="background:#142840;color:#fff">${p.emoji||'📦'} ${p.name}</option>`).join('');
     if (current) sel.value = current;
   });
 }
@@ -1253,7 +1332,6 @@ function runCompare() {
   function numVal(v) { return parseFloat(String(v||0).replace(/[^0-9.]/g,'')) || 0; }
   function getLaunch(p) { if (!p.launchReadiness) return '—'; return Math.round((p.launchReadiness.filter(function(i){return i.pass;}).length / p.launchReadiness.length)*100) + '%'; }
   var metrics = [
-    { label: 'Status', av: getSavedProductStatus(a.name), bv: getSavedProductStatus(b.name), higher: false },
     { label: 'Emerging Score', av: a.emergingScore||'—', bv: b.emergingScore||'—', higher: true },
     { label: 'Trend Score', av: a.trendScore||'—', bv: b.trendScore||'—', higher: true },
     { label: 'Problem Score', av: a.problemScore||'—', bv: b.problemScore||'—', higher: true },
