@@ -144,11 +144,22 @@ export default async function handler(req, res) {
       await Promise.all(batch.map(async (user) => {
         try {
           await resend.emails.send({
-            from: 'Hub at DropResearch Hub <hub@dropresearchhub.com>',
-            to: user.email,
-            subject: `Hub found ${totalCount} new product${totalCount !== 1 ? 's' : ''} this week`,
-            html: emailHtml,
-          });
+  from: 'DropResearch Hub <hub@dropresearchhub.com>',
+  to: user.email,
+  subject: `Your weekly DropResearch Hub product update`,
+  html: emailHtml,
+  text: `Your weekly DropResearch Hub product update is ready.
+
+Hub has found ${totalCount} new product${totalCount !== 1 ? 's' : ''} this week.
+
+Top pick: ${topProduct?.name || 'This week\'s top pick'}
+
+Log in to view the full product research, scoring breakdowns, ad angles and supplier search terms:
+
+https://dropresearchhub.com/members.html
+
+You are receiving this because you are a DropResearch Hub member.`,
+});
           sent++;
         } catch (e) {
           failed++;
