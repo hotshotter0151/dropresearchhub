@@ -114,6 +114,23 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-hero-metric-label{font-size:9px;color:var(--g400);font-weight:800;text-transform:uppercase;letter-spacing:.65px;margin-bottom:4px}
 .analysis-hero-metric-value{font-size:19px;font-weight:900;color:var(--g900);letter-spacing:-.2px}
 .analysis-hero-why{background:var(--g50);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:12px 14px;font-size:13px;color:var(--g700);line-height:1.65;font-style:italic}
+
+.analysis-hero-card{animation:drhFadeUp .48s ease both}
+.analysis-hero-img img{transition:transform .35s ease,filter .35s ease}
+.analysis-hero-img:hover img{transform:scale(1.035);filter:drop-shadow(0 12px 22px rgba(30,58,95,.14))}
+.analysis-hero-metric{animation:drhFadeUp .42s ease both}
+.analysis-hero-metric:nth-child(1){animation-delay:.08s}
+.analysis-hero-metric:nth-child(2){animation-delay:.14s}
+.analysis-hero-metric:nth-child(3){animation-delay:.2s}
+.score-card{animation:drhFadeUp .42s ease both}
+.score-row .score-card:nth-child(1){animation-delay:.06s}
+.score-row .score-card:nth-child(2){animation-delay:.11s}
+.score-row .score-card:nth-child(3){animation-delay:.16s}
+.score-row .score-card:nth-child(4){animation-delay:.21s}
+.analysis-verdict-card{animation:drhFadeUp .45s ease both,drhSoftPulse 1.15s ease .38s 1}
+@keyframes drhFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes drhSoftPulse{0%{box-shadow:0 0 0 rgba(245,158,11,0)}45%{box-shadow:0 0 0 6px rgba(245,158,11,.09)}100%{box-shadow:0 0 0 rgba(245,158,11,0)}}
+@media (prefers-reduced-motion: reduce){.analysis-hero-card,.analysis-hero-metric,.score-card,.analysis-verdict-card{animation:none!important}.analysis-hero-img img{transition:none!important}.analysis-hero-img:hover img{transform:none!important;filter:none!important}}
 .score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
 .score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
@@ -642,6 +659,26 @@ function buildAnalysisBody(p) {
     ? `<img src="${productImage}" alt="${p.name || 'Product image'}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="analysis-hero-fallback" style="display:none;align-items:center;justify-content:center;width:100%;height:100%">${p.emoji || '📦'}</div>`
     : `<div class="analysis-hero-fallback">${p.emoji || '📦'}</div>`;
 
+  const trendScoreNum = Number(p.trendScore || p.emergingScore || 0);
+  const marginText = String(p.margin || '').trim();
+  const saturationText = String(p.saturationRisk || 'Medium');
+  const competitionText = String(p.competitionLevel || saturationText);
+  const trendSentence = trendScoreNum >= 85
+    ? 'strong trend momentum'
+    : trendScoreNum >= 65
+      ? 'positive early trend signals'
+      : 'developing trend signals';
+  const saturationSentence = saturationText === 'Low'
+    ? 'low saturation'
+    : saturationText === 'Medium'
+      ? 'manageable competition'
+      : 'higher competition risk';
+  const marginSentence = marginText && marginText !== '—'
+    ? `margin potential around ${marginText}`
+    : 'enough margin potential to investigate further';
+  const hubSummary = `Hub picked this product because it combines ${trendSentence}, ${saturationSentence} and ${marginSentence}. Based on the current scores, this is a product worth reviewing before the market becomes more crowded.`;
+  const hubVerdictReason = p.verdictReason || `Based on the current analysis, Hub is weighing ${trendSentence}, ${competitionText.toLowerCase()} competition and ${marginText || 'margin'} potential before recommending the next step.`;
+
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
@@ -664,7 +701,7 @@ function buildAnalysisBody(p) {
             <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Est. Margin</div><div class="analysis-hero-metric-value" style="color:var(--green)">${p.margin || '—'}</div></div>
             <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Sat. Risk</div><div class="analysis-hero-metric-value" style="color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
           </div>
-          <div class="analysis-hero-why">${p.whyEmerging || p.whyNow || p.verdictReason || 'Hub has flagged this product for further research based on the current opportunity signals.'}</div>
+          <div class="analysis-hero-why">${hubSummary}</div>
         </div>
       </div>
     </div>
@@ -676,9 +713,9 @@ function buildAnalysisBody(p) {
       <div class="score-card"><div class="score-card-label">Est. Margin</div><div class="score-card-value" style="color:var(--green)">${p.margin||'—'}</div><div class="score-card-sub">${p.supplierCost?`Cost: ${p.supplierCost}`:'Estimated margin'}</div></div>
     </div>
 
-    <div style="background:${p.verdict==='Strong Opportunity'?'var(--green-bg)':p.verdict==='Watch List'?'var(--amber-bg)':'var(--red-bg)'};border:1px solid ${p.verdict==='Strong Opportunity'?'#bbf7d0':p.verdict==='Watch List'?'#fde68a':'#fecaca'};border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div class="analysis-verdict-card" style="background:${p.verdict==='Strong Opportunity'?'var(--green-bg)':p.verdict==='Watch List'?'var(--amber-bg)':'var(--red-bg)'};border:1px solid ${p.verdict==='Strong Opportunity'?'#bbf7d0':p.verdict==='Watch List'?'#fde68a':'#fecaca'};border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <div style="font-size:28px">${p.verdict==='Strong Opportunity'?'✅':p.verdict==='Watch List'?'👀':'❌'}</div>
-      <div style="flex:1"><div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict||'Under Review'}</div><div style="font-size:13px;color:var(--g700);margin-top:3px">${p.verdictReason||''}</div></div>
+      <div style="flex:1"><div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict||'Under Review'}</div><div style="font-size:13px;color:var(--g700);margin-top:3px">${hubVerdictReason}</div></div>
       <div style="text-align:right"><div style="font-size:11px;color:var(--g400);text-transform:uppercase;font-weight:700">Selling Price</div><div style="font-size:18px;font-weight:900;color:var(--navy)">${p.sellingPrice||p.margin||'—'}</div></div>
     </div>
 
