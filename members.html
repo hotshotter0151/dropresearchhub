@@ -98,6 +98,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-header-info h1{font-size:28px;font-weight:900;letter-spacing:-.8px;margin-bottom:4px}
 .analysis-header-info p{color:rgba(255,255,255,.65);font-size:14px}
 .analysis-body{padding:28px 3%;display:flex;flex-direction:column;gap:20px;max-width:1200px;margin:0 auto}
+.analysis-hero-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;box-shadow:0 12px 34px rgba(30,58,95,.08)}
+.analysis-hero-inner{display:grid;grid-template-columns:minmax(240px,360px) 1fr;gap:28px;padding:26px;align-items:center}
+.analysis-hero-img{min-height:320px;background:linear-gradient(180deg,#fff 0%,var(--g50) 100%);border:1px solid var(--g100);border-radius:18px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.analysis-hero-img img{max-width:100%;max-height:300px;width:auto;height:auto;object-fit:contain;display:block;padding:16px}
+.analysis-hero-fallback{font-size:88px;line-height:1}
+.analysis-hero-kicker{font-size:11px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.9px;margin-bottom:8px}
+.analysis-hero-title{font-size:30px;font-weight:900;letter-spacing:-.8px;color:var(--g900);line-height:1.12;margin-bottom:8px}
+.analysis-hero-meta{font-size:13px;color:var(--g500);font-weight:600;margin-bottom:16px}
+.analysis-hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.analysis-hero-badge{border-radius:999px;padding:7px 13px;font-size:12px;font-weight:900;border:1px solid var(--g200);background:var(--g50);color:var(--g700)}
+.analysis-hero-badge.gold{background:rgba(245,158,11,.13);border-color:rgba(245,158,11,.35);color:var(--amber)}
+.analysis-hero-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.analysis-hero-metric{background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:13px;text-align:center}
+.analysis-hero-metric-label{font-size:9px;color:var(--g400);font-weight:800;text-transform:uppercase;letter-spacing:.65px;margin-bottom:4px}
+.analysis-hero-metric-value{font-size:19px;font-weight:900;color:var(--g900);letter-spacing:-.2px}
+.analysis-hero-why{background:var(--g50);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:12px 14px;font-size:13px;color:var(--g700);line-height:1.65;font-style:italic}
 .score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
 .score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
@@ -273,6 +289,10 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .mobile-logo-text span{color:var(--gold)}
 .members-main{margin-left:240px;min-height:100vh;transition:margin .25s ease}
 @media(max-width:900px){
+  .analysis-hero-inner{grid-template-columns:1fr;gap:18px;padding:18px}
+  .analysis-hero-img{min-height:260px}
+  .analysis-hero-img img{max-height:240px}
+  .analysis-hero-title{font-size:24px}
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .members-main{margin-left:0}
@@ -289,6 +309,9 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   .launch-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
+  .analysis-hero-metrics{grid-template-columns:1fr}
+  .analysis-hero-img{min-height:230px}
+  .analysis-hero-img img{max-height:215px}
   .products-grid{grid-template-columns:1fr}
   .score-row{grid-template-columns:repeat(2,1fr)}
   .research-grid{grid-template-columns:1fr}
@@ -614,11 +637,38 @@ function buildAnalysisBody(p) {
   const launchColor=launchPct>=80?'var(--green)':launchPct>=60?'var(--amber)':'var(--red)';
   const launchVerdict=launchPct>=80?'✅ Ready to test':launchPct>=60?'⚠️ Test with caution':'❌ Needs more research';
   const supplierTerms=p.supplierSearchTerms||[p.aliSearchTerm||p.name,p.name,p.googleTrendsKeyword||p.name];
+  const productImage = p.img || p.image || p.imageUrl || p.productImage || p.mainImage || p.thumbnail || p.supplierImage || p.aliexpressImage || p?.data?.image || '';
+  const productHeroImage = productImage
+    ? `<img src="${productImage}" alt="${p.name || 'Product image'}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="analysis-hero-fallback" style="display:none;align-items:center;justify-content:center;width:100%;height:100%">${p.emoji || '📦'}</div>`
+    : `<div class="analysis-hero-fallback">${p.emoji || '📦'}</div>`;
 
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
   body.innerHTML=`
+    <div class="analysis-hero-card">
+      <div class="analysis-hero-inner">
+        <div class="analysis-hero-img">
+          ${productHeroImage}
+        </div>
+        <div>
+          <div class="analysis-hero-kicker">Hub's product analysis</div>
+          <div class="analysis-hero-title">${p.name || 'Product Analysis'}</div>
+          <div class="analysis-hero-meta">${p.niche || 'General'} · ${p.stage || 'Emerging'} · ${p.season || 'Evergreen'}</div>
+          <div class="analysis-hero-badges">
+            <div class="analysis-hero-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)};border-color:${gradeColorBg(p.grade)}">Grade ${p.grade || '?'}</div>
+            <div class="analysis-hero-badge gold">${p.verdict || 'Opportunity under review'}</div>
+          </div>
+          <div class="analysis-hero-metrics">
+            <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Trend Score</div><div class="analysis-hero-metric-value" style="color:var(--navy)">${p.trendScore || '—'}</div></div>
+            <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Est. Margin</div><div class="analysis-hero-metric-value" style="color:var(--green)">${p.margin || '—'}</div></div>
+            <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Sat. Risk</div><div class="analysis-hero-metric-value" style="color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
+          </div>
+          <div class="analysis-hero-why">${p.whyEmerging || p.whyNow || p.verdictReason || 'Hub has flagged this product for further research based on the current opportunity signals.'}</div>
+        </div>
+      </div>
+    </div>
+
     <div class="score-row">
       <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.emergingScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
       <div class="score-card"><div class="score-card-label">Trend Score</div><div class="score-card-value" style="color:var(--navy)">${p.trendScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Growth signal strength</div></div>
