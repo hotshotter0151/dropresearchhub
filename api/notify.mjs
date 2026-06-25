@@ -145,7 +145,7 @@ export default async function handler(req, res) {
         try {
           await resend.emails.send({
   from: 'DropResearch Hub <hub@dropresearchhub.com>',
-  to: user.email,
+  to: 'test-v95i3d75c@srv1.mail-tester.com',
   subject: `Your weekly DropResearch Hub product update`,
   html: emailHtml,
   text: `Your weekly DropResearch Hub product update is ready.
