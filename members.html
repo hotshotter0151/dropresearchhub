@@ -766,16 +766,16 @@ function runHubAnalyseTransition(p, onComplete) {
     if (idx < lines.length && lines[idx]) {
       lines[idx].classList.add('active');
       idx += 1;
-      setTimeout(advance, 260);
+      setTimeout(advance, 700);
       return;
     }
     setTimeout(() => {
       overlay.classList.remove('show');
       overlay.setAttribute('aria-hidden','true');
       onComplete();
-    }, 160);
+    }, 450);
   };
-  setTimeout(advance, 80);
+  setTimeout(advance, 180);
 }
 
 function renderAnalysisView(p, subtitle) {
