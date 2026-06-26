@@ -125,6 +125,7 @@ select.filter-input{min-width:140px}
 .product-links{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .product-links a{font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none}
 .product-thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--g200);margin-top:6px;display:block}
+.product-thumb-empty{display:flex;align-items:center;justify-content:center;background:var(--g50);color:var(--g400);font-size:10px;font-weight:800;text-align:center;line-height:1.2;padding:6px}
 .product-controls{display:flex;flex-direction:column;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
 .grade-badge{border-radius:8px;padding:5px 12px;font-size:12px;font-weight:900;text-align:center}
 .toggle-btn{width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;background:var(--g300);position:relative;transition:background .2s;flex-shrink:0}
@@ -663,7 +664,7 @@ async function adminGenerate() {
     let c = t.replace(/```json|```/g,'').trim();
     const s = c.indexOf('['), e = c.lastIndexOf(']');
     if (s===-1||e===-1) throw new Error('No product array found');
-    const newProducts = JSON.parse(c.slice(s,e+1));
+    const newProducts = JSON.parse(c.slice(s,e+1)).map(normaliseProductImage);
 
     setGenLog('gen-log-supplier', 'done', 'Supplier data read successfully');
     setGenLog('gen-log-queue', 'active', 'Preparing review queue');
@@ -697,6 +698,22 @@ async function adminGenerate() {
   genText.textContent = '✨ Generate 3 products';
 }
 
+
+function getProductImage(p) {
+  return p?.img || p?.image || p?.imageUrl || p?.image_url || p?.productImage || p?.product_image || p?.thumbnail || p?.thumb || p?.photo || p?.picture || p?.supplierImage || p?.supplier_image || p?.aliImage || p?.ali_image || p?.aliexpressImage || p?.aliexpress_image || p?.mainImage || p?.main_image || p?.primaryImage || p?.primary_image || p?.supplier?.image || p?.supplier?.imageUrl || p?.supplier?.thumbnail || p?.supplierData?.image || p?.supplierData?.imageUrl || p?.supplierData?.thumbnail || p?.aliExpress?.image || p?.aliExpress?.imageUrl || p?.aliexpress?.image || p?.aliexpress?.imageUrl || '';
+}
+
+function normaliseProductImage(p) {
+  const img = getProductImage(p);
+  return img ? { ...p, img } : p;
+}
+
+function productImageHtml(p) {
+  const img = getProductImage(p);
+  if (!img) return '<div class="product-thumb product-thumb-empty">No image returned</div>';
+  return `<img class="product-thumb" src="${esc(String(img))}" onerror="this.outerHTML='<div class=&quot;product-thumb product-thumb-empty&quot;>Image unavailable</div>'">`;
+}
+
 function renderPendingList() {
   const list = document.getElementById('pending-list');
   document.getElementById('pending-count-badge').textContent = pendingProducts.length;
@@ -708,7 +725,7 @@ function renderPendingList() {
         <div class="product-name">${p.name}</div>
         <div class="product-meta">${p.niche||''} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'} · Sat Risk: ${p.saturationRisk||'—'}</div>
         <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
-        ${p.img?`<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
+        ${productImageHtml(p)}
         <div class="product-links">
           <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe">📺 Meta Ads</a>
           <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fff0e6;color:#c2410c;border:1px solid #fed7aa">🛒 AliExpress</a>
@@ -786,7 +803,7 @@ async function loadAllProducts() {
             </div>
             <div class="product-meta">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'}</div>
             <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
-            ${p.img ? `<img class="product-thumb" src="${p.img}" onerror="this.style.display='none'">` : ''}
+            ${productImageHtml(p)}
           </div>
           <div class="product-controls">
             <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'—'}</div>
