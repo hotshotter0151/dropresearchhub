@@ -40,26 +40,27 @@ export default async function handler(req, res) {
     const rapidApiKey = process.env.RAPIDAPI_KEY;
     if (!rapidApiKey || !aliSearchTerm) return null;
     try {
-      const url = `https://aliexpress-api2.p.rapidapi.com/search?SearchText=${encodeURIComponent(aliSearchTerm)}&page=1&pageSize=3`;
+      const url = `https://aliexpress-datahub.p.rapidapi.com/item_search_2?q=${encodeURIComponent(aliSearchTerm)}&page=1`;
       const r = await fetch(url, {
-        headers: { 'x-rapidapi-host': 'aliexpress-api2.p.rapidapi.com', 'x-rapidapi-key': rapidApiKey },
-        signal: AbortSignal.timeout(4000)
+        headers: { 'x-rapidapi-host': 'aliexpress-datahub.p.rapidapi.com', 'x-rapidapi-key': rapidApiKey },
+        signal: AbortSignal.timeout(6000)
       });
-      if (!r.ok) return null;
+      if (!r.ok) { console.log('[ALI] HTTP error:', r.status); return null; }
       const data = await r.json();
-      const items = data?.result?.resultList || data?.data?.products || [];
-      const first = items[0]?.item || items[0];
-      if (!first) { console.log('[ALI] No items for:', aliSearchTerm, JSON.stringify(Object.keys(data||{}))); return null; }
-      console.log('[ALI] Keys:', JSON.stringify(Object.keys(first).slice(0,15)));
+      const items = data?.result?.resultList || [];
+      const first = items[0]?.item || null;
+      if (!first) { console.log('[ALI] No items for:', aliSearchTerm); return null; }
+      const img = first.image ? 'https:' + first.image : null;
+      console.log('[ALI] Got image:', img ? 'yes' : 'no', 'for:', aliSearchTerm);
       return {
-        img: first.image || first.productImage || first.img || first.imageUrl || first.mainImage || first.picUrl || null,
-        supplierPrice: first.salePrice || first.price?.current || null,
-        orderCount: first.tradeCount || first.soldCount || first.orders || null,
-        rating: first.starRating || first.averageStar || null,
-        reviewCount: first.feedbackRating?.totalValidNum || first.reviewCount || null,
-        shippingDays: first.logisticsDesc || null
+        img,
+        supplierPrice: first.sku?.def?.promotionPrice || null,
+        orderCount: first.sales || null,
+        rating: first.averageStarRate || null,
+        reviewCount: null,
+        shippingDays: null
       };
-    } catch (e) { return null; }
+    } catch (e) { console.log('[ALI] Error:', e.message); return null; }
   }
 
   async function fetchTrendingData() {
