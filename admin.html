@@ -155,6 +155,16 @@ select.filter-input{min-width:140px}
 .gen-complete-note{display:none;margin-top:14px;background:var(--green-bg);border:1px solid #bbf7d0;color:#166534;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:750}
 .gen-complete-note.show{display:block}
 
+.hub-note-card{background:linear-gradient(135deg,#fff7ed 0%,#fff 48%,#f8fafc 100%);border:1px solid #fed7aa;border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(245,158,11,.08);position:relative;overflow:hidden}
+.hub-note-card::after{content:'';position:absolute;right:-34px;top:-34px;width:120px;height:120px;border-radius:50%;background:rgba(245,158,11,.08)}
+.hub-note-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:relative;z-index:1}
+.hub-note-kicker{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#b45309;margin-bottom:4px}
+.hub-note-title{font-size:17px;font-weight:900;color:var(--g900);letter-spacing:-.3px}
+.hub-note-body{font-size:13px;color:var(--g700);margin-top:7px;max-width:780px;line-height:1.65}
+.hub-note-tag{background:#fff;border:1px solid #fde68a;color:#92400e;border-radius:999px;padding:5px 10px;font-size:11px;font-weight:900;white-space:nowrap}
+.hub-note-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
+.hub-note-chip{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;color:var(--g500)}
+
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
 </style>
@@ -232,6 +242,19 @@ select.filter-input{min-width:140px}
 
     <!-- PRODUCTS -->
     <section id="products" class="section">
+
+      <!-- Hub's Notes -->
+      <div class="hub-note-card" id="hub-note-card">
+        <div class="hub-note-top">
+          <div>
+            <div class="hub-note-kicker" id="hub-note-kicker">Hub's Note</div>
+            <div class="hub-note-title" id="hub-note-title">Today's focus</div>
+            <div class="hub-note-body" id="hub-note-body">Loading today's admin note...</div>
+          </div>
+          <div class="hub-note-tag" id="hub-note-tag">Workbench</div>
+        </div>
+        <div class="hub-note-footer" id="hub-note-footer"></div>
+      </div>
 
       <!-- Generate -->
       <div class="card" style="margin-bottom:16px">
@@ -930,6 +953,59 @@ let toastTimer;
 function toast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className=`show ${type}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className='',3000); }
 
 
+
+function updateHubNote() {
+  const notes = [
+    {
+      day: 'Sunday', tag: 'Planning', title: 'Set up next week before it starts',
+      body: 'Use today to think ahead. The best product drops feel calm because the weak ideas have already been filtered out before members ever see them.',
+      chips: ['Plan next drop', 'Check weak niches', 'Keep it simple']
+    },
+    {
+      day: 'Monday', tag: 'Product Drop', title: 'Build this week\'s product drop',
+      body: 'Start with quality over volume. Three strong products with clear UK demand, simple use cases and strong visuals will beat a bigger list of average finds.',
+      chips: ['Generate products', 'Review carefully', 'Publish only the best']
+    },
+    {
+      day: 'Tuesday', tag: 'Supplier Check', title: 'Images and supplier confidence matter today',
+      body: 'Before you trust a product, look at the basics: does it have a strong image, a sensible supplier route, a believable cost price and enough clarity for a beginner to understand it?',
+      chips: ['Image quality', 'Supplier clarity', 'Cost check']
+    },
+    {
+      day: 'Wednesday', tag: 'Creative Angles', title: 'Think like the advert, not the spreadsheet',
+      body: 'A product needs a scroll-stopping reason to exist. If you cannot explain the problem, the audience and the first video hook quickly, it probably is not ready for members.',
+      chips: ['Hook test', 'Problem angle', 'Beginner friendly']
+    },
+    {
+      day: 'Thursday', tag: 'Margin Day', title: 'Check the money before the hype',
+      body: 'A product can look exciting but still be poor if the margin is thin. Prioritise products with enough room for ads, returns, discounts and beginner mistakes.',
+      chips: ['Margin check', 'Sell price', 'Ad room']
+    },
+    {
+      day: 'Friday', tag: 'Publish Check', title: 'Make sure the member feed feels sharp',
+      body: 'Before you publish, check the products have strong images, clear UK use and simple ad angles. A weaker product with a great image can still outperform a clever product nobody understands.',
+      chips: ['Final review', 'Publish selected', 'Notify members']
+    },
+    {
+      day: 'Saturday', tag: 'Light Review', title: 'Step back and look for patterns',
+      body: 'Use today to spot what keeps appearing across the week. Repeated problems, seasonal demand and simple household fixes often become better drops than random viral products.',
+      chips: ['Pattern spotting', 'Seasonal demand', 'Next ideas']
+    }
+  ];
+  const now = new Date();
+  const note = notes[now.getDay()] || notes[1];
+  const kicker = document.getElementById('hub-note-kicker');
+  const title = document.getElementById('hub-note-title');
+  const body = document.getElementById('hub-note-body');
+  const tag = document.getElementById('hub-note-tag');
+  const footer = document.getElementById('hub-note-footer');
+  if (kicker) kicker.textContent = `Hub's Note — ${note.day}`;
+  if (title) title.textContent = note.title;
+  if (body) body.textContent = note.body;
+  if (tag) tag.textContent = note.tag;
+  if (footer) footer.innerHTML = note.chips.map(c => `<span class="hub-note-chip">${esc(c)}</span>`).join('');
+}
+
 function updatePersonalGreeting() {
   const el = document.getElementById('personal-greeting');
   if (!el) return;
@@ -942,6 +1018,7 @@ function updatePersonalGreeting() {
 
 // Init
 updatePersonalGreeting();
+updateHubNote();
 loadUsers();
 loadHealth();
 </script>
