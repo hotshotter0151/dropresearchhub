@@ -165,6 +165,50 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .toast.show{opacity:1}
 @keyframes hubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
+
+
+/* ── DASHBOARD v1.1 PREMIUM COMMAND CENTRE ── */
+.dash-welcome{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 58%,#244c7d 100%);border-radius:24px;padding:0;margin-bottom:18px;box-shadow:0 18px 45px rgba(20,40,64,.18);border:1px solid rgba(255,255,255,.08)}
+.dash-welcome::before{width:340px;height:340px;top:-150px;right:-80px;background:rgba(245,158,11,.10)}
+.dash-welcome::after{content:'';position:absolute;bottom:-120px;right:220px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.dash-command-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:stretch;padding:28px}
+.dash-welcome-top{margin-bottom:18px}
+.dash-hub-img{width:64px;height:64px;border:2px solid rgba(245,158,11,.45);box-shadow:0 10px 25px rgba(0,0,0,.18)}
+.dash-welcome-label{color:rgba(245,158,11,.9)}
+.dash-welcome-name{font-size:30px;line-height:1.08;letter-spacing:-.9px;max-width:720px}
+.dash-hub-note{font-size:14px;color:rgba(255,255,255,.78);max-width:760px}
+.dash-meta-badge{padding:7px 13px;background:rgba(255,255,255,.08)}
+.dash-brief-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:18px;backdrop-filter:blur(10px)}
+.dash-brief-label{font-size:10px;font-weight:900;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.42);margin-bottom:10px}
+.dash-brief-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.dash-brief-row:last-child{border-bottom:none}
+.dash-brief-k{font-size:12px;color:rgba(255,255,255,.58);font-weight:700}
+.dash-brief-v{font-size:13px;color:#fff;font-weight:900;text-align:right}
+.dash-primary-cta{margin-top:14px;display:flex;justify-content:center;align-items:center;gap:8px;background:var(--gold);color:var(--navy-dark);border-radius:12px;padding:12px 14px;font-size:13px;font-weight:900;text-decoration:none;box-shadow:0 12px 28px rgba(245,158,11,.25);transition:all .16s}
+.dash-primary-cta:hover{transform:translateY(-1px);background:var(--gold-light)}
+.stat-card{border-radius:18px;padding:18px 20px;position:relative;overflow:hidden;transition:all .18s;box-shadow:0 8px 22px rgba(30,58,95,.04)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--gold))}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(30,58,95,.09)}
+.stat-card-value{font-size:32px;color:var(--navy-dark)}
+.section-head{margin-top:4px}
+.section-title{font-size:19px;letter-spacing:-.45px}
+.section-kicker{font-size:12px;color:var(--g500);margin-top:-8px;margin-bottom:14px}
+#dash-products-grid{grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);align-items:stretch}
+#dash-products-grid .preview-card:first-child{border-radius:20px;box-shadow:0 14px 34px rgba(30,58,95,.08)}
+.preview-card{border-radius:18px}
+.preview-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(30,58,95,.11)}
+.preview-card-name{letter-spacing:-.2px}
+.quick-actions{grid-template-columns:repeat(4,1fr)}
+.qa-card{align-items:flex-start;flex-direction:column;min-height:150px;border-radius:18px;padding:18px;background:linear-gradient(180deg,#fff 0%,#fbfcff 100%)}
+.qa-icon{width:42px;height:42px}
+.qa-title{font-size:13px;line-height:1.25}
+.qa-desc{font-size:12px}
+.saved-strip{border-radius:18px;box-shadow:0 8px 22px rgba(30,58,95,.04)}
+.dashboard-end-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:18px;padding:16px 18px;margin-top:18px;display:flex;align-items:center;gap:12px;color:#9a3412;font-size:13px;line-height:1.55}
+.dashboard-end-note strong{color:#7c2d12}
+@media(max-width:1100px){.dash-command-inner{grid-template-columns:1fr}.quick-actions{grid-template-columns:repeat(2,1fr)}#dash-products-grid{grid-template-columns:1fr}.dash-brief-card{max-width:none}}
+@media(max-width:900px){.dash-command-inner{padding:20px}.dash-welcome-name{font-size:23px}.quick-actions{grid-template-columns:1fr}.dashboard-end-note{align-items:flex-start}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
@@ -242,7 +286,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
     <div class="nav-section-label" style="margin-top:8px">Your Research</div>
     <button class="nav-item" onclick="showPage('saved',this)">
-      <span class="nav-item-icon">💛</span> Products Hub Is Tracking
+      <span class="nav-item-icon">💛</span> Tracked Products
     </button>
     <button class="nav-item" onclick="showPage('compare',this)">
       <span class="nav-item-icon">⚖️</span> Hub's Comparison Report
@@ -268,58 +312,70 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
 
-    <!-- HUB WELCOME CARD -->
+    <!-- HUB COMMAND CENTRE -->
     <div class="dash-welcome">
-      <div class="dash-welcome-top">
-        <div class="dash-hub-img">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+      <div class="dash-command-inner">
+        <div>
+          <div class="dash-welcome-top">
+            <div class="dash-hub-img">
+              <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+            </div>
+            <div class="dash-welcome-text">
+              <div class="dash-welcome-label">Hub's research briefing</div>
+              <div class="dash-welcome-name"><span id="dash-greeting">Good morning</span> — your product research briefing is ready.</div>
+              <div class="dash-hub-note" id="hub-weekly-note">Loading Hub's research notes...</div>
+            </div>
+          </div>
+          <div class="dash-meta">
+            <div class="dash-meta-badge green">🟢 Hub is active</div>
+            <div class="dash-meta-badge" id="drop-date-badge">Loading...</div>
+            <div class="dash-meta-badge" id="products-live-badge">Loading...</div>
+          </div>
         </div>
-        <div class="dash-welcome-text">
-          <div class="dash-welcome-label">Hub's weekly note</div>
-          <div class="dash-welcome-name" id="dash-greeting">Good morning</div>
-          <div class="dash-hub-note" id="hub-weekly-note">Loading Hub's research notes...</div>
+        <div class="dash-brief-card">
+          <div class="dash-brief-label">Today's command centre</div>
+          <div class="dash-brief-row"><span class="dash-brief-k">Best action</span><span class="dash-brief-v">Review weekly picks</span></div>
+          <div class="dash-brief-row"><span class="dash-brief-k">Research mode</span><span class="dash-brief-v">UK market focus</span></div>
+          <div class="dash-brief-row"><span class="dash-brief-k">Next step</span><span class="dash-brief-v">Choose a product to validate</span></div>
+          <a class="dash-primary-cta" href="members.html">📈 Open Emerging Products →</a>
         </div>
-      </div>
-      <div class="dash-meta">
-        <div class="dash-meta-badge green">🟢 Hub is active</div>
-        <div class="dash-meta-badge" id="drop-date-badge">Loading...</div>
-        <div class="dash-meta-badge" id="products-live-badge">Loading...</div>
       </div>
     </div>
 
     <!-- STATS -->
     <div class="stat-row">
       <div class="stat-card">
-        <div class="stat-card-label">Products This Week</div>
+        <div class="stat-card-label">Weekly Picks</div>
         <div class="stat-card-value" id="stat-products">—</div>
-        <div class="stat-card-sub">Hub's picks</div>
+        <div class="stat-card-sub">Ready to analyse</div>
         <div class="stat-card-trend up" id="stat-products-trend"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Products Saved</div>
+        <div class="stat-card-label">Tracked Products</div>
         <div class="stat-card-value" id="stat-saved">—</div>
-        <div class="stat-card-sub">Hub is tracking</div>
+        <div class="stat-card-sub">Saved by you</div>
         <div class="stat-card-trend amber" id="stat-saved-trend"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Avg. Margin</div>
+        <div class="stat-card-label">Average Margin</div>
         <div class="stat-card-value" id="stat-margin">—</div>
         <div class="stat-card-sub">This week's picks</div>
         <div class="stat-card-trend up"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Top Grade</div>
+        <div class="stat-card-label">Best Grade</div>
         <div class="stat-card-value" id="stat-grade" style="color:var(--green)">—</div>
-        <div class="stat-card-sub">Best pick this week</div>
+        <div class="stat-card-sub">Highest rated pick</div>
       </div>
     </div>
 
     <!-- THIS WEEK'S PICKS -->
     <div class="section-head">
-      <div class="section-title">Hub's picks this week</div>
-      <a class="section-link" onclick="showPage('opportunities',document.querySelector('.nav-item:nth-child(2)'))">
-        See full reports →
-      </a>
+      <div>
+        <div class="section-title">Hub's highest-priority picks</div>
+        <div class="section-kicker">A quick snapshot of the products Hub thinks are worth your attention first.</div>
+      </div>
+      <a class="section-link" href="members.html">See full reports →</a>
     </div>
     <div class="products-preview" id="dash-products-grid">
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--g400)">
@@ -331,7 +387,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
     <!-- QUICK ACTIONS -->
     <div class="section-head" style="margin-top:24px">
-      <div class="section-title">Ask Hub</div>
+      <div class="section-title">What do you want Hub to help with next?</div>
     </div>
     <div class="quick-actions">
       <a class="qa-card" onclick="showPage('validator',null)">
@@ -344,35 +400,40 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <a class="qa-card" onclick="showPage('creative',null)">
         <div class="qa-icon" style="background:#fef3c7">✍️</div>
         <div class="qa-text">
-          <div class="qa-title">Ask Hub For Ad Angles</div>
-          <div class="qa-desc">Hub writes your TikTok script, hooks and a creator brief ready to send.</div>
+          <div class="qa-title">Hub's Creative Studio</div>
+          <div class="qa-desc">Turn a product into scripts, hooks and a ready-to-send creator brief.</div>
         </div>
       </a>
       <a class="qa-card" onclick="showPage('simulator',null)">
         <div class="qa-icon" style="background:#f0fdf4">🚀</div>
         <div class="qa-text">
-          <div class="qa-title">Ask Hub For A Launch Plan</div>
-          <div class="qa-desc">Hub builds your store concept and a week-by-week launch roadmap.</div>
+          <div class="qa-title">Build A Launch Plan</div>
+          <div class="qa-desc">Get a store concept, launch roadmap and next-step plan.</div>
         </div>
       </a>
       <a class="qa-card" onclick="showPage('saved',null)">
         <div class="qa-icon" style="background:#fdf4ff">💛</div>
         <div class="qa-text">
-          <div class="qa-title">Products Hub Is Tracking</div>
-          <div class="qa-desc">Review and compare the products you've asked Hub to keep an eye on.</div>
+          <div class="qa-title">Tracked Products</div>
+          <div class="qa-desc">Review saved products and compare what Hub is tracking for you.</div>
         </div>
       </a>
     </div>
 
     <!-- SAVED STRIP -->
     <div class="section-head" style="margin-top:8px">
-      <div class="section-title">Hub is tracking for you</div>
+      <div class="section-title">Products Hub is tracking for you</div>
       <a class="section-link" onclick="showPage('saved',null)">View all →</a>
     </div>
     <div class="saved-strip">
       <div id="saved-strip-inner">
         <div class="saved-strip-empty">Nothing saved yet — hit 💛 on any product to ask Hub to track it.</div>
       </div>
+    </div>
+
+    <div class="dashboard-end-note">
+      <span style="font-size:22px">💡</span>
+      <div><strong>Hub's tip:</strong> Use the dashboard as your starting point. Pick one product, read the full report, then build either a launch plan or creative pack before testing.</div>
     </div>
 
   </div>
@@ -451,7 +512,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="feature-header">
       <div class="feature-header-icon">✍️</div>
       <div class="feature-header-text">
-        <h1>Ask Hub For Ad Angles</h1>
+        <h1>Hub's Creative Studio</h1>
         <p>Hub writes your TikTok script, three opening hooks, and a brief you can send straight to a creator.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
@@ -480,7 +541,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="feature-header">
       <div class="feature-header-icon">🚀</div>
       <div class="feature-header-text">
-        <h1>Ask Hub For A Launch Plan</h1>
+        <h1>Build A Launch Plan</h1>
         <p>Hub builds your store concept and a week-by-week plan for launching any product. Takes about 15 seconds.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
@@ -509,7 +570,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="feature-header">
       <div class="feature-header-icon">💛</div>
       <div class="feature-header-text">
-        <h1>Products Hub Is Tracking For You</h1>
+        <h1>Tracked Products For You</h1>
         <p>These are the products you've asked Hub to keep an eye on.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
@@ -641,6 +702,7 @@ async function loadProducts() {
     document.getElementById('products-badge').textContent = latest3.length;
     document.getElementById('products-live-badge').textContent = products.length + ' products live';
     document.getElementById('stat-products').textContent = latest3.length;
+    document.getElementById('stat-products-trend').textContent = 'Fresh research ready';
 
     const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
     const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
