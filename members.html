@@ -890,8 +890,21 @@ function buildAnalysisBody(p) {
   const emergingScoreDisplay = Number(p.emergingScore || 0);
   const trendScoreDisplay = Number(p.trendScore || 0);
   const heroTrendScoreDisplay = Number(p.trendScore || 0);
-  const confidenceScoreRaw = Number(p.confidenceScore || p.confidence || Math.round(((Number(p.emergingScore)||68) * 0.55) + ((Number(p.trendScore)||65) * 0.25) + (saturationText === 'Low' ? 16 : saturationText === 'Medium' ? 10 : 5)));
-  const confidenceScore = Math.max(42, Math.min(96, confidenceScoreRaw));
+  const parseScoreValue = (value) => {
+    if (value === null || value === undefined || value === '') return null;
+    const cleaned = String(value).replace(/[^0-9.]/g, '');
+    const parsed = Number(cleaned);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+  const confidenceText = String(p.confidence || p.confidenceLevel || '').toLowerCase();
+  let confidenceScoreRaw = parseScoreValue(p.confidenceScore) || parseScoreValue(p.confidencePercent) || parseScoreValue(p.confidence);
+  if (!confidenceScoreRaw) {
+    if (confidenceText.includes('high')) confidenceScoreRaw = 86;
+    else if (confidenceText.includes('medium') || confidenceText.includes('good')) confidenceScoreRaw = 70;
+    else if (confidenceText.includes('low')) confidenceScoreRaw = 45;
+    else confidenceScoreRaw = Math.round(((parseScoreValue(p.emergingScore) || 68) * 0.55) + ((parseScoreValue(p.trendScore) || 65) * 0.25) + (saturationText === 'Low' ? 16 : saturationText === 'Medium' ? 10 : 5));
+  }
+  const confidenceScore = Math.max(35, Math.min(96, Math.round(confidenceScoreRaw)));
   const confidenceLabel = confidenceScore >= 85 ? 'High confidence' : confidenceScore >= 70 ? 'Good confidence' : 'Needs validation';
   const confidenceTone = confidenceScore >= 85 ? 'var(--green)' : confidenceScore >= 70 ? 'var(--amber)' : 'var(--red)';
 
@@ -946,7 +959,7 @@ function buildAnalysisBody(p) {
     <div class="hub-confidence-card" style="--confidence-width:${confidenceScore}%">
       <div>
         <div class="hub-confidence-label">Hub confidence</div>
-        <div class="hub-confidence-title">How much weight Hub gives this opportunity</div>
+        <div class="hub-confidence-title">How confident Hub is in this opportunity today</div>
         <div class="hub-confidence-track"><div class="hub-confidence-fill"></div></div>
       </div>
       <div class="hub-confidence-score">
