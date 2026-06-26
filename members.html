@@ -131,6 +131,18 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-verdict-card.is-visible{animation:drhSoftPulse 1.15s ease .22s 1}
 @keyframes drhSoftPulse{0%{box-shadow:0 0 0 rgba(245,158,11,0)}45%{box-shadow:0 0 0 6px rgba(245,158,11,.09)}100%{box-shadow:0 0 0 rgba(245,158,11,0)}}
 @media (prefers-reduced-motion: reduce){.analysis-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}.analysis-verdict-card.is-visible{animation:none!important}.analysis-hero-img img,.score-card,.analysis-hero-metric{transition:none!important}.analysis-hero-img:hover img,.analysis-panel:hover,.score-card:hover,.analysis-hero-metric:hover{transform:none!important;filter:none!important}}
+
+/* v2.2 data-alive polish: counters, verdict settle and progress motion */
+.drh-counter{display:inline-block;min-width:.72em;font-variant-numeric:tabular-nums;transition:transform .22s ease,filter .22s ease}
+.drh-counter.is-counting{transform:translateY(-1px);filter:drop-shadow(0 6px 12px rgba(30,58,95,.1))}
+.analysis-verdict-card.drh-verdict-alive{animation:drhVerdictArrive .72s cubic-bezier(.16,1,.3,1) both,drhVerdictGlow 1.15s ease .38s 1}
+@keyframes drhVerdictArrive{0%{transform:translateY(10px) scale(.985);filter:blur(2px)}70%{transform:translateY(-1px) scale(1.006);filter:blur(0)}100%{transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes drhVerdictGlow{0%{box-shadow:0 0 0 rgba(245,158,11,0)}45%{box-shadow:0 0 0 8px rgba(245,158,11,.1)}100%{box-shadow:0 0 0 rgba(245,158,11,0)}}
+.growth-progress-line{position:relative;overflow:hidden;border-radius:8px;padding-left:8px}
+.growth-progress-line.active{background:rgba(245,158,11,.08)}
+.growth-progress-line.active::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);animation:drhProgressSweep 1.2s ease-in-out infinite;pointer-events:none}
+@keyframes drhProgressSweep{to{transform:translateX(100%)}}
+@media (prefers-reduced-motion: reduce){.drh-counter,.drh-counter.is-counting{transition:none!important;transform:none!important;filter:none!important}.analysis-verdict-card.drh-verdict-alive{animation:none!important}.growth-progress-line.active::after{display:none!important}}
 .score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
 .score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
@@ -560,6 +572,47 @@ function showView(name, btn) {
   window.scrollTo(0, 0);
 }
 
+function animateDrhCounters(scope) {
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counters = Array.from(scope.querySelectorAll('.drh-counter[data-target]'));
+  counters.forEach(counter => {
+    if (counter.dataset.animated === 'true') return;
+    counter.dataset.animated = 'true';
+    const target = Number(counter.dataset.target);
+    if (!Number.isFinite(target)) return;
+    const decimals = Number(counter.dataset.decimals || '0');
+    const suffix = counter.dataset.suffix || '';
+    if (reduceMotion) {
+      counter.textContent = `${target.toFixed(decimals)}${suffix}`;
+      return;
+    }
+    const duration = Number(counter.dataset.duration || '850');
+    const start = performance.now();
+    counter.classList.add('is-counting');
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    const tick = now => {
+      const progress = Math.min((now - start) / duration, 1);
+      const value = target * easeOut(progress);
+      counter.textContent = `${value.toFixed(decimals)}${suffix}`;
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        counter.textContent = `${target.toFixed(decimals)}${suffix}`;
+        counter.classList.remove('is-counting');
+      }
+    };
+    counter.textContent = `${(0).toFixed(decimals)}${suffix}`;
+    requestAnimationFrame(tick);
+  });
+}
+
+function activateAnalysisMotion(section) {
+  animateDrhCounters(section);
+  if (section.classList.contains('analysis-verdict-card')) {
+    section.classList.add('drh-verdict-alive');
+  }
+}
+
 function setupAnalysisScrollReveal() {
   const body = document.getElementById('analysis-body');
   if (!body) return;
@@ -570,13 +623,17 @@ function setupAnalysisScrollReveal() {
   });
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduceMotion || !('IntersectionObserver' in window)) {
-    sections.forEach(section => section.classList.add('is-visible'));
+    sections.forEach(section => {
+      section.classList.add('is-visible');
+      activateAnalysisMotion(section);
+    });
     return;
   }
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
+        activateAnalysisMotion(entry.target);
         obs.unobserve(entry.target);
       }
     });
@@ -703,6 +760,10 @@ function buildAnalysisBody(p) {
   const hubSummary = `Hub picked this product because it combines ${trendSentence}, ${saturationSentence} and ${marginSentence}. Based on the current scores, this is a product worth reviewing before the market becomes more crowded.`;
   const hubVerdictReason = p.verdictReason || `Based on the current analysis, Hub is weighing ${trendSentence}, ${competitionText.toLowerCase()} competition and ${marginText || 'margin'} potential before recommending the next step.`;
 
+  const emergingScoreDisplay = Number(p.emergingScore || 0);
+  const trendScoreDisplay = Number(p.trendScore || 0);
+  const heroTrendScoreDisplay = Number(p.trendScore || 0);
+
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
@@ -721,7 +782,7 @@ function buildAnalysisBody(p) {
             <div class="analysis-hero-badge gold">${p.verdict || 'Opportunity under review'}</div>
           </div>
           <div class="analysis-hero-metrics">
-            <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Trend Score</div><div class="analysis-hero-metric-value" style="color:var(--navy)">${p.trendScore || '—'}</div></div>
+            <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Trend Score</div><div class="analysis-hero-metric-value" style="color:var(--navy)">${heroTrendScoreDisplay ? `<span class="drh-counter" data-target="${heroTrendScoreDisplay}" data-duration="760">${p.trendScore}</span>` : '—'}</div></div>
             <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Est. Margin</div><div class="analysis-hero-metric-value" style="color:var(--green)">${p.margin || '—'}</div></div>
             <div class="analysis-hero-metric"><div class="analysis-hero-metric-label">Sat. Risk</div><div class="analysis-hero-metric-value" style="color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk || '—'}</div></div>
           </div>
@@ -731,8 +792,8 @@ function buildAnalysisBody(p) {
     </div>
 
     <div class="score-row">
-      <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${p.emergingScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
-      <div class="score-card"><div class="score-card-label">Trend Score</div><div class="score-card-value" style="color:var(--navy)">${p.trendScore||'—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Growth signal strength</div></div>
+      <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${emergingScoreDisplay ? `<span class="drh-counter" data-target="${emergingScoreDisplay}" data-duration="920">${p.emergingScore}</span>` : '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
+      <div class="score-card"><div class="score-card-label">Trend Score</div><div class="score-card-value" style="color:var(--navy)">${trendScoreDisplay ? `<span class="drh-counter" data-target="${trendScoreDisplay}" data-duration="820">${p.trendScore}</span>` : '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Growth signal strength</div></div>
       <div class="score-card"><div class="score-card-label">Sat. Risk</div><div class="score-card-value" style="font-size:22px;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div><div class="score-card-sub">Competition level</div></div>
       <div class="score-card"><div class="score-card-label">Est. Margin</div><div class="score-card-value" style="color:var(--green)">${p.margin||'—'}</div><div class="score-card-sub">${p.supplierCost?`Cost: ${p.supplierCost}`:'Estimated margin'}</div></div>
     </div>
