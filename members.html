@@ -393,6 +393,20 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   .calc-results.show{grid-template-columns:1fr}
 }
 
+
+/* v1.5 — cleaner cards, star badges and premium save button */
+.product-star-badge{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.96);border:1px solid rgba(245,158,11,.38);border-radius:999px;color:var(--navy);font-size:11px;font-weight:900;padding:6px 10px;z-index:3;box-shadow:0 8px 20px rgba(30,58,95,.10);max-width:calc(100% - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-star-badge.current{background:rgba(20,40,64,.94);border-color:rgba(245,158,11,.62);color:#fff}
+.product-card-actions{display:grid;grid-template-columns:1fr 56px;gap:10px;align-items:center;margin-top:auto}
+.product-card-actions .analyse-btn{height:56px;margin:0;border-radius:14px;box-shadow:0 10px 24px rgba(30,58,95,.14)}
+.product-save-btn{height:56px;width:56px;background:#fff;border:1px solid var(--g200);border-radius:16px;font-size:23px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 8px 22px rgba(30,58,95,.08);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease}
+.product-save-btn:hover{transform:translateY(-2px) scale(1.03);border-color:rgba(245,158,11,.55);box-shadow:0 14px 30px rgba(245,158,11,.18);background:#fffbeb}
+.product-save-btn.saved{background:#fff7ed;border-color:rgba(245,158,11,.55);box-shadow:0 12px 28px rgba(245,158,11,.20)}
+.product-save-btn.pop{animation:saveHeartPop .34s cubic-bezier(.16,1,.3,1)}
+@keyframes saveHeartPop{0%{transform:scale(.92)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media(max-width:600px){.product-star-badge{font-size:10px;max-width:calc(100% - 92px)}.product-card-actions{grid-template-columns:1fr 54px}.product-save-btn{height:54px;width:54px}}
+@media (prefers-reduced-motion: reduce){.product-save-btn,.product-save-btn.pop{transition:none!important;animation:none!important}.product-save-btn:hover{transform:none!important}}
+
 /* STATUS TRACKER */
 .saved-status-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px 0}
 .saved-status-pill{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;color:var(--g700)}
@@ -571,7 +585,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <div class="view" id="view-saved">
   <div class="page-header">
-    <h1>💛 Saved Products Hub</h1>
+    <h1>💛 Saved Products</h1>
     <p>Your saved products — compare any two side by side to find your best opportunity.</p>
     <div class="header-meta">
       <div class="header-badge green" id="saved-count-badge">Loading...</div>
@@ -750,17 +764,76 @@ function gradeColorBg(g) {
   return '#FEE2E2';
 }
 
+
+/* v1.5 product-card polish: ranking badges + premium save button helpers */
+function gradeRankValue(g) {
+  const rank = {'A+': 96, 'A': 90, 'B+': 84, 'B': 78, 'C+': 70, 'C': 64};
+  return rank[String(g || '').toUpperCase()] || 0;
+}
+function getProductScore(p) {
+  if (!p) return 0;
+  const candidates = [
+    p.opportunityScore,
+    p.hubScore,
+    p.score,
+    p.totalScore,
+    p.finalScore,
+    p.productScore,
+    p.researchScore,
+    p.scoring?.overall,
+    p.scoring?.total,
+    p.scoring?.score
+  ];
+  for (const val of candidates) {
+    const n = parseFloat(String(val ?? '').replace(/[^0-9.]/g, ''));
+    if (!Number.isNaN(n) && n > 0) return n;
+  }
+  return gradeRankValue(p.grade);
+}
+function getWeekNumber(date = new Date()) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+function getCurrentTopProduct() {
+  const latest3 = allProducts.slice(0, 3);
+  if (!latest3.length) return null;
+  return [...latest3].sort((a, b) => getProductScore(b) - getProductScore(a))[0];
+}
+function getProductStarBadge(p) {
+  const currentTop = getCurrentTopProduct();
+  const currentWeek = getWeekNumber();
+  const productName = String(p?.name || '').trim().toLowerCase();
+  const topName = String(currentTop?.name || '').trim().toLowerCase();
+  if (productName && topName && productName === topName) return `⭐ Hub's #1 — Week ${currentWeek}`;
+  const savedWeek = p.starWeek || p.star_product_week || p.hubPickWeek || p.featuredWeek || p.weekNumber;
+  if (p.isStarProduct || p.starProduct || p.wasTopPick || p.hubPickWeek || p.starWeek || p.star_product_week || p.featuredWeek) {
+    return `⭐ Star Product — Week ${savedWeek || currentWeek}`;
+  }
+  const latestNames = new Set(allProducts.slice(0, 3).map(x => String(x.name || '').trim().toLowerCase()));
+  if (latestNames.has(productName)) return '🆕 New this week';
+  if (String(p.confidence || '').toLowerCase().includes('high')) return '🔥 High confidence';
+  return p.stage || 'Emerging';
+}
+
 function renderProductsGrid() {
   const grid = document.getElementById('products-grid');
   const list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche||'').toLowerCase() === activeNiche.toLowerCase());
   document.getElementById('toolbar-count').textContent = `${list.length} product${list.length!==1?'s':''}`;
   if (!list.length) { grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back Monday when new products drop.</p></div>`; return; }
-  grid.innerHTML = list.map((p,i) => `
-    <div class="product-card" onclick="openAnalysis(${i})">
+  grid.innerHTML = list.map((p,i) => {
+    const productIdx = allProducts.indexOf(p);
+    const safeIdx = productIdx >= 0 ? productIdx : i;
+    const starBadge = getProductStarBadge(p);
+    const isCurrentTop = starBadge.includes("Hub's #1");
+    return `
+    <div class="product-card" onclick="openAnalysis(${safeIdx})">
       <div class="product-card-img" style="background:#fff">
         ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
-        <div class="stage-badge">${p.verdict||p.stage||'Emerging'}</div>
+        <div class="product-star-badge ${isCurrentTop ? 'current' : ''}">${starBadge}</div>
       </div>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
@@ -771,15 +844,16 @@ function renderProductsGrid() {
           <div class="mini-score"><div class="mini-score-label">Problem</div><div class="mini-score-val" style="color:var(--green)">${p.problemScore||'—'}</div></div>
           <div class="mini-score"><div class="mini-score-label">Sat. Risk</div><div class="mini-score-val" style="font-size:11px;font-weight:900;color:${p.saturationRisk==='Low'?'var(--green)':p.saturationRisk==='Medium'?'var(--amber)':'var(--red)'}">${p.saturationRisk||'—'}</div></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 48px;gap:8px">
-          <button class="analyse-btn" style="height:48px;margin:0" onclick="event.stopPropagation();openAnalysis(${i})">
+        <div class="product-card-actions">
+          <button class="analyse-btn" onclick="event.stopPropagation();openAnalysis(${safeIdx})">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Analyse
           </button>
-          <button onclick="event.stopPropagation();toggleSaveProduct(${i},this)" id="save-btn-${i}" title="Save to Saved Products Hub" style="height:48px;width:48px;background:#fff;border:1px solid var(--g200);border-radius:12px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0">🤍</button>
+          <button onclick="event.stopPropagation();toggleSaveProduct(${safeIdx},this)" id="save-btn-${safeIdx}" class="product-save-btn" title="Save product">🤍</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function buildNicheFilters() {
@@ -1606,7 +1680,13 @@ async function loadSavedProducts() {
 function updateAllSaveButtons() {
   allProducts.forEach((p, i) => {
     const btn = document.getElementById('save-btn-' + i);
-    if (btn) btn.textContent = savedProductNames.has(p.name) ? '💛' : '🤍';
+    if (btn) {
+      const saved = savedProductNames.has(p.name);
+      btn.textContent = saved ? '💛' : '🤍';
+      btn.classList.toggle('saved', saved);
+      btn.title = saved ? 'Saved product' : 'Save product';
+      btn.setAttribute('aria-label', saved ? 'Saved product' : 'Save product');
+    }
   });
 }
 
@@ -1620,7 +1700,7 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
       btn.textContent = '🤍';
-      showToast('Removed from Saved Products Hub');
+      showToast('Removed from Saved Products');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
     } catch(e) { showToast('Could not unsave — try again'); }
   } else {
@@ -1636,7 +1716,7 @@ async function toggleSaveProduct(idx, btn) {
 function showSavedMessage() {
   const msg = document.createElement('div');
   msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--navy-dark);color:#fff;padding:20px 32px;border-radius:16px;font-size:15px;font-weight:800;z-index:9999;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)';
-  msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">💛</div><div>Saved to Saved Products Hub</div>';
+  msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">💛</div><div>Saved to Saved Products</div>';
   document.body.appendChild(msg);
   setTimeout(() => { msg.style.opacity='0'; msg.style.transition='opacity .3s'; setTimeout(() => msg.remove(), 300); }, 2000);
 }
@@ -1776,7 +1856,7 @@ async function loadPublishedProducts() {
       if (marginEl && avgMargin) { marginEl.textContent = 'Avg margin: ' + avgMargin + '%'; marginEl.style.display=''; }
 
       // Populate header top card with best product
-      const top = allProducts.find(p=>p.grade==='A+')||allProducts.find(p=>p.grade==='A')||allProducts[0];
+      const top = getCurrentTopProduct() || allProducts.find(p=>p.grade==='A+') || allProducts.find(p=>p.grade==='A') || allProducts[0];
       if (top) {
         const cardEl = document.getElementById('header-top-card');
         if (cardEl) cardEl.style.display = 'block';
