@@ -288,6 +288,16 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 @media(max-width:700px){.tracked-panel-head{align-items:flex-start;flex-direction:column}.tracked-empty{grid-template-columns:1fr}.tracked-empty-btn{display:inline-flex;width:max-content}.saved-chip.tracked-chip{min-width:210px}}
 @media (prefers-reduced-motion: reduce){.tracked-panel-cta,.saved-chip.tracked-chip,.saved-product-premium-card{transition:none!important}.tracked-panel-cta:hover,.saved-chip.tracked-chip:hover,.saved-product-premium-card:hover{transform:none!important}}
 
+
+/* ── DASHBOARD v1.4 SMART RANKING + STAR HISTORY ── */
+.star-week-badge{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(20,40,64,.94);border:1px solid rgba(245,158,11,.55);color:#fff;border-radius:999px;padding:8px 11px;font-size:11px;font-weight:900;text-align:center;box-shadow:0 10px 22px rgba(0,0,0,.22);z-index:4}
+.mini-star-week-badge{position:absolute;left:8px;right:8px;bottom:8px;background:rgba(20,40,64,.92);border:1px solid rgba(245,158,11,.45);color:#fff;border-radius:999px;padding:4px 6px;font-size:9px;font-weight:900;text-align:center;z-index:4}
+.priority-pill.gold{background:rgba(245,158,11,.13);border-color:rgba(245,158,11,.38);color:var(--amber)}
+.also-pick-rank{font-size:9px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.65px;margin-bottom:4px}
+.priority-card{border-color:rgba(245,158,11,.5)}
+.priority-kicker{color:var(--gold)}
+@media(max-width:700px){.star-week-badge{position:static;margin:0 14px 14px}.mini-star-week-badge{font-size:8px}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
@@ -783,6 +793,55 @@ function gradeColor(g) {
   return '#DC2626';
 }
 
+// ── SMART WEEKLY RANKING ─────────────────────────────────────────────────
+function gradeRankValue(g) {
+  const rank = {'A+':98,'A':92,'A-':88,'B+':82,'B':76,'B-':70,'C+':64,'C':58,'C-':52};
+  const key = String(g||'').toUpperCase().trim();
+  return rank[key] || 0;
+}
+
+function parseScoreValue(v) {
+  if (v === null || v === undefined) return 0;
+  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+  const match = String(v).match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : 0;
+}
+
+function getProductScore(p) {
+  return Math.max(
+    parseScoreValue(p.hubScore),
+    parseScoreValue(p.opportunityScore),
+    parseScoreValue(p.score),
+    parseScoreValue(p.totalScore),
+    parseScoreValue(p.confidenceScore),
+    parseScoreValue(p.trendScore),
+    gradeRankValue(p.grade)
+  );
+}
+
+function getWeekNumber(date = new Date()) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+function getStarBadge(p, isCurrentTop) {
+  const wk = p.starWeek || p.star_product_week || p.hubPickWeek || p.weekNumber || getWeekNumber();
+  if (isCurrentTop) return `⭐ Hub's #1 — Week ${wk}`;
+  if (p.isStarProduct || p.starProduct || p.wasTopPick || p.hubPickWeek || p.starWeek || p.star_product_week) return `⭐ Star Product — Week ${wk}`;
+  return '';
+}
+
+function rankWeeklyProducts(products) {
+  return [...products].sort((a,b) => {
+    const scoreDiff = getProductScore(b) - getProductScore(a);
+    if (scoreDiff !== 0) return scoreDiff;
+    return 0;
+  });
+}
+
 // ── LOAD PRODUCTS ─────────────────────────────────────────────────────────
 async function loadProducts() {
   try {
@@ -792,8 +851,9 @@ async function loadProducts() {
 
     if (!products.length) return;
 
-    // Only show latest 3 on dashboard
-    const latest3 = products.slice(0, 3);
+    // Only show latest 3 admin-pushed products, then rank them so Hub's #1 is the strongest scored pick.
+    const latest3Raw = products.slice(0, 3);
+    const latest3 = rankWeeklyProducts(latest3Raw);
     document.getElementById('products-badge').textContent = latest3.length;
     document.getElementById('products-live-badge').textContent = products.length + ' products live';
     document.getElementById('stat-products').textContent = latest3.length;
@@ -808,7 +868,7 @@ async function loadProducts() {
     const now = new Date();
     document.getElementById('drop-date-badge').textContent = 'Drop: w/c ' + now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 
-    const hubNote = data.hubNote || "I reviewed hundreds of products this week. Most failed — competition too high or margins too thin. These three stood out for very different reasons. Take a look.";
+    const hubNote = data.hubNote || "I reviewed hundreds of products this week. I’ve ranked this drop by the strongest score first, so your #1 recommendation is the product most worth checking before you move on.";
     document.getElementById('hub-weekly-note').textContent = hubNote;
     document.getElementById('weekly-hub-note').textContent = '"' + hubNote + '"';
     document.getElementById('sidebar-hub-status').textContent = latest3.length + ' picks ready';
@@ -818,15 +878,18 @@ async function loadProducts() {
     const hero = latest3[0];
     const others = latest3.slice(1);
     if (!hero) return;
+    const heroScore = getProductScore(hero);
+    const heroStarBadge = getStarBadge(hero, true);
     grid.innerHTML = `
       <div class="weekly-priority-wrap">
         <a class="priority-card" href="members.html">
           <div class="priority-img">
             ${hero.img ? `<img src="${hero.img}" alt="${hero.name}" onerror="this.style.display='none'">` : `<span style="font-size:64px">${hero.emoji||'📦'}</span>`}
             <div class="preview-grade" style="background:${gradeColor(hero.grade)}">Grade ${hero.grade||'?'} — Hub's #1</div>
+            <div class="star-week-badge">${heroStarBadge}</div>
           </div>
           <div class="priority-body">
-            <div class="priority-kicker">⭐ Hub's #1 Recommendation This Week</div>
+            <div class="priority-kicker">⭐ Hub's #1 Recommendation This Week · Ranked by Hub score</div>
             <div class="priority-title">${hero.name}</div>
             <div class="priority-meta">${hero.niche||'Emerging product'} · ${hero.season||'Current opportunity'}</div>
             <div class="priority-quote">“If I were only launching one product this week, this is where I’d start. The signal is strong, the margin looks worth testing, and it deserves a proper full report before you move on.”</div>
@@ -837,6 +900,7 @@ async function loadProducts() {
               <div class="priority-reason"><span>✓</span> Worth full analysis</div>
             </div>
             <div class="priority-footer">
+              <div class="priority-pill gold">Hub score ${heroScore || gradeRankValue(hero.grade) || '—'}</div>
               <div class="priority-pill green">${hero.margin||'—'} margin</div>
               <div class="priority-pill">Trend ${hero.trendScore||'—'}</div>
               <div class="priority-pill">${hero.saturationRisk||'Competition check'}</div>
@@ -847,13 +911,15 @@ async function loadProducts() {
         <div class="also-picks-panel">
           <div class="also-picks-head">Also worth looking at</div>
           <div class="also-picks-grid">
-            ${others.map(p=>`
+            ${others.map(p=>{ const pStarBadge = getStarBadge(p, false); return `
             <a class="also-pick-card" href="members.html">
               <div class="also-pick-img">
                 ${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
                 <div class="preview-grade" style="top:8px;left:8px;font-size:10px;padding:3px 8px;background:${gradeColor(p.grade)}">${p.grade||'?'}</div>
+                ${pStarBadge ? `<div class="mini-star-week-badge">${pStarBadge}</div>` : ''}
               </div>
               <div class="also-pick-body">
+                <div class="also-pick-rank">Hub score ${getProductScore(p) || gradeRankValue(p.grade) || '—'}</div>
                 <div class="also-pick-name">${p.name}</div>
                 <div class="also-pick-meta">${p.niche||''}</div>
                 <div class="also-pick-bottom">
@@ -861,7 +927,7 @@ async function loadProducts() {
                   <div class="also-pick-cta">Full report →</div>
                 </div>
               </div>
-            </a>`).join('')}
+            </a>`}).join('')}
           </div>
         </div>
       </div>`
@@ -869,13 +935,15 @@ async function loadProducts() {
     // Weekly picks page — full cards
     const weeklyGrid = document.getElementById('weekly-products-grid');
     if (weeklyGrid) {
-      weeklyGrid.innerHTML = latest3.map(p=>`
+      weeklyGrid.innerHTML = latest3.map((p,idx)=>{ const starBadge = getStarBadge(p, idx === 0); return `
         <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:160px 1fr">
           <div style="background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:42px;border-right:1px solid var(--g100);position:relative;min-height:160px">
             ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:156px;object-fit:contain;padding:8px" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
             <div style="position:absolute;top:10px;left:10px;background:${gradeColor(p.grade)};color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:4px 10px">Grade ${p.grade||'?'}</div>
+            ${starBadge ? `<div style="position:absolute;bottom:10px;left:10px;right:10px;background:rgba(20,40,64,.92);color:#fff;border:1px solid rgba(245,158,11,.45);border-radius:999px;font-size:10px;font-weight:900;padding:5px 8px;text-align:center">${starBadge}</div>` : ''}
           </div>
           <div style="padding:18px 20px;display:flex;flex-direction:column;justify-content:center">
+            <div style="font-size:10px;font-weight:900;color:${idx===0?'var(--gold)':'var(--g400)'};text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">${idx===0?"Hub&apos;s highest scored pick":'Also shortlisted'} · Score ${getProductScore(p) || gradeRankValue(p.grade) || '—'}</div>
             <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:3px">${p.name}</div>
             <div style="font-size:12px;color:var(--g400);margin-bottom:10px">${p.niche||''} · ${p.season||'Evergreen'}</div>
             <div style="font-size:13px;color:var(--g700);line-height:1.6;font-style:italic;padding:10px 12px;background:var(--g50);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;margin-bottom:12px">${p.whyEmerging||p.whyNow||''}</div>
@@ -885,7 +953,7 @@ async function loadProducts() {
               <a href="members.html" style="margin-left:auto;background:var(--navy);color:#fff;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">See full report →</a>
             </div>
           </div>
-        </div>`).join('');
+        </div>`}).join('');
     }
 
   } catch(e) {
