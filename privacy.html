@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — DropResearchHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;
+  --navy-light:#2B4F82;
+  --navy-dark:#142840;
+  --gold:#F59E0B;
+  --gold-soft:#FEF3C7;
+  --bg:#F8FAFC;
+  --card:#FFFFFF;
+  --text:#111827;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --soft:#F3F4F6;
+  --green:#16A34A;
+  --blue:#2563EB;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.site-header{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{max-width:1120px;margin:0 auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff}
+.logo-mark{width:38px;height:38px;background:#fff;border-radius:10px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.logo-bar.gold{background:var(--gold)}
+.logo-text{font-weight:900;font-size:15px;letter-spacing:-.2px}.logo-text span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-link{font-size:13px;font-weight:700;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 11px;border-radius:999px;transition:all .15s}
+.nav-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-link.primary{background:#fff;color:var(--navy)}
+.hero{max-width:1120px;margin:0 auto;padding:54px 22px 62px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:end}
+.kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.32);color:#FCD34D;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;margin-bottom:16px}
+h1{font-size:48px;line-height:1.04;letter-spacing:-1.8px;font-weight:900;margin-bottom:16px}
+.hero p{font-size:17px;color:rgba(255,255,255,.78);max-width:650px}
+.hero-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:20px;backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.18)}
+.hero-card-title{font-size:13px;font-weight:900;color:#fff;margin-bottom:10px}.hero-card p{font-size:13px;color:rgba(255,255,255,.74)}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.status{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px}
+.status b{display:block;color:#fff;font-size:13px}.status span{font-size:11px;color:rgba(255,255,255,.62)}
+.page-wrap{max-width:1120px;margin:-28px auto 0;padding:0 22px 58px;display:grid;grid-template-columns:270px 1fr;gap:22px;align-items:start}
+.sidebar{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 28px rgba(17,24,39,.05)}
+.sidebar-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
+.side-link{display:block;text-decoration:none;color:#374151;font-size:13px;font-weight:700;padding:9px 10px;border-radius:10px;margin-bottom:2px}
+.side-link:hover{background:var(--soft);color:var(--navy)}
+.legal-card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px rgba(17,24,39,.05);overflow:hidden}
+.legal-intro{padding:28px 30px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#F9FAFB)}
+.legal-intro h2{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.legal-intro p{font-size:14px;color:var(--muted)}
+.policy{padding:30px}
+.policy section{scroll-margin-top:24px;margin-bottom:34px;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.policy section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+h3{font-size:19px;font-weight:900;letter-spacing:-.35px;margin-bottom:10px;color:var(--navy-dark)}
+h4{font-size:14px;font-weight:900;margin:18px 0 8px;color:#1F2937}
+p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;margin:8px 0 14px}.policy li{font-size:14px;color:#374151;margin:6px 0}
+.notice{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.notice b{color:#1D4ED8}
+.warn{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.warn b{color:#78350F}
+.table{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:14px 0;background:#fff}
+.row{display:grid;grid-template-columns:210px 1fr;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}
+.cell{padding:12px 14px;font-size:13px;color:#374151}.cell:first-child{background:#F9FAFB;font-weight:800;color:#1F2937}
+.site-footer{border-top:1px solid var(--line);background:#fff;margin-top:48px}
+.footer-inner{max-width:1120px;margin:0 auto;padding:28px 22px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.footer-brand{font-size:13px;color:#6B7280}.footer-brand b{color:var(--navy);font-weight:900}
+.footer-links{display:flex;gap:14px;flex-wrap:wrap}.footer-links a{font-size:12px;font-weight:800;color:#4B5563;text-decoration:none}.footer-links a:hover{color:var(--navy)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:38px}.page-wrap{grid-template-columns:1fr}.sidebar{position:relative;top:auto}.nav{align-items:flex-start}.nav-links{justify-content:flex-end}h1{font-size:38px}.row{grid-template-columns:1fr}.cell:first-child{border-bottom:1px solid var(--line)}}
+@media(max-width:560px){.nav{flex-direction:column;align-items:flex-start}.hero{padding-bottom:44px}h1{font-size:32px}.policy,.legal-intro{padding:22px}.status-grid{grid-template-columns:1fr}.footer-inner{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <nav class="nav">
+    <a class="logo" href="index.html" aria-label="DropResearchHub home">
+      <div class="logo-mark">
+        <div class="logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="logo-bar" style="height:20px"></div>
+        <div class="logo-bar gold" style="height:15px"></div>
+      </div>
+      <div class="logo-text">Drop<span>Research</span> Hub</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="trial.html">Start Trial</a>
+      <a class="nav-link primary" href="contact.html">Contact</a>
+    </div>
+  </nav>
+  <div class="hero">
+    <div>
+      <div class="kicker">Privacy & data protection</div>
+      <h1>Privacy Policy</h1>
+      <p>This policy explains how DropResearchHub collects, uses, stores and protects personal information when you visit the website, create an account, start a trial, subscribe, or contact us.</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-title">Policy summary</div>
+      <p>We collect the information needed to run your account, process subscriptions, deliver platform emails, improve the service and keep DRH secure.</p>
+      <div class="status-grid">
+        <div class="status"><b>Last updated</b><span>26 June 2026</span></div>
+        <div class="status"><b>Applies to</b><span>dropresearchhub.com</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-title">On this page</div>
+    <a class="side-link" href="#who-we-are">Who we are</a>
+    <a class="side-link" href="#data-we-collect">Data we collect</a>
+    <a class="side-link" href="#how-we-use-data">How we use data</a>
+    <a class="side-link" href="#legal-bases">Legal bases</a>
+    <a class="side-link" href="#third-parties">Third parties</a>
+    <a class="side-link" href="#cookies">Cookies</a>
+    <a class="side-link" href="#retention">Retention</a>
+    <a class="side-link" href="#rights">Your rights</a>
+    <a class="side-link" href="#contact">Contact</a>
+  </aside>
+
+  <article class="legal-card">
+    <div class="legal-intro">
+      <h2>Privacy matters to us</h2>
+      <p>DropResearchHub is a UK-focused product research membership for ecommerce entrepreneurs. We only aim to collect information that is useful, necessary, or required to provide and protect the service.</p>
+    </div>
+
+    <div class="policy">
+      <section id="who-we-are">
+        <h3>1. Who we are</h3>
+        <p>DropResearchHub (“DRH”, “we”, “us” or “our”) operates the website and member platform available at <strong>dropresearchhub.com</strong>.</p>
+        <p>For privacy questions, you can contact us through the details on our <a href="contact.html">Contact page</a>.</p>
+        <div class="notice"><b>Note:</b> This privacy policy is written for the current DRH platform and should be reviewed as the business grows, adds new providers, or changes how member data is handled.</div>
+      </section>
+
+      <section id="data-we-collect">
+        <h3>2. Information we collect</h3>
+        <p>We may collect and process the following types of information:</p>
+        <div class="table">
+          <div class="row"><div class="cell">Account details</div><div class="cell">Name, email address, login information, account status, trial status and subscription status.</div></div>
+          <div class="row"><div class="cell">Billing details</div><div class="cell">Subscription plan, payment status, Stripe customer reference, invoice/payment records and cancellation status. Full card details are handled by Stripe and are not stored by DRH.</div></div>
+          <div class="row"><div class="cell">Platform usage</div><div class="cell">Pages visited, products viewed, saved products, analysis interactions, account activity and member preferences where supported by the platform.</div></div>
+          <div class="row"><div class="cell">Support messages</div><div class="cell">Messages you send to us, including your contact details and the content of your enquiry.</div></div>
+          <div class="row"><div class="cell">Technical data</div><div class="cell">IP address, browser type, device information, session data, cookies, approximate location data and website performance/security logs.</div></div>
+        </div>
+      </section>
+
+      <section id="how-we-use-data">
+        <h3>3. How we use your information</h3>
+        <p>We use personal information to:</p>
+        <ul>
+          <li>create, manage and secure your DRH account;</li>
+          <li>provide access to the member platform, dashboard, product research pages and analysis tools;</li>
+          <li>process free trials, paid subscriptions, renewals, cancellations and billing events;</li>
+          <li>send service emails such as welcome messages, account updates, product drop notifications and subscription notices;</li>
+          <li>respond to support requests and business enquiries;</li>
+          <li>improve the website, product research experience and member workflow;</li>
+          <li>detect abuse, prevent fraud and protect the security of the platform;</li>
+          <li>comply with legal, tax, accounting and regulatory responsibilities.</li>
+        </ul>
+      </section>
+
+      <section id="legal-bases">
+        <h3>4. Our lawful bases for processing</h3>
+        <p>Under UK data protection law, we rely on different lawful bases depending on how the information is used:</p>
+        <ul>
+          <li><strong>Contract:</strong> to provide your account, trial, subscription and member access.</li>
+          <li><strong>Legitimate interests:</strong> to improve the service, keep the platform secure, manage support and understand how DRH is used.</li>
+          <li><strong>Consent:</strong> where required for optional marketing communications or non-essential cookies.</li>
+          <li><strong>Legal obligation:</strong> where we need to keep records for tax, accounting, fraud prevention or compliance reasons.</li>
+        </ul>
+      </section>
+
+      <section id="third-parties">
+        <h3>5. Third-party services we use</h3>
+        <p>DRH uses trusted third-party providers to operate the platform. These providers only receive information needed to perform their service.</p>
+        <div class="table">
+          <div class="row"><div class="cell">Vercel</div><div class="cell">Website hosting, deployment and serverless API hosting.</div></div>
+          <div class="row"><div class="cell">Supabase</div><div class="cell">User accounts, database storage and member/product data.</div></div>
+          <div class="row"><div class="cell">Stripe</div><div class="cell">Payments, subscription billing, invoices, trials, renewals and cancellation events.</div></div>
+          <div class="row"><div class="cell">Resend</div><div class="cell">Transactional and service emails such as welcome messages and product drop notifications.</div></div>
+          <div class="row"><div class="cell">Anthropic Claude API</div><div class="cell">AI-assisted product research generation and analysis support. We aim not to send unnecessary personal data to AI services.</div></div>
+          <div class="row"><div class="cell">Research data providers</div><div class="cell">Product, supplier or trend enrichment services where used to support DRH research outputs.</div></div>
+        </div>
+        <p>Some providers may process information outside the UK. Where this happens, we expect appropriate safeguards to be used by the provider.</p>
+      </section>
+
+      <section id="cookies">
+        <h3>6. Cookies and similar technologies</h3>
+        <p>We use cookies and similar technologies to keep the website working, remember sessions, protect accounts, understand performance and improve the platform.</p>
+        <p>Some cookies are essential for the service to work. Other cookies, such as analytics or marketing cookies, should only be used where permitted by law and your preferences.</p>
+        <p>More detail is available in our <a href="cookies.html">Cookie Policy</a>.</p>
+      </section>
+
+      <section id="ai-research">
+        <h3>7. AI-assisted research</h3>
+        <p>DropResearchHub uses AI-assisted workflows to help generate product research, market commentary, validation notes, analysis summaries and related ecommerce insights.</p>
+        <p>AI outputs may be generated using product information, public market signals, supplier data, trend data and platform prompts. We do not aim to use personal customer information to generate product research unless it is necessary for a feature you request.</p>
+        <div class="warn"><b>Important:</b> DRH product research is for educational and research purposes. It should not be treated as a guarantee of sales, profit, supplier quality, ad performance or business success.</div>
+      </section>
+
+      <section id="retention">
+        <h3>8. How long we keep information</h3>
+        <p>We keep personal information for as long as reasonably needed to provide the service, manage your account, comply with legal obligations and resolve disputes.</p>
+        <ul>
+          <li>Account records are usually kept while your account remains active.</li>
+          <li>Billing and invoice records may be kept for tax and accounting purposes.</li>
+          <li>Support messages may be kept for a reasonable period to help manage future queries.</li>
+          <li>Technical logs may be kept for security, troubleshooting and platform performance.</li>
+        </ul>
+      </section>
+
+      <section id="security">
+        <h3>9. Security</h3>
+        <p>We take reasonable steps to protect personal information using secure hosting, restricted access, reputable service providers and appropriate technical controls.</p>
+        <p>No online service can guarantee complete security. You should keep your login details private and contact us if you suspect unauthorised account access.</p>
+      </section>
+
+      <section id="rights">
+        <h3>10. Your privacy rights</h3>
+        <p>Depending on the situation, you may have rights to:</p>
+        <ul>
+          <li>access the personal data we hold about you;</li>
+          <li>request correction of inaccurate information;</li>
+          <li>request deletion of your data;</li>
+          <li>object to or restrict certain processing;</li>
+          <li>request a copy of your data in a portable format;</li>
+          <li>withdraw consent where processing is based on consent;</li>
+          <li>complain to the UK Information Commissioner's Office if you are unhappy with how your data is handled.</li>
+        </ul>
+        <p>We may need to verify your identity before responding to privacy requests.</p>
+      </section>
+
+      <section id="children">
+        <h3>11. Children</h3>
+        <p>DropResearchHub is intended for users aged 18 or over. We do not knowingly provide subscriptions to children or intentionally collect personal information from children.</p>
+      </section>
+
+      <section id="changes">
+        <h3>12. Changes to this policy</h3>
+        <p>We may update this Privacy Policy as the platform changes, new services are added, or legal requirements change. The updated version will be posted on this page with a revised “Last updated” date.</p>
+      </section>
+
+      <section id="contact">
+        <h3>13. Contact us</h3>
+        <p>For privacy questions, account data requests or support, please use our <a href="contact.html">Contact page</a>.</p>
+      </section>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><b>DropResearchHub</b> © 2026. Built for UK ecommerce entrepreneurs.</div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="refunds.html">Refunds</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
