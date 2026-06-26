@@ -230,6 +230,50 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .generate-creative-btn:disabled{background:var(--g200);color:var(--g400);cursor:default}
 .creative-output{display:none;margin-top:18px}
 .creative-output.show{display:block}
+
+/* CREATIVE STUDIO V2.5 */
+.creative-studio-panel{border:1px solid rgba(30,58,95,.14);box-shadow:0 14px 38px rgba(30,58,95,.08)}
+.creative-studio-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.creative-studio-kicker{font-size:11px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.9px;margin-bottom:5px}
+.creative-studio-title{font-size:22px;font-weight:900;color:var(--g900);letter-spacing:-.55px;line-height:1.1;margin-bottom:6px}
+.creative-studio-sub{font-size:13px;color:var(--g500);line-height:1.65;max-width:640px}
+.creative-studio-hub-chip{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:999px;padding:8px 13px;white-space:nowrap}
+.creative-studio-hub-chip img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid rgba(245,158,11,.45)}
+.creative-studio-hub-chip span{font-size:12px;font-weight:800;color:var(--navy)}
+.creative-studio-controls{background:linear-gradient(180deg,#fff 0%,var(--g50) 100%);border:1px solid var(--g200);border-radius:18px;padding:16px;margin-bottom:14px}
+.creative-studio-action-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px}
+.creative-studio-note{font-size:12px;color:var(--g500);line-height:1.5;max-width:520px}
+.generate-creative-btn.creative-pack-btn{min-height:48px;padding:14px 22px;border-radius:14px;box-shadow:0 10px 26px rgba(245,158,11,.22)}
+.generate-creative-btn.creative-pack-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(245,158,11,.27)}
+.creative-build-loader{display:none;margin-top:16px;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);border-radius:22px;padding:18px;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 44px rgba(20,40,64,.22);overflow:hidden;position:relative}
+.creative-build-loader.show{display:grid;grid-template-columns:150px 1fr 250px;gap:18px;align-items:center;animation:drhFadeUp .35s ease both}
+.creative-build-loader::before{content:'';position:absolute;top:-80px;right:-70px;width:220px;height:220px;background:rgba(245,158,11,.08);border-radius:50%;pointer-events:none}
+.creative-build-hub{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.creative-build-hub img{width:112px;height:112px;object-fit:contain;animation:hubFloat 3s ease-in-out infinite;filter:drop-shadow(0 10px 18px rgba(0,0,0,.18))}
+.creative-build-hub-label{font-size:11px;font-weight:900;color:rgba(255,255,255,.7);text-align:center}
+.creative-build-log{position:relative;z-index:1}
+.creative-build-title{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.35px;margin-bottom:4px}
+.creative-build-sub{font-size:12px;color:rgba(255,255,255,.54);margin-bottom:12px}
+.creative-build-steps{display:flex;flex-direction:column;gap:7px}
+.creative-build-step{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;color:rgba(255,255,255,.35);transition:all .25s ease}
+.creative-build-step::before{content:'○';font-size:12px;color:rgba(255,255,255,.24);width:16px;text-align:center}
+.creative-build-step.active{color:#fff;transform:translateX(2px)}
+.creative-build-step.active::before{content:'●';color:var(--gold);animation:hubPulse 1.2s ease-in-out infinite}
+.creative-build-step.done{color:rgba(255,255,255,.7)}
+.creative-build-step.done::before{content:'✓';color:#86efac}
+.creative-pack-preview{position:relative;z-index:1;background:#fff;border-radius:16px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.25)}
+.creative-pack-preview-title{font-size:10px;font-weight:900;color:var(--gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.creative-pack-row{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--g100);padding:8px 0;opacity:.28;transform:translateY(4px);transition:all .25s ease}
+.creative-pack-row:last-child{border-bottom:none}
+.creative-pack-row.show{opacity:1;transform:translateY(0)}
+.creative-pack-row span:first-child{font-size:11px;font-weight:800;color:var(--g500)}
+.creative-pack-row span:last-child{font-size:11px;font-weight:900;color:var(--navy);text-align:right}
+.creative-output.premium-output{background:#fff;border:1px solid var(--g200);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(30,58,95,.06)}
+.creative-output-ready{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.creative-output-ready strong{font-size:13px;color:#166534}
+.creative-output-ready span{font-size:12px;color:#15803d}
+@media(max-width:900px){.creative-build-loader.show{grid-template-columns:1fr}.creative-build-hub{flex-direction:row;justify-content:flex-start}.creative-build-hub img{width:72px;height:72px}.creative-pack-preview{max-width:100%}}
+
 .variation-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .var-tab{background:var(--g100);border:1px solid var(--g200);color:var(--g500);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 .var-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
@@ -392,33 +436,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 @media(max-width:900px){.hub-analysis-complete{grid-template-columns:1fr 1fr}.hub-confidence-card{grid-template-columns:1fr}.hub-confidence-score{text-align:left}.hub-complete-step{justify-content:flex-start}}
 @media(max-width:600px){.hub-analysis-complete{grid-template-columns:1fr}.hub-analyse-card{padding:20px}.hub-analyse-title{font-size:17px}}
 @media (prefers-reduced-motion: reduce){.hub-analyse-card{animation:none!important}.hub-analyse-avatar img{animation:none!important}.hub-analyse-line,.hub-confidence-fill{transition:none!important}.hub-confidence-fill{width:var(--confidence-width)!important}}
-
-/* CREATIVE STUDIO v2.4 */
-.creative-studio-panel{border:1px solid rgba(30,58,95,.12);box-shadow:0 14px 38px rgba(30,58,95,.07)}
-.creative-studio-head{padding:22px 24px;border-bottom:1px solid var(--g200);display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:linear-gradient(135deg,#fff 0%,#fbfbff 100%)}
-.creative-studio-title{display:flex;align-items:center;gap:12px}
-.creative-studio-icon{width:42px;height:42px;border-radius:13px;background:rgba(245,158,11,.14);display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:inset 0 0 0 1px rgba(245,158,11,.25)}
-.creative-studio-title h2{font-size:22px;font-weight:900;color:var(--g900);letter-spacing:-.55px;line-height:1.15}
-.creative-studio-title p{font-size:13px;color:var(--g500);margin-top:4px;max-width:660px}
-.creative-studio-tip{display:flex;align-items:center;gap:10px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:16px;padding:12px 14px;min-width:250px}
-.creative-studio-tip img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;border:1px solid rgba(124,58,237,.18)}
-.creative-studio-tip-label{font-size:11px;font-weight:900;color:#6d28d9;text-transform:uppercase;letter-spacing:.55px;margin-bottom:2px}
-.creative-studio-tip-text{font-size:12px;color:#4c1d95;line-height:1.45;font-weight:600}
-.creative-studio-body{padding:22px 24px 24px;background:#fff}
-.creative-control-grid{display:grid;grid-template-columns:1fr 1fr minmax(240px,.8fr);gap:14px;align-items:end;margin-bottom:18px}
-.creative-generate-wrap{display:flex;flex-direction:column;gap:7px}.creative-credit-note{text-align:center;font-size:11px;color:var(--g400);font-weight:700}
-.creative-loading-card{display:none;margin:18px 0 4px;background:linear-gradient(135deg,#f5f3ff 0%,#fff7ed 100%);border:1px solid #ddd6fe;border-radius:18px;padding:20px;overflow:hidden;position:relative}
-.creative-loading-card.show{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;animation:drhFadeUp .35s ease both}
-.creative-loading-hub{position:relative;width:150px;height:150px;border-radius:22px;background:rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,.7)}
-.creative-loading-hub img{width:128px;height:128px;object-fit:contain;animation:hubWriteBody 1.45s ease-in-out infinite;transform-origin:50% 70%}.creative-pencil{position:absolute;right:28px;bottom:43px;width:24px;height:5px;background:var(--gold);border-radius:999px;transform:rotate(-28deg);animation:hubPencilWrite .55s ease-in-out infinite;box-shadow:0 0 0 1px rgba(20,40,64,.08)}
-.creative-pencil::after{content:'';position:absolute;right:-6px;top:0;border-left:7px solid var(--navy);border-top:3px solid transparent;border-bottom:3px solid transparent}.creative-writing-lines{position:absolute;right:33px;bottom:57px;width:42px;height:28px;display:flex;flex-direction:column;gap:5px;transform:rotate(-6deg)}
-.creative-writing-lines span{height:3px;background:rgba(30,58,95,.28);border-radius:999px;transform-origin:left;animation:hubLineWrite 1.6s ease-in-out infinite}.creative-writing-lines span:nth-child(2){width:82%;animation-delay:.18s}.creative-writing-lines span:nth-child(3){width:62%;animation-delay:.36s}
-.creative-loading-title{font-size:17px;font-weight:900;color:var(--navy-dark);letter-spacing:-.3px;margin-bottom:5px}.creative-loading-sub{font-size:13px;color:var(--g500);margin-bottom:16px}.creative-work-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.creative-work-step{background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9);border-radius:12px;padding:10px 9px;min-height:72px;position:relative;overflow:hidden}
-.creative-work-step::before{content:'';position:absolute;left:0;top:0;height:3px;width:100%;background:var(--g200)}.creative-work-step.active::before{background:linear-gradient(90deg,var(--gold),#8b5cf6);animation:creativeStepFill 1.2s ease-in-out infinite}.creative-work-dot{width:22px;height:22px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--g400);margin-bottom:7px}.creative-work-step.done .creative-work-dot{background:var(--navy);color:#fff}.creative-work-step.active .creative-work-dot{background:var(--gold);color:var(--navy);animation:hubSoftPop .9s ease-in-out infinite}.creative-work-label{font-size:11px;line-height:1.35;font-weight:800;color:var(--g600)}
-.creative-output-shell{border:1px solid var(--g200);border-radius:18px;padding:16px;margin-top:18px;background:linear-gradient(180deg,#fff 0%,#fbfcff 100%)}.creative-output-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.creative-output-label{font-size:12px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.7px}.creative-result-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:14px}.creative-side-stack{display:flex;flex-direction:column;gap:10px}.creative-side-card{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:13px 14px}.creative-side-label{font-size:10px;color:#6d28d9;text-transform:uppercase;letter-spacing:.7px;font-weight:900;margin-bottom:5px}.creative-side-card:nth-child(2) .creative-side-label{color:#db2777}.creative-side-card:nth-child(3) .creative-side-label{color:#d97706}.creative-brief-next{margin-top:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:16px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.creative-brief-next strong{font-size:13px;color:#92400e}.creative-brief-next span{font-size:12px;color:#92400e}
-@keyframes hubWriteBody{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(1deg)}}@keyframes hubPencilWrite{0%,100%{transform:translate(0,0) rotate(-28deg)}50%{transform:translate(-7px,5px) rotate(-22deg)}}@keyframes hubLineWrite{0%{transform:scaleX(.15);opacity:.25}45%{transform:scaleX(1);opacity:.9}100%{transform:scaleX(1);opacity:.35}}@keyframes creativeStepFill{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}@keyframes hubSoftPop{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-@media(max-width:900px){.creative-studio-head{grid-template-columns:1fr}.creative-control-grid{grid-template-columns:1fr}.creative-loading-card.show{grid-template-columns:1fr}.creative-loading-hub{margin:0 auto}.creative-work-steps{grid-template-columns:1fr 1fr}.creative-result-grid{grid-template-columns:1fr}.creative-studio-tip{min-width:0}}@media (prefers-reduced-motion: reduce){.creative-loading-hub img,.creative-pencil,.creative-writing-lines span,.creative-work-step.active::before,.creative-work-step.active .creative-work-dot{animation:none!important}}
-
 </style>
 </head>
 <body>
@@ -1168,30 +1185,70 @@ function buildAnalysisBody(p) {
     </div>
 
     <div class="analysis-panel creative-studio-panel">
-      <div class="creative-studio-head">
-        <div class="creative-studio-title">
-          <div class="creative-studio-icon">🎬</div>
+      <div class="analysis-panel-body">
+        <div class="creative-studio-head">
           <div>
-            <h2>Hub's Creative Studio</h2>
-            <p>Turn this product into 3 launch-ready ad concepts with scripts, hooks and a production brief you can send to Fiverr, Viral Ecom Adz or your own editor.</p>
+            <div class="creative-studio-kicker">Hub's Creative Studio</div>
+            <div class="creative-studio-title">Turn this product into a launch-ready creative pack</div>
+            <div class="creative-studio-sub">Build 3 ad concepts with scripts, hooks and a ready-to-send production brief for Fiverr, Viral Ecom Adz, UGC creators or your own videos.</div>
+          </div>
+          <div class="creative-studio-hub-chip">
+            <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+            <span>Hub will build it</span>
           </div>
         </div>
-        <div class="creative-studio-tip">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div><div class="creative-studio-tip-label">Hub's tip</div><div class="creative-studio-tip-text">Test 3 different angles with small budgets. Scale the one that wins.</div></div>
+        <div class="creative-studio-controls">
+          <div class="creative-form">
+            <div><label class="creative-label">Platform</label><select class="creative-select" id="creative-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
+            <div><label class="creative-label">Primary angle</label><select class="creative-select" id="creative-angle"><option>Problem → Solution</option><option>Curiosity / Pattern interrupt</option><option>Social proof / Testimonial</option><option>Lifestyle / Aspirational</option><option>Before & After</option></select></div>
+          </div>
+          <div class="creative-studio-action-row">
+            <div class="creative-studio-note">Use this pack to record your own content or send a clean brief to a video editor/UGC creator.</div>
+            <button class="generate-creative-btn creative-pack-btn" id="creative-gen-btn" onclick="generateCreative('${p.name.replace(/'/g,"\\'")}')">🚀 Build My Launch Creative Pack</button>
+          </div>
+          <div class="creative-build-loader" id="creative-build-loader">
+            <div class="creative-build-hub">
+              <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+              <div class="creative-build-hub-label">Hub is working</div>
+            </div>
+            <div class="creative-build-log">
+              <div class="creative-build-title">Building your Launch Creative Pack...</div>
+              <div class="creative-build-sub">Hub is turning the product analysis into usable ad assets.</div>
+              <div class="creative-build-steps" id="creative-build-steps">
+                <div class="creative-build-step">Reading product analysis</div>
+                <div class="creative-build-step">Finding the strongest selling angle</div>
+                <div class="creative-build-step">Matching the audience and platform</div>
+                <div class="creative-build-step">Writing 3 video ad concepts</div>
+                <div class="creative-build-step">Creating hooks and shot list</div>
+                <div class="creative-build-step">Preparing the editor brief</div>
+              </div>
+            </div>
+            <div class="creative-pack-preview">
+              <div class="creative-pack-preview-title">Launch Creative Pack</div>
+              <div class="creative-pack-row"><span>Platform</span><span id="pack-platform">—</span></div>
+              <div class="creative-pack-row"><span>Angle</span><span id="pack-angle">—</span></div>
+              <div class="creative-pack-row"><span>Concepts</span><span>3</span></div>
+              <div class="creative-pack-row"><span>Hooks</span><span>15</span></div>
+              <div class="creative-pack-row"><span>Brief</span><span>Ready</span></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="creative-studio-body">
-        <div class="creative-control-grid">
-          <div><label class="creative-label">Platform</label><select class="creative-select" id="creative-platform"><option>TikTok</option><option>Meta (Facebook/Instagram)</option><option>Both TikTok + Meta</option></select></div>
-          <div><label class="creative-label">Primary angle</label><select class="creative-select" id="creative-angle"><option>Problem → Solution</option><option>Curiosity / Pattern interrupt</option><option>Social proof / Testimonial</option><option>Lifestyle / Aspirational</option><option>Before & After</option></select></div>
-          <div class="creative-generate-wrap"><button class="generate-creative-btn" id="creative-gen-btn" onclick="generateCreative('${p.name.replace(/'/g,"\\'")}')">✨ Build My Creative Pack</button><div class="creative-credit-note">Creates 3 concepts: script, hooks and send-ready brief</div></div>
+        <div class="creative-output premium-output" id="creative-output">
+          <div class="creative-output-ready"><div><strong>Creative Pack Ready ✓</strong><br><span>Choose a concept below, then copy the script, hooks or production brief.</span></div></div>
+          <div class="variation-tabs" id="variation-tabs"></div>
+          <div class="script-tabs">
+            <button class="script-tab active" onclick="setScriptTab('script',this)">Video script</button>
+            <button class="script-tab" onclick="setScriptTab('hooks',this)">Hooks</button>
+            <button class="script-tab" onclick="setScriptTab('brief',this)">Send-to-editor brief</button>
+          </div>
+          <div id="tab-script"><div class="script-box" id="script-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('script-content')">📋 Copy script</button></div></div>
+          <div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy hooks</button></div></div>
+          <div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy brief</button></div></div>
+          <div class="meta-info-row">
+            <div class="meta-info-card"><div class="meta-info-card-label">🎵 Music / sound vibe</div><div class="meta-info-card-val" id="music-val">—</div></div>
+            <div class="meta-info-card"><div class="meta-info-card-label">🎯 Target audience</div><div class="meta-info-card-val" id="audience-val">—</div></div>
+          </div>
         </div>
-        <div class="creative-loading-card" id="creative-loading-temp">
-          <div class="creative-loading-hub"><img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub writing" onerror="this.style.display='none'"><div class="creative-writing-lines"><span></span><span></span><span></span></div><div class="creative-pencil"></div></div>
-          <div><div class="creative-loading-title">Hub is writing your creative pack...</div><div class="creative-loading-sub">Building scripts, hooks, shot ideas and a brief you can send straight to a creator.</div><div class="creative-work-steps" id="creative-work-steps"><div class="creative-work-step active"><div class="creative-work-dot">1</div><div class="creative-work-label">Reading product analysis</div></div><div class="creative-work-step"><div class="creative-work-dot">2</div><div class="creative-work-label">Writing scroll-stopping hooks</div></div><div class="creative-work-step"><div class="creative-work-dot">3</div><div class="creative-work-label">Building video scripts</div></div><div class="creative-work-step"><div class="creative-work-dot">4</div><div class="creative-work-label">Creating shot list</div></div><div class="creative-work-step"><div class="creative-work-dot">5</div><div class="creative-work-label">Preparing send-ready brief</div></div></div></div>
-        </div>
-        <div class="creative-output" id="creative-output"><div class="creative-output-shell"><div class="creative-output-top"><div><div class="creative-output-label">Creative pack ready</div><div style="font-size:13px;color:var(--g500);margin-top:2px">Pick a concept, copy the script, or send the brief to a video creator.</div></div><div class="variation-tabs" id="variation-tabs"></div></div><div class="script-tabs"><button class="script-tab active" onclick="setScriptTab('script',this)">Video script</button><button class="script-tab" onclick="setScriptTab('hooks',this)">5 hooks</button><button class="script-tab" onclick="setScriptTab('brief',this)">Brief to send</button></div><div class="creative-result-grid"><div><div id="tab-script"><div class="script-box" id="script-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('script-content')">📋 Copy script</button></div></div><div id="tab-hooks" style="display:none"><div class="script-box" id="hooks-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('hooks-content')">📋 Copy hooks</button></div></div><div id="tab-brief" style="display:none"><div class="brief-box" id="brief-content"></div><div class="copy-row"><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy brief for Fiverr / Viral Ecom Adz</button></div></div></div><div class="creative-side-stack"><div class="creative-side-card"><div class="creative-side-label">🎯 Target audience</div><div class="meta-info-card-val" id="audience-val">—</div></div><div class="creative-side-card"><div class="creative-side-label">🎵 Music vibe</div><div class="meta-info-card-val" id="music-val">—</div></div><div class="creative-side-card"><div class="creative-side-label">⚡ Best use</div><div class="meta-info-card-val">Use this as a first test creative. Keep the winning hook and make 2–3 more versions around it.</div></div></div></div><div class="creative-brief-next"><div><strong>What's next?</strong><br><span>Send the brief to a creator, build your launch plan, or generate another creative pack.</span></div><button class="copy-btn" onclick="copyEl('brief-content')">📋 Copy production brief</button></div></div></div>
       </div>
     </div>`;
 
@@ -1305,50 +1362,77 @@ function extractCreativeJson(data){
   return JSON.parse(text);
 }
 
+let creativeBuildInterval = null;
+function startCreativeBuildAnimation(platform, angle){
+  const loader=document.getElementById('creative-build-loader');
+  const output=document.getElementById('creative-output');
+  if(output) output.classList.remove('show');
+  if(!loader) return null;
+  const steps=[...loader.querySelectorAll('.creative-build-step')];
+  const rows=[...loader.querySelectorAll('.creative-pack-row')];
+  const packPlatform=document.getElementById('pack-platform');
+  const packAngle=document.getElementById('pack-angle');
+  if(packPlatform) packPlatform.textContent=platform;
+  if(packAngle) packAngle.textContent=angle.replace(' / ', ' / ');
+  steps.forEach(s=>s.className='creative-build-step');
+  rows.forEach(r=>r.classList.remove('show'));
+  loader.classList.add('show');
+  let index=0;
+  const tick=()=>{
+    steps.forEach((step,i)=>{
+      step.classList.toggle('done', i<index);
+      step.classList.toggle('active', i===index);
+    });
+    rows.forEach((row,i)=>row.classList.toggle('show', i<index));
+    index=(index+1)%(steps.length+1);
+  };
+  tick();
+  clearInterval(creativeBuildInterval);
+  creativeBuildInterval=setInterval(tick,850);
+  return loader;
+}
+function stopCreativeBuildAnimation(success){
+  const loader=document.getElementById('creative-build-loader');
+  clearInterval(creativeBuildInterval);
+  creativeBuildInterval=null;
+  if(loader){
+    loader.querySelectorAll('.creative-build-step').forEach(s=>{s.classList.remove('active');s.classList.add('done');});
+    loader.querySelectorAll('.creative-pack-row').forEach(r=>r.classList.add('show'));
+    if(success){
+      setTimeout(()=>loader.classList.remove('show'),550);
+    }else{
+      loader.classList.remove('show');
+    }
+  }
+}
 async function generateCreative(productName){
   const btn=document.getElementById('creative-gen-btn');
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
-  const loading=document.getElementById('creative-loading-temp');
-  const output=document.getElementById('creative-output');
-  btn.disabled=true;
-  btn.textContent='✨ Building creative pack...';
-  if(output) output.classList.remove('show');
-  if(loading) loading.classList.add('show');
-  let stepTimer=null;
-  const steps=()=>Array.from(document.querySelectorAll('#creative-work-steps .creative-work-step'));
-  let stepIndex=0;
-  const tickSteps=()=>{
-    const els=steps();
-    els.forEach((el,i)=>{el.classList.toggle('done',i<stepIndex);el.classList.toggle('active',i===stepIndex);const dot=el.querySelector('.creative-work-dot');if(dot) dot.textContent=i<stepIndex?'✓':String(i+1);});
-    stepIndex=Math.min(stepIndex+1, els.length-1);
-  };
-  tickSteps();
-  stepTimer=setInterval(tickSteps,900);
+  btn.disabled=true;btn.textContent='Hub is building...';
+  startCreativeBuildAnimation(platform, angle);
   try{
-    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative concepts. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly for a video editor or UGC creator","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Concept 1: angle ${angle}. Concept 2: different unexpected angle. Concept 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
     if(!res.ok) throw new Error('Creative request failed: '+res.status);
     const data=await res.json();
     const parsed=extractCreativeJson(data);
     creativeVariations=Array.isArray(parsed.variations)?parsed.variations:[];
     if(!creativeVariations.length) throw new Error('No creative variations returned');
     currentVariation=0;
-    if(stepTimer) clearInterval(stepTimer);
-    steps().forEach((el,i)=>{el.classList.add('done');el.classList.remove('active');const dot=el.querySelector('.creative-work-dot');if(dot) dot.textContent='✓';});
-    await new Promise(resolve=>setTimeout(resolve,650));
     renderCreativeOutput();
-    if(output) output.classList.add('show');
-    showToast('Creative pack ready');
+    stopCreativeBuildAnimation(true);
+    setTimeout(()=>{
+      const out=document.getElementById('creative-output');
+      if(out) out.classList.add('show');
+      showToast('Creative pack ready ✓');
+    },620);
   }catch(e){
     console.error('Creative generator error:', e);
+    stopCreativeBuildAnimation(false);
     showToast('Could not generate creatives — try again');
   }
-  if(stepTimer) clearInterval(stepTimer);
-  if(loading) loading.classList.remove('show');
-  btn.disabled=false;
-  btn.textContent='✨ Build My Creative Pack';
+  btn.disabled=false;btn.textContent='🚀 Build My Launch Creative Pack';
 }
-
 function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Concept ${i+1}</button>`).join('');loadVariation(currentVariation);}
 function setVariation(idx,btn){currentVariation=idx;document.querySelectorAll('.var-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadVariation(idx);setScriptTab('script',document.querySelector('.script-tab'));}
 function loadVariation(idx){const v=creativeVariations[idx];if(!v)return;document.getElementById('script-content').textContent=v.script||'';document.getElementById('hooks-content').textContent=v.hooks||'';document.getElementById('brief-content').textContent=v.brief||'';document.getElementById('music-val').textContent=v.music||'—';document.getElementById('audience-val').textContent=v.audience||'—';}
