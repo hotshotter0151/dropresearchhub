@@ -1263,20 +1263,50 @@ function updateSlider(val) {
 function runCalc(){liveCalc();}
 
 
+function extractCreativeJson(data){
+  if (data?.variations) return data;
+  let text = '';
+  if (Array.isArray(data?.content)) text = data.content.map(i => i.text || '').join('');
+  else if (typeof data?.content === 'string') text = data.content;
+  else if (typeof data?.text === 'string') text = data.text;
+  else if (typeof data?.message === 'string') text = data.message;
+  text = String(text || '').trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
+  const first = text.indexOf('{');
+  const last = text.lastIndexOf('}');
+  if (first !== -1 && last !== -1 && last > first) text = text.slice(first, last + 1);
+  return JSON.parse(text);
+}
+
 async function generateCreative(productName){
   const btn=document.getElementById('creative-gen-btn');
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
   btn.disabled=true;btn.textContent='✨ Generating 3 variations...';
-  createHubLoader('creative-output', 'Hub is crafting your ad angles...'); startHubMessages('creative-output');
+  let loading=document.getElementById('creative-loading-temp');
+  if(!loading){
+    loading=document.createElement('div');
+    loading.id='creative-loading-temp';
+    loading.className='status-messages show';
+    loading.style.marginTop='14px';
+    btn.insertAdjacentElement('afterend', loading);
+  }
+  loading.innerHTML='<div class="status-line show active">Hub is crafting your ad scripts...</div><div class="status-line show">Building hooks, shot list and production brief...</div>';
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative variations. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Variation 1: angle ${angle}. Variation 2: different unexpected angle. Variation 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
+    if(!res.ok) throw new Error('Creative request failed: '+res.status);
     const data=await res.json();
-    const text=(data.content||[]).map(i=>i.text||'').join('');
-    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){parsed={variations:[{script:text,hooks:'',brief:'',music:'',audience:''}]};}
-    creativeVariations=parsed.variations||[];currentVariation=0;renderCreativeOutput();document.getElementById('creative-output').classList.add('show');
-  }catch(e){showToast('Could not generate creatives — try again');}
-  stopHubMessages();removeHubLoader('creative-output');
+    const parsed=extractCreativeJson(data);
+    creativeVariations=Array.isArray(parsed.variations)?parsed.variations:[];
+    if(!creativeVariations.length) throw new Error('No creative variations returned');
+    currentVariation=0;
+    renderCreativeOutput();
+    document.getElementById('creative-output').classList.add('show');
+    showToast('Creatives generated');
+  }catch(e){
+    console.error('Creative generator error:', e);
+    showToast('Could not generate creatives — try again');
+  }
+  if(loading) loading.remove();
   btn.disabled=false;btn.textContent='✨ Generate 3 creative variations';
 }
 function renderCreativeOutput(){const tabs=document.getElementById('variation-tabs');tabs.innerHTML=creativeVariations.map((_,i)=>`<button class="var-tab ${i===currentVariation?'active':''}" onclick="setVariation(${i},this)">Variation ${i+1}</button>`).join('');loadVariation(currentVariation);}
