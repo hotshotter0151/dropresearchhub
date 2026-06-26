@@ -148,6 +148,23 @@ body{font-family:'Inter',sans-serif;color:var(--g900);background:var(--bg);line-
 .no-products{background:white;border:1px solid var(--line);border-radius:22px;padding:48px;text-align:center;grid-column:1/-1}
 .no-products h3{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:8px}
 .no-products p{font-size:14px;color:var(--g500);line-height:1.6}
+
+.site-footer{background:#101F33;color:rgba(255,255,255,.68);border-top:1px solid rgba(255,255,255,.08);margin-top:36px;border-radius:22px 22px 0 0;overflow:hidden}
+.site-footer-inner{padding:34px 28px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:26px}
+.site-footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.site-footer-logo{width:34px;height:34px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:7px 6px;flex-shrink:0}
+.site-footer-logo span{width:4px;border-radius:2px;background:var(--navy)}
+.site-footer-logo span.gold{background:var(--gold)}
+.site-footer-name{font-size:15px;font-weight:900;color:#fff;letter-spacing:-.3px}.site-footer-name span{color:var(--gold)}
+.site-footer-copy{font-size:13px;line-height:1.65;color:rgba(255,255,255,.55);max-width:330px}
+.site-footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.38);font-weight:900;margin-bottom:12px}
+.site-footer-col a{display:block;color:rgba(255,255,255,.62);text-decoration:none;font-size:13px;font-weight:600;margin-bottom:9px;transition:.15s}
+.site-footer-col a:hover{color:#fff}
+.site-footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.38)}
+.site-footer-bottom a{color:rgba(255,255,255,.5);text-decoration:none}.site-footer-bottom a:hover{color:#fff}
+@media(max-width:900px){.site-footer-inner{grid-template-columns:1fr 1fr}.site-footer{border-radius:18px 18px 0 0}}
+@media(max-width:560px){.site-footer-inner{grid-template-columns:1fr}.site-footer-bottom{align-items:flex-start;flex-direction:column}}
+
 @media(max-width:1000px){.feed-grid,.missing-grid,.insight-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.score-row{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:980px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin-left:0;width:100%;padding:20px}.sticky-upgrade{left:0}}
 @media(max-width:620px){.feed-grid,.stats,.p-signals,.missing-grid,.insight-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr 1fr}}
@@ -272,6 +289,44 @@ body{font-family:'Inter',sans-serif;color:var(--g900);background:var(--bg);line-
     </div>
     <div id="v-result"><div class="empty">Enter a product name above to get your free assessment.</div></div>
   </section>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div>
+        <div class="site-footer-brand">
+          <div class="site-footer-logo"><span style="height:9px;opacity:.45"></span><span style="height:15px;opacity:.7"></span><span style="height:21px"></span><span class="gold" style="height:16px"></span></div>
+          <div class="site-footer-name">Drop<span>Research</span> Hub</div>
+        </div>
+        <p class="site-footer-copy">UK-focused product research for ecommerce entrepreneurs. Hub helps you find, validate and research emerging products before they become overcrowded.</p>
+      </div>
+      <div class="site-footer-col">
+        <h4>Platform</h4>
+        <a href="index.html">Home</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="signup.html">Start Free Trial</a>
+      </div>
+      <div class="site-footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="refunds.html">Refund Policy</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="disclaimer.html">Disclaimer</a>
+      </div>
+      <div class="site-footer-col">
+        <h4>Support</h4>
+        <a href="contact.html">Contact</a>
+        <a href="mailto:support@dropresearchhub.com">support@dropresearchhub.com</a>
+        <a href="index.html">Back to homepage</a>
+      </div>
+    </div>
+    <div class="site-footer-bottom">
+      <div>© 2026 DropResearchHub. All rights reserved.</div>
+      <div>Product research is educational information only. Results are not guaranteed.</div>
+    </div>
+  </footer>
+
 </main>
 </div>
 
