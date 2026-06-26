@@ -227,10 +227,21 @@ section{padding:96px 5%}
 .final-cta h2 span{color:var(--gold)}
 .final-cta p{font-size:18px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 36px;position:relative}
 .final-cta-note{font-size:13px;color:rgba(255,255,255,.3);margin-top:16px;position:relative}
-footer{background:var(--navy-dark);padding:32px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-footer p{font-size:13px;color:rgba(255,255,255,.35)}
-footer a{color:rgba(255,255,255,.35);text-decoration:none;font-size:13px}
-footer a:hover{color:#fff}
+footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1px solid rgba(255,255,255,.08)}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:42px;align-items:start}
+.footer-brand-copy{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-top:14px;max-width:320px}
+.footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);font-weight:900;margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.footer-links a:hover{color:#fff}
+.footer-support-note{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:2px}
+.footer-bottom{max-width:1200px;margin:34px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.35)}
+.footer-bottom a{color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700}
+.footer-bottom a:hover{color:#fff}
+
+@media(max-width:900px){.footer-inner{grid-template-columns:1fr 1fr}.footer-brand-copy{max-width:none}}
+@media(max-width:600px){.footer-inner{grid-template-columns:1fr;gap:28px}.footer-bottom{flex-direction:column;align-items:flex-start}}
 @media(max-width:1000px){.how-grid,.lifestyle-grid,.winning-grid,.preview-grid,.features-grid{grid-template-columns:1fr}.hero{padding:120px 5% 80px}.proof-bar{gap:20px}.lifestyle-card{height:260px}}
 @media(max-width:600px){.nav-links{display:none}.hero h1{font-size:36px}.winning-card-stat{flex-wrap:wrap}.video-showcase{padding:48px 5% 0}}
 </style>
@@ -682,23 +693,53 @@ footer a:hover{color:#fff}
 </section>
 
 <footer>
-  <a class="nav-logo" href="#">
-    <div class="nav-logo-icon">
-      <div class="nav-logo-bar" style="height:10px;opacity:.4"></div>
-      <div class="nav-logo-bar" style="height:16px;opacity:.7"></div>
-      <div class="nav-logo-bar" style="height:22px"></div>
-      <div class="nav-logo-bar g" style="height:17px"></div>
+  <div class="footer-inner">
+    <div>
+      <a class="nav-logo" href="index.html">
+        <div class="nav-logo-icon">
+          <div class="nav-logo-bar" style="height:10px;opacity:.4"></div>
+          <div class="nav-logo-bar" style="height:16px;opacity:.7"></div>
+          <div class="nav-logo-bar" style="height:22px"></div>
+          <div class="nav-logo-bar g" style="height:17px"></div>
+        </div>
+        <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
+      </a>
+      <p class="footer-brand-copy">Find emerging product opportunities before the market gets crowded. Built for UK ecommerce entrepreneurs who want better product research, not guesswork.</p>
     </div>
-    <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
-  </a>
-  <div style="display:flex;gap:24px;flex-wrap:wrap">
-    <a href="#how">How it works</a>
-    <a href="#products">Products</a>
-    <a href="#pricing">Pricing</a>
-    <a href="#faq">FAQ</a>
-    <a href="members.html">Members area</a>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <div class="footer-links">
+        <a href="#how">How it works</a>
+        <a href="#products">Products</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="signup.html">Start free trial</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="refunds.html">Refund Policy</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="disclaimer.html">Disclaimer</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <div class="footer-links">
+        <a href="contact.html">Contact</a>
+        <a href="members.html">Members area</a>
+        <a href="login.html">Login</a>
+      </div>
+      <p class="footer-support-note">Questions about your subscription, account access or product research? Use the contact page and we'll point you in the right direction.</p>
+    </div>
   </div>
-  <p>© 2026 DropResearch Hub. All rights reserved.</p>
+  <div class="footer-bottom">
+    <p>© 2026 DropResearchHub. All rights reserved.</p>
+    <a href="disclaimer.html">Product research only — no guarantee of sales or profit.</a>
+  </div>
 </footer>
 
 <script>
