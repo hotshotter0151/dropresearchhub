@@ -361,6 +361,37 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .saved-card-dropped{opacity:.55;filter:grayscale(.45)}
 .saved-card-dropped .saved-product-title{text-decoration:line-through;color:var(--g500)!important}
 .saved-card-status-badge{position:absolute;bottom:8px;left:8px;background:rgba(255,255,255,.95);border:1px solid var(--g200);border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px;color:var(--g700);z-index:3}
+
+/* v2.3 — HUB ANALYSING TRANSITION + CONFIDENCE MOMENTS */
+.hub-analyse-overlay{position:fixed;inset:0;background:rgba(20,40,64,.92);backdrop-filter:blur(8px);z-index:900;display:none;align-items:center;justify-content:center;padding:24px}
+.hub-analyse-overlay.show{display:flex}
+.hub-analyse-card{width:min(520px,100%);background:#fff;border:1px solid rgba(255,255,255,.28);border-radius:24px;padding:26px;box-shadow:0 24px 80px rgba(0,0,0,.35);animation:hubAnalyseArrive .34s cubic-bezier(.16,1,.3,1) both}
+.hub-analyse-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.hub-analyse-avatar{width:58px;height:58px;border-radius:50%;background:var(--g50);border:2px solid rgba(245,158,11,.4);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hub-analyse-avatar img{width:100%;height:100%;object-fit:cover;animation:hubFloat 2.7s ease-in-out infinite}
+.hub-analyse-kicker{font-size:11px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
+.hub-analyse-title{font-size:19px;font-weight:900;color:var(--navy-dark);letter-spacing:-.4px;line-height:1.2}
+.hub-analyse-lines{display:flex;flex-direction:column;gap:9px}
+.hub-analyse-line{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:11px 13px;font-size:13px;font-weight:800;color:var(--g500);opacity:.55;transform:translateY(4px);transition:all .24s ease}
+.hub-analyse-line.active{opacity:1;color:var(--navy);border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.08);transform:translateY(0)}
+.hub-analyse-line.done{opacity:1;color:var(--green);background:#f0fdf4;border-color:#bbf7d0;transform:translateY(0)}
+.hub-analyse-dot{width:18px;height:18px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.hub-analysis-complete{background:#fff;border:1px solid var(--g200);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;box-shadow:0 10px 28px rgba(30,58,95,.05)}
+.hub-complete-step{display:flex;align-items:center;gap:8px;background:var(--g50);border:1px solid var(--g100);border-radius:999px;padding:8px 10px;font-size:11px;font-weight:900;color:var(--g700);white-space:nowrap;justify-content:center}
+.hub-complete-tick{width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;box-shadow:0 5px 12px rgba(22,163,74,.18);flex-shrink:0}
+.hub-confidence-card{background:linear-gradient(135deg,#fff 0%,var(--off) 100%);border:1px solid var(--g200);border-radius:18px;padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;box-shadow:0 10px 28px rgba(30,58,95,.05)}
+.hub-confidence-label{font-size:11px;font-weight:900;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.hub-confidence-title{font-size:18px;font-weight:900;color:var(--navy-dark);letter-spacing:-.3px;margin-bottom:8px}
+.hub-confidence-track{height:12px;background:var(--g100);border-radius:999px;overflow:hidden;border:1px solid var(--g200)}
+.hub-confidence-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:999px;transition:width .95s cubic-bezier(.16,1,.3,1)}
+.analysis-reveal.is-visible .hub-confidence-fill{width:var(--confidence-width)}
+.hub-confidence-score{text-align:right;min-width:90px}
+.hub-confidence-num{font-size:34px;font-weight:900;color:var(--navy);letter-spacing:-1px;line-height:1}
+.hub-confidence-status{font-size:11px;font-weight:900;color:var(--green);text-transform:uppercase;letter-spacing:.7px;margin-top:5px}
+@keyframes hubAnalyseArrive{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:900px){.hub-analysis-complete{grid-template-columns:1fr 1fr}.hub-confidence-card{grid-template-columns:1fr}.hub-confidence-score{text-align:left}.hub-complete-step{justify-content:flex-start}}
+@media(max-width:600px){.hub-analysis-complete{grid-template-columns:1fr}.hub-analyse-card{padding:20px}.hub-analyse-title{font-size:17px}}
+@media (prefers-reduced-motion: reduce){.hub-analyse-card{animation:none!important}.hub-analyse-avatar img{animation:none!important}.hub-analyse-line,.hub-confidence-fill{transition:none!important}.hub-confidence-fill{width:var(--confidence-width)!important}}
 </style>
 </head>
 <body>
@@ -546,6 +577,24 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="hub-analyse-overlay" id="hub-analyse-overlay" aria-hidden="true">
+  <div class="hub-analyse-card">
+    <div class="hub-analyse-top">
+      <div class="hub-analyse-avatar"><img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'"></div>
+      <div>
+        <div class="hub-analyse-kicker">Hub is analysing</div>
+        <div class="hub-analyse-title" id="hub-analyse-product">Building your product report...</div>
+      </div>
+    </div>
+    <div class="hub-analyse-lines">
+      <div class="hub-analyse-line" id="hal-1"><span class="hub-analyse-dot"></span>Checking UK demand signals</div>
+      <div class="hub-analyse-line" id="hal-2"><span class="hub-analyse-dot"></span>Reviewing supplier and margin potential</div>
+      <div class="hub-analyse-line" id="hal-3"><span class="hub-analyse-dot"></span>Comparing competition and saturation</div>
+      <div class="hub-analyse-line" id="hal-4"><span class="hub-analyse-dot"></span>Preparing Hub's recommendation</div>
+    </div>
+  </div>
+</div>
+
 <div id="manage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:20px;padding:36px;max-width:420px;width:calc(100% - 40px)">
     <h2 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:8px">Manage Subscription</h2>
@@ -696,22 +745,56 @@ function buildNicheFilters() {
 }
 function setNicheFilter(niche){activeNiche=niche;renderProductsGrid();}
 
+function runHubAnalyseTransition(p, onComplete) {
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const overlay = document.getElementById('hub-analyse-overlay');
+  if (!overlay || reduceMotion) { onComplete(); return; }
+  const productLabel = document.getElementById('hub-analyse-product');
+  if (productLabel) productLabel.textContent = `Building report for ${p.name || 'this product'}...`;
+  const lines = ['hal-1','hal-2','hal-3','hal-4'].map(id => document.getElementById(id)).filter(Boolean);
+  lines.forEach(line => { line.classList.remove('active','done'); const dot=line.querySelector('.hub-analyse-dot'); if(dot) dot.textContent=''; });
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden','false');
+  let idx = 0;
+  const advance = () => {
+    if (idx > 0 && lines[idx-1]) {
+      lines[idx-1].classList.remove('active');
+      lines[idx-1].classList.add('done');
+      const dot = lines[idx-1].querySelector('.hub-analyse-dot');
+      if (dot) dot.textContent = '✓';
+    }
+    if (idx < lines.length && lines[idx]) {
+      lines[idx].classList.add('active');
+      idx += 1;
+      setTimeout(advance, 260);
+      return;
+    }
+    setTimeout(() => {
+      overlay.classList.remove('show');
+      overlay.setAttribute('aria-hidden','true');
+      onComplete();
+    }, 160);
+  };
+  setTimeout(advance, 80);
+}
+
+function renderAnalysisView(p, subtitle) {
+  showView('analysis', null);
+  document.getElementById('analysis-product-name').textContent = p.name;
+  document.getElementById('analysis-product-niche').textContent = subtitle;
+  buildAnalysisBody(p);
+}
+
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
-  showView('analysis',null);
-  document.getElementById('analysis-product-name').textContent=p.name;
-  document.getElementById('analysis-product-niche').textContent=`${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`;
-  buildAnalysisBody(p);
+  runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`));
 }
 
 function openAnalysisFromSaved(idx) {
   const saved = window._savedProducts || [];
   const p = saved[idx];
   if (!p) return;
-  showView('analysis', null);
-  document.getElementById('analysis-product-name').textContent = p.name;
-  document.getElementById('analysis-product-niche').textContent = `${p.niche||''} · Saved product`;
-  buildAnalysisBody(p);
+  runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche||''} · Saved product`));
 }
 
 function buildAnalysisBody(p) {
@@ -763,11 +846,23 @@ function buildAnalysisBody(p) {
   const emergingScoreDisplay = Number(p.emergingScore || 0);
   const trendScoreDisplay = Number(p.trendScore || 0);
   const heroTrendScoreDisplay = Number(p.trendScore || 0);
+  const confidenceScoreRaw = Number(p.confidenceScore || p.confidence || Math.round(((Number(p.emergingScore)||68) * 0.55) + ((Number(p.trendScore)||65) * 0.25) + (saturationText === 'Low' ? 16 : saturationText === 'Medium' ? 10 : 5)));
+  const confidenceScore = Math.max(42, Math.min(96, confidenceScoreRaw));
+  const confidenceLabel = confidenceScore >= 85 ? 'High confidence' : confidenceScore >= 70 ? 'Good confidence' : 'Needs validation';
+  const confidenceTone = confidenceScore >= 85 ? 'var(--green)' : confidenceScore >= 70 ? 'var(--amber)' : 'var(--red)';
 
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
 
   body.innerHTML=`
+    <div class="hub-analysis-complete">
+      <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Trend analysed</div>
+      <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Market checked</div>
+      <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Suppliers reviewed</div>
+      <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Margin assessed</div>
+      <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Verdict ready</div>
+    </div>
+
     <div class="analysis-hero-card">
       <div class="analysis-hero-inner">
         <div class="analysis-hero-img">
@@ -802,6 +897,18 @@ function buildAnalysisBody(p) {
       <div style="font-size:28px">${p.verdict==='Strong Opportunity'?'✅':p.verdict==='Watch List'?'👀':'❌'}</div>
       <div style="flex:1"><div style="font-size:16px;font-weight:900;color:${p.verdict==='Strong Opportunity'?'var(--green)':p.verdict==='Watch List'?'var(--amber)':'var(--red)'}">Verdict: ${p.verdict||'Under Review'}</div><div style="font-size:13px;color:var(--g700);margin-top:3px">${hubVerdictReason}</div></div>
       <div style="text-align:right"><div style="font-size:11px;color:var(--g400);text-transform:uppercase;font-weight:700">Selling Price</div><div style="font-size:18px;font-weight:900;color:var(--navy)">${p.sellingPrice||p.margin||'—'}</div></div>
+    </div>
+
+    <div class="hub-confidence-card" style="--confidence-width:${confidenceScore}%">
+      <div>
+        <div class="hub-confidence-label">Hub confidence</div>
+        <div class="hub-confidence-title">How much weight Hub gives this opportunity</div>
+        <div class="hub-confidence-track"><div class="hub-confidence-fill"></div></div>
+      </div>
+      <div class="hub-confidence-score">
+        <div class="hub-confidence-num">${confidenceScore}<span style="font-size:15px;color:var(--g400)">%</span></div>
+        <div class="hub-confidence-status" style="color:${confidenceTone}">${confidenceLabel}</div>
+      </div>
     </div>
 
     <div class="analysis-panel">
