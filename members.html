@@ -115,22 +115,22 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .analysis-hero-metric-value{font-size:19px;font-weight:900;color:var(--g900);letter-spacing:-.2px}
 .analysis-hero-why{background:var(--g50);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:12px 14px;font-size:13px;color:var(--g700);line-height:1.65;font-style:italic}
 
-.analysis-hero-card{animation:drhFadeUp .48s ease both}
+/* v2.1 analysis polish: subtle section reveal, premium easing and lightweight hover movement */
 .analysis-hero-img img{transition:transform .35s ease,filter .35s ease}
 .analysis-hero-img:hover img{transform:scale(1.035);filter:drop-shadow(0 12px 22px rgba(30,58,95,.14))}
-.analysis-hero-metric{animation:drhFadeUp .42s ease both}
-.analysis-hero-metric:nth-child(1){animation-delay:.08s}
-.analysis-hero-metric:nth-child(2){animation-delay:.14s}
-.analysis-hero-metric:nth-child(3){animation-delay:.2s}
-.score-card{animation:drhFadeUp .42s ease both}
-.score-row .score-card:nth-child(1){animation-delay:.06s}
-.score-row .score-card:nth-child(2){animation-delay:.11s}
-.score-row .score-card:nth-child(3){animation-delay:.16s}
-.score-row .score-card:nth-child(4){animation-delay:.21s}
-.analysis-verdict-card{animation:drhFadeUp .45s ease both,drhSoftPulse 1.15s ease .38s 1}
-@keyframes drhFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.analysis-reveal{opacity:0;transform:translateY(18px);filter:blur(2px);transition:opacity .62s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1),filter .62s cubic-bezier(.16,1,.3,1),box-shadow .22s ease,border-color .22s ease;will-change:opacity,transform,filter}
+.analysis-reveal.is-visible{opacity:1;transform:translateY(0);filter:blur(0)}
+.analysis-reveal:nth-child(1){transition-delay:.03s}
+.analysis-reveal:nth-child(2){transition-delay:.07s}
+.analysis-reveal:nth-child(3){transition-delay:.1s}
+.analysis-reveal:nth-child(4){transition-delay:.13s}
+.analysis-reveal:nth-child(n+5){transition-delay:.04s}
+.analysis-panel.analysis-reveal.is-visible,.score-row.analysis-reveal.is-visible,.analysis-hero-card.analysis-reveal.is-visible{box-shadow:0 10px 28px rgba(30,58,95,.06)}
+.analysis-panel:hover,.score-card:hover,.analysis-hero-metric:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(30,58,95,.08);border-color:var(--g300)}
+.score-card,.analysis-hero-metric{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.analysis-verdict-card.is-visible{animation:drhSoftPulse 1.15s ease .22s 1}
 @keyframes drhSoftPulse{0%{box-shadow:0 0 0 rgba(245,158,11,0)}45%{box-shadow:0 0 0 6px rgba(245,158,11,.09)}100%{box-shadow:0 0 0 rgba(245,158,11,0)}}
-@media (prefers-reduced-motion: reduce){.analysis-hero-card,.analysis-hero-metric,.score-card,.analysis-verdict-card{animation:none!important}.analysis-hero-img img{transition:none!important}.analysis-hero-img:hover img{transform:none!important;filter:none!important}}
+@media (prefers-reduced-motion: reduce){.analysis-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}.analysis-verdict-card.is-visible{animation:none!important}.analysis-hero-img img,.score-card,.analysis-hero-metric{transition:none!important}.analysis-hero-img:hover img,.analysis-panel:hover,.score-card:hover,.analysis-hero-metric:hover{transform:none!important;filter:none!important}}
 .score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .score-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px;text-align:center}
 .score-card-label{font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:8px}
@@ -560,6 +560,30 @@ function showView(name, btn) {
   window.scrollTo(0, 0);
 }
 
+function setupAnalysisScrollReveal() {
+  const body = document.getElementById('analysis-body');
+  if (!body) return;
+  const sections = Array.from(body.children);
+  sections.forEach((section, index) => {
+    section.classList.add('analysis-reveal');
+    section.style.transitionDelay = `${Math.min(index * 0.035, 0.18)}s`;
+  });
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    sections.forEach(section => section.classList.add('is-visible'));
+    return;
+  }
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  sections.forEach(section => observer.observe(section));
+}
+
 function gradeColor(g) {
   if (!g) return '#6B7280';
   const s = String(g).toUpperCase();
@@ -974,6 +998,8 @@ function buildAnalysisBody(p) {
         </div>
       </div>
     </div>`;
+
+  requestAnimationFrame(setupAnalysisScrollReveal);
 }
 
 async function generateProjection(btn) {
