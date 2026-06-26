@@ -209,6 +209,46 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 @media(max-width:1100px){.dash-command-inner{grid-template-columns:1fr}.quick-actions{grid-template-columns:repeat(2,1fr)}#dash-products-grid{grid-template-columns:1fr}.dash-brief-card{max-width:none}}
 @media(max-width:900px){.dash-command-inner{padding:20px}.dash-welcome-name{font-size:23px}.quick-actions{grid-template-columns:1fr}.dashboard-end-note{align-items:flex-start}}
 
+/* ── DASHBOARD v1.2 WEEKLY PRIORITY POLISH ── */
+.weekly-priority-wrap{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);gap:16px;align-items:stretch;margin-bottom:22px}
+.priority-card{background:#fff;border:1px solid rgba(245,158,11,.35);border-radius:24px;overflow:hidden;box-shadow:0 18px 44px rgba(30,58,95,.10);text-decoration:none;display:grid;grid-template-columns:230px 1fr;min-height:265px;position:relative;animation:drhPriorityIn .48s cubic-bezier(.16,1,.3,1) both}
+.priority-card::before{content:'';position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--gold),var(--green));z-index:2}
+.priority-img{background:linear-gradient(180deg,#fff 0%,var(--g50) 100%);border-right:1px solid var(--g100);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.priority-img img{max-width:100%;max-height:250px;object-fit:contain;padding:14px;transition:transform .25s ease}
+.priority-card:hover .priority-img img{transform:scale(1.035)}
+.priority-body{padding:22px 24px;display:flex;flex-direction:column;justify-content:center}
+.priority-kicker{font-size:11px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.9px;margin-bottom:8px}
+.priority-title{font-size:22px;font-weight:900;color:var(--navy-dark);letter-spacing:-.55px;line-height:1.12;margin-bottom:5px}
+.priority-meta{font-size:12px;color:var(--g400);font-weight:700;margin-bottom:12px}
+.priority-quote{background:var(--g50);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:12px 14px;color:var(--g700);font-size:13px;line-height:1.6;font-style:italic;margin-bottom:14px}
+.priority-reasons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.priority-reason{background:#f8fafc;border:1px solid var(--g200);border-radius:10px;padding:8px 10px;font-size:11px;font-weight:800;color:var(--g700);display:flex;align-items:center;gap:7px}
+.priority-reason span{color:var(--green);font-weight:900}
+.priority-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:auto}
+.priority-pill{background:var(--g50);border:1px solid var(--g200);border-radius:999px;padding:6px 11px;font-size:11px;font-weight:900;color:var(--g700)}
+.priority-pill.green{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
+.priority-cta{margin-left:auto;background:var(--navy);color:#fff;border-radius:12px;padding:10px 14px;font-size:12px;font-weight:900}
+.also-picks-panel{background:#fff;border:1px solid var(--g200);border-radius:22px;padding:16px;box-shadow:0 10px 28px rgba(30,58,95,.05);animation:drhPriorityIn .55s cubic-bezier(.16,1,.3,1) .08s both}
+.also-picks-head{font-size:13px;font-weight:900;color:var(--g900);letter-spacing:-.2px;margin-bottom:10px}
+.also-picks-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.also-pick-card{background:linear-gradient(180deg,#fff 0%,#fbfcff 100%);border:1px solid var(--g200);border-radius:16px;text-decoration:none;display:grid;grid-template-columns:96px 1fr;overflow:hidden;transition:all .18s}
+.also-pick-card:hover{transform:translateY(-2px);border-color:var(--navy);box-shadow:0 10px 24px rgba(30,58,95,.08)}
+.also-pick-img{background:var(--g50);min-height:112px;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid var(--g100);font-size:30px}
+.also-pick-img img{max-width:94px;max-height:108px;object-fit:contain;padding:7px}
+.also-pick-body{padding:12px 13px;display:flex;flex-direction:column;justify-content:center}
+.also-pick-name{font-size:13px;font-weight:900;color:var(--g900);line-height:1.25;margin-bottom:3px}
+.also-pick-meta{font-size:10px;color:var(--g400);font-weight:700;margin-bottom:8px}
+.also-pick-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--g100);padding-top:8px}
+.also-pick-margin{font-size:12px;font-weight:900;color:var(--green)}
+.also-pick-cta{font-size:10px;font-weight:900;color:var(--navy)}
+.dashboard-mission{background:linear-gradient(135deg,#fff7ed 0%,#fffbeb 100%);border-color:#fed7aa;align-items:flex-start}
+.dashboard-mission strong{display:block;font-size:14px;margin-bottom:3px}
+.dashboard-mission span:last-child{display:block;color:#9a3412}
+@keyframes drhPriorityIn{from{opacity:0;transform:translateY(14px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@media(max-width:1100px){.weekly-priority-wrap{grid-template-columns:1fr}.priority-card{grid-template-columns:200px 1fr}}
+@media(max-width:700px){.priority-card{grid-template-columns:1fr}.priority-img{min-height:210px;border-right:none;border-bottom:1px solid var(--g100)}.priority-reasons{grid-template-columns:1fr}.priority-cta{margin-left:0;width:100%;text-align:center}.also-pick-card{grid-template-columns:88px 1fr}}
+@media (prefers-reduced-motion: reduce){.priority-card,.also-picks-panel{animation:none!important}.priority-img img,.also-pick-card{transition:none!important}.priority-card:hover .priority-img img,.also-pick-card:hover{transform:none!important}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
@@ -345,35 +385,35 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <!-- STATS -->
     <div class="stat-row">
       <div class="stat-card">
-        <div class="stat-card-label">Weekly Picks</div>
+        <div class="stat-card-label">Research Opportunities</div>
         <div class="stat-card-value" id="stat-products">—</div>
-        <div class="stat-card-sub">Ready to analyse</div>
+        <div class="stat-card-sub">Ready for review</div>
         <div class="stat-card-trend up" id="stat-products-trend"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Tracked Products</div>
+        <div class="stat-card-label">Products You're Tracking</div>
         <div class="stat-card-value" id="stat-saved">—</div>
         <div class="stat-card-sub">Saved by you</div>
         <div class="stat-card-trend amber" id="stat-saved-trend"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Average Margin</div>
+        <div class="stat-card-label">Strongest Margin</div>
         <div class="stat-card-value" id="stat-margin">—</div>
-        <div class="stat-card-sub">This week's picks</div>
+        <div class="stat-card-sub">Best opportunity signal</div>
         <div class="stat-card-trend up"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-label">Best Grade</div>
+        <div class="stat-card-label">Highest Research Grade</div>
         <div class="stat-card-value" id="stat-grade" style="color:var(--green)">—</div>
-        <div class="stat-card-sub">Highest rated pick</div>
+        <div class="stat-card-sub">Hub's strongest rating</div>
       </div>
     </div>
 
     <!-- THIS WEEK'S PICKS -->
     <div class="section-head">
       <div>
-        <div class="section-title">Hub's highest-priority picks</div>
-        <div class="section-kicker">A quick snapshot of the products Hub thinks are worth your attention first.</div>
+        <div class="section-title">If you only have time to research one product today... start here.</div>
+        <div class="section-kicker">Hub has ranked this week's drop so members know where to focus first.</div>
       </div>
       <a class="section-link" href="members.html">See full reports →</a>
     </div>
@@ -431,9 +471,12 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       </div>
     </div>
 
-    <div class="dashboard-end-note">
-      <span style="font-size:22px">💡</span>
-      <div><strong>Hub's tip:</strong> Use the dashboard as your starting point. Pick one product, read the full report, then build either a launch plan or creative pack before testing.</div>
+    <div class="dashboard-end-note dashboard-mission">
+      <span style="font-size:24px">🎯</span>
+      <div>
+        <strong>Hub's Mission Today</strong>
+        <span>Review today's featured opportunity. Read the full analysis. Build a launch plan. Only then move on to the next product. The best stores come from execution, not endless research.</span>
+      </div>
     </div>
 
   </div>
@@ -705,8 +748,8 @@ async function loadProducts() {
     document.getElementById('stat-products-trend').textContent = 'Fresh research ready';
 
     const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
-    const avgMargin = margins.length ? Math.round(margins.reduce((a,b)=>a+b,0)/margins.length) : 0;
-    if (avgMargin) document.getElementById('stat-margin').textContent = avgMargin + '%';
+    const strongestMargin = margins.length ? Math.round(Math.max(...margins)) : 0;
+    if (strongestMargin) document.getElementById('stat-margin').textContent = strongestMargin + '%';
     const topGrade = products.map(p=>p.grade).sort((a,b)=>({'A+':0,'A':1,'B+':2,'B':3,'C':4}[a]||5)-({'A+':0,'A':1,'B+':2,'B':3,'C':4}[b]||5))[0];
     if (topGrade) document.getElementById('stat-grade').textContent = topGrade;
 
@@ -724,38 +767,52 @@ async function loadProducts() {
     const others = latest3.slice(1);
     if (!hero) return;
     grid.innerHTML = `
-      <a class="preview-card" href="members.html" style="display:grid;grid-template-columns:200px 1fr;height:auto;min-height:180px">
-        <div class="preview-card-img" style="height:100%;border-bottom:none;border-right:1px solid var(--g100)">
-          ${hero.img ? `<img src="${hero.img}" alt="${hero.name}" onerror="this.style.display='none'">` : `<span>${hero.emoji||'📦'}</span>`}
-          <div class="preview-grade" style="background:${gradeColor(hero.grade)}">Grade ${hero.grade||'?'} — Top Pick</div>
-        </div>
-        <div class="preview-card-body" style="display:flex;flex-direction:column;justify-content:center">
-          <div class="preview-card-name" style="font-size:16px;margin-bottom:4px">${hero.name}</div>
-          <div class="preview-card-niche">${hero.niche||''}</div>
-          <div class="preview-card-why" style="margin:10px 0">${hero.whyEmerging||hero.whyNow||''}</div>
-          <div class="preview-card-footer">
-            <div class="preview-card-margin">${hero.margin||'—'} margin</div>
-            <div class="preview-card-cta">See Hub's full report →</div>
+      <div class="weekly-priority-wrap">
+        <a class="priority-card" href="members.html">
+          <div class="priority-img">
+            ${hero.img ? `<img src="${hero.img}" alt="${hero.name}" onerror="this.style.display='none'">` : `<span style="font-size:64px">${hero.emoji||'📦'}</span>`}
+            <div class="preview-grade" style="background:${gradeColor(hero.grade)}">Grade ${hero.grade||'?'} — Hub's #1</div>
           </div>
-        </div>
-      </a>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        ${others.map(p=>`
-        <a class="preview-card" href="members.html">
-          <div class="preview-card-img" style="height:120px;background:#fff">
-            ${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
-            <div class="preview-grade" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
-          </div>
-          <div class="preview-card-body">
-            <div class="preview-card-name">${p.name}</div>
-            <div class="preview-card-niche">${p.niche||''}</div>
-            <div class="preview-card-footer" style="margin-top:8px">
-              <div class="preview-card-margin">${p.margin||'—'} margin</div>
-              <div class="preview-card-cta">Full report →</div>
+          <div class="priority-body">
+            <div class="priority-kicker">⭐ Hub's #1 Recommendation This Week</div>
+            <div class="priority-title">${hero.name}</div>
+            <div class="priority-meta">${hero.niche||'Emerging product'} · ${hero.season||'Current opportunity'}</div>
+            <div class="priority-quote">“If I were only launching one product this week, this is where I’d start. The signal is strong, the margin looks worth testing, and it deserves a proper full report before you move on.”</div>
+            <div class="priority-reasons">
+              <div class="priority-reason"><span>✓</span> Biggest opportunity</div>
+              <div class="priority-reason"><span>✓</span> Best margin signal</div>
+              <div class="priority-reason"><span>✓</span> Highest priority pick</div>
+              <div class="priority-reason"><span>✓</span> Worth full analysis</div>
+            </div>
+            <div class="priority-footer">
+              <div class="priority-pill green">${hero.margin||'—'} margin</div>
+              <div class="priority-pill">Trend ${hero.trendScore||'—'}</div>
+              <div class="priority-pill">${hero.saturationRisk||'Competition check'}</div>
+              <div class="priority-cta">Read Full Report →</div>
             </div>
           </div>
-        </a>`).join('')}
-      </div>`;
+        </a>
+        <div class="also-picks-panel">
+          <div class="also-picks-head">Also worth looking at</div>
+          <div class="also-picks-grid">
+            ${others.map(p=>`
+            <a class="also-pick-card" href="members.html">
+              <div class="also-pick-img">
+                ${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">`:`<span>${p.emoji||'📦'}</span>`}
+                <div class="preview-grade" style="top:8px;left:8px;font-size:10px;padding:3px 8px;background:${gradeColor(p.grade)}">${p.grade||'?'}</div>
+              </div>
+              <div class="also-pick-body">
+                <div class="also-pick-name">${p.name}</div>
+                <div class="also-pick-meta">${p.niche||''}</div>
+                <div class="also-pick-bottom">
+                  <div class="also-pick-margin">${p.margin||'—'} margin</div>
+                  <div class="also-pick-cta">Full report →</div>
+                </div>
+              </div>
+            </a>`).join('')}
+          </div>
+        </div>
+      </div>`
 
     // Weekly picks page — full cards
     const weeklyGrid = document.getElementById('weekly-products-grid');
