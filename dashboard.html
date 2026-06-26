@@ -316,6 +316,32 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   .stat-card{padding:14px 16px}
   .stat-card-value{font-size:22px}
 }
+
+
+/* ── DRH FOOTER v1.0 ── */
+.drh-footer{background:var(--navy-dark);color:#fff;margin-top:36px;border-radius:22px 22px 0 0;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.drh-footer-inner{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:26px;padding:30px 30px 24px}
+.drh-footer-brand{display:flex;flex-direction:column;gap:10px}
+.drh-footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;width:max-content}
+.drh-footer-logo-icon{width:34px;height:34px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.drh-footer-logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.drh-footer-logo-bar.g{background:var(--gold)}
+.drh-footer-logo-text{font-size:14px;font-weight:900;letter-spacing:-.25px;color:#fff}
+.drh-footer-logo-text span{color:var(--gold)}
+.drh-footer-copy{font-size:13px;color:rgba(255,255,255,.58);line-height:1.65;max-width:310px}
+.drh-footer-note{display:inline-flex;width:max-content;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:var(--gold);border-radius:999px;padding:6px 11px;font-size:11px;font-weight:900;margin-top:4px}
+.drh-footer-col-title{font-size:11px;font-weight:900;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px}
+.drh-footer-links{display:flex;flex-direction:column;gap:8px}
+.drh-footer-links a{color:rgba(255,255,255,.62);text-decoration:none;font-size:13px;font-weight:650;transition:color .15s}
+.drh-footer-links a:hover{color:#fff}
+.drh-footer-bottom{border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 30px;background:rgba(0,0,0,.12)}
+.drh-footer-bottom p{font-size:12px;color:rgba(255,255,255,.38)}
+.drh-footer-small-links{display:flex;gap:14px;flex-wrap:wrap}
+.drh-footer-small-links a{font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;font-weight:650}
+.drh-footer-small-links a:hover{color:#fff}
+@media(max-width:900px){.drh-footer-inner{grid-template-columns:1fr 1fr;padding:24px 20px}.drh-footer-bottom{padding:16px 20px}}
+@media(max-width:560px){.drh-footer-inner{grid-template-columns:1fr}.drh-footer-note{width:auto}.drh-footer-bottom{align-items:flex-start;flex-direction:column}.drh-footer-small-links{gap:10px}}
+
 </style>
 </head>
 <body>
@@ -723,6 +749,68 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       </div>
     </div>
   </div>
+
+
+  <!-- DRH FOOTER v1.0 -->
+  <footer class="drh-footer">
+    <div class="drh-footer-inner">
+      <div class="drh-footer-brand">
+        <a class="drh-footer-logo" href="dashboard.html">
+          <div class="drh-footer-logo-icon">
+            <div class="drh-footer-logo-bar" style="height:8px;opacity:.4"></div>
+            <div class="drh-footer-logo-bar" style="height:14px;opacity:.7"></div>
+            <div class="drh-footer-logo-bar" style="height:20px"></div>
+            <div class="drh-footer-logo-bar g" style="height:15px"></div>
+          </div>
+          <div class="drh-footer-logo-text">Drop<span>Research</span> Hub</div>
+        </a>
+        <div class="drh-footer-copy">Find winning products before they become saturated. Built for UK ecommerce entrepreneurs who want better research before spending money on ads.</div>
+        <div class="drh-footer-note">Members area</div>
+      </div>
+
+      <div>
+        <div class="drh-footer-col-title">Platform</div>
+        <div class="drh-footer-links">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="members.html">Emerging Products</a>
+          <a href="pulse.html">UK Market Pulse</a>
+          <a href="index.html#pricing">Pricing</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="drh-footer-col-title">Legal</div>
+        <div class="drh-footer-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="refunds.html">Refund Policy</a>
+          <a href="cookies.html">Cookie Policy</a>
+          <a href="disclaimer.html">Disclaimer</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="drh-footer-col-title">Support</div>
+        <div class="drh-footer-links">
+          <a href="contact.html">Contact</a>
+          <a href="index.html">Homepage</a>
+          <a href="login.html">Member Login</a>
+          <a href="signup.html">Start Free Trial</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="drh-footer-bottom">
+      <p>© 2026 DropResearchHub. All rights reserved.</p>
+      <div class="drh-footer-small-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="cookies.html">Cookies</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
 
 </main>
 
