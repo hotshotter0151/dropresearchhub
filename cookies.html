@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cookie Policy — DropResearchHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;
+  --navy-light:#2B4F82;
+  --navy-dark:#142840;
+  --gold:#F59E0B;
+  --gold-soft:#FEF3C7;
+  --bg:#F8FAFC;
+  --card:#FFFFFF;
+  --text:#111827;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --soft:#F3F4F6;
+  --green:#16A34A;
+  --blue:#2563EB;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.site-header{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{max-width:1120px;margin:0 auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff}
+.logo-mark{width:38px;height:38px;background:#fff;border-radius:10px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+.logo-bar.gold{background:var(--gold)}
+.logo-text{font-weight:900;font-size:15px;letter-spacing:-.2px}.logo-text span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-link{font-size:13px;font-weight:700;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 11px;border-radius:999px;transition:all .15s}
+.nav-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-link.primary{background:#fff;color:var(--navy)}
+.hero{max-width:1120px;margin:0 auto;padding:54px 22px 62px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:end}
+.kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.32);color:#FCD34D;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;margin-bottom:16px}
+h1{font-size:48px;line-height:1.04;letter-spacing:-1.8px;font-weight:900;margin-bottom:16px}
+.hero p{font-size:17px;color:rgba(255,255,255,.78);max-width:650px}
+.hero-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:20px;backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.18)}
+.hero-card-title{font-size:13px;font-weight:900;color:#fff;margin-bottom:10px}.hero-card p{font-size:13px;color:rgba(255,255,255,.74)}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.status{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px}
+.status b{display:block;color:#fff;font-size:13px}.status span{font-size:11px;color:rgba(255,255,255,.62)}
+.page-wrap{max-width:1120px;margin:-28px auto 0;padding:0 22px 58px;display:grid;grid-template-columns:270px 1fr;gap:22px;align-items:start}
+.sidebar{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 28px rgba(17,24,39,.05)}
+.sidebar-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
+.side-link{display:block;text-decoration:none;color:#374151;font-size:13px;font-weight:700;padding:9px 10px;border-radius:10px;margin-bottom:2px}
+.side-link:hover{background:var(--soft);color:var(--navy)}
+.legal-card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px rgba(17,24,39,.05);overflow:hidden}
+.legal-intro{padding:28px 30px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#F9FAFB)}
+.legal-intro h2{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.legal-intro p{font-size:14px;color:var(--muted)}
+.policy{padding:30px}
+.policy section{scroll-margin-top:24px;margin-bottom:34px;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.policy section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+h3{font-size:19px;font-weight:900;letter-spacing:-.35px;margin-bottom:10px;color:var(--navy-dark)}
+h4{font-size:14px;font-weight:900;margin:18px 0 8px;color:#1F2937}
+p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;margin:8px 0 14px}.policy li{font-size:14px;color:#374151;margin:6px 0}
+.notice{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.notice b{color:#1D4ED8}
+.warn{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.warn b{color:#78350F}
+.table{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:14px 0;background:#fff}
+.row{display:grid;grid-template-columns:210px 1fr;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}
+.cell{padding:12px 14px;font-size:13px;color:#374151}.cell:first-child{background:#F9FAFB;font-weight:800;color:#1F2937}
+.site-footer{border-top:1px solid var(--line);background:#fff;margin-top:48px}
+.footer-inner{max-width:1120px;margin:0 auto;padding:28px 22px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
+.footer-brand{font-size:13px;color:#6B7280}.footer-brand b{color:var(--navy);font-weight:900}
+.footer-links{display:flex;gap:14px;flex-wrap:wrap}.footer-links a{font-size:12px;font-weight:800;color:#4B5563;text-decoration:none}.footer-links a:hover{color:var(--navy)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:38px}.page-wrap{grid-template-columns:1fr}.sidebar{position:relative;top:auto}.nav{align-items:flex-start}.nav-links{justify-content:flex-end}h1{font-size:38px}.row{grid-template-columns:1fr}.cell:first-child{border-bottom:1px solid var(--line)}}
+@media(max-width:560px){.nav{flex-direction:column;align-items:flex-start}.hero{padding-bottom:44px}h1{font-size:32px}.policy,.legal-intro{padding:22px}.status-grid{grid-template-columns:1fr}.footer-inner{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <nav class="nav">
+    <a class="logo" href="index.html" aria-label="DropResearchHub home">
+      <div class="logo-mark">
+        <div class="logo-bar" style="height:8px;opacity:.4"></div>
+        <div class="logo-bar" style="height:14px;opacity:.7"></div>
+        <div class="logo-bar" style="height:20px"></div>
+        <div class="logo-bar gold" style="height:15px"></div>
+      </div>
+      <div class="logo-text">Drop<span>Research</span> Hub</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="trial.html">Start Trial</a>
+      <a class="nav-link primary" href="contact.html">Contact</a>
+    </div>
+  </nav>
+  <div class="hero">
+    <div>
+      <div class="kicker">Website cookies</div>
+      <h1>Cookie Policy</h1>
+      <p>This policy explains how DropResearchHub uses cookies and similar technologies to keep the website working, protect accounts, process subscriptions and improve the platform.</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-title">Policy summary</div>
+      <p>Some cookies are needed for DRH to work properly. Others may help us understand performance, improve the member experience and support marketing.</p>
+      <div class="status-grid">
+        <div class="status"><b>Last updated</b><span>26 June 2026</span></div>
+        <div class="status"><b>Applies to</b><span>dropresearchhub.com</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-title">On this page</div>
+    <a class="side-link" href="#what-are-cookies">What cookies are</a>
+    <a class="side-link" href="#how-we-use">How we use cookies</a>
+    <a class="side-link" href="#types">Types of cookies</a>
+    <a class="side-link" href="#third-parties">Third parties</a>
+    <a class="side-link" href="#choices">Your choices</a>
+    <a class="side-link" href="#changes">Changes</a>
+    <a class="side-link" href="#contact">Contact</a>
+  </aside>
+
+  <article class="legal-card">
+    <div class="legal-intro">
+      <h2>Clear and practical cookie information</h2>
+      <p>DRH uses cookies to run a secure subscription platform. We aim to keep cookie use sensible and proportionate.</p>
+    </div>
+
+    <div class="policy">
+      <section id="what-are-cookies">
+        <h3>1. What cookies are</h3>
+        <p>Cookies are small text files placed on your device when you visit a website. They help websites remember information about your visit, such as login sessions, preferences and technical details needed for the service to work.</p>
+        <p>Similar technologies, such as local storage, session storage, pixels and server logs, may also be used for similar purposes.</p>
+      </section>
+
+      <section id="how-we-use">
+        <h3>2. How DropResearchHub uses cookies</h3>
+        <p>We may use cookies and similar technologies to:</p>
+        <ul>
+          <li>keep you signed in and manage member sessions;</li>
+          <li>protect the website from abuse, fraud and unauthorised access;</li>
+          <li>support subscriptions, trials and payment journeys;</li>
+          <li>remember basic preferences where the platform supports them;</li>
+          <li>understand website performance and improve the user experience;</li>
+          <li>measure marketing performance where analytics or advertising tools are used.</li>
+        </ul>
+      </section>
+
+      <section id="types">
+        <h3>3. Types of cookies we may use</h3>
+        <div class="table">
+          <div class="row"><div class="cell">Essential cookies</div><div class="cell">Required for the website, login, member access, security and checkout flows to work. These cannot usually be switched off without breaking parts of the service.</div></div>
+          <div class="row"><div class="cell">Session cookies</div><div class="cell">Used to remember your visit while browsing DRH, including admin/member access checks and temporary session information.</div></div>
+          <div class="row"><div class="cell">Preference cookies</div><div class="cell">Used where DRH remembers basic settings or choices, such as saved states or display preferences.</div></div>
+          <div class="row"><div class="cell">Analytics cookies</div><div class="cell">Help us understand how visitors use the site, which pages are useful and where the platform can be improved.</div></div>
+          <div class="row"><div class="cell">Marketing cookies</div><div class="cell">May be used in future to measure campaigns, retarget visitors or understand ad performance. These should only be used where permitted by law and your preferences.</div></div>
+        </div>
+      </section>
+
+      <section id="third-parties">
+        <h3>4. Third-party services</h3>
+        <p>Some cookies or similar technologies may be set by trusted providers used to operate DRH.</p>
+        <div class="table">
+          <div class="row"><div class="cell">Vercel</div><div class="cell">Hosting, deployment, serverless functions, performance and security logs.</div></div>
+          <div class="row"><div class="cell">Supabase</div><div class="cell">Authentication, user sessions, account access and database-backed member functionality.</div></div>
+          <div class="row"><div class="cell">Stripe</div><div class="cell">Secure checkout, subscription payments, trial billing and fraud prevention.</div></div>
+          <div class="row"><div class="cell">Resend</div><div class="cell">Email delivery records for service emails and platform notifications.</div></div>
+          <div class="row"><div class="cell">Analytics/marketing tools</div><div class="cell">If added, these may help us measure traffic, campaign performance and product usage.</div></div>
+        </div>
+        <p>Third-party providers may process technical data according to their own policies.</p>
+      </section>
+
+      <section id="choices">
+        <h3>5. Managing cookies</h3>
+        <p>You can control cookies through your browser settings. Most browsers allow you to block cookies, delete existing cookies or receive alerts before cookies are stored.</p>
+        <p>If you block essential cookies, parts of DRH may not work properly. For example, you may not be able to log in, stay signed in, access member areas or complete a subscription checkout.</p>
+        <div class="notice"><b>Practical note:</b> If DRH later adds a cookie consent banner or preference centre, your choices there will also control non-essential cookies where supported.</div>
+      </section>
+
+      <section id="changes">
+        <h3>6. Changes to this Cookie Policy</h3>
+        <p>We may update this Cookie Policy as DRH develops, adds new tools, changes providers or introduces analytics and marketing features.</p>
+        <p>The latest version will be shown on this page with the updated date above.</p>
+      </section>
+
+      <section id="contact">
+        <h3>7. Contact</h3>
+        <p>For questions about cookies or privacy, contact us through our <a href="contact.html">Contact page</a>.</p>
+        <p>You can also read our <a href="privacy.html">Privacy Policy</a> for more information about how we handle personal data.</p>
+      </section>
+    </div>
+  </article>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><b>DropResearchHub</b> © 2026. Built for UK ecommerce entrepreneurs.</div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="refunds.html">Refunds</a>
+      <a href="disclaimer.html">Disclaimer</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
