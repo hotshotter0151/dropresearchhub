@@ -734,12 +734,92 @@ let creativeVariations = [];
 let currentVariation = 0;
 let activeGrowthChart = null;
 
+/* ─────────────────────────────────────────────
+   DRH MEMBER ANALYTICS TRACKING
+   Sends member actions into analytics_events via /api/analytics
+───────────────────────────────────────────── */
+function drhGetDeviceType() {
+  const w = window.innerWidth || 1200;
+  if (w < 768) return 'mobile';
+  if (w < 1024) return 'tablet';
+  return 'desktop';
+}
+
+function drhGetBrowser() {
+  const ua = navigator.userAgent || '';
+  if (ua.includes('Edg')) return 'Edge';
+  if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+  if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+  if (ua.includes('Firefox')) return 'Firefox';
+  return 'Other';
+}
+
+function drhGetSessionId() {
+  let id = sessionStorage.getItem('drh_analytics_session');
+  if (!id) {
+    id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+    sessionStorage.setItem('drh_analytics_session', id);
+  }
+  return id;
+}
+
+function drhCleanProductMeta(product) {
+  if (!product) return {};
+  return {
+    product_name: product.name || '',
+    product_niche: product.niche || '',
+    product_grade: product.grade || '',
+    trend_score: product.trendScore || product.emergingScore || '',
+    saturation_risk: product.saturationRisk || '',
+    margin: product.margin || '',
+    source: product._analyticsSource || ''
+  };
+}
+
+function drhTrack(eventName, metadata = {}) {
+  try {
+    const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+    const params = new URLSearchParams(window.location.search || '');
+    const viewEl = document.querySelector('.view.active');
+    const activeView = viewEl ? String(viewEl.id || '').replace('view-', '') : '';
+    const pagePath = metadata.page_path || (window.location.pathname + (activeView ? '#' + activeView : ''));
+
+    const body = {
+      event_name: eventName,
+      page_path: pagePath,
+      referrer: document.referrer || '',
+      source: params.get('utm_source') || metadata.source || '',
+      medium: params.get('utm_medium') || '',
+      campaign: params.get('utm_campaign') || '',
+      device_type: drhGetDeviceType(),
+      browser: drhGetBrowser(),
+      session_id: drhGetSessionId(),
+      metadata: {
+        area: 'members',
+        active_view: activeView,
+        member_email: session?.email || '',
+        ...metadata
+      }
+    };
+
+    fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true
+    }).catch(() => {});
+  } catch (e) {}
+}
+
+
 function showView(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
+  const view = document.getElementById('view-' + name);
+  if (view) view.classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
+  drhTrack('member_view_opened', { view_name: name, page_path: window.location.pathname + '#' + name });
 }
 
 function animateDrhCounters(scope) {
@@ -968,6 +1048,11 @@ function renderAnalysisView(p, subtitle) {
 
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
+  drhTrack('product_analyse_click', {
+    source_area: 'emerging_products',
+    product_index: idx,
+    ...drhCleanProductMeta(p)
+  });
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`));
 }
 
@@ -975,6 +1060,11 @@ function openAnalysisFromSaved(idx) {
   const saved = window._savedProducts || [];
   const p = saved[idx];
   if (!p) return;
+  drhTrack('product_analyse_click', {
+    source_area: 'saved_products',
+    product_index: idx,
+    ...drhCleanProductMeta(p)
+  });
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche||''} · Saved product`));
 }
 
@@ -1559,6 +1649,7 @@ async function generateCreative(productName){
   const btn=document.getElementById('creative-gen-btn');
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
+  drhTrack('creative_pack_started', { product_name: productName, platform, angle });
   btn.disabled=true;btn.textContent='Hub is building...';
   startCreativeBuildAnimation(platform, angle);
   try{
@@ -1575,10 +1666,12 @@ async function generateCreative(productName){
       const out=document.getElementById('creative-output');
       if(out) out.classList.add('show');
       showToast('Creative pack ready ✓');
+      drhTrack('creative_pack_completed', { product_name: productName, platform, angle, variations: creativeVariations.length });
     },620);
   }catch(e){
     console.error('Creative generator error:', e);
     stopCreativeBuildAnimation(false);
+    drhTrack('creative_pack_failed', { product_name: productName, platform, angle, error: e.message || 'unknown' });
     showToast('Could not generate creatives — try again');
   }
   btn.disabled=false;btn.textContent='🚀 Build My Launch Creative Pack';
@@ -1613,11 +1706,17 @@ async function runValidator(){
   } else {
     productName = input.trim();
   }
+  drhTrack('ask_hub_used', {
+    tool: 'product_validator',
+    product_name: productName,
+    input_type: isUrl ? 'url' : 'text'
+  });
   createHubLoader('validator-result', 'Hub is analysing your product...');
   startHubMessages('validator-result');
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
+    drhTrack('ask_hub_completed', { tool: 'product_validator', product_name: productName });
     stopHubMessages();removeHubLoader('validator-result');
     const p={
       name:data.productName||productName,niche:data.marketStage||'Validator result',stage:'Assessed',season:'Assessed',
@@ -1641,10 +1740,11 @@ async function runValidator(){
     buildAnalysisBody(p);
     tempBody.id='validator-analysis-body';
     origBody.id='analysis-body';
-  }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+  }catch(e){drhTrack('ask_hub_failed', { tool: 'product_validator', product_name: productName || input, error: e.message || 'unknown' });stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
 }
 async function runValidatorWithName(name) {
   if (!name || name.trim().length < 3) { showToast('Please type the product name'); return; }
+  drhTrack('ask_hub_fallback_name_used', { tool: 'product_validator', product_name: name.trim() });
   document.getElementById('validator-input').value = name;
   await runValidator();
 }
@@ -1720,6 +1820,7 @@ function changeSavedProductStatus(index, status) {
   p._status = status;
   renderSavedGrid(saved);
   populateCompareDropdowns();
+  drhTrack('saved_product_status_changed', { product_name: p.name, status });
   runCompare();
   showToast(`${p.name} moved to ${status}`);
 }
@@ -1763,6 +1864,7 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
       btn.textContent = '🤍';
+      drhTrack('product_save_click', { action: 'unsave', ...drhCleanProductMeta(p) });
       showToast('Removed from Saved Products');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
     } catch(e) { showToast('Could not unsave — try again'); }
@@ -1771,6 +1873,7 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
       savedProductNames.add(p.name);
       btn.textContent = '💛';
+      drhTrack('product_save_click', { action: 'save', ...drhCleanProductMeta(p) });
       showSavedMessage();
     } catch(e) { showToast('Could not save — try again'); }
   }
@@ -1821,6 +1924,7 @@ async function unsaveProduct(name) {
     await fetch('/api/saved', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, productName: name}) });
     savedProductNames.delete(name);
     localStorage.removeItem(savedStatusKey(name));
+    drhTrack('product_save_click', { action: 'unsave_from_saved_page', product_name: name });
     updateAllSaveButtons();
     loadSavedProducts();
     showToast('Removed from saved products');
@@ -1872,6 +1976,12 @@ function runCompare() {
     else { m.winA = false; m.winB = false; }
     if (m.winA) aWins++; if (m.winB) bWins++;
   });
+  drhTrack('product_compare_used', {
+    product_a: a.name || '',
+    product_b: b.name || '',
+    product_a_grade: a.grade || '',
+    product_b_grade: b.grade || ''
+  });
   var winner = aWins > bWins ? a : bWins > aWins ? b : null;
   var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
   var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
@@ -1904,6 +2014,7 @@ async function loadPublishedProducts() {
     const data = await res.json();
     if (data.products && data.products.length) {
       allProducts = data.products;
+      drhTrack('member_products_feed_loaded', { product_count: allProducts.length });
       buildNicheFilters();
       renderProductsGrid();
       const badge = document.getElementById('product-count-badge');
@@ -1944,6 +2055,7 @@ async function loadPublishedProducts() {
   }
 }
 
+drhTrack('member_page_view', { view_name: 'products', page_path: window.location.pathname + '#products' });
 renderProductsGrid();
 loadPublishedProducts();
 loadSavedProducts();
