@@ -734,92 +734,12 @@ let creativeVariations = [];
 let currentVariation = 0;
 let activeGrowthChart = null;
 
-/* ─────────────────────────────────────────────
-   DRH MEMBER ANALYTICS TRACKING
-   Sends member actions into analytics_events via /api/analytics
-───────────────────────────────────────────── */
-function drhGetDeviceType() {
-  const w = window.innerWidth || 1200;
-  if (w < 768) return 'mobile';
-  if (w < 1024) return 'tablet';
-  return 'desktop';
-}
-
-function drhGetBrowser() {
-  const ua = navigator.userAgent || '';
-  if (ua.includes('Edg')) return 'Edge';
-  if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
-  if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
-  if (ua.includes('Firefox')) return 'Firefox';
-  return 'Other';
-}
-
-function drhGetSessionId() {
-  let id = sessionStorage.getItem('drh_analytics_session');
-  if (!id) {
-    id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
-    sessionStorage.setItem('drh_analytics_session', id);
-  }
-  return id;
-}
-
-function drhCleanProductMeta(product) {
-  if (!product) return {};
-  return {
-    product_name: product.name || '',
-    product_niche: product.niche || '',
-    product_grade: product.grade || '',
-    trend_score: product.trendScore || product.emergingScore || '',
-    saturation_risk: product.saturationRisk || '',
-    margin: product.margin || '',
-    source: product._analyticsSource || ''
-  };
-}
-
-function drhTrack(eventName, metadata = {}) {
-  try {
-    const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-    const params = new URLSearchParams(window.location.search || '');
-    const viewEl = document.querySelector('.view.active');
-    const activeView = viewEl ? String(viewEl.id || '').replace('view-', '') : '';
-    const pagePath = metadata.page_path || (window.location.pathname + (activeView ? '#' + activeView : ''));
-
-    const body = {
-      event_name: eventName,
-      page_path: pagePath,
-      referrer: document.referrer || '',
-      source: params.get('utm_source') || metadata.source || '',
-      medium: params.get('utm_medium') || '',
-      campaign: params.get('utm_campaign') || '',
-      device_type: drhGetDeviceType(),
-      browser: drhGetBrowser(),
-      session_id: drhGetSessionId(),
-      metadata: {
-        area: 'members',
-        active_view: activeView,
-        member_email: session?.email || '',
-        ...metadata
-      }
-    };
-
-    fetch('/api/analytics', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      keepalive: true
-    }).catch(() => {});
-  } catch (e) {}
-}
-
-
 function showView(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
-  const view = document.getElementById('view-' + name);
-  if (view) view.classList.add('active');
+  document.getElementById('view-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
-  drhTrack('member_view_opened', { view_name: name, page_path: window.location.pathname + '#' + name });
 }
 
 function animateDrhCounters(scope) {
@@ -1048,11 +968,6 @@ function renderAnalysisView(p, subtitle) {
 
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
-  drhTrack('product_analyse_click', {
-    source_area: 'emerging_products',
-    product_index: idx,
-    ...drhCleanProductMeta(p)
-  });
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`));
 }
 
@@ -1060,11 +975,6 @@ function openAnalysisFromSaved(idx) {
   const saved = window._savedProducts || [];
   const p = saved[idx];
   if (!p) return;
-  drhTrack('product_analyse_click', {
-    source_area: 'saved_products',
-    product_index: idx,
-    ...drhCleanProductMeta(p)
-  });
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche||''} · Saved product`));
 }
 
@@ -1649,7 +1559,6 @@ async function generateCreative(productName){
   const btn=document.getElementById('creative-gen-btn');
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
-  drhTrack('creative_pack_started', { product_name: productName, platform, angle });
   btn.disabled=true;btn.textContent='Hub is building...';
   startCreativeBuildAnimation(platform, angle);
   try{
@@ -1666,12 +1575,10 @@ async function generateCreative(productName){
       const out=document.getElementById('creative-output');
       if(out) out.classList.add('show');
       showToast('Creative pack ready ✓');
-      drhTrack('creative_pack_completed', { product_name: productName, platform, angle, variations: creativeVariations.length });
     },620);
   }catch(e){
     console.error('Creative generator error:', e);
     stopCreativeBuildAnimation(false);
-    drhTrack('creative_pack_failed', { product_name: productName, platform, angle, error: e.message || 'unknown' });
     showToast('Could not generate creatives — try again');
   }
   btn.disabled=false;btn.textContent='🚀 Build My Launch Creative Pack';
@@ -1706,17 +1613,11 @@ async function runValidator(){
   } else {
     productName = input.trim();
   }
-  drhTrack('ask_hub_used', {
-    tool: 'product_validator',
-    product_name: productName,
-    input_type: isUrl ? 'url' : 'text'
-  });
   createHubLoader('validator-result', 'Hub is analysing your product...');
   startHubMessages('validator-result');
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName,niche:'General',costPrice:'Unknown',sellPrice:'Unknown'})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Analysis failed');
-    drhTrack('ask_hub_completed', { tool: 'product_validator', product_name: productName });
     stopHubMessages();removeHubLoader('validator-result');
     const p={
       name:data.productName||productName,niche:data.marketStage||'Validator result',stage:'Assessed',season:'Assessed',
@@ -1740,11 +1641,10 @@ async function runValidator(){
     buildAnalysisBody(p);
     tempBody.id='validator-analysis-body';
     origBody.id='analysis-body';
-  }catch(e){drhTrack('ask_hub_failed', { tool: 'product_validator', product_name: productName || input, error: e.message || 'unknown' });stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
+  }catch(e){stopHubMessages();removeHubLoader('validator-result');resultArea.innerHTML=`<div class="validator-empty"><h3>Could not complete assessment</h3><p>Check your connection and try again.</p></div>`;}
 }
 async function runValidatorWithName(name) {
   if (!name || name.trim().length < 3) { showToast('Please type the product name'); return; }
-  drhTrack('ask_hub_fallback_name_used', { tool: 'product_validator', product_name: name.trim() });
   document.getElementById('validator-input').value = name;
   await runValidator();
 }
@@ -1820,7 +1720,6 @@ function changeSavedProductStatus(index, status) {
   p._status = status;
   renderSavedGrid(saved);
   populateCompareDropdowns();
-  drhTrack('saved_product_status_changed', { product_name: p.name, status });
   runCompare();
   showToast(`${p.name} moved to ${status}`);
 }
@@ -1864,7 +1763,6 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
       btn.textContent = '🤍';
-      drhTrack('product_save_click', { action: 'unsave', ...drhCleanProductMeta(p) });
       showToast('Removed from Saved Products');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
     } catch(e) { showToast('Could not unsave — try again'); }
@@ -1873,7 +1771,6 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
       savedProductNames.add(p.name);
       btn.textContent = '💛';
-      drhTrack('product_save_click', { action: 'save', ...drhCleanProductMeta(p) });
       showSavedMessage();
     } catch(e) { showToast('Could not save — try again'); }
   }
@@ -1924,7 +1821,6 @@ async function unsaveProduct(name) {
     await fetch('/api/saved', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, productName: name}) });
     savedProductNames.delete(name);
     localStorage.removeItem(savedStatusKey(name));
-    drhTrack('product_save_click', { action: 'unsave_from_saved_page', product_name: name });
     updateAllSaveButtons();
     loadSavedProducts();
     showToast('Removed from saved products');
@@ -1976,12 +1872,6 @@ function runCompare() {
     else { m.winA = false; m.winB = false; }
     if (m.winA) aWins++; if (m.winB) bWins++;
   });
-  drhTrack('product_compare_used', {
-    product_a: a.name || '',
-    product_b: b.name || '',
-    product_a_grade: a.grade || '',
-    product_b_grade: b.grade || ''
-  });
   var winner = aWins > bWins ? a : bWins > aWins ? b : null;
   var aName = a.name.length>22 ? a.name.slice(0,22)+'...' : a.name;
   var bName = b.name.length>22 ? b.name.slice(0,22)+'...' : b.name;
@@ -2014,7 +1904,6 @@ async function loadPublishedProducts() {
     const data = await res.json();
     if (data.products && data.products.length) {
       allProducts = data.products;
-      drhTrack('member_products_feed_loaded', { product_count: allProducts.length });
       buildNicheFilters();
       renderProductsGrid();
       const badge = document.getElementById('product-count-badge');
@@ -2055,7 +1944,6 @@ async function loadPublishedProducts() {
   }
 }
 
-drhTrack('member_page_view', { view_name: 'products', page_path: window.location.pathname + '#products' });
 renderProductsGrid();
 loadPublishedProducts();
 loadSavedProducts();
@@ -2102,5 +1990,293 @@ function closeSidebar(){document.getElementById("sidebar").classList.remove("ope
 const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
 </script>
 </div>
+
+
+<!-- DRH MEMBER ACTION ANALYTICS — added 27 Jun 2026 -->
+<script>
+(function () {
+  const DRH_ANALYTICS_DEBUG = false;
+
+  function safeText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function getDeviceType() {
+    const w = window.innerWidth || 0;
+    if (w < 768) return 'mobile';
+    if (w < 1024) return 'tablet';
+    return 'desktop';
+  }
+
+  function getBrowser() {
+    const ua = navigator.userAgent || '';
+    if (ua.includes('Edg')) return 'Edge';
+    if (ua.includes('Firefox')) return 'Firefox';
+    if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+    if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+    return 'Other';
+  }
+
+  function getSessionId() {
+    let id = sessionStorage.getItem('drh_analytics_session');
+    if (!id) {
+      try {
+        id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random();
+      } catch (e) {
+        id = String(Date.now()) + Math.random();
+      }
+      sessionStorage.setItem('drh_analytics_session', id);
+    }
+    return id;
+  }
+
+  function getMemberEmail() {
+    try {
+      const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+      return session?.email || '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function getProductNameFromElement(el) {
+    if (!el) return '';
+
+    const direct = el.getAttribute('data-product-name') || el.getAttribute('aria-label') || '';
+    if (direct) return safeText(direct.replace(/^save\s+/i, '').replace(/^analyse\s+/i, ''));
+
+    const card = el.closest('.product-card') || el.closest('[id^="saved-card-"]') || el.closest('[id^="product-"]') || el.closest('.analysis-hero-card');
+    if (card) {
+      const selectors = [
+        '.product-card-name',
+        '.saved-product-title',
+        '.analysis-hero-title',
+        '[id*="name"]',
+        'h1',
+        'h2',
+        'b'
+      ];
+      for (const selector of selectors) {
+        const found = card.querySelector(selector);
+        const txt = safeText(found?.textContent || '');
+        if (txt && txt.length > 1 && txt.length < 140) return txt;
+      }
+    }
+
+    const activeTitle = safeText(document.querySelector('.analysis-hero-title')?.textContent || document.querySelector('.analysis-header-info h1')?.textContent || '');
+    if (activeTitle) return activeTitle;
+
+    return '';
+  }
+
+  function getSource() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('utm_source') || (document.referrer ? document.referrer : 'Direct');
+  }
+
+  function analyticsPayload(eventName, metadata) {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      event_name: eventName,
+      page_path: window.location.pathname || '/members.html',
+      referrer: document.referrer || '',
+      source: params.get('utm_source') || getSource() || 'Direct',
+      medium: params.get('utm_medium') || '',
+      campaign: params.get('utm_campaign') || '',
+      device_type: getDeviceType(),
+      browser: getBrowser(),
+      session_id: getSessionId(),
+      metadata: {
+        page_title: document.title || '',
+        member_email: getMemberEmail(),
+        ...metadata
+      }
+    };
+  }
+
+  function trackMemberAction(eventName, metadata) {
+    try {
+      const payload = analyticsPayload(eventName, metadata || {});
+      if (DRH_ANALYTICS_DEBUG) console.log('[DRH analytics]', payload);
+
+      const body = JSON.stringify(payload);
+
+      if (navigator.sendBeacon) {
+        try {
+          const blob = new Blob([body], { type: 'application/json' });
+          const queued = navigator.sendBeacon('/api/analytics', blob);
+          if (queued) return;
+        } catch (e) {}
+      }
+
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+        keepalive: true
+      }).catch(() => {});
+    } catch (e) {
+      if (DRH_ANALYTICS_DEBUG) console.warn('[DRH analytics failed]', e);
+    }
+  }
+
+  window.trackMemberAction = trackMemberAction;
+
+  function trackInitialPageView() {
+    const key = 'drh_members_page_view_' + getSessionId() + '_' + location.pathname;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+    trackMemberAction('members_page_view', {
+      page_name: 'Members Area'
+    });
+  }
+
+  function classifyClick(target) {
+    const clickable = target.closest('button, a, [role="button"]');
+    if (!clickable) return null;
+
+    const text = safeText(clickable.textContent || '');
+    const onclick = String(clickable.getAttribute('onclick') || '');
+    const href = String(clickable.getAttribute('href') || '');
+    const id = String(clickable.id || '');
+    const cls = String(clickable.className || '');
+    const productName = getProductNameFromElement(clickable);
+
+    if (cls.includes('product-save-btn') || onclick.includes('toggleSaveProduct')) {
+      const isCurrentlySaved = text.includes('💛') || clickable.classList.contains('saved');
+      return {
+        event: isCurrentlySaved ? 'product_unsaved' : 'product_saved',
+        metadata: {
+          product_name: productName,
+          action_label: text || 'Save button'
+        }
+      };
+    }
+
+    if (onclick.includes('unsaveProduct')) {
+      return {
+        event: 'product_unsaved',
+        metadata: {
+          product_name: productName,
+          action_label: text || 'Remove saved product'
+        }
+      };
+    }
+
+    if (cls.includes('analyse-btn') || onclick.includes('openAnalysis(') || onclick.includes('openAnalysisFromSaved')) {
+      return {
+        event: 'product_analyse_click',
+        metadata: {
+          product_name: productName,
+          action_label: text || 'Analyse'
+        }
+      };
+    }
+
+    if (onclick.includes('runValidator') || id.includes('validator') || (text.toLowerCase().includes('ask hub') && !href)) {
+      return {
+        event: 'ask_hub_used',
+        metadata: {
+          product_name: safeText(document.getElementById('validator-input')?.value || document.getElementById('validator-name-fallback')?.value || productName),
+          tool: 'Product Validator',
+          action_label: text || 'Ask Hub'
+        }
+      };
+    }
+
+    if (onclick.includes('generateCreative') || id === 'creative-gen-btn' || cls.includes('creative-pack-btn')) {
+      return {
+        event: 'creative_pack_generated',
+        metadata: {
+          product_name: productName,
+          platform: safeText(document.getElementById('creative-platform')?.value || ''),
+          angle: safeText(document.getElementById('creative-angle')?.value || ''),
+          action_label: text || 'Creative Pack'
+        }
+      };
+    }
+
+    if (onclick.includes('runCompare') || text.toLowerCase().includes('compare')) {
+      return {
+        event: 'product_compare_used',
+        metadata: {
+          action_label: text || 'Compare Products'
+        }
+      };
+    }
+
+    if (href.includes('pulse.html') || text.toLowerCase().includes('market pulse')) {
+      return {
+        event: 'market_pulse_view',
+        metadata: {
+          action_label: text || 'Market Pulse'
+        }
+      };
+    }
+
+    if (href.includes('dashboard.html') && text.toLowerCase().includes('launch')) {
+      return {
+        event: 'launch_plan',
+        metadata: {
+          action_label: text || 'Launch Plan'
+        }
+      };
+    }
+
+    return null;
+  }
+
+  document.addEventListener('click', function (event) {
+    const classified = classifyClick(event.target);
+    if (!classified) return;
+    trackMemberAction(classified.event, classified.metadata);
+  }, true);
+
+  document.addEventListener('change', function (event) {
+    const target = event.target;
+    if (!target) return;
+
+    if (target.id === 'compare-select-a' || target.id === 'compare-select-b') {
+      trackMemberAction('product_compare_used', {
+        compare_select: target.id,
+        selected_index: target.value || ''
+      });
+    }
+
+    if (target.classList && target.classList.contains('saved-status-control')) {
+      trackMemberAction('saved_product_status_changed', {
+        product_name: getProductNameFromElement(target),
+        status: target.value || ''
+      });
+    }
+  }, true);
+
+  const originalPushState = history.pushState;
+  const originalReplaceState = history.replaceState;
+
+  history.pushState = function () {
+    const result = originalPushState.apply(this, arguments);
+    setTimeout(trackInitialPageView, 50);
+    return result;
+  };
+
+  history.replaceState = function () {
+    const result = originalReplaceState.apply(this, arguments);
+    setTimeout(trackInitialPageView, 50);
+    return result;
+  };
+
+  window.addEventListener('popstate', function () {
+    setTimeout(trackInitialPageView, 50);
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trackInitialPageView);
+  } else {
+    trackInitialPageView();
+  }
+})();
+</script>
+
 </body>
 </html>
