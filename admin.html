@@ -808,11 +808,22 @@ select.filter-input{min-width:140px}
       </div>
 
       <div class="card">
-        <div class="panel-head"><div><div class="panel-title">🤖 Hub Intelligence</div><div class="panel-sub">Coming next once member actions are tracked</div></div></div>
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">🤖 Hub Intelligence</div>
+            <div class="panel-sub">Live member behaviour from product analysis, saved products, Ask Hub and creative tools.</div>
+          </div>
+          <span class="analytics-pill gold" id="hub-intel-status">Live</span>
+        </div>
         <div class="card-pad mini-list">
-          <div class="mini-item"><div><b>Products Analysed</b><br><span class="sub">Track Analyse button usage across members</span></div><span class="badge gray">Next</span></div>
-          <div class="mini-item"><div><b>Saved Products</b><br><span class="sub">See which products members care about most</span></div><span class="badge gray">Next</span></div>
-          <div class="mini-item"><div><b>Market Pulse Views</b><br><span class="sub">Measure retention and weekly engagement</span></div><span class="badge gray">Next</span></div>
+          <div class="mini-item"><div><b>Products Analysed</b><br><span class="sub">How often members clicked Analyse</span></div><span class="badge blue" id="hub-products-analysed">0</span></div>
+          <div class="mini-item"><div><b>Saved Products</b><br><span class="sub">Products saved to member research lists</span></div><span class="badge gold" id="hub-products-saved">0</span></div>
+          <div class="mini-item"><div><b>Ask Hub Used</b><br><span class="sub">Product validator and Hub assistant actions</span></div><span class="badge green" id="hub-ask-hub-used">0</span></div>
+          <div class="mini-item"><div><b>Creative Packs</b><br><span class="sub">Ad angle and creative generation actions</span></div><span class="badge blue" id="hub-creative-packs">0</span></div>
+          <div class="mini-item"><div><b>Top Member Action</b><br><span class="sub">Most common tracked action in this period</span></div><span class="badge gray" id="hub-top-action">—</span></div>
+          <div class="mini-item"><div><b>Most Active Page</b><br><span class="sub">Where members are spending attention</span></div><span class="badge gray" id="hub-top-page">—</span></div>
+          <div class="mini-item"><div><b>Hottest Product</b><br><span class="sub">Most interacted-with product signal</span></div><span class="badge gray" id="hub-hottest-product">—</span></div>
+          <div class="mini-item"><div><b>Member Engagement Score</b><br><span class="sub">Weighted action score for this range</span></div><span class="badge green" id="hub-engagement-score">0</span></div>
         </div>
       </div>
     </section>
@@ -1067,9 +1078,11 @@ async function loadAnalytics() {
 }
 
 function renderAnalytics(rows) {
-  const pageViews = rows.filter(r => r.event_name === 'page_view');
+  rows = normaliseAnalyticsRows(rows);
+
+  const pageViews = rows.filter(r => r.event_name === 'page_view' || r.event_name === 'members_page_view' || r.event_name === 'market_pulse_view');
   const sessions = new Set(rows.map(r => r.session_id).filter(Boolean));
-  const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started'].includes(r.event_name)).length;
+  const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started','checkout_start','signup_click'].includes(r.event_name)).length;
   const liveCutoff = Date.now() - (5 * 60 * 1000);
   const liveSessions = new Set(rows.filter(r => new Date(r.created_at).getTime() >= liveCutoff).map(r => r.session_id).filter(Boolean));
 
@@ -1084,6 +1097,87 @@ function renderAnalytics(rows) {
   renderBars('ana-browsers', countBy(rows.map(r => r.browser || 'Unknown')), 'No browser data yet');
   renderTopPages(pageViews);
   renderActivity(rows.slice(0, 12));
+  renderHubIntelligence(rows);
+}
+
+function normaliseAnalyticsRows(rows) {
+  if (!Array.isArray(rows)) return [];
+  return rows.map(row => {
+    const meta = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
+    const eventName = String(row.event_name || row.event || 'page_view').trim();
+    const pagePath = row.page_path || row.page || row.path || '/';
+    const deviceType = row.device_type || row.device || row.deviceType || 'Unknown';
+    const browser = row.browser || 'Unknown';
+    const sessionId = row.session_id || row.visitor_id || row.id || '';
+    return {
+      ...row,
+      metadata: meta,
+      event_name: eventName,
+      page_path: pagePath,
+      device_type: deviceType,
+      browser: browser,
+      session_id: sessionId,
+      created_at: row.created_at || row.timestamp || new Date().toISOString(),
+      source: row.source || '',
+      referrer: row.referrer || ''
+    };
+  });
+}
+
+function eventMatches(eventName, names) {
+  const clean = String(eventName || '').toLowerCase();
+  return names.some(name => clean === name || clean.includes(name));
+}
+
+function getMetaValue(row, keys) {
+  const meta = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
+  for (const key of keys) {
+    if (row[key]) return row[key];
+    if (meta[key]) return meta[key];
+  }
+  return '';
+}
+
+function renderHubIntelligence(rows) {
+  const productAnalyseEvents = rows.filter(r => eventMatches(r.event_name, ['product_analyse_click','product_analyze_click','analyse_product','analyze_product','analysis_opened']));
+  const savedEvents = rows.filter(r => eventMatches(r.event_name, ['product_saved','save_product','product_save_click']));
+  const askHubEvents = rows.filter(r => eventMatches(r.event_name, ['ask_hub_used','validator_used','product_validator','admin_validator','launch_plan']));
+  const creativeEvents = rows.filter(r => eventMatches(r.event_name, ['creative_pack_generated','creative_pack','ad_angles','generate_creative','creative_generated']));
+  const memberActionEvents = rows.filter(r => !eventMatches(r.event_name, ['page_view','members_page_view','market_pulse_view']));
+
+  setText('hub-products-analysed', productAnalyseEvents.length);
+  setText('hub-products-saved', savedEvents.length);
+  setText('hub-ask-hub-used', askHubEvents.length);
+  setText('hub-creative-packs', creativeEvents.length);
+
+  const topAction = topEntry(countBy(memberActionEvents.map(r => eventLabel(r.event_name))));
+  setText('hub-top-action', topAction ? `${topAction[0]} (${topAction[1]})` : 'No actions yet');
+
+  const topPage = topEntry(countBy(rows.map(r => r.page_path || 'Unknown')));
+  setText('hub-top-page', topPage ? `${topPage[0]} (${topPage[1]})` : 'No visits yet');
+
+  const productNames = rows
+    .map(r => getMetaValue(r, ['product_name','productName','name','product','title']))
+    .filter(Boolean)
+    .map(v => String(v).trim())
+    .filter(v => v && v !== 'Unknown');
+
+  const topProduct = topEntry(countBy(productNames));
+  setText('hub-hottest-product', topProduct ? `${topProduct[0]} (${topProduct[1]})` : 'No product signal yet');
+
+  const engagementScore = (productAnalyseEvents.length * 3) + (savedEvents.length * 4) + (askHubEvents.length * 5) + (creativeEvents.length * 4) + memberActionEvents.length;
+  setText('hub-engagement-score', engagementScore);
+
+  const status = document.getElementById('hub-intel-status');
+  if (status) {
+    status.textContent = memberActionEvents.length ? 'Live' : 'Waiting for actions';
+    status.className = memberActionEvents.length ? 'analytics-pill green' : 'analytics-pill gold';
+  }
+}
+
+function topEntry(counts) {
+  const entries = Object.entries(counts || {}).filter(([,v]) => Number(v) > 0).sort((a,b) => b[1] - a[1]);
+  return entries[0] || null;
 }
 
 function sourceLabel(r) {
