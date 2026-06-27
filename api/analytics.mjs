@@ -1,59 +1,115 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "GET") {
+    return res.status(405).json({
+      error: "Method not allowed",
+      message: "Use GET only"
+    });
   }
 
   try {
-    const SUPABASE_URL = process.env.SUPABASE_URL;
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!SUPABASE_URL) {
-      return res.status(500).json({ error: 'Missing SUPABASE_URL' });
+    if (!supabaseUrl || !serviceRoleKey) {
+      return res.status(500).json({
+        error: "Missing Supabase environment variables",
+        details: "SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing in Vercel"
+      });
     }
 
-    if (!SUPABASE_SERVICE_ROLE_KEY) {
-      return res.status(500).json({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY' });
+    const range = String(req.query.range || "today").toLowerCase();
+    const now = new Date();
+    let startDate = new Date();
+
+    if (range === "today") {
+      startDate.setHours(0, 0, 0, 0);
+    } else if (range === "7d") {
+      startDate.setDate(now.getDate() - 7);
+    } else if (range === "30d") {
+      startDate.setDate(now.getDate() - 30);
+    } else {
+      startDate.setHours(0, 0, 0, 0);
     }
 
-    const event = req.body || {};
+    const query = new URL(`${supabaseUrl}/rest/v1/analytics_events`);
+    query.searchParams.set("select", "*");
+    query.searchParams.set("created_at", `gte.${startDate.toISOString()}`);
+    query.searchParams.set("order", "created_at.desc");
+    query.searchParams.set("limit", "1000");
 
-    const payload = {
-      event_name: event.event_name || 'page_view',
-      page_path: event.page_path || '',
-      referrer: event.referrer || '',
-      source: event.source || '',
-      medium: event.medium || '',
-      campaign: event.campaign || '',
-      device_type: event.device_type || '',
-      browser: event.browser || '',
-      session_id: event.session_id || '',
-      metadata: event.metadata || {}
-    };
-
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/analytics_events`, {
-      method: 'POST',
+    const response = await fetch(query.toString(), {
+      method: "GET",
       headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal'
-      },
-      body: JSON.stringify(payload)
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        "Content-Type": "application/json"
+      }
     });
 
+    const text = await response.text();
+
     if (!response.ok) {
-      const text = await response.text();
-      return res.status(500).json({
-        error: 'Supabase insert failed',
+      return res.status(response.status).json({
+        error: "Supabase analytics query failed",
         details: text
       });
     }
 
-    return res.status(200).json({ success: true });
-  } catch (err) {
+    let rows = [];
+
+    try {
+      rows = JSON.parse(text);
+    } catch (err) {
+      return res.status(500).json({
+        error: "Could not parse Supabase response",
+        details: err.message
+      });
+    }
+
+    const events = rows.map((row) => {
+      const deviceValue = row.device_type || row.device || "Unknown";
+      const pageValue = row.page_path || row.path || row.page || "/";
+      const eventValue = row.event_name || row.event || "page_view";
+      const sourceValue = row.source || row.referrer || "Direct";
+
+      return {
+        id: row.id || "",
+        event_name: eventValue,
+        event: eventValue,
+        page_path: pageValue,
+        page: pageValue,
+        referrer: row.referrer || "",
+        source: sourceValue,
+        device_type: deviceValue,
+        device: deviceValue,
+        browser: row.browser || "Unknown",
+        session_id: row.session_id || row.visitor_id || row.id || "",
+        created_at: row.created_at || row.timestamp || new Date().toISOString(),
+        medium: row.medium || "",
+        campaign: row.campaign || "",
+        metadata: row.metadata || {}
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      range,
+      count: events.length,
+      events
+    });
+
+  } catch (error) {
     return res.status(500).json({
-      error: 'Analytics API crashed',
-      details: err.message
+      error: "Admin analytics API failed",
+      details: error.message
     });
   }
 }
