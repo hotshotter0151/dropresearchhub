@@ -173,11 +173,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .research-link{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:14px 32px 14px 14px;text-decoration:none;color:var(--navy);font-size:13px;font-weight:700;transition:all .15s;position:relative}
 .research-link:hover{background:var(--off);border-color:var(--navy);transform:translateY(-1px)}
 .research-link-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-
-
-
-
-
 .launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .launch-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500}
 .launch-item.pass{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
@@ -509,7 +504,8 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <a class="sb-item" href="dashboard.html#weekly"><span class="sb-item-icon">📦</span> Weekly Picks</a>
     <button class="sb-item active" onclick="showView('products',this);closeSidebar()"><span class="sb-item-icon">📈</span> Emerging Products</button>
     <div class="sb-section" style="margin-top:8px">Hub's Research</div>
-    <a class="sb-item" href="pulse.html"><span class="sb-item-icon">🌍</span> UK Market Pulse</a>
+    <!-- INJECTION 8: market_pulse_view tracking on Market Pulse sidebar link -->
+    <a class="sb-item" href="pulse.html" onclick="trackEvent('market_pulse_view')"><span class="sb-item-icon">🌍</span> UK Market Pulse</a>
     <div class="sb-section" style="margin-top:8px">Ask Hub</div>
     <button class="sb-item" onclick="showView('validator',this);closeSidebar()"><span class="sb-item-icon">🔍</span> About A Product</button>
     <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
@@ -729,6 +725,18 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <script>
 let allProducts = [];
+
+// ── DRH ANALYTICS SHIM — maps trackEvent() calls to window.trackMemberAction ─
+// trackMemberAction is defined later in the analytics block at the bottom.
+// This shim is defined first so all handlers below can call trackEvent() safely.
+function trackEvent(eventName, metadata) {
+  try {
+    if (typeof window.trackMemberAction === 'function') {
+      window.trackMemberAction(eventName, metadata || {});
+    }
+  } catch (e) {}
+}
+
 let activeNiche = 'all';
 let creativeVariations = [];
 let currentVariation = 0;
@@ -968,6 +976,8 @@ function renderAnalysisView(p, subtitle) {
 
 function openAnalysis(idx) {
   const p=allProducts[idx];if(!p)return;
+  // INJECTION 2: track analyse click with real product name
+  trackEvent('product_analyse_click', { product_name: p.name });
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche} · ${p.stage||'Emerging'} · ${p.season||'Evergreen'}`));
 }
 
@@ -1560,6 +1570,8 @@ async function generateCreative(productName){
   const platform=document.getElementById('creative-platform').value;
   const angle=document.getElementById('creative-angle').value;
   btn.disabled=true;btn.textContent='Hub is building...';
+  // INJECTION 6: track creative pack opened
+  trackEvent('creative_pack_opened');
   startCreativeBuildAnimation(platform, angle);
   try{
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:`You are an expert ecom ad creative strategist for ${platform}. Generate 3 complete ad creative concepts. Respond ONLY with a valid JSON object (no markdown, no backticks). Format:{"variations":[{"script":"punchy video script hook+middle+CTA max 120 words, use line breaks","hooks":"5 alternative hook lines numbered 1-5 one per line","brief":"ready-to-send production brief with: Product, Platform, Video length, Angle, Tone, Key shots to capture, CTA — formatted clearly for a video editor or UGC creator","music":"TikTok music vibe suggestion","audience":"Meta target audience description"},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."},{"script":"...","hooks":"...","brief":"...","music":"...","audience":"..."}]}Concept 1: angle ${angle}. Concept 2: different unexpected angle. Concept 3: most creative angle.`,messages:[{role:'user',content:`Product: ${productName}. Platform: ${platform}.`}],max_tokens:2000})});
@@ -1593,6 +1605,8 @@ async function runValidator(){
   const input=document.getElementById('validator-input').value.trim();
   const resultArea=document.getElementById('validator-result');
   if(!input){showToast('Paste a product URL first');return;}
+  // INJECTION 5: track ask_hub_used when validator runs
+  trackEvent('ask_hub_used');
   let productName;
   const isAliExpressItem = input.includes('aliexpress.com/item/');
   const isUrl = input.includes('http') || input.includes('.com/');
@@ -1763,6 +1777,8 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, productName: p.name }) });
       savedProductNames.delete(p.name);
       btn.textContent = '🤍';
+      // INJECTION 3: track product_unsaved
+      trackEvent('product_unsaved', { product_name: p.name });
       showToast('Removed from Saved Products');
       if (document.getElementById('view-saved').classList.contains('active')) loadSavedProducts();
     } catch(e) { showToast('Could not unsave — try again'); }
@@ -1771,6 +1787,8 @@ async function toggleSaveProduct(idx, btn) {
       await fetch('/api/saved', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ email, product: p }) });
       savedProductNames.add(p.name);
       btn.textContent = '💛';
+      // INJECTION 4: track product_saved
+      trackEvent('product_saved', { product_name: p.name });
       showSavedMessage();
     } catch(e) { showToast('Could not save — try again'); }
   }
@@ -1846,7 +1864,9 @@ function runCompare() {
   var tableEl = document.getElementById('compare-table');
   if (!tableEl || !selA || !selB) return;
   var idxA = selA.value, idxB = selB.value;
+  // INJECTION 7: track comparison_opened when both selects have valid, different values
   if (idxA === '' || idxB === '' || idxA === idxB) { tableEl.innerHTML = ''; return; }
+  trackEvent('comparison_opened');
   var a = saved[parseInt(idxA)];
   var b = saved[parseInt(idxB)];
   if (!a || !b) return;
@@ -1944,6 +1964,8 @@ async function loadPublishedProducts() {
   }
 }
 
+// INJECTION 9: members_page_view fires on load, before the 3 required init calls
+trackEvent('members_page_view');
 renderProductsGrid();
 loadPublishedProducts();
 loadSavedProducts();
