@@ -7,6 +7,14 @@ export default async function handler(req, res) {
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+    if (!SUPABASE_URL) {
+      return res.status(500).json({ error: 'Missing SUPABASE_URL' });
+    }
+
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      return res.status(500).json({ error: 'Missing SUPABASE_SERVICE_ROLE_KEY' });
+    }
+
     const event = req.body || {};
 
     const payload = {
@@ -35,11 +43,17 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text);
+      return res.status(500).json({
+        error: 'Supabase insert failed',
+        details: text
+      });
     }
 
     return res.status(200).json({ success: true });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      error: 'Analytics API crashed',
+      details: err.message
+    });
   }
 }
