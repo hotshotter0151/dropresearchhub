@@ -1067,6 +1067,34 @@ async function loadAnalytics() {
 }
 
 function renderAnalytics(rows) {
+  rows = rows.map(r => ({
+    ...r,
+    device_type: r.device_type || r.device || r.deviceType || 'Unknown',
+    browser: r.browser || 'Unknown',
+    page_path: r.page_path || r.page || r.path || '/',
+    event_name: r.event_name || r.event || 'page_view',
+    source: r.source || r.referrer || 'Direct'
+  }));
+
+  const pageViews = rows.filter(r => r.event_name === 'page_view');
+  const sessions = new Set(rows.map(r => r.session_id).filter(Boolean));
+  const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started'].includes(r.event_name)).length;
+  const liveCutoff = Date.now() - (5 * 60 * 1000);
+  const liveSessions = new Set(rows.filter(r => new Date(r.created_at).getTime() >= liveCutoff).map(r => r.session_id).filter(Boolean));
+
+  setText('ana-visitors', sessions.size || 0);
+  setText('ana-pageviews', pageViews.length || 0);
+  setText('ana-trials', trials || 0);
+
+  const live = document.getElementById('ana-live');
+  if (live) live.innerHTML = `<span class="analytics-live-dot"></span>${liveSessions.size || 0}`;
+
+  renderBars('ana-sources', countBy(rows.map(sourceLabel)), 'No traffic sources yet');
+  renderBars('ana-devices', countBy(rows.map(r => r.device_type || 'Unknown')), 'No device data yet');
+  renderBars('ana-browsers', countBy(rows.map(r => r.browser || 'Unknown')), 'No browser data yet');
+  renderTopPages(pageViews);
+  renderActivity(rows.slice(0, 20));
+}
   const pageViews = rows.filter(r => r.event_name === 'page_view');
   const sessions = new Set(rows.map(r => r.session_id).filter(Boolean));
   const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started'].includes(r.event_name)).length;
