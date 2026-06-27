@@ -244,6 +244,329 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1p
 @media(max-width:600px){.footer-inner{grid-template-columns:1fr;gap:28px}.footer-bottom{flex-direction:column;align-items:flex-start}}
 @media(max-width:1000px){.how-grid,.lifestyle-grid,.winning-grid,.preview-grid,.features-grid{grid-template-columns:1fr}.hero{padding:120px 5% 80px}.proof-bar{gap:20px}.lifestyle-card{height:260px}}
 @media(max-width:600px){.nav-links{display:none}.hero h1{font-size:36px}.winning-card-stat{flex-wrap:wrap}.video-showcase{padding:48px 5% 0}}
+
+/* =========================================================
+   DRH MOBILE OPTIMISATION PASS — added 27 Jun 2026
+   Keeps desktop design intact, tightens tablet/mobile layout
+   ========================================================= */
+@media (max-width: 1100px){
+  section{padding:76px 5%}
+  .hero{min-height:auto;padding:118px 5% 72px}
+  .hero-content{max-width:760px}
+}
+
+@media (max-width: 768px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{-webkit-text-size-adjust:100%}
+
+  nav{
+    height:62px;
+    padding:0 14px;
+    gap:10px;
+  }
+  .nav-logo{min-width:0;gap:8px}
+  .nav-logo-icon{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    flex-shrink:0;
+  }
+  .nav-logo-text{
+    font-size:14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:150px;
+  }
+  .nav-links{display:none}
+  .nav-cta{
+    padding:9px 12px;
+    font-size:12px;
+    border-radius:9px;
+    white-space:nowrap;
+  }
+
+  .hero{
+    min-height:auto;
+    padding:96px 18px 54px;
+    align-items:flex-start;
+  }
+  .hero-content{max-width:100%}
+  .hero-badge{
+    font-size:10px;
+    padding:7px 11px;
+    margin-bottom:18px;
+    max-width:100%;
+    line-height:1.25;
+  }
+  .hero h1{
+    font-size:38px;
+    line-height:1.03;
+    letter-spacing:-1.45px;
+    margin-bottom:18px;
+  }
+  .hero p{
+    font-size:15px;
+    line-height:1.62;
+    margin-bottom:22px;
+  }
+  .hero-content > div[style*="display:flex"][style*="Hub, your research partner"]{
+    align-items:flex-start!important;
+    padding:12px!important;
+    margin-bottom:22px!important;
+  }
+  .hero-content > div[style*="display:flex"][style*="Hub, your research partner"] img{
+    width:38px!important;
+    height:38px!important;
+  }
+  .hero-cta-row{
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .btn-primary,.btn-secondary{
+    width:100%;
+    justify-content:center;
+    text-align:center;
+    padding:15px 18px;
+    font-size:14px;
+    border-radius:13px;
+  }
+  .hero-note{
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:30px;
+  }
+  .hero-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    padding-top:22px;
+  }
+  .hero-stats > div{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:12px 8px;
+    text-align:center;
+  }
+  .hero-stat-num{font-size:20px}
+  .hero-stat-label{
+    font-size:10px;
+    line-height:1.25;
+  }
+
+  .proof-bar{
+    padding:16px 18px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    justify-content:stretch;
+  }
+  .proof-item{
+    width:100%;
+    font-size:12px;
+    justify-content:flex-start;
+  }
+
+  section{padding:64px 18px}
+  .section-label{font-size:11px}
+  .section-title{
+    font-size:30px;
+    line-height:1.08;
+    letter-spacing:-.9px;
+  }
+  .section-sub{
+    font-size:15px;
+    line-height:1.6;
+  }
+
+  .marquee-section{padding:36px 0}
+  .marquee-header{padding:0 18px 22px}
+  .marquee-card{
+    width:270px;
+    padding:16px;
+  }
+  .marquee-card-text{font-size:12px}
+  .marquee-track{gap:12px;animation-duration:46s}
+  .marquee-track-wrap::before,.marquee-track-wrap::after{width:36px}
+
+  .video-showcase{padding:46px 18px 0}
+  .video-showcase-inner{
+    border-radius:18px;
+    box-shadow:0 14px 36px rgba(30,58,95,.16);
+  }
+
+  .how-grid{
+    grid-template-columns:1fr;
+    gap:34px;
+  }
+  .how-step{
+    gap:14px;
+    padding:22px 0;
+  }
+  .how-step-num{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    font-size:15px;
+  }
+  .how-step h3{font-size:15px}
+  .how-step p{font-size:13px}
+  .how-visual{
+    padding:20px;
+    border-radius:20px;
+  }
+  .how-signal{
+    padding:12px;
+    gap:10px;
+  }
+  .how-signal-icon{
+    width:34px;
+    height:34px;
+  }
+  .how-signal-label{font-size:12px}
+  .how-signal-sub{font-size:10px}
+  .how-signal-badge{font-size:9px;padding:4px 7px}
+
+  .lifestyle{
+    padding:64px 18px;
+  }
+  .lifestyle-title,.preview-title{
+    font-size:30px;
+    line-height:1.08;
+    letter-spacing:-.9px;
+  }
+  .lifestyle-sub,.preview-sub{
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:30px;
+  }
+  .lifestyle-grid,.winning-grid,.preview-grid,.features-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .lifestyle-card{
+    height:245px;
+    border-radius:18px;
+  }
+  .lifestyle-card-text{left:16px;right:16px;bottom:16px}
+  .lifestyle-card-text h3{font-size:16px}
+  .lifestyle-card-text p{font-size:12px}
+
+  .winning-grid{margin-top:30px}
+  .winning-card,.preview-card,.feature-card{
+    border-radius:18px;
+  }
+  .winning-card-img{height:190px}
+  .winning-card-body{padding:18px}
+  .winning-card-name{font-size:17px}
+  .winning-card-teaser,.winning-story p{font-size:13px}
+  .winning-card-stat{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .winning-expand-btn{
+    padding:12px;
+    font-size:13px;
+    border-radius:11px;
+  }
+
+  .preview{padding:64px 18px}
+  .preview-grid{margin-bottom:30px}
+  .preview-card-img{height:178px}
+  .preview-card-body{padding:14px}
+  .preview-card-name{font-size:15px}
+  .preview-card-scores{gap:5px}
+  .preview-score{padding:7px 4px}
+  .preview-cta p{font-size:12px;line-height:1.5}
+
+  .features-grid{margin-top:30px}
+  .feature-card{padding:22px}
+  .feature-icon{
+    width:46px;
+    height:46px;
+    border-radius:13px;
+    font-size:21px;
+  }
+  .feature-card h3{font-size:16px}
+  .feature-card p{font-size:13px}
+
+  .pricing-card{
+    margin-top:30px;
+    padding:26px 18px;
+    border-radius:22px;
+  }
+  .pricing-trial{font-size:24px}
+  .pricing-then{font-size:14px}
+  .pricing-features{gap:10px}
+  .pricing-feature{
+    font-size:13px;
+    align-items:flex-start;
+  }
+  .pricing-feature::before{
+    width:20px;
+    height:20px;
+    margin-top:1px;
+  }
+
+  .faq-list{margin-top:30px}
+  .faq-q{
+    padding:18px;
+    font-size:14px;
+    gap:14px;
+  }
+  .faq-a{font-size:13px}
+  .faq-a.open{padding:0 18px 18px}
+
+  .final-cta{
+    padding:68px 18px;
+  }
+  .final-cta h2{
+    font-size:34px;
+    line-height:1.06;
+  }
+  .final-cta p{
+    font-size:15px;
+    line-height:1.6;
+  }
+
+  footer{
+    padding:42px 18px 24px;
+  }
+  .footer-inner{
+    grid-template-columns:1fr;
+    gap:26px;
+  }
+  .footer-brand-copy{font-size:13px}
+  .footer-links a,.footer-support-note{font-size:13px}
+  .footer-bottom{
+    margin-top:26px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+}
+
+@media (max-width: 420px){
+  .nav-logo-text{max-width:128px;font-size:13px}
+  .nav-cta{font-size:11px;padding:8px 10px}
+  .hero h1{font-size:34px}
+  .hero-stats{
+    grid-template-columns:1fr;
+  }
+  .hero-stats > div{
+    text-align:left;
+  }
+  .hero-stat-num{font-size:22px}
+  .hero-stat-label{font-size:11px}
+  .section-title,.lifestyle-title,.preview-title{font-size:28px}
+  .winning-card-stat{grid-template-columns:1fr}
+  .mock-card{display:none}
+}
+
 </style>
 </head>
 <body>
