@@ -4,19 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png">
-<title>DropResearch Hub — Find Winning Products Before Everyone Else</title>
-<meta name="description" content="DropResearch Hub finds emerging UK dropshipping products before they peak. Weekly validated product picks, a 12-point scoring framework, ad creative scripts and a built-in research assistant — built specifically for UK sellers. Start your free 7-day trial.">
+<title>DropResearch Hub — Find Products Before The Trend Starts</title>
+<meta name="description" content="DropResearch Hub finds emerging UK products weeks before they trend on TikTok, Amazon and social media. Weekly validated picks, 12-point scoring, ad scripts and Hub — your personal research partner. Start free for 7 days.">
 <link rel="canonical" href="https://dropresearchhub.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dropresearchhub.com/">
-<meta property="og:title" content="DropResearch Hub — Find Winning Products Before Everyone Else">
-<meta property="og:description" content="Weekly validated UK dropshipping product picks, a 12-point scoring framework and ad creative scripts — find products before they go viral, not after.">
+<meta property="og:title" content="DropResearch Hub — Find Products Before The Trend Starts">
+<meta property="og:description" content="Stop scrolling hashtags for product ideas. Hub finds emerging opportunities weeks before they trend — when margin is still there and the market isn't crowded.">
 <meta property="og:image" content="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png">
-<meta property="og:site_name" content="DropResearch Hub">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DropResearch Hub — Find Winning Products Before Everyone Else">
-<meta name="twitter:description" content="Weekly validated UK dropshipping product picks, a 12-point scoring framework and ad creative scripts — find products before they go viral, not after.">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -30,547 +25,330 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;color:var(--g900);line-height:1.6;overflow-x:hidden}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px}
+.nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px;flex-shrink:0}
 .nav-logo-bar{width:5px;border-radius:2px;background:var(--navy)}.nav-logo-bar.g{background:var(--gold)}
 .nav-logo-text{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}.nav-logo-text span{color:var(--gold)}
 .nav-links{display:flex;align-items:center;gap:28px}
 .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .15s}
 .nav-links a:hover{color:#fff}
-.nav-cta{background:var(--gold);color:var(--navy-dark);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;text-decoration:none}
+.nav-cta{background:var(--gold);color:var(--navy-dark);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;text-decoration:none;white-space:nowrap}
 .nav-cta:hover{background:var(--gold-light)}
-.hero{min-height:100vh;background:linear-gradient(135deg,#0a1628 0%,#142840 50%,#1a3558 100%);position:relative;display:flex;align-items:center;padding:100px 5% 80px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:url('lifestyle-bg.jpg') center/cover no-repeat;opacity:.08}
-.hero-bg-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,.97) 0%,rgba(20,40,64,.92) 60%,rgba(26,53,88,.85) 100%)}
-.hero-content{position:relative;z-index:2;max-width:640px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;text-transform:uppercase;margin-bottom:28px}
-.hero-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-.hero h1{font-size:clamp(38px,5vw,60px);font-weight:900;letter-spacing:-2px;line-height:1.04;color:#fff;margin-bottom:22px}
-.hero h1 span{color:var(--gold)}
-.hero p{font-size:18px;color:rgba(255,255,255,.72);line-height:1.65;max-width:560px;margin-bottom:36px}
-.hero-cta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.btn-primary{background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,158,11,.35)}
-.btn-secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:16px 24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none}
-.btn-secondary:hover{background:rgba(255,255,255,.14)}
-.hero-note{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:48px}
-.hero-stats{display:flex;gap:32px;flex-wrap:wrap;padding-top:36px;border-top:1px solid rgba(255,255,255,.1)}
-.hero-stat-num{font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--gold)}
-.hero-stat-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:600;margin-top:2px}
-.hero-right{position:absolute;right:5%;top:50%;transform:translateY(-50%);z-index:2;width:340px}
-@media(max-width:1100px){.hero-right{display:none}}
-.mock-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.45)}
-.mock-card-img{height:190px;position:relative;overflow:hidden;background:#f0f4ff}
-.mock-card-img img{width:100%;height:100%;object-fit:cover}
-.mock-badge-g{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:5px 10px}
-.mock-badge-s{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.96);border-radius:999px;font-size:11px;font-weight:800;padding:5px 10px;color:var(--navy)}
-.mock-body{padding:16px}
-.mock-name{font-size:15px;font-weight:800;margin-bottom:3px}
-.mock-niche{font-size:12px;color:var(--g400);margin-bottom:10px}
-.mock-famous{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-radius:10px;padding:10px 12px;font-size:11px;font-weight:700;margin-bottom:12px;line-height:1.5}
-.mock-famous span{color:var(--gold)}
-.mock-scores{display:flex;gap:6px;margin-bottom:12px}
-.mock-score{flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:8px 4px;border:1px solid var(--g100)}
-.mock-score-label{font-size:9px;color:var(--g400);text-transform:uppercase;font-weight:700}
-.mock-score-val{font-size:13px;font-weight:900;margin-top:2px}
-.mock-lock{position:relative;border-radius:10px;overflow:hidden}
-.mock-lock-inner{background:var(--g50);border-radius:10px;padding:10px;filter:blur(4px)}
-.mock-lock-overlay{position:absolute;inset:0;background:rgba(255,255,255,.88);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-.mock-lock-overlay span{font-size:13px;font-weight:800;color:var(--navy)}
-.mock-lock-overlay small{font-size:11px;color:var(--g500)}
-.mock-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px}
-.proof-bar{background:var(--navy-dark);padding:20px 5%;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
-.proof-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);font-size:13px;font-weight:700}
-.proof-item span{color:var(--gold);font-weight:900}
-section{padding:96px 5%}
-.section-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:12px}
-.section-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;line-height:1.1;color:var(--navy);margin-bottom:16px}
-.section-sub{font-size:17px;color:var(--g500);line-height:1.65;max-width:580px}
-.center{text-align:center}.center .section-sub{margin:0 auto}
-.marquee-section{background:var(--off);padding:48px 0;overflow:hidden;border-bottom:1px solid var(--g200)}
-.marquee-track{display:flex;width:max-content;animation:marquee-scroll 38s linear infinite}
-.marquee-track:hover{animation-play-state:paused}
-@keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.marquee-item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--g200);border-radius:999px;padding:10px 20px 10px 14px;margin:0 8px;white-space:nowrap;flex-shrink:0}
-.marquee-stars{color:var(--gold);font-size:13px;letter-spacing:1px;flex-shrink:0}
-.marquee-text{font-size:13px;color:var(--g700);font-weight:500}
-.marquee-name{font-weight:800;color:var(--navy)}
-.marquee-section{background:var(--off);padding:48px 0;overflow:hidden;border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)}
-.marquee-header{text-align:center;padding:0 5% 28px}
-.marquee-stars{color:var(--gold);font-size:16px;letter-spacing:2px;margin-bottom:8px}
-.marquee-title{font-size:13px;font-weight:800;color:var(--g500);text-transform:uppercase;letter-spacing:1px}
-.marquee-note{font-size:11px;color:var(--g400);margin-top:4px}
-.marquee-track-wrap{position:relative;width:100%}
-.marquee-track-wrap::before,.marquee-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
-.marquee-track-wrap::before{left:0;background:linear-gradient(90deg,var(--off),transparent)}
-.marquee-track-wrap::after{right:0;background:linear-gradient(270deg,var(--off),transparent)}
-.marquee-track{display:flex;gap:16px;width:max-content;animation:marqueeScroll 38s linear infinite}
-.marquee-track:hover{animation-play-state:paused}
-@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.marquee-card{flex-shrink:0;width:320px;background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px 20px}
-.marquee-card-stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:10px}
-.marquee-card-text{font-size:13px;color:var(--g700);line-height:1.6;margin-bottom:14px}
-.marquee-card-person{display:flex;align-items:center;gap:9px}
-.marquee-card-avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.marquee-card-name{font-size:12px;font-weight:800;color:var(--g900)}
-.marquee-card-role{font-size:10px;color:var(--g400)}
-.video-showcase{background:#fff;padding:80px 5% 0}
-.video-showcase-inner{max-width:1100px;margin:0 auto;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(30,58,95,.18);border:1px solid var(--g200)}
-.video-showcase video{width:100%;height:auto;display:block}
-.how{background:#fff}
-.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1200px;margin:0 auto}
-.how-steps{display:flex;flex-direction:column;gap:0}
-.how-step{display:flex;gap:20px;padding:28px 0;border-bottom:1px solid var(--g100)}
-.how-step:last-child{border-bottom:none}
-.how-step-num{width:48px;height:48px;border-radius:14px;background:var(--navy);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.how-step h3{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:6px}
-.how-step p{font-size:14px;color:var(--g500);line-height:1.65}
-.how-visual{background:var(--navy-dark);border-radius:24px;padding:32px;color:#fff}
-.how-visual h3{font-size:20px;font-weight:900;margin-bottom:6px}
-.how-visual p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:24px}
-.how-signal{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;margin-bottom:10px}
-.how-signal-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.how-signal-label{font-size:13px;font-weight:700;color:#fff}
-.how-signal-sub{font-size:11px;color:rgba(255,255,255,.5)}
-.how-signal-badge{margin-left:auto;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.4);color:#86efac;border-radius:999px;font-size:10px;font-weight:800;padding:4px 8px;white-space:nowrap}
-.lifestyle{background:var(--navy-dark);padding:96px 5%}
-.lifestyle-title{font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-1.2px;color:#fff;text-align:center;margin-bottom:12px}
-.lifestyle-sub{font-size:17px;color:rgba(255,255,255,.6);text-align:center;max-width:560px;margin:0 auto 48px}
-.lifestyle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px;margin:0 auto}
-.lifestyle-card{border-radius:20px;overflow:hidden;position:relative;height:340px;background:var(--navy)}
-.lifestyle-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.lifestyle-card:hover img{transform:scale(1.04)}
-.lifestyle-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,22,40,.88))}
-.lifestyle-card-text{position:absolute;bottom:20px;left:20px;right:20px;color:#fff}
-.lifestyle-card-text h3{font-size:18px;font-weight:900;margin-bottom:4px}
-.lifestyle-card-text p{font-size:13px;color:rgba(255,255,255,.7)}
-.lifestyle-cta{text-align:center;margin-top:48px}
-.winning{background:var(--off)}
-.winning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;max-width:1200px;margin-left:auto;margin-right:auto}
-.winning-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;transition:all .2s;display:flex;flex-direction:column}
-.winning-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(30,58,95,.1)}
-.winning-card-img{height:200px;position:relative;overflow:hidden;flex-shrink:0;background:var(--g100)}
-.winning-card-img img{width:100%;height:100%;object-fit:cover;object-position:top}
-.winning-card-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5))}
-.winning-card-tag{position:absolute;bottom:14px;right:14px;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px}
-.winning-card-body{padding:20px;display:flex;flex-direction:column;flex:1}
-.winning-card-name{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:6px}
-.winning-card-teaser{font-size:13px;color:var(--g500);line-height:1.55;margin-bottom:16px;flex:1}
-.winning-card-stat{display:flex;gap:12px;margin-bottom:16px}
-.winning-stat-box{flex:1;background:var(--g50);border-radius:10px;padding:10px;text-align:center}
-.winning-stat-box span{font-size:10px;color:var(--g400);text-transform:uppercase;font-weight:700;display:block}
-.winning-stat-box b{font-size:16px;font-weight:900;color:var(--navy)}
-.winning-expand-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-.winning-expand-btn:hover{background:var(--navy-light)}
-.winning-story{display:none;margin-top:16px;padding:16px;background:var(--g50);border-radius:14px;border-left:3px solid var(--gold)}
-.winning-story.open{display:block}
-.winning-grid{align-items:start}
-.winning-story p{font-size:13px;color:var(--g700);line-height:1.75;margin-bottom:10px}
-.winning-story .drh-note{background:var(--navy);color:#fff;border-radius:10px;padding:12px 14px;font-size:13px;font-weight:700;margin-top:12px;line-height:1.55}
-.winning-story .drh-note span{color:var(--gold)}
-.preview{background:var(--navy-dark);padding:96px 5%}
-.preview-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1.2px;color:#fff;text-align:center;margin-bottom:12px}
-.preview-sub{font-size:17px;color:rgba(255,255,255,.6);text-align:center;max-width:560px;margin:0 auto 48px}
-.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1200px;margin:0 auto 48px}
-.preview-card{background:#fff;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
-.preview-card-img{height:180px;position:relative;overflow:hidden;flex-shrink:0;background:#f0f4ff}
-.preview-card-img img{width:100%;height:100%;object-fit:cover}
-.preview-card-badge-g{position:absolute;top:10px;left:10px;background:var(--green);color:#fff;border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px}
-.preview-card-badge-s{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.96);border-radius:999px;font-size:10px;font-weight:800;padding:4px 9px;color:var(--navy)}
-.preview-card-body{padding:14px;flex:1;display:flex;flex-direction:column}
-.preview-card-name{font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px}
-.preview-card-niche{font-size:11px;color:var(--g400);margin-bottom:8px}
-.preview-card-scores{display:flex;gap:6px;margin-bottom:10px}
-.preview-score{flex:1;text-align:center;background:var(--g50);border-radius:7px;padding:6px 3px}
-.preview-score-label{font-size:8px;color:var(--g400);text-transform:uppercase;font-weight:700}
-.preview-score-val{font-size:12px;font-weight:900;margin-top:1px}
-.preview-locked{position:relative;border-radius:8px;overflow:hidden;margin-bottom:10px}
-.preview-locked-inner{background:var(--g50);border-radius:8px;padding:10px;filter:blur(5px)}
-.preview-locked-overlay{position:absolute;inset:0;background:rgba(255,255,255,.85);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:8px}
-.preview-locked-overlay .lock-icon{font-size:18px}
-.preview-locked-overlay span{font-size:11px;font-weight:800;color:var(--navy)}
-.preview-locked-overlay small{font-size:10px;color:var(--g500)}
-.preview-card-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:auto}
-.preview-cta{text-align:center}
-.preview-cta p{color:rgba(255,255,255,.45);font-size:13px;margin-top:14px}
-.features{background:var(--off)}
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;max-width:1200px;margin-left:auto;margin-right:auto}
-.feature-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:28px}
-.feature-icon{width:52px;height:52px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
-.feature-card h3{font-size:17px;font-weight:900;color:var(--navy);margin-bottom:8px}
-.feature-card p{font-size:14px;color:var(--g500);line-height:1.65}
-.pricing{background:#fff}
-.pricing-card{max-width:520px;margin:48px auto 0;background:var(--navy);border-radius:28px;padding:40px;color:#fff;text-align:center;position:relative;overflow:hidden}
-.pricing-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:rgba(245,158,11,.12);border-radius:50%}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:linear-gradient(135deg,#080f1e 0%,#0f1f38 45%,#142840 100%);position:relative;display:flex;align-items:center;padding:100px 5% 80px;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(245,158,11,.07) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(30,58,95,.4) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center;width:100%;max-width:1200px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;margin-bottom:22px}
+.hero-eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(34px,4.2vw,56px);font-weight:900;letter-spacing:-2px;line-height:1.04;color:#fff;margin-bottom:10px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero-subhead{font-size:clamp(15px,1.6vw,18px);color:rgba(255,255,255,.6);line-height:1.65;max-width:520px;margin-bottom:28px}
+.hero-subhead strong{color:rgba(255,255,255,.9);font-weight:700}
+
+/* Hub quote strip */
+.hub-strip{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:30px;max-width:520px}
+.hub-strip img{width:44px;height:44px;border-radius:50%;border:2px solid rgba(245,158,11,.45);flex-shrink:0}
+.hub-strip-text{font-size:13px;color:rgba(255,255,255,.78);line-height:1.55;font-style:italic}
+.hub-strip-text strong{color:var(--gold);font-style:normal;font-weight:800}
+
+.hero-cta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.btn-primary{background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px 30px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,158,11,.3)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:16px 24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;white-space:nowrap}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff}
+.hero-note{font-size:12px;color:rgba(255,255,255,.35);line-height:1.5}
+
+/* Hero mock card */
+.hero-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+.hero-card-img{height:185px;position:relative;overflow:hidden;background:linear-gradient(135deg,#dbeafe,#eff6ff);display:flex;align-items:center;justify-content:center}
+.hero-card-img img{width:100%;height:100%;object-fit:cover}
+.hero-card-badge-g{position:absolute;top:10px;left:10px;background:var(--green);color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:5px 10px;z-index:2}
+.hero-card-badge-s{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.96);border-radius:999px;font-size:11px;font-weight:800;padding:5px 10px;color:var(--navy);z-index:2}
+.hero-card-spotted{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(10,22,40,.95),transparent);padding:14px 12px 10px;font-size:11px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:6px}
+.hero-card-body{padding:14px}
+.hero-card-name{font-size:15px;font-weight:900;color:var(--g900);margin-bottom:2px}
+.hero-card-niche{font-size:11px;color:var(--g400);margin-bottom:10px}
+.hero-card-scores{display:flex;gap:6px;margin-bottom:10px}
+.hero-score{flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:7px 4px;border:1px solid var(--g100)}
+.hero-score-label{font-size:9px;color:var(--g400);text-transform:uppercase;font-weight:700}
+.hero-score-val{font-size:13px;font-weight:900;margin-top:2px}
+.hero-card-locked{position:relative;border-radius:10px;overflow:hidden;margin-bottom:10px}
+.hero-card-locked-inner{background:var(--g50);padding:10px;filter:blur(4px);font-size:10px;font-weight:700;color:var(--navy)}
+.hero-card-locked-overlay{position:absolute;inset:0;background:rgba(255,255,255,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.hero-card-locked-overlay span{font-size:12px;font-weight:800;color:var(--navy)}
+.hero-card-locked-overlay small{font-size:10px;color:var(--g500)}
+.hero-card-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit}
+
+/* ── HASHTAG TRUTH SECTION ── */
+.hashtag-section{background:var(--navy-dark);padding:80px 5%}
+.hashtag-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hashtag-left{}
+.hashtag-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:14px}
+.hashtag-title{font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-1px;line-height:1.1;color:#fff;margin-bottom:18px}
+.hashtag-title em{font-style:normal;color:var(--gold)}
+.hashtag-body{font-size:15px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:28px}
+.hashtag-body strong{color:rgba(255,255,255,.9)}
+.hashtag-right{}
+.hashtag-timeline{position:relative;padding-left:24px}
+.hashtag-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),rgba(245,158,11,.15))}
+.timeline-item{position:relative;margin-bottom:24px}
+.timeline-item:last-child{margin-bottom:0}
+.timeline-dot{position:absolute;left:-24px;top:4px;width:18px;height:18px;border-radius:50%;border:2px solid var(--gold);background:var(--navy-dark);display:flex;align-items:center;justify-content:center;font-size:9px}
+.timeline-dot.now{background:var(--gold);border-color:var(--gold)}
+.timeline-week{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:3px}
+.timeline-label{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.timeline-sub{font-size:12px;color:rgba(255,255,255,.45)}
+.timeline-tag{display:inline-block;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--gold);border-radius:999px;font-size:10px;font-weight:800;padding:3px 8px;margin-top:4px}
+.timeline-tag.red{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.3);color:#f87171}
+.timeline-tag.green{background:rgba(22,163,74,.15);border-color:rgba(22,163,74,.3);color:#86efac}
+
+/* ── NOT ANOTHER SPY TOOL ── */
+.notaspy{background:#fff;padding:72px 5%}
+.notaspy-inner{max-width:1000px;margin:0 auto}
+.notaspy-title{font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:var(--navy);text-align:center;margin-bottom:10px}
+.notaspy-sub{font-size:16px;color:var(--g500);text-align:center;margin-bottom:48px}
+.notaspy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.notaspy-card{border-radius:18px;padding:24px}
+.notaspy-card.bad{background:#FFF1F2;border:1px solid #fecaca}
+.notaspy-card.good{background:#f0fdf4;border:1px solid #bbf7d0}
+.notaspy-card-icon{font-size:24px;margin-bottom:12px}
+.notaspy-card-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.notaspy-card.bad .notaspy-card-label{color:#dc2626}
+.notaspy-card.good .notaspy-card-label{color:var(--green)}
+.notaspy-card h3{font-size:15px;font-weight:800;margin-bottom:6px}
+.notaspy-card.bad h3{color:#991b1b}
+.notaspy-card.good h3{color:#15803d}
+.notaspy-card p{font-size:13px;line-height:1.6}
+.notaspy-card.bad p{color:#b91c1c}
+.notaspy-card.good p{color:#166534}
+
+/* ── PLATFORM MOCKUP — FEED ── */
+.platform-feed{background:var(--off);padding:80px 5%}
+.platform-feed-inner{max-width:1200px;margin:0 auto}
+.section-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:10px}
+.section-title{font-size:clamp(26px,3.2vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1;color:var(--navy);margin-bottom:12px}
+.section-sub{font-size:16px;color:var(--g500);line-height:1.65;max-width:560px;margin-bottom:40px}
+.mock-feed{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:16px}
+.mock-product-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden;box-shadow:0 4px 16px rgba(30,58,95,.06)}
+.mock-product-img{height:170px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:48px}
+.mock-product-img.blue{background:linear-gradient(135deg,#dbeafe,#eff6ff)}
+.mock-product-img.green{background:linear-gradient(135deg,#d1fae5,#ecfdf5)}
+.mock-product-img.purple{background:linear-gradient(135deg,#ede9fe,#f5f3ff)}
+.mock-product-img img{max-width:100%;max-height:160px;object-fit:contain;padding:12px}
+.mock-grade-badge{position:absolute;top:10px;left:10px;border-radius:999px;color:#fff;font-size:11px;font-weight:900;padding:4px 9px}
+.mock-star-badge{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.95);border:1px solid rgba(245,158,11,.35);border-radius:999px;font-size:10px;font-weight:900;padding:4px 9px;color:var(--navy)}
+.mock-product-body{padding:14px}
+.mock-product-name{font-size:14px;font-weight:800;color:var(--g900);margin-bottom:2px}
+.mock-product-niche{font-size:11px;color:var(--g400);margin-bottom:10px}
+.mock-product-why{font-size:11px;color:var(--g600);line-height:1.5;padding:8px 10px;background:var(--g50);border-radius:8px;border-left:3px solid var(--gold);margin-bottom:10px}
+.mock-product-scores{display:flex;gap:6px;margin-bottom:10px}
+.mock-ps{flex:1;text-align:center;background:var(--g50);border-radius:8px;padding:6px 3px;border:1px solid var(--g100)}
+.mock-ps-label{font-size:8px;color:var(--g400);text-transform:uppercase;font-weight:700}
+.mock-ps-val{font-size:12px;font-weight:900;margin-top:1px}
+.mock-product-actions{display:grid;grid-template-columns:1fr 44px;gap:8px}
+.mock-analyse-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.mock-save-btn{background:#fff;border:1px solid var(--g200);border-radius:10px;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mock-feed-note{text-align:center;font-size:13px;color:var(--g400);font-style:italic}
+
+/* ── PLATFORM MOCKUP — ANALYSIS ── */
+.platform-analysis{background:var(--navy-dark);padding:80px 5%}
+.platform-analysis-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.platform-analysis-left{}
+.platform-analysis-left .section-title{color:#fff}
+.platform-analysis-left .section-sub{color:rgba(255,255,255,.6);margin-bottom:28px}
+.analysis-feature-list{display:flex;flex-direction:column;gap:14px}
+.analysis-feature{display:flex;align-items:flex-start;gap:12px}
+.analysis-feature-icon{width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.25);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+.analysis-feature-text h4{font-size:14px;font-weight:800;color:#fff;margin-bottom:2px}
+.analysis-feature-text p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.5}
+.mock-analysis-panel{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.4)}
+.mock-analysis-header{background:var(--navy);padding:16px 18px;display:flex;align-items:center;gap:12px}
+.mock-analysis-back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer}
+.mock-analysis-title{font-size:14px;font-weight:800;color:#fff}
+.mock-analysis-niche{font-size:11px;color:rgba(255,255,255,.5)}
+.mock-analysis-body{padding:16px}
+.mock-verdict{background:var(--green-bg);border:1px solid #bbf7d0;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.mock-verdict-icon{font-size:20px}
+.mock-verdict-label{font-size:13px;font-weight:900;color:var(--green)}
+.mock-verdict-reason{font-size:11px;color:#166534;margin-top:1px}
+.mock-scores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.mock-score-box{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px;text-align:center}
+.mock-score-box-label{font-size:9px;color:var(--g400);text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.mock-score-box-val{font-size:18px;font-weight:900}
+.mock-scoring-bars{margin-bottom:14px}
+.mock-scoring-bar-row{margin-bottom:8px}
+.mock-scoring-bar-top{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--g700);margin-bottom:3px}
+.mock-scoring-bar-track{background:var(--g100);border-radius:999px;height:6px;overflow:hidden}
+.mock-scoring-bar-fill{height:100%;border-radius:999px}
+.mock-confidence{background:linear-gradient(135deg,#fff,var(--off));border:1px solid var(--g200);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.mock-confidence-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:3px}
+.mock-confidence-title{font-size:12px;font-weight:700;color:var(--g700);margin-bottom:8px}
+.mock-confidence-track{height:8px;background:var(--g100);border-radius:999px;overflow:hidden}
+.mock-confidence-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:999px}
+.mock-confidence-score{text-align:right}
+.mock-confidence-num{font-size:26px;font-weight:900;color:var(--navy);letter-spacing:-1px}
+.mock-confidence-status{font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px}
+
+/* ── HOW IT WORKS ── */
+.how{background:#fff;padding:80px 5%}
+.how-inner{max-width:1100px;margin:0 auto}
+.how-steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
+.how-step-card{background:var(--g50);border:1px solid var(--g200);border-radius:18px;padding:24px;position:relative;overflow:hidden}
+.how-step-card::before{content:attr(data-num);position:absolute;top:-10px;right:12px;font-size:64px;font-weight:900;color:var(--g100);line-height:1;pointer-events:none;font-variant-numeric:tabular-nums}
+.how-step-icon{font-size:28px;margin-bottom:14px;display:block}
+.how-step-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:6px;line-height:1.3}
+.how-step-card p{font-size:13px;color:var(--g500);line-height:1.6}
+
+/* ── PRODUCT STORIES ── */
+.stories{background:var(--off);padding:80px 5%}
+.stories-inner{max-width:1100px;margin:0 auto}
+.stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.story-card{background:#fff;border:1px solid var(--g200);border-radius:20px;overflow:hidden}
+.story-card-img{height:180px;overflow:hidden;position:relative}
+.story-card-img img{width:100%;height:100%;object-fit:cover}
+.story-card-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(10,22,40,.7))}
+.story-card-tag{position:absolute;bottom:12px;right:12px;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:10px;font-weight:900;padding:4px 10px}
+.story-card-body{padding:18px}
+.story-card-name{font-size:17px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.story-card-teaser{font-size:13px;color:var(--g500);line-height:1.55;margin-bottom:14px}
+.story-stats{display:flex;gap:10px;margin-bottom:14px}
+.story-stat{flex:1;background:var(--g50);border-radius:10px;padding:10px;text-align:center}
+.story-stat span{font-size:9px;color:var(--g400);text-transform:uppercase;font-weight:700;display:block}
+.story-stat b{font-size:15px;font-weight:900;color:var(--navy)}
+.story-expand-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.story-expand-btn:hover{background:var(--navy-light)}
+.story-expand-btn.open{background:var(--gold);color:var(--navy-dark)}
+.story-body{display:none;margin-top:14px;padding:14px;background:var(--g50);border-radius:12px;border-left:3px solid var(--gold)}
+.story-body.open{display:block}
+.story-body p{font-size:13px;color:var(--g700);line-height:1.75;margin-bottom:10px}
+.story-body p:last-child{margin-bottom:0}
+.story-drh-note{background:var(--navy);color:#fff;border-radius:10px;padding:12px 14px;font-size:12px;font-weight:700;line-height:1.6;margin-top:12px}
+.story-drh-note span{color:var(--gold)}
+
+/* ── SOCIAL PROOF ── */
+.proof{background:var(--navy-dark);padding:72px 5%}
+.proof-inner{max-width:1100px;margin:0 auto}
+.proof-header{text-align:center;margin-bottom:40px}
+.proof-header .section-title{color:#fff}
+.proof-header .section-sub{color:rgba(255,255,255,.55);margin:0 auto;max-width:480px}
+.proof-disclaimer{display:inline-block;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);border-radius:999px;padding:5px 14px;font-size:11px;color:var(--gold);font-weight:700;margin-top:12px}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.proof-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:20px}
+.proof-stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:10px}
+.proof-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.65;margin-bottom:16px;font-style:italic}
+.proof-person{display:flex;align-items:center;gap:10px}
+.proof-avatar{width:32px;height:32px;border-radius:50%;background:var(--navy-light);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.proof-name{font-size:13px;font-weight:800;color:#fff}
+.proof-role{font-size:11px;color:rgba(255,255,255,.4)}
+
+/* ── FEATURES ── */
+.features{background:var(--off);padding:80px 5%}
+.features-inner{max-width:1200px;margin:0 auto}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+.feature-card{background:#fff;border:1px solid var(--g200);border-radius:18px;padding:24px;transition:all .2s}
+.feature-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(30,58,95,.08);border-color:var(--g300)}
+.feature-icon{width:48px;height:48px;border-radius:13px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.feature-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.feature-card p{font-size:13px;color:var(--g500);line-height:1.65}
+
+/* ── PRICING ── */
+.pricing{background:#fff;padding:80px 5%}
+.pricing-inner{max-width:520px;margin:44px auto 0}
+.pricing-card{background:var(--navy);border-radius:28px;padding:40px;color:#fff;text-align:center;position:relative;overflow:hidden}
+.pricing-card::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:rgba(245,158,11,.1);border-radius:50%;pointer-events:none}
 .pricing-badge{display:inline-block;background:var(--gold);color:var(--navy-dark);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:900;margin-bottom:20px}
 .pricing-trial{font-size:28px;font-weight:900;margin-bottom:6px}
 .pricing-then{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:28px}
 .pricing-then strong{color:#fff;font-size:22px}
-.pricing-features{text-align:left;margin-bottom:32px;display:flex;flex-direction:column;gap:12px}
-.pricing-feature{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.85)}
-.pricing-feature::before{content:'✓';width:22px;height:22px;border-radius:50%;background:rgba(245,158,11,.2);color:var(--gold);font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.pricing-cta{width:100%;background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:14px;text-decoration:none;display:block}
+.pricing-features{text-align:left;margin-bottom:32px;display:flex;flex-direction:column;gap:10px}
+.pricing-feature{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.4}
+.pricing-feature::before{content:'✓';width:20px;height:20px;border-radius:50%;background:rgba(245,158,11,.2);color:var(--gold);font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.pricing-cta{width:100%;background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px;text-decoration:none;display:block}
 .pricing-cta:hover{background:var(--gold-light)}
-.pricing-note{font-size:12px;color:rgba(255,255,255,.4)}
-.faq{background:var(--off)}
-.faq-list{max-width:720px;margin:48px auto 0;display:flex;flex-direction:column;gap:12px}
-.faq-item{background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden}
-.faq-q{width:100%;background:none;border:none;padding:20px 22px;font-size:15px;font-weight:700;color:var(--g900);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit}
-.faq-q span{font-size:20px;color:var(--g400);flex-shrink:0}
-.faq-a{padding:0 22px;font-size:14px;color:var(--g500);line-height:1.7;max-height:0;overflow:hidden;transition:all .3s}
-.faq-a.open{max-height:200px;padding:0 22px 18px}
-.final-cta{background:linear-gradient(135deg,var(--navy-dark),var(--navy));padding:96px 5%;text-align:center;position:relative;overflow:hidden}
-.final-cta::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:rgba(245,158,11,.07);border-radius:50%}
-.final-cta h2{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:16px;position:relative}
-.final-cta h2 span{color:var(--gold)}
-.final-cta p{font-size:18px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 36px;position:relative}
-.final-cta-note{font-size:13px;color:rgba(255,255,255,.3);margin-top:16px;position:relative}
-footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1px solid rgba(255,255,255,.08)}
-.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:42px;align-items:start}
-.footer-brand-copy{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-top:14px;max-width:320px}
+.pricing-note{font-size:12px;color:rgba(255,255,255,.35);line-height:1.5}
+
+/* ── FAQ ── */
+.faq{background:var(--off);padding:80px 5%}
+.faq-inner{max-width:700px;margin:0 auto}
+.faq-list{margin-top:40px;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;padding:18px 20px;font-size:14px;font-weight:700;color:var(--g900);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:14px}
+.faq-q span{font-size:18px;color:var(--g400);flex-shrink:0;transition:transform .2s}
+.faq-q.open span{transform:rotate(45deg);color:var(--navy)}
+.faq-a{padding:0 20px;font-size:14px;color:var(--g500);line-height:1.7;max-height:0;overflow:hidden;transition:all .3s}
+.faq-a.open{max-height:300px;padding:0 20px 18px}
+
+/* ── FINAL CTA ── */
+.final-cta{background:linear-gradient(135deg,#080f1e,#0f1f38,#142840);padding:100px 5%;text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(245,158,11,.07) 0%,transparent 60%);pointer-events:none}
+.final-cta-inner{position:relative;z-index:2;max-width:640px;margin:0 auto}
+.final-cta h2{font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:14px;line-height:1.08}
+.final-cta h2 em{font-style:normal;color:var(--gold)}
+.final-cta p{font-size:17px;color:rgba(255,255,255,.6);max-width:480px;margin:0 auto 34px;line-height:1.65}
+.final-cta-note{font-size:13px;color:rgba(255,255,255,.3);margin-top:16px}
+
+/* ── FOOTER ── */
+footer{background:var(--navy-dark);padding:54px 5% 28px;border-top:1px solid rgba(255,255,255,.08)}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px;align-items:start}
+.footer-brand-copy{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:14px;max-width:300px}
 .footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);font-weight:900;margin-bottom:14px}
 .footer-links{display:flex;flex-direction:column;gap:10px}
-.footer-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
 .footer-links a:hover{color:#fff}
-.footer-support-note{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:2px}
-.footer-bottom{max-width:1200px;margin:34px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
-.footer-bottom p{font-size:12px;color:rgba(255,255,255,.35)}
-.footer-bottom a{color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700}
+.footer-bottom{max-width:1200px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.3)}
+.footer-bottom a{color:rgba(255,255,255,.4);text-decoration:none;font-size:12px;font-weight:600}
 .footer-bottom a:hover{color:#fff}
 
-@media(max-width:900px){.footer-inner{grid-template-columns:1fr 1fr}.footer-brand-copy{max-width:none}}
-@media(max-width:600px){.footer-inner{grid-template-columns:1fr;gap:28px}.footer-bottom{flex-direction:column;align-items:flex-start}}
-@media(max-width:1000px){.how-grid,.lifestyle-grid,.winning-grid,.preview-grid,.features-grid{grid-template-columns:1fr}.hero{padding:120px 5% 80px}.proof-bar{gap:20px}.lifestyle-card{height:260px}}
-@media(max-width:600px){.nav-links{display:none}.hero h1{font-size:36px}.winning-card-stat{flex-wrap:wrap}.video-showcase{padding:48px 5% 0}}
-
-/* =========================================================
-   DRH MOBILE OPTIMISATION PASS — added 27 Jun 2026
-   Keeps desktop design intact, tightens tablet/mobile layout
-   ========================================================= */
-@media (max-width: 1100px){
-  section{padding:76px 5%}
-  .hero{min-height:auto;padding:118px 5% 72px}
-  .hero-content{max-width:760px}
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-card{max-width:380px}
+  .hashtag-inner,.platform-analysis-inner{grid-template-columns:1fr;gap:40px}
+  .how-steps-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:28px}
 }
-
-@media (max-width: 768px){
-  html,body{width:100%;max-width:100%;overflow-x:hidden}
-  body{-webkit-text-size-adjust:100%}
-
-  nav{
-    height:62px;
-    padding:0 14px;
-    gap:10px;
-  }
-  .nav-logo{min-width:0;gap:8px}
-  .nav-logo-icon{
-    width:34px;
-    height:34px;
-    border-radius:9px;
-    flex-shrink:0;
-  }
-  .nav-logo-text{
-    font-size:14px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:150px;
-  }
+@media(max-width:768px){
+  html,body{overflow-x:hidden;width:100%}
+  nav{padding:0 16px;height:60px}
   .nav-links{display:none}
-  .nav-cta{
-    padding:9px 12px;
-    font-size:12px;
-    border-radius:9px;
-    white-space:nowrap;
-  }
-
-  .hero{
-    min-height:auto;
-    padding:96px 18px 54px;
-    align-items:flex-start;
-  }
-  .hero-content{max-width:100%}
-  .hero-badge{
-    font-size:10px;
-    padding:7px 11px;
-    margin-bottom:18px;
-    max-width:100%;
-    line-height:1.25;
-  }
-  .hero h1{
-    font-size:38px;
-    line-height:1.03;
-    letter-spacing:-1.45px;
-    margin-bottom:18px;
-  }
-  .hero p{
-    font-size:15px;
-    line-height:1.62;
-    margin-bottom:22px;
-  }
-  .hero-content > div[style*="display:flex"][style*="Hub, your research partner"]{
-    align-items:flex-start!important;
-    padding:12px!important;
-    margin-bottom:22px!important;
-  }
-  .hero-content > div[style*="display:flex"][style*="Hub, your research partner"] img{
-    width:38px!important;
-    height:38px!important;
-  }
-  .hero-cta-row{
-    flex-direction:column;
-    align-items:stretch;
-    gap:10px;
-    margin-bottom:14px;
-  }
-  .btn-primary,.btn-secondary{
-    width:100%;
-    justify-content:center;
-    text-align:center;
-    padding:15px 18px;
-    font-size:14px;
-    border-radius:13px;
-  }
-  .hero-note{
-    font-size:12px;
-    line-height:1.5;
-    margin-bottom:30px;
-  }
-  .hero-stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-    padding-top:22px;
-  }
-  .hero-stats > div{
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;
-    padding:12px 8px;
-    text-align:center;
-  }
-  .hero-stat-num{font-size:20px}
-  .hero-stat-label{
-    font-size:10px;
-    line-height:1.25;
-  }
-
-  .proof-bar{
-    padding:16px 18px;
-    display:grid;
-    grid-template-columns:1fr;
-    gap:10px;
-    justify-content:stretch;
-  }
-  .proof-item{
-    width:100%;
-    font-size:12px;
-    justify-content:flex-start;
-  }
-
-  section{padding:64px 18px}
-  .section-label{font-size:11px}
-  .section-title{
-    font-size:30px;
-    line-height:1.08;
-    letter-spacing:-.9px;
-  }
-  .section-sub{
-    font-size:15px;
-    line-height:1.6;
-  }
-
-  .marquee-section{padding:36px 0}
-  .marquee-header{padding:0 18px 22px}
-  .marquee-card{
-    width:270px;
-    padding:16px;
-  }
-  .marquee-card-text{font-size:12px}
-  .marquee-track{gap:12px;animation-duration:46s}
-  .marquee-track-wrap::before,.marquee-track-wrap::after{width:36px}
-
-  .video-showcase{padding:46px 18px 0}
-  .video-showcase-inner{
-    border-radius:18px;
-    box-shadow:0 14px 36px rgba(30,58,95,.16);
-  }
-
-  .how-grid{
-    grid-template-columns:1fr;
-    gap:34px;
-  }
-  .how-step{
-    gap:14px;
-    padding:22px 0;
-  }
-  .how-step-num{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    font-size:15px;
-  }
-  .how-step h3{font-size:15px}
-  .how-step p{font-size:13px}
-  .how-visual{
-    padding:20px;
-    border-radius:20px;
-  }
-  .how-signal{
-    padding:12px;
-    gap:10px;
-  }
-  .how-signal-icon{
-    width:34px;
-    height:34px;
-  }
-  .how-signal-label{font-size:12px}
-  .how-signal-sub{font-size:10px}
-  .how-signal-badge{font-size:9px;padding:4px 7px}
-
-  .lifestyle{
-    padding:64px 18px;
-  }
-  .lifestyle-title,.preview-title{
-    font-size:30px;
-    line-height:1.08;
-    letter-spacing:-.9px;
-  }
-  .lifestyle-sub,.preview-sub{
-    font-size:15px;
-    line-height:1.6;
-    margin-bottom:30px;
-  }
-  .lifestyle-grid,.winning-grid,.preview-grid,.features-grid{
-    grid-template-columns:1fr;
-    gap:16px;
-  }
-  .lifestyle-card{
-    height:245px;
-    border-radius:18px;
-  }
-  .lifestyle-card-text{left:16px;right:16px;bottom:16px}
-  .lifestyle-card-text h3{font-size:16px}
-  .lifestyle-card-text p{font-size:12px}
-
-  .winning-grid{margin-top:30px}
-  .winning-card,.preview-card,.feature-card{
-    border-radius:18px;
-  }
-  .winning-card-img{height:190px}
-  .winning-card-body{padding:18px}
-  .winning-card-name{font-size:17px}
-  .winning-card-teaser,.winning-story p{font-size:13px}
-  .winning-card-stat{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-  }
-  .winning-expand-btn{
-    padding:12px;
-    font-size:13px;
-    border-radius:11px;
-  }
-
-  .preview{padding:64px 18px}
-  .preview-grid{margin-bottom:30px}
-  .preview-card-img{height:178px}
-  .preview-card-body{padding:14px}
-  .preview-card-name{font-size:15px}
-  .preview-card-scores{gap:5px}
-  .preview-score{padding:7px 4px}
-  .preview-cta p{font-size:12px;line-height:1.5}
-
-  .features-grid{margin-top:30px}
-  .feature-card{padding:22px}
-  .feature-icon{
-    width:46px;
-    height:46px;
-    border-radius:13px;
-    font-size:21px;
-  }
-  .feature-card h3{font-size:16px}
-  .feature-card p{font-size:13px}
-
-  .pricing-card{
-    margin-top:30px;
-    padding:26px 18px;
-    border-radius:22px;
-  }
-  .pricing-trial{font-size:24px}
-  .pricing-then{font-size:14px}
-  .pricing-features{gap:10px}
-  .pricing-feature{
-    font-size:13px;
-    align-items:flex-start;
-  }
-  .pricing-feature::before{
-    width:20px;
-    height:20px;
-    margin-top:1px;
-  }
-
-  .faq-list{margin-top:30px}
-  .faq-q{
-    padding:18px;
-    font-size:14px;
-    gap:14px;
-  }
-  .faq-a{font-size:13px}
-  .faq-a.open{padding:0 18px 18px}
-
-  .final-cta{
-    padding:68px 18px;
-  }
-  .final-cta h2{
-    font-size:34px;
-    line-height:1.06;
-  }
-  .final-cta p{
-    font-size:15px;
-    line-height:1.6;
-  }
-
-  footer{
-    padding:42px 18px 24px;
-  }
-  .footer-inner{
-    grid-template-columns:1fr;
-    gap:26px;
-  }
-  .footer-brand-copy{font-size:13px}
-  .footer-links a,.footer-support-note{font-size:13px}
-  .footer-bottom{
-    margin-top:26px;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
-  }
+  .nav-logo-text{font-size:14px}
+  .nav-cta{font-size:12px;padding:9px 14px}
+  .hero{padding:90px 18px 60px;min-height:auto}
+  .hero h1{font-size:34px;letter-spacing:-1.2px}
+  .hero-subhead{font-size:15px}
+  .hero-cta-row{flex-direction:column;align-items:stretch}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center;text-align:center;padding:15px}
+  .hero-card{max-width:100%}
+  .hashtag-section,.notaspy,.platform-feed,.platform-analysis,.how,.stories,.proof,.features,.pricing,.faq,.final-cta{padding:60px 18px}
+  .notaspy-grid,.mock-feed,.stories-grid,.proof-grid,.features-grid{grid-template-columns:1fr}
+  .how-steps-grid{grid-template-columns:1fr}
+  .mock-scores-grid{grid-template-columns:repeat(3,1fr)}
+  .section-title{font-size:26px;letter-spacing:-.8px}
+  .hashtag-title{font-size:26px}
+  .notaspy-title{font-size:24px}
+  .footer-inner{grid-template-columns:1fr;gap:24px}
+  .footer-bottom{flex-direction:column;align-items:flex-start;gap:8px}
+  .footer-brand-copy{max-width:none}
+  .final-cta h2{font-size:30px}
+  .final-cta p{font-size:15px}
+  .pricing-card{padding:28px 20px}
 }
-
-@media (max-width: 420px){
-  .nav-logo-text{max-width:128px;font-size:13px}
-  .nav-cta{font-size:11px;padding:8px 10px}
-  .hero h1{font-size:34px}
-  .hero-stats{
-    grid-template-columns:1fr;
-  }
-  .hero-stats > div{
-    text-align:left;
-  }
-  .hero-stat-num{font-size:22px}
-  .hero-stat-label{font-size:11px}
-  .section-title,.lifestyle-title,.preview-title{font-size:28px}
-  .winning-card-stat{grid-template-columns:1fr}
-  .mock-card{display:none}
+@media(max-width:420px){
+  .hero h1{font-size:30px}
+  .nav-logo-text{font-size:13px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
-
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">
     <div class="nav-logo-icon">
@@ -583,438 +361,546 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1p
   </a>
   <div class="nav-links">
     <a href="#how">How it works</a>
-    <a href="#products">Products</a>
+    <a href="#platform">The platform</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
   </div>
   <a href="signup.html" class="nav-cta">Start free trial →</a>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-bg-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-badge"><div class="hero-badge-dot"></div>Live product intelligence — updated weekly</div>
-    <h1>Find winning products<br><span>before they blow up.</span></h1>
-    <p>DropResearch Hub surfaces emerging products at the exact moment they start trending — before the TikTok feeds fill up, before the Amazon listings get crowded, before the Meta costs climb, before everyone else catches on.</p>
-    <!-- HUB INTRO — added -->
-    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;margin-bottom:28px">
-      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:44px;height:44px;border-radius:50%;border:2px solid rgba(245,158,11,.4);flex-shrink:0" onerror="this.outerHTML='<div style=font-size:26px>🤖</div>'">
-      <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.55;font-style:italic">"I research the market every week so you don't have to — finding products in the window before they go viral." — <strong style="color:var(--gold);font-style:normal">Hub, your research partner</strong></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div>Weekly product intelligence — updated every Monday</div>
+      <h1>The best products are gone<br>by the time <em>most people find them.</em></h1>
+      <p class="hero-subhead">Scrolling <strong>#TikTokMadeMeBuyIt</strong> for your next product? That hashtag means the trend already passed. <strong>Hub finds products in the weeks before the hashtag exists</strong> — when the margin is still there and the market isn't crowded yet.</p>
+      <div class="hub-strip">
+        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='<div style=font-size:26px;flex-shrink:0>🤖</div>'">
+        <div class="hub-strip-text">"I scan TikTok, Amazon and AliExpress every week so you don't have to — delivering opportunities while the window is still open." — <strong>Hub, your research partner</strong></div>
+      </div>
+      <div class="hero-cta-row">
+        <a href="signup.html" class="btn-primary">Start your free 7-day trial →</a>
+        <a href="#how" class="btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-note">✓ No charge for 7 days &nbsp;·&nbsp; Then £24.99/month &nbsp;·&nbsp; Cancel anytime</div>
     </div>
-    <div class="hero-cta-row">
-      <a href="signup.html" class="btn-primary">Start your free 7-day trial →</a>
-      <a href="#how" class="btn-secondary">See how it works</a>
-    </div>
-    <div class="hero-note">✓ No commitment &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; Then £24.99/month</div>
-    <div class="hero-stats">
-      <div><div class="hero-stat-num">3–5</div><div class="hero-stat-label">New products weekly</div></div>
-      <div><div class="hero-stat-num">12pt</div><div class="hero-stat-label">Validation framework</div></div>
-      <div><div class="hero-stat-num">£24.99</div><div class="hero-stat-label">Per month after trial</div></div>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="mock-card">
-      <div class="mock-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_35_03%20PM.png" alt="Cordless neck fan" onerror="this.parentElement.style.background='linear-gradient(135deg,#dbeafe,#eff6ff)';this.style.display='none'"/>
-        <div class="mock-badge-g">Grade A+</div>
-        <div class="mock-badge-s">Strong Opportunity</div>
-      </div>
-      <div class="mock-body">
-        <div class="mock-name">Cordless Neck Fan Pro</div>
-        <div class="mock-niche">Tech · Summer peak</div>
-        <div class="mock-famous">🏆 <span>Before it was famous</span> — Hub spotted this 6 weeks before it went viral on TikTok Shop UK</div>
-        <div class="mock-scores">
-          <div class="mock-score"><div class="mock-score-label">Trend</div><div class="mock-score-val" style="color:var(--navy)">91</div></div>
-          <div class="mock-score"><div class="mock-score-label">Problem</div><div class="mock-score-val" style="color:var(--green)">88</div></div>
-          <div class="mock-score"><div class="mock-score-label">Sat. Risk</div><div class="mock-score-val" style="color:var(--green);font-size:11px">Low</div></div>
-        </div>
-        <div class="mock-lock">
-          <div class="mock-lock-inner"><div style="font-size:11px;font-weight:800;color:var(--navy)">TikTok angle · Meta angle · Ad scripts · Bundle ideas</div></div>
-          <div class="mock-lock-overlay"><span>🔒</span><span>Members only</span><small>Full analysis unlocked on trial</small></div>
-        </div>
-        <div class="mock-btn">Analyse this product</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="proof-bar">
-  <div class="proof-item"><span>✓</span> 12-point product validation</div>
-  <div class="proof-item"><span>✓</span> TikTok, Amazon & AliExpress data</div>
-  <div class="proof-item"><span>✓</span> Ad creative scripts included</div>
-  <div class="proof-item"><span>✓</span> UK-focused research</div>
-</div>
-
-<!-- SCROLLING REVIEWS MARQUEE — added -->
-<section class="marquee-section">
-  <div class="marquee-header">
-    <div class="marquee-stars">★★★★★</div>
-    <div class="marquee-title">Early access feedback</div>
-    <div class="marquee-note">DropResearch Hub is newly launched — these are real quotes from early access testers, not yet paying members.</div>
-  </div>
-  <div class="marquee-track-wrap">
-    <div class="marquee-track">
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"This actually found something before it blew up on TikTok — that's the whole point, isn't it?"</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">J</div><div><div class="marquee-card-name">James</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"The scoring breakdown actually makes sense — made picking my next product way less stressful."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">R</div><div><div class="marquee-card-name">Ryan</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Had a full store concept and ad angles in under a minute. Would've taken me a weekend."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">S</div><div><div class="marquee-card-name">Sophie</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Being UK-focused actually matters more than I expected — other tools clearly didn't translate."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">M</div><div><div class="marquee-card-name">Michael</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"The validator caught a couple of bad picks before I wasted any ad spend on them."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">A</div><div><div class="marquee-card-name">Aisha</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Simple to use even as someone who'd never run a store before — nothing assumes prior knowledge."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">T</div><div><div class="marquee-card-name">Tom</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <!-- duplicate set for seamless loop -->
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"This actually found something before it blew up on TikTok — that's the whole point, isn't it?"</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">J</div><div><div class="marquee-card-name">James</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"The scoring breakdown actually makes sense — made picking my next product way less stressful."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">R</div><div><div class="marquee-card-name">Ryan</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Had a full store concept and ad angles in under a minute. Would've taken me a weekend."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">S</div><div><div class="marquee-card-name">Sophie</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Being UK-focused actually matters more than I expected — other tools clearly didn't translate."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">M</div><div><div class="marquee-card-name">Michael</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"The validator caught a couple of bad picks before I wasted any ad spend on them."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">A</div><div><div class="marquee-card-name">Aisha</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-      <div class="marquee-card">
-        <div class="marquee-card-stars">★★★★★</div>
-        <div class="marquee-card-text">"Simple to use even as someone who'd never run a store before — nothing assumes prior knowledge."</div>
-        <div class="marquee-card-person"><div class="marquee-card-avatar">T</div><div><div class="marquee-card-name">Tom</div><div class="marquee-card-role">Early access tester</div></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOMEPAGE DEMO VIDEO — added -->
-<section class="video-showcase">
-  <div class="video-showcase-inner">
-    <video autoplay loop muted playsinline>
-      <source src="drh_homepage_video.webm" type="video/webm">
-      <source src="drh_homepage_video.mp4" type="video/mp4">
-    </video>
-  </div>
-</section>
-
-<section class="how" id="how">
-  <div class="how-grid">
     <div>
-      <div class="section-label">How DropResearch Hub works</div>
+      <div class="hero-card">
+        <div class="hero-card-img">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_35_03%20PM.png" alt="Cordless Neck Fan Pro" onerror="this.parentElement.style.background='linear-gradient(135deg,#dbeafe,#eff6ff)';this.style.display='none'"/>
+          <div class="hero-card-badge-g">Grade A+</div>
+          <div class="hero-card-badge-s">Strong Opportunity</div>
+          <div class="hero-card-spotted">🏆 Hub spotted this 6 weeks before it went viral on TikTok Shop UK</div>
+        </div>
+        <div class="hero-card-body">
+          <div class="hero-card-name">Cordless Neck Fan Pro</div>
+          <div class="hero-card-niche">Tech · Summer · Evergreen</div>
+          <div class="hero-card-scores">
+            <div class="hero-score"><div class="hero-score-label">Trend</div><div class="hero-score-val" style="color:var(--navy)">91</div></div>
+            <div class="hero-score"><div class="hero-score-label">Problem</div><div class="hero-score-val" style="color:var(--green)">88</div></div>
+            <div class="hero-score"><div class="hero-score-label">Margin</div><div class="hero-score-val" style="color:var(--green)">65%</div></div>
+            <div class="hero-score"><div class="hero-score-label">Sat. Risk</div><div class="hero-score-val" style="color:var(--green);font-size:11px">Low</div></div>
+          </div>
+          <div class="hero-card-locked">
+            <div class="hero-card-locked-inner">TikTok angle · Meta angle · Ad scripts · Bundle ideas · Supplier terms</div>
+            <div class="hero-card-locked-overlay"><span>🔒 Members only</span><small>Full analysis unlocked on trial</small></div>
+          </div>
+          <div class="hero-card-btn">Analyse this product →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HASHTAG TRUTH -->
+<section class="hashtag-section">
+  <div class="hashtag-inner">
+    <div class="hashtag-left">
+      <div class="hashtag-eyebrow">The timing problem</div>
+      <h2 class="hashtag-title">By the time you see the hashtag,<br><em>you're already too late.</em></h2>
+      <p class="hashtag-body">
+        Think about it. <strong>#TikTokMadeMeBuyIt has billions of views.</strong> That means thousands of sellers, creators and brands already found that product, already filmed it, already ran ads on it, already saturated the market.<br><br>
+        The UGC creators posting daily — they don't have a research system. They're scrolling the same hashtags you are, jumping on the same trends you see. They're not starting trends. They're joining crowds.<br><br>
+        <strong>DropResearch Hub is built to find what's coming before it arrives.</strong> Hub monitors the signals — order velocity, search momentum, creator activity — and surfaces opportunities in the weeks before the crowd shows up.
+      </p>
+      <a href="signup.html" class="btn-primary" style="display:inline-flex">Find products before the hashtag →</a>
+    </div>
+    <div class="hashtag-right">
+      <div class="hashtag-timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot now"></div>
+          <div class="timeline-week">Week 1 — Right now</div>
+          <div class="timeline-label">Hub spots early signals</div>
+          <div class="timeline-sub">AliExpress order growth, Google search momentum, TikTok creator activity picking up</div>
+          <div class="timeline-tag green">✓ You get this week's picks</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-week">Week 3–4</div>
+          <div class="timeline-label">First movers test and scale</div>
+          <div class="timeline-sub">Early sellers launch ads. ROAS is high. Competition is still low. Margin is strong.</div>
+          <div class="timeline-tag green">✓ You're already testing</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-week">Week 6–8</div>
+          <div class="timeline-label">Product starts trending publicly</div>
+          <div class="timeline-sub">TikTok fills up. Amazon gets crowded. Ad costs climb. Early movers are already scaling.</div>
+          <div class="timeline-tag">⚡ Window closing</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-week">Week 10+</div>
+          <div class="timeline-label">#TikTokMadeMeBuyIt</div>
+          <div class="timeline-sub">It's everywhere. Every seller has found it. Margins are gone. The crowd has arrived.</div>
+          <div class="timeline-tag red">✗ Too late — this is where most people start</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOT ANOTHER SPY TOOL -->
+<section class="notaspy">
+  <div class="notaspy-inner">
+    <h2 class="notaspy-title">This is not a product spy tool.</h2>
+    <p class="notaspy-sub">Spy tools show you what's already selling everywhere. That's not research — that's confirmation that you're already late.</p>
+    <div class="notaspy-grid">
+      <div class="notaspy-card bad">
+        <div class="notaspy-card-icon">🔍</div>
+        <div class="notaspy-card-label">What spy tools do</div>
+        <h3>Show you what's already selling</h3>
+        <p>You see what thousands of other sellers have already found, already tested, already scaled. By the time it appears in a spy tool database, the opportunity has already peaked for most categories.</p>
+      </div>
+      <div class="notaspy-card bad">
+        <div class="notaspy-card-icon">#️⃣</div>
+        <div class="notaspy-card-label">What hashtags do</div>
+        <h3>Show you what already went viral</h3>
+        <p>Hashtags are a record of what happened, not what's happening next. Every product on #TikTokMadeMeBuyIt had its best moment before the hashtag existed. You're seeing the aftermath.</p>
+      </div>
+      <div class="notaspy-card good">
+        <div class="notaspy-card-icon">🎯</div>
+        <div class="notaspy-card-label">What DropResearch Hub does</div>
+        <h3>Finds what's about to trend</h3>
+        <p>Hub monitors early signals — rising AliExpress orders, Google search momentum, creator pickup — and surfaces products in the weeks before they peak. You get in first, while the margin is still there.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM MOCKUP — WEEKLY FEED -->
+<section class="platform-feed" id="platform">
+  <div class="platform-feed-inner">
+    <div class="section-eyebrow">Inside the platform</div>
+    <h2 class="section-title">Your weekly product feed.</h2>
+    <p class="section-sub">Every Monday, Hub drops 3–5 validated emerging products into your feed. Each one scored, researched and ready to act on.</p>
+    <div class="mock-feed">
+      <!-- Card 1 -->
+      <div class="mock-product-card">
+        <div class="mock-product-img blue">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_44_06%20PM.png" alt="Smart Car Diffuser" onerror="this.parentElement.innerHTML='🚗'"/>
+          <div class="mock-grade-badge" style="background:var(--green)">Grade A+</div>
+          <div class="mock-star-badge">⭐ Hub's #1 — Week 26</div>
+        </div>
+        <div class="mock-product-body">
+          <div class="mock-product-name">Smart Car Diffuser</div>
+          <div class="mock-product-niche">Lifestyle · Evergreen</div>
+          <div class="mock-product-why">"Searches up 340% in 6 weeks. No dominant UK seller yet. Perfect UGC product."</div>
+          <div class="mock-product-scores">
+            <div class="mock-ps"><div class="mock-ps-label">Trend</div><div class="mock-ps-val" style="color:var(--navy)">84</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Problem</div><div class="mock-ps-val" style="color:var(--green)">86</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Sat.</div><div class="mock-ps-val" style="color:var(--green);font-size:10px">Low</div></div>
+          </div>
+          <div class="mock-product-actions">
+            <div class="mock-analyse-btn">🔍 Analyse</div>
+            <div class="mock-save-btn">🤍</div>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="mock-product-card">
+        <div class="mock-product-img green">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_12_28%20PM.png" alt="Silicone Food Wrap" onerror="this.parentElement.innerHTML='🥗'"/>
+          <div class="mock-grade-badge" style="background:var(--gold);color:var(--navy-dark)">Grade A</div>
+          <div class="mock-star-badge">🆕 New this week</div>
+        </div>
+        <div class="mock-product-body">
+          <div class="mock-product-name">Silicone Food Wrap Set</div>
+          <div class="mock-product-niche">Kitchen · Eco · Evergreen</div>
+          <div class="mock-product-why">"Eco angle + problem-solving. Strong Meta audience. Bundle potential with containers."</div>
+          <div class="mock-product-scores">
+            <div class="mock-ps"><div class="mock-ps-label">Trend</div><div class="mock-ps-val" style="color:var(--navy)">78</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Problem</div><div class="mock-ps-val" style="color:var(--green)">82</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Sat.</div><div class="mock-ps-val" style="color:var(--amber);font-size:10px">Med</div></div>
+          </div>
+          <div class="mock-product-actions">
+            <div class="mock-analyse-btn">🔍 Analyse</div>
+            <div class="mock-save-btn">🤍</div>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="mock-product-card">
+        <div class="mock-product-img purple">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_13_23%20PM.png" alt="LED Scalp Massager" onerror="this.parentElement.innerHTML='💆'"/>
+          <div class="mock-grade-badge" style="background:var(--green)">Grade A+</div>
+          <div class="mock-star-badge">🔥 High confidence</div>
+        </div>
+        <div class="mock-product-body">
+          <div class="mock-product-name">LED Scalp Massager</div>
+          <div class="mock-product-niche">Beauty · Wellness · Evergreen</div>
+          <div class="mock-product-why">"Demonstrable in 8 seconds of video. Solves real pain. TikTok creator pickup starting."</div>
+          <div class="mock-product-scores">
+            <div class="mock-ps"><div class="mock-ps-label">Trend</div><div class="mock-ps-val" style="color:var(--navy)">86</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Problem</div><div class="mock-ps-val" style="color:var(--green)">91</div></div>
+            <div class="mock-ps"><div class="mock-ps-label">Sat.</div><div class="mock-ps-val" style="color:var(--green);font-size:10px">Low</div></div>
+          </div>
+          <div class="mock-product-actions">
+            <div class="mock-analyse-btn">🔍 Analyse</div>
+            <div class="mock-save-btn">🤍</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mock-feed-note">↑ A representative snapshot of the weekly member feed — products, scores and Hub's reasoning, updated every Monday.</p>
+  </div>
+</section>
+
+<!-- PLATFORM MOCKUP — ANALYSIS VIEW -->
+<section class="platform-analysis">
+  <div class="platform-analysis-inner">
+    <div class="platform-analysis-left">
+      <div class="section-eyebrow" style="color:var(--gold)">Full product analysis</div>
+      <h2 class="section-title">Every product comes with a complete Hub report.</h2>
+      <p class="section-sub">Not just a score. Hub builds a full research dossier — verdict, scoring breakdown, confidence rating, ad angles, supplier search terms, launch checklist and creative scripts.</p>
+      <div class="analysis-feature-list">
+        <div class="analysis-feature">
+          <div class="analysis-feature-icon">📊</div>
+          <div class="analysis-feature-text">
+            <h4>12-point scoring breakdown</h4>
+            <p>UK Market Gap, Problem Intensity, Creative Potential, Profit Potential, Competition Barrier and 7 more criteria — scored and explained.</p>
+          </div>
+        </div>
+        <div class="analysis-feature">
+          <div class="analysis-feature-icon">🎯</div>
+          <div class="analysis-feature-text">
+            <h4>Hub's verdict and confidence rating</h4>
+            <p>Strong Opportunity, Watch List or Pass — with a plain-English reason and a confidence percentage so you know how strongly Hub backs it.</p>
+          </div>
+        </div>
+        <div class="analysis-feature">
+          <div class="analysis-feature-icon">🎬</div>
+          <div class="analysis-feature-text">
+            <h4>Ad scripts and creative angles</h4>
+            <p>TikTok angle, Meta angle and 3 ready-to-film video ad scripts per product — hand them to a creator or film yourself.</p>
+          </div>
+        </div>
+        <div class="analysis-feature">
+          <div class="analysis-feature-icon">💰</div>
+          <div class="analysis-feature-text">
+            <h4>Unit Economics Engine</h4>
+            <p>Model three profit scenarios before you spend a penny on ads — conservative, realistic and aggressive.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mock-analysis-panel">
+        <div class="mock-analysis-header">
+          <div class="mock-analysis-back">← Back</div>
+          <div>
+            <div class="mock-analysis-title">Smart Car Diffuser</div>
+            <div class="mock-analysis-niche">Lifestyle · Emerging · Evergreen</div>
+          </div>
+        </div>
+        <div class="mock-analysis-body">
+          <div class="mock-verdict">
+            <div class="mock-verdict-icon">✅</div>
+            <div>
+              <div class="mock-verdict-label">Verdict: Strong Opportunity</div>
+              <div class="mock-verdict-reason">Low saturation, strong trend momentum and 65%+ margin potential. Hub backs this one.</div>
+            </div>
+          </div>
+          <div class="mock-scores-grid">
+            <div class="mock-score-box"><div class="mock-score-box-label">Emerging Score</div><div class="mock-score-box-val" style="color:var(--green)">84<span style="font-size:12px;color:var(--g400)">/100</span></div></div>
+            <div class="mock-score-box"><div class="mock-score-box-label">Est. Margin</div><div class="mock-score-box-val" style="color:var(--green)">65%</div></div>
+            <div class="mock-score-box"><div class="mock-score-box-label">Sat. Risk</div><div class="mock-score-box-val" style="color:var(--green);font-size:16px">Low</div></div>
+          </div>
+          <div class="mock-scoring-bars">
+            <div class="mock-scoring-bar-row">
+              <div class="mock-scoring-bar-top"><span>UK Market Gap</span><span style="color:var(--navy)">21/25</span></div>
+              <div class="mock-scoring-bar-track"><div class="mock-scoring-bar-fill" style="width:84%;background:var(--navy)"></div></div>
+            </div>
+            <div class="mock-scoring-bar-row">
+              <div class="mock-scoring-bar-top"><span>Problem Intensity</span><span style="color:var(--green)">17/20</span></div>
+              <div class="mock-scoring-bar-track"><div class="mock-scoring-bar-fill" style="width:85%;background:var(--green)"></div></div>
+            </div>
+            <div class="mock-scoring-bar-row">
+              <div class="mock-scoring-bar-top"><span>Creative Potential</span><span style="color:#8B5CF6">9/10</span></div>
+              <div class="mock-scoring-bar-track"><div class="mock-scoring-bar-fill" style="width:90%;background:#8B5CF6"></div></div>
+            </div>
+            <div class="mock-scoring-bar-row">
+              <div class="mock-scoring-bar-top"><span>Competition Barrier</span><span style="color:var(--amber)">16/20</span></div>
+              <div class="mock-scoring-bar-track"><div class="mock-scoring-bar-fill" style="width:80%;background:var(--amber)"></div></div>
+            </div>
+          </div>
+          <div class="mock-confidence">
+            <div>
+              <div class="mock-confidence-label">Hub confidence</div>
+              <div class="mock-confidence-title">How confident Hub is in this opportunity</div>
+              <div class="mock-confidence-track"><div class="mock-confidence-fill" style="width:87%"></div></div>
+            </div>
+            <div class="mock-confidence-score">
+              <div class="mock-confidence-num">87<span style="font-size:13px;color:var(--g400)">%</span></div>
+              <div class="mock-confidence-status">High confidence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div style="text-align:center;max-width:600px;margin:0 auto">
+      <div class="section-eyebrow">How it works</div>
       <h2 class="section-title">From market signal to launch-ready in minutes.</h2>
-      <p class="section-sub" style="margin-bottom:36px">Every week Hub scans the platforms where trends start. You get the intelligence — not the hours of research.</p>
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-step-num">1</div>
-          <div><h3>Hub scans the market for you</h3><p>Every week Hub monitors TikTok Shop UK, Amazon Movers & Shakers, AliExpress order growth and Google Trends — looking for products showing early upward signals before they peak.</p></div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-num">2</div>
-          <div><h3>Every product is scored</h3><p>Each product goes through Hub's 12-point framework — problem-solving ability, video potential, margin strength, saturation risk and more. Only the best 3–5 make it through each week.</p></div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-num">3</div>
-          <div><h3>You get a full research report</h3><p>Supplier search terms, TikTok and Meta ad angles, target customer profile, competitor checks and 3 ready-to-use ad script variations. Everything you need to test the product.</p></div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-num">4</div>
-          <div><h3>Ask Hub anything, anytime</h3><p>Found something yourself? Ask Hub to validate it. Want a launch plan? Hub builds your store concept and week-by-week roadmap in seconds. Need an ad script? Hub writes it for you.</p></div>
-        </div>
-      </div>
+      <p class="section-sub" style="margin:0 auto">Every week Hub does the research. You get the picks. No hours of scrolling. No guesswork.</p>
     </div>
-    <div class="how-visual">
-      <h3>Live data sources</h3>
-      <p>What Hub monitors every week to find emerging products before they peak</p>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(0,0,0,.3)">🎵</div><div><div class="how-signal-label">TikTok Shop UK</div><div class="how-signal-sub">Trending products & creator activity</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(245,158,11,.2)">📦</div><div><div class="how-signal-label">Amazon Movers & Shakers</div><div class="how-signal-sub">Products gaining rank fast</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(239,68,68,.2)">🛒</div><div><div class="how-signal-label">AliExpress Product Data</div><div class="how-signal-sub">Live pricing & order counts</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(59,130,246,.2)">📊</div><div><div class="how-signal-label">Google Trends UK</div><div class="how-signal-sub">Search demand movements</div></div><div class="how-signal-badge">Live</div></div>
-      <div class="how-signal"><div class="how-signal-icon" style="background:rgba(99,102,241,.2)">📺</div><div><div class="how-signal-label">Research Hub Links</div><div class="how-signal-sub">Pre-searched Meta, TikTok & Amazon</div></div><div class="how-signal-badge">Live</div></div>
-      <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:12px">
-        <div style="font-size:13px;font-weight:800;color:var(--gold);margin-bottom:4px">12-point scoring framework</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6">Problem solving · Video potential · Margin strength · Competition level · Saturation risk · Audience size · and 6 more criteria</div>
+    <div class="how-steps-grid" id="how">
+      <div class="how-step-card" data-num="1">
+        <span class="how-step-icon">📡</span>
+        <h3>Hub scans the market every week</h3>
+        <p>TikTok Shop UK, Amazon Movers & Shakers, AliExpress order velocity, Google Trends UK — Hub monitors the signals that matter before they become obvious.</p>
+      </div>
+      <div class="how-step-card" data-num="2">
+        <span class="how-step-icon">📊</span>
+        <h3>Every product is scored on 12 criteria</h3>
+        <p>Only products that pass Hub's full framework make the weekly feed. Problem-solving ability, video potential, margin strength, saturation risk and more.</p>
+      </div>
+      <div class="how-step-card" data-num="3">
+        <span class="how-step-icon">📋</span>
+        <h3>You get a full research report</h3>
+        <p>Scoring breakdown, supplier search terms, ad angles, creative scripts and a launch checklist — everything you need to decide and act, in one place.</p>
+      </div>
+      <div class="how-step-card" data-num="4">
+        <span class="how-step-icon">🤖</span>
+        <h3>Ask Hub anything, anytime</h3>
+        <p>Found something yourself? Hub validates it. Need a launch plan? Hub builds it. Want ad scripts? Hub writes them. Your research partner, on demand.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="lifestyle">
-  <h2 class="lifestyle-title">This is what finding the right product first looks like.</h2>
-  <p class="lifestyle-sub">The people making real money from dropshipping aren't smarter than you. They just found the right product at the right time.</p>
-  <div class="lifestyle-grid">
-    <div class="lifestyle-card">
-      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2006_59_46%20PM.png" alt="Work from anywhere" onerror="this.style.display='none'"/>
-      <div class="lifestyle-card-overlay"></div>
-      <div class="lifestyle-card-text"><h3>Work from anywhere</h3><p>A laptop and the right products. That's all it takes.</p></div>
+<!-- PRODUCT STORIES -->
+<section class="stories">
+  <div class="stories-inner">
+    <div style="text-align:center;max-width:600px;margin:0 auto">
+      <div class="section-eyebrow">Real product stories</div>
+      <h2 class="section-title">Ordinary products. Extraordinary profits.</h2>
+      <p class="section-sub" style="margin:0 auto">These products made millions for ordinary people who found them at the right time. None of them had DropResearch Hub — it didn't exist yet.</p>
     </div>
-    <div class="lifestyle-card">
-      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_03_55%20PM.png" alt="Success" onerror="this.style.display='none'"/>
-      <div class="lifestyle-card-overlay"></div>
-      <div class="lifestyle-card-text"><h3>Be first to market</h3><p>Early movers capture the margin. Late movers fight for scraps.</p></div>
-    </div>
-    <div class="lifestyle-card">
-      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_05_45%20PM.png" alt="Laptop entrepreneur" onerror="this.style.display='none'"/>
-      <div class="lifestyle-card-overlay"></div>
-      <div class="lifestyle-card-text"><h3>Build real income</h3><p>Not a side hustle. A scalable business with the right intelligence.</p></div>
-    </div>
-  </div>
-  <div class="lifestyle-cta"><a href="signup.html" class="btn-primary">Start your free 7-day trial →</a></div>
-</section>
-
-<section class="winning" id="products">
-  <div class="center">
-    <div class="section-label">Real product stories</div>
-    <h2 class="section-title">Ordinary products. Extraordinary profits.</h2>
-    <p class="section-sub" style="margin:0 auto">These products made millions for ordinary people who found them at the right time. None of them had DropResearch Hub — it didn't exist yet.</p>
-  </div>
-  <div class="winning-grid">
-    <div class="winning-card">
-      <div class="winning-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_07_31%20PM.png" alt="Fidget spinner" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
-        <div class="winning-card-img-overlay"></div>
-        <div class="winning-card-tag">2017 · Viral</div>
-      </div>
-      <div class="winning-card-body">
-        <div class="winning-card-name">🌀 The Fidget Spinner</div>
-        <div class="winning-card-teaser">A £1.50 toy that became a £500 million global craze in 12 weeks. Thousands of ordinary sellers made fortunes — most had never run a store before.</div>
-        <div class="winning-card-stat">
-          <div class="winning-stat-box"><span>Market size</span><b>£500M+</b></div>
-          <div class="winning-stat-box"><span>Peak window</span><b>8 weeks</b></div>
+    <div class="stories-grid">
+      <div class="story-card">
+        <div class="story-card-img">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_07_31%20PM.png" alt="Fidget spinner" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
+          <div class="story-card-img-overlay"></div>
+          <div class="story-card-tag">2017 · Viral</div>
         </div>
-        <button class="winning-expand-btn" onclick="toggleStory('fidget',this)"><span>📖</span> How did this take the world by storm?</button>
-        <div class="winning-story" id="story-fidget">
-          <p>In early 2017, a small number of dropshippers noticed something unusual — a simple spinning toy quietly picking up traction on AliExpress. Orders were creeping up. Reviews were growing. A handful listed it for £12–£18. Cost price: under £1.50.</p>
-          <p>Within 6 weeks it had exploded. Every school in the UK had them. Parents were bulk buying. Amazon sold out daily. Sellers who got in early were doing £10,000–£50,000 weeks from a spinner that cost less than a coffee.</p>
-          <p>By week 10 it was everywhere. Margins collapsed. The window had closed. The early movers had already made their money and moved on.</p>
-          <div class="drh-note">💡 The sellers who won found the fidget spinner <span>weeks before it went viral</span>. DropResearch Hub didn't exist in 2017. It does now. <span>The next one is already emerging.</span></div>
+        <div class="story-card-body">
+          <div class="story-card-name">🌀 The Fidget Spinner</div>
+          <div class="story-card-teaser">A £1.50 toy. A £500M global craze. Thousands of ordinary sellers made fortunes in 8 weeks — most had never run a store before.</div>
+          <div class="story-stats">
+            <div class="story-stat"><span>Market size</span><b>£500M+</b></div>
+            <div class="story-stat"><span>Peak window</span><b>8 weeks</b></div>
+          </div>
+          <button class="story-expand-btn" onclick="toggleStory('fidget',this)">📖 Read the full story</button>
+          <div class="story-body" id="story-fidget">
+            <p>In early 2017, a small number of sellers noticed something unusual on AliExpress — a simple spinning toy, orders quietly creeping up. They listed it for £12–£18. Cost price: under £1.50.</p>
+            <p>Within 6 weeks it had exploded. Every school in the UK had them. Amazon sold out daily. Sellers who got in early were doing £10,000–£50,000 weeks from a spinner that cost less than a coffee.</p>
+            <p>By week 10 it was everywhere. Margins collapsed. The window had closed. The early movers had already made their money and moved on.</p>
+            <div class="story-drh-note">💡 The sellers who won found the fidget spinner <span>weeks before it went viral</span>. DropResearch Hub didn't exist in 2017. <span>It does now. The next one is already emerging.</span></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="winning-card">
-      <div class="winning-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_08_39%20PM.png" alt="Posture corrector back" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
-        <div class="winning-card-img-overlay"></div>
-        <div class="winning-card-tag">2019 · Problem Solver</div>
-      </div>
-      <div class="winning-card-body">
-        <div class="winning-card-name">🦴 The Posture Corrector</div>
-        <div class="winning-card-teaser">A £3 piece of elastic. Sold for £25–£35. Work-from-home culture turned it into a £30 million market that unknown sellers dominated for months.</div>
-        <div class="winning-card-stat">
-          <div class="winning-stat-box"><span>Market size</span><b>£30M+</b></div>
-          <div class="winning-stat-box"><span>Peak window</span><b>12 weeks</b></div>
+      <div class="story-card">
+        <div class="story-card-img">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_08_39%20PM.png" alt="Posture corrector" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
+          <div class="story-card-img-overlay"></div>
+          <div class="story-card-tag">2019 · Problem Solver</div>
         </div>
-        <button class="winning-expand-btn" onclick="toggleStory('posture',this)"><span>📖</span> How did this take the world by storm?</button>
-        <div class="winning-story" id="story-posture">
-          <p>In 2019, remote work was rising. Back pain searches on Google were quietly trending upward. A product that had existed on AliExpress for years — a simple posture brace — suddenly had a massive new audience of desk workers.</p>
-          <p>Early sellers spotted the Google Trends movement. They listed the product, shot a simple before/after video on their phone, and ran £20/day Facebook ads. Return on ad spend hit 4x, 5x, 6x. They scaled fast.</p>
-          <p>By the time the mainstream caught on, first-movers had built branded stores, collected thousands of reviews, and owned the ad space. Latecomers paid double for ads with half the return.</p>
-          <div class="drh-note">💡 This product was on AliExpress for 3 years before it blew up. <span>The timing was everything.</span> DropResearch Hub is built to find the next posture corrector <span>before the timing passes.</span></div>
+        <div class="story-card-body">
+          <div class="story-card-name">🦴 The Posture Corrector</div>
+          <div class="story-card-teaser">A £3 piece of elastic sold for £25–£35. Work-from-home culture turned it into a £30M market that unknown sellers dominated for months.</div>
+          <div class="story-stats">
+            <div class="story-stat"><span>Market size</span><b>£30M+</b></div>
+            <div class="story-stat"><span>Peak window</span><b>12 weeks</b></div>
+          </div>
+          <button class="story-expand-btn" onclick="toggleStory('posture',this)">📖 Read the full story</button>
+          <div class="story-body" id="story-posture">
+            <p>In 2019, remote work was rising. Back pain searches on Google were quietly trending. A product that had existed on AliExpress for years suddenly had a massive new audience.</p>
+            <p>Early sellers spotted the Google Trends movement. They listed the product, shot a simple before/after video, and ran £20/day Facebook ads. ROAS hit 4x, 5x, 6x. They scaled fast.</p>
+            <p>By the time the mainstream caught on, first-movers had built branded stores, collected thousands of reviews, and owned the ad space. Latecomers paid double for half the return.</p>
+            <div class="story-drh-note">💡 This product was on AliExpress for 3 years before it blew up. <span>The timing was everything.</span> DropResearch Hub is built to find the next posture corrector <span>before the timing passes.</span></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="winning-card">
-      <div class="winning-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_10_24%20PM.png" alt="Reusable metal straws eco" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
-        <div class="winning-card-img-overlay"></div>
-        <div class="winning-card-tag">2018 · Eco Trend</div>
-      </div>
-      <div class="winning-card-body">
-        <div class="winning-card-name">🌿 Reusable Metal Straws</div>
-        <div class="winning-card-teaser">A viral video changed consumer behaviour overnight. Sellers with metal straws in stock sold out in 48 hours. Cost: 30p. Sale price: £8–£12.</div>
-        <div class="winning-card-stat">
-          <div class="winning-stat-box"><span>Margin</span><b>90%+</b></div>
-          <div class="winning-stat-box"><span>Peak window</span><b>6 weeks</b></div>
+      <div class="story-card">
+        <div class="story-card-img">
+          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_10_24%20PM.png" alt="Metal straws" onerror="this.parentElement.style.background='#f3f4f6';this.style.display='none'"/>
+          <div class="story-card-img-overlay"></div>
+          <div class="story-card-tag">2018 · Eco Trend</div>
         </div>
-        <button class="winning-expand-btn" onclick="toggleStory('straws',this)"><span>📖</span> How did this take the world by storm?</button>
-        <div class="winning-story" id="story-straws">
-          <p>In 2018, a video of a plastic straw being removed from a sea turtle's nose went viral. Within 24 hours, Google searches for "reusable straws" exploded. The UK government was talking about plastic bans.</p>
-          <p>Sellers who had been watching eco trends on AliExpress already had metal straws in their stores. They didn't scramble — they turned on their ads. Overnight, those stores were doing thousands of orders at 90%+ margins.</p>
-          <p>Within 3 weeks, every major retailer had caught up. But the dropshippers had already cashed out and moved on to the next thing.</p>
-          <div class="drh-note">💡 The sellers who won <span>weren't lucky</span> — they were watching the right signals. <span>DropResearch Hub watches those signals for you, every single week.</span></div>
+        <div class="story-card-body">
+          <div class="story-card-name">🌿 Reusable Metal Straws</div>
+          <div class="story-card-teaser">A viral video changed consumer behaviour overnight. Sellers with stock sold out in 48 hours. Cost: 30p. Sale price: £8–£12. Margin: 90%+.</div>
+          <div class="story-stats">
+            <div class="story-stat"><span>Margin</span><b>90%+</b></div>
+            <div class="story-stat"><span>Peak window</span><b>6 weeks</b></div>
+          </div>
+          <button class="story-expand-btn" onclick="toggleStory('straws',this)">📖 Read the full story</button>
+          <div class="story-body" id="story-straws">
+            <p>In 2018, a video of a plastic straw being removed from a sea turtle's nose went viral. Within 24 hours, Google searches for "reusable straws" exploded. The UK government talked about plastic bans.</p>
+            <p>Sellers who had been watching eco trends on AliExpress already had metal straws in their stores. They didn't scramble — they turned on their ads. Overnight, those stores were doing thousands of orders at 90%+ margins.</p>
+            <p>Within 3 weeks, every major retailer had caught up. But the dropshippers had already cashed out and moved on.</p>
+            <div class="story-drh-note">💡 The sellers who won <span>weren't lucky</span> — they were watching the right signals. <span>DropResearch Hub watches those signals for you, every single week.</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="preview">
-  <h2 class="preview-title">Inside DropResearch Hub.</h2>
-  <p class="preview-sub">This is what members see every week — products scored, validated and ready to research before they blow up.</p>
-  <div class="preview-grid">
-    <div class="preview-card">
-      <div class="preview-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_44_06%20PM.png" alt="Neck fan portable" onerror="this.parentElement.style.background='linear-gradient(135deg,#dbeafe,#eff6ff)';this.style.display='none'"/>
-        <div class="preview-card-badge-g">Grade A+</div>
-        <div class="preview-card-badge-s">Strong Opportunity</div>
+<!-- SOCIAL PROOF -->
+<section class="proof">
+  <div class="proof-inner">
+    <div class="proof-header">
+      <div class="section-eyebrow" style="color:var(--gold)">Early access feedback</div>
+      <h2 class="section-title">What early testers said.</h2>
+      <p class="section-sub">DropResearch Hub is newly launched. These are real quotes from people who tested the platform before public launch.</p>
+      <div class="proof-disclaimer">Early access testers — not yet paying members</div>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"This actually found something before it blew up on TikTok — that's the whole point, isn't it? Saved me hours of scrolling."</div>
+        <div class="proof-person"><div class="proof-avatar">J</div><div><div class="proof-name">James</div><div class="proof-role">TikTok seller · Early access tester</div></div></div>
       </div>
-      <div class="preview-card-body">
-        <div class="preview-card-name">Smart Car Diffuser</div>
-        <div class="preview-card-niche">Lifestyle · Evergreen</div>
-        <div class="preview-card-scores">
-          <div class="preview-score"><div class="preview-score-label">Trend</div><div class="preview-score-val" style="color:var(--navy)">84</div></div>
-          <div class="preview-score"><div class="preview-score-label">Problem</div><div class="preview-score-val" style="color:var(--green)">86</div></div>
-          <div class="preview-score"><div class="preview-score-label">Sat.</div><div class="preview-score-val" style="color:var(--green);font-size:10px">Low</div></div>
-        </div>
-        <div class="preview-locked">
-          <div class="preview-locked-inner"><div style="font-size:10px;font-weight:700;color:var(--navy)">TikTok angle · Meta angle · Ad scripts</div></div>
-          <div class="preview-locked-overlay"><div class="lock-icon">🔒</div><span>Members only</span><small>Start trial to unlock</small></div>
-        </div>
-        <button class="preview-card-btn" onclick="window.location.href='signup.html'">Analyse this product</button>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"The scoring breakdown actually makes sense — finally something that explains why a product is worth testing, not just that it is."</div>
+        <div class="proof-person"><div class="proof-avatar">R</div><div><div class="proof-name">Ryan</div><div class="proof-role">Dropshipper · Early access tester</div></div></div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"Had a full store concept and ad angles in under a minute. Would've taken me a weekend to pull that together myself."</div>
+        <div class="proof-person"><div class="proof-avatar">S</div><div><div class="proof-name">Sophie</div><div class="proof-role">Brand builder · Early access tester</div></div></div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"Being UK-focused matters more than I expected. Other tools I've used clearly just recycle US research and call it done."</div>
+        <div class="proof-person"><div class="proof-avatar">M</div><div><div class="proof-name">Michael</div><div class="proof-role">eCommerce seller · Early access tester</div></div></div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"The validator caught a couple of bad picks before I wasted any ad spend on them. That alone is worth the subscription."</div>
+        <div class="proof-person"><div class="proof-avatar">A</div><div><div class="proof-name">Aisha</div><div class="proof-role">Dropshipper · Early access tester</div></div></div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"Simple to use even as someone who'd never run a store before. Nothing assumes you already know what you're doing."</div>
+        <div class="proof-person"><div class="proof-avatar">T</div><div><div class="proof-name">Tom</div><div class="proof-role">Beginner seller · Early access tester</div></div></div>
       </div>
     </div>
-    <div class="preview-card">
-      <div class="preview-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_12_28%20PM.png" alt="Food storage kitchen" onerror="this.parentElement.style.background='linear-gradient(135deg,#f0fdf4,#dcfce7)';this.style.display='none'"/>
-        <div class="preview-card-badge-g" style="background:var(--gold);color:var(--navy-dark)">Grade A</div>
-        <div class="preview-card-badge-s">Watch List</div>
-      </div>
-      <div class="preview-card-body">
-        <div class="preview-card-name">Silicone Food Wrap Set</div>
-        <div class="preview-card-niche">Kitchen · Evergreen</div>
-        <div class="preview-card-scores">
-          <div class="preview-score"><div class="preview-score-label">Trend</div><div class="preview-score-val" style="color:var(--navy)">78</div></div>
-          <div class="preview-score"><div class="preview-score-label">Problem</div><div class="preview-score-val" style="color:var(--green)">82</div></div>
-          <div class="preview-score"><div class="preview-score-label">Sat.</div><div class="preview-score-val" style="color:var(--amber);font-size:10px">Med</div></div>
-        </div>
-        <div class="preview-locked">
-          <div class="preview-locked-inner"><div style="font-size:10px;font-weight:700;color:var(--navy)">TikTok angle · Meta angle · Ad scripts</div></div>
-          <div class="preview-locked-overlay"><div class="lock-icon">🔒</div><span>Members only</span><small>Start trial to unlock</small></div>
-        </div>
-        <button class="preview-card-btn" onclick="window.location.href='signup.html'">Analyse this product</button>
-      </div>
-    </div>
-    <div class="preview-card">
-      <div class="preview-card-img">
-        <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_13_23%20PM.png" alt="Scalp hair beauty" onerror="this.parentElement.style.background='linear-gradient(135deg,#fdf4ff,#f3e8ff)';this.style.display='none'"/>
-        <div class="preview-card-badge-g">Grade A+</div>
-        <div class="preview-card-badge-s">Strong Opportunity</div>
-      </div>
-      <div class="preview-card-body">
-        <div class="preview-card-name">LED Scalp Massager</div>
-        <div class="preview-card-niche">Beauty · Evergreen</div>
-        <div class="preview-card-scores">
-          <div class="preview-score"><div class="preview-score-label">Trend</div><div class="preview-score-val" style="color:var(--navy)">86</div></div>
-          <div class="preview-score"><div class="preview-score-label">Problem</div><div class="preview-score-val" style="color:var(--green)">91</div></div>
-          <div class="preview-score"><div class="preview-score-label">Sat.</div><div class="preview-score-val" style="color:var(--green);font-size:10px">Low</div></div>
-        </div>
-        <div class="preview-locked">
-          <div class="preview-locked-inner"><div style="font-size:10px;font-weight:700;color:var(--navy)">TikTok angle · Meta angle · Ad scripts</div></div>
-          <div class="preview-locked-overlay"><div class="lock-icon">🔒</div><span>Members only</span><small>Start trial to unlock</small></div>
-        </div>
-        <button class="preview-card-btn" onclick="window.location.href='signup.html'">Analyse this product</button>
-      </div>
-    </div>
-  </div>
-  <div class="preview-cta">
-    <a href="signup.html" class="btn-primary">Start your free 7-day trial — see the full feed →</a>
-    <p>7 days free · Then £24.99/month · Cancel anytime</p>
   </div>
 </section>
 
+<!-- FEATURES -->
 <section class="features">
-  <div class="center">
-    <div class="section-label">What you get</div>
-    <h2 class="section-title">Everything you need to find and launch winning products.</h2>
-  </div>
-  <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">📈</div><h3>Weekly emerging product feed</h3><p>3–5 validated emerging products every week, scored across 12 criteria. Fresh opportunities before they hit mainstream radar.</p></div>
-    <div class="feature-card"><div class="feature-icon">🎯</div><h3>12-point validation framework</h3><p>Every product scored on problem-solving, video potential, margin strength, competition risk and more. Only the best make the cut.</p></div>
-    <div class="feature-card"><div class="feature-icon">🎬</div><h3>Ad creative scripts</h3><p>3 ready-to-use TikTok and Meta ad script variations per product — hook, middle, CTA — ready to hand to a creator or film yourself.</p></div>
-    <div class="feature-card"><div class="feature-icon">🔍</div><h3>Research hub per product</h3><p>Direct links to Meta Ads Library, TikTok Search, Google Trends, Amazon UK and AliExpress — all pre-searched for each product.</p></div>
-    <div class="feature-card"><div class="feature-icon">✅</div><h3>Product validator</h3><p>Found a product yourself? Paste any URL or name and get a full Hub assessment — opportunity score, risks, angles and verdict.</p></div>
-    <div class="feature-card"><div class="feature-icon">🇬🇧</div><h3>UK-focused intelligence</h3><p>Built specifically for UK dropshippers. UK Google Trends data, UK pricing, UK competition — not recycled US research.</p></div>
-    <div class="feature-card"><div class="feature-icon">🚀</div><h3>Launch plan builder</h3><p>Hub builds your store concept — name, colours, hero copy — plus a week-by-week 4-week launch roadmap specific to your product.</p></div>
-    <div class="feature-card"><div class="feature-icon">🌍</div><h3>UK Market Pulse</h3><p>Hub's weekly read on UK market conditions — which niches are heating up, what's approaching saturation, and where opportunity is moving next.</p></div>
-    <div class="feature-card"><div class="feature-icon">⚖️</div><h3>Product comparison report</h3><p>Save products and compare any two side by side. Hub tells you which one he'd back and exactly why.</p></div>
+  <div class="features-inner">
+    <div style="text-align:center;max-width:580px;margin:0 auto">
+      <div class="section-eyebrow">Everything included</div>
+      <h2 class="section-title">One membership. The full toolkit.</h2>
+      <p class="section-sub" style="margin:0 auto">Every feature included from day one. No add-ons, no tiers, no upgrades.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">📈</div><h3>Weekly emerging product feed</h3><p>3–5 validated picks every Monday. Scored, researched and ready — before the market finds them.</p></div>
+      <div class="feature-card"><div class="feature-icon">🎯</div><h3>12-point validation framework</h3><p>Every product scored on problem-solving, video potential, margin strength, competition risk and more. Only the best make the cut.</p></div>
+      <div class="feature-card"><div class="feature-icon">🎬</div><h3>Ad creative scripts</h3><p>3 ready-to-use TikTok and Meta ad script variations per product — hook, middle, CTA — ready to film or send to a creator.</p></div>
+      <div class="feature-card"><div class="feature-icon">✅</div><h3>Product validator</h3><p>Found something yourself? Paste any URL or product name and get Hub's full assessment — score, risks, angles and verdict.</p></div>
+      <div class="feature-card"><div class="feature-icon">💰</div><h3>Unit Economics Engine</h3><p>Model three profit scenarios before you spend a penny. Conservative, realistic and aggressive — with break-even and ROAS targets.</p></div>
+      <div class="feature-card"><div class="feature-icon">🚀</div><h3>Launch plan builder</h3><p>Hub builds your store concept — name, colours, hero copy — plus a 4-week launch roadmap specific to your product.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌍</div><h3>UK Market Pulse</h3><p>Hub's weekly read on UK conditions — which niches are heating up, what's approaching saturation, where opportunity is moving.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚖️</div><h3>Product comparison</h3><p>Save products and compare any two side by side. Hub tells you which one he'd back and exactly why.</p></div>
+      <div class="feature-card"><div class="feature-icon">🇬🇧</div><h3>UK-focused intelligence</h3><p>Built for UK sellers. UK Google Trends data, UK pricing benchmarks, UK competition — not recycled US research.</p></div>
+    </div>
   </div>
 </section>
 
+<!-- PRICING -->
 <section class="pricing" id="pricing">
-  <div class="center">
-    <div class="section-label">Pricing</div>
+  <div style="text-align:center;max-width:560px;margin:0 auto">
+    <div class="section-eyebrow">Pricing</div>
     <h2 class="section-title">Simple. No hidden fees.</h2>
     <p class="section-sub" style="margin:0 auto">One plan. Everything included. Cancel anytime.</p>
   </div>
-  <div class="pricing-card">
-    <div class="pricing-badge">🔥 Most popular</div>
-    <div class="pricing-trial">Start free for 7 days</div>
-    <div class="pricing-then">Then just <strong>£24.99/month</strong></div>
-    <div class="pricing-features">
-      <div class="pricing-feature">Weekly emerging product feed (3–5 products)</div>
-      <div class="pricing-feature">Full 12-point scoring breakdown per product</div>
-      <div class="pricing-feature">TikTok + Meta ad angles for every product</div>
-      <div class="pricing-feature">3 ad creative script variations per product</div>
-      <div class="pricing-feature">Unlimited product validator</div>
-      <div class="pricing-feature">Launch plan builder — store concept + roadmap</div>
-      <div class="pricing-feature">Growth projection charts with entry window</div>
-      <div class="pricing-feature">UK Market Pulse — weekly intelligence</div>
-      <div class="pricing-feature">Product comparison report</div>
-      <div class="pricing-feature">Profit calculator per product</div>
-      <div class="pricing-feature">Research hub with pre-searched links</div>
-      <div class="pricing-feature">UK-focused market intelligence</div>
-      <div class="pricing-feature">Cancel anytime — no questions asked</div>
+  <div class="pricing-inner">
+    <div class="pricing-card">
+      <div class="pricing-badge">🔥 Most popular</div>
+      <div class="pricing-trial">Start free for 7 days</div>
+      <div class="pricing-then">Then just <strong>£24.99/month</strong></div>
+      <div class="pricing-features">
+        <div class="pricing-feature">Weekly emerging product feed (3–5 products)</div>
+        <div class="pricing-feature">Full 12-point scoring breakdown per product</div>
+        <div class="pricing-feature">TikTok + Meta ad angles for every product</div>
+        <div class="pricing-feature">3 ad creative script variations per product</div>
+        <div class="pricing-feature">Unlimited product validator</div>
+        <div class="pricing-feature">Launch plan builder — store concept + roadmap</div>
+        <div class="pricing-feature">Unit Economics Engine — model your profits</div>
+        <div class="pricing-feature">UK Market Pulse — weekly intelligence</div>
+        <div class="pricing-feature">Product comparison report</div>
+        <div class="pricing-feature">UK-focused market intelligence</div>
+        <div class="pricing-feature">Cancel anytime — no questions asked</div>
+      </div>
+      <a href="signup.html" class="pricing-cta">Start my free trial →</a>
+      <div class="pricing-note">No charge for 7 days. Card required to start. Cancel anytime before day 8 and you won't pay a thing.</div>
     </div>
-    <a href="signup.html" class="pricing-cta">Start your free 7-day trial →</a>
-    <div class="pricing-note">Card required to start trial. You won't be charged until day 8. Cancel anytime before then.</div>
   </div>
 </section>
 
+<!-- FAQ -->
 <section class="faq" id="faq">
-  <div class="center">
-    <div class="section-label">FAQ</div>
-    <h2 class="section-title">Common questions.</h2>
-  </div>
-  <div class="faq-list">
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need experience to use DropResearch Hub? <span>+</span></button><div class="faq-a">No. DropResearch Hub is built specifically for beginners. Every product comes with the research, the angles, the scripts and the supplier search terms — you don't need to know how to do any of this yourself.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Who is Hub? <span>+</span></button><div class="faq-a">Hub is the product of over 100 hours of research by the team behind DropResearch Hub into one question: what actually separates a product that's about to take off from one that's already everywhere? Most tools show you what's already crowded — products other sellers found first. Hub's job is to find them earlier, while there's still real space to build a brand around them. He scans the market every week, scores every product, and answers your questions — whether that's validating a product you found, writing your ad scripts, or building your launch plan. He's built into every part of the platform.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How is this different from just searching social media market places? <span>+</span></button><div class="faq-a">By the time something is trending on social media market places, it's already too late. DropResearch Hub surfaces products in the 4–8 week window before they go viral — when competition is low and margins are still strong.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How many products do I get each week? <span>+</span></button><div class="faq-a">Members get several validated emerging products per week, only if we can precisely find validated emerging products, if we find 20 we upload you 20 products, each with a full analysis report, scoring breakdown, ad angles and creative scripts.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What does the free trial include? <span>+</span></button><div class="faq-a">During your 7-day trial you get a real look at the platform — enough to see exactly what Hub does and how the research works, before you decide to subscribe. Full access, every feature and the complete weekly product feed, unlocks once you're a member.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel at any time? <span>+</span></button><div class="faq-a">Yes. Cancel anytime from your account page. No questions, no hassle, no hidden fees. If you cancel during the trial, you won't be charged at all.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is this UK-specific? <span>+</span></button><div class="faq-a">Yes — built for UK dropshippers, social media market place sellers and ecommerce entrepreneur's.However the platform is relevant for the tools we offer globally</div></div>
+  <div class="faq-inner">
+    <div style="text-align:center">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 class="section-title">Common questions.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What exactly is DropResearch Hub? <span>+</span></button><div class="faq-a">DropResearch Hub is a weekly product research membership. Every week Hub — the platform's research character — finds 3–5 emerging products before they peak, scores them on a 12-point framework and delivers a full research report to members. It also includes a product validator, launch plan builder, ad script generator and UK Market Pulse. Think of it as having a dedicated product researcher who works every week so you don't have to.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How is this different from a product spy tool like Minea? <span>+</span></button><div class="faq-a">Spy tools show you what's already selling everywhere — by the time it appears in their database, thousands of sellers have already found it. DropResearch Hub finds products in the 4–8 week window before they reach mainstream awareness, when saturation is still low and margin is still strong. It's the difference between being first and being late.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is this only for dropshippers? <span>+</span></button><div class="faq-a">No. DropResearch Hub works for anyone looking to capitalise on emerging product trends — dropshippers, TikTok Shop sellers, UGC creators looking for products to build content around, Amazon sellers, brand builders, and anyone who wants to find the right product before the market gets crowded.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need experience to use it? <span>+</span></button><div class="faq-a">No experience needed. Every product comes with the research, the angles, the scripts and the supplier terms already done. You don't need to know how to do any of this yourself — Hub does it for you.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How many products do I get each week? <span>+</span></button><div class="faq-a">Hub publishes products when they pass the 12-point framework — typically 3–5 per week. Quality over quantity. If Hub finds 10 that pass, you get 10. If only 2 pass that week, you get 2. The point is that every product that reaches your feed has earned its place.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What does the free trial include? <span>+</span></button><div class="faq-a">During your 7-day trial you get access to the platform and enough to understand exactly what Hub does and how the research works. Full access to every feature and the complete weekly product feed unlocks as a paying member.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel at any time? <span>+</span></button><div class="faq-a">Yes. Cancel anytime from your account page. No questions, no hassle, no fees. Cancel during the trial and you won't be charged at all.</div></div>
+    </div>
   </div>
 </section>
 
+<!-- FINAL CTA -->
 <section class="final-cta">
-  <h2>The next winning product<br><span>is already emerging.</span></h2>
-  <p>The question is whether you find it in week 1 or week 8. Start your free trial today.</p>
-  <a href="signup.html" class="btn-primary" style="font-size:17px;padding:18px 36px;position:relative">Start your free 7-day trial →</a>
-  <div class="final-cta-note">7 days free · Then £24.99/month · Cancel anytime · No commitment</div>
+  <div class="final-cta-inner">
+    <h2>Stop joining trends.<br><em>Start them.</em></h2>
+    <p>Hub finds the product in week one. The hashtag arrives in week eight. Start your free trial today and be on the right side of that gap.</p>
+    <a href="signup.html" class="btn-primary" style="font-size:16px;padding:18px 36px;margin:0 auto">Start my free 7-day trial →</a>
+    <div class="final-cta-note">No charge for 7 days · Then £24.99/month · Cancel anytime</div>
+  </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div>
@@ -1027,13 +913,13 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1p
         </div>
         <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
       </a>
-      <p class="footer-brand-copy">Find emerging product opportunities before the market gets crowded. Built for UK ecommerce entrepreneurs who want better product research, not guesswork.</p>
+      <p class="footer-brand-copy">Find emerging product opportunities before the market gets crowded. Built for UK sellers who want better research, not guesswork.</p>
     </div>
     <div class="footer-col">
       <h4>Platform</h4>
       <div class="footer-links">
         <a href="#how">How it works</a>
-        <a href="#products">Products</a>
+        <a href="#platform">The platform</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
         <a href="signup.html">Start free trial</a>
@@ -1053,10 +939,9 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1p
       <h4>Support</h4>
       <div class="footer-links">
         <a href="contact.html">Contact</a>
-        <a href="members.html">Members area</a>
         <a href="login.html">Login</a>
+        <a href="members.html">Members area</a>
       </div>
-      <p class="footer-support-note">Questions about your subscription, account access or product research? Use the contact page and we'll point you in the right direction.</p>
     </div>
   </div>
   <div class="footer-bottom">
@@ -1067,29 +952,43 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;color:#fff;border-top:1p
 
 <script>
 function toggleStory(id, btn) {
-  const story = document.getElementById('story-' + id);
-  const isOpen = story.classList.contains('open');
-  document.querySelectorAll('.winning-story').forEach(s => s.classList.remove('open'));
-  document.querySelectorAll('.winning-expand-btn').forEach(b => { b.style.background=''; b.style.color=''; });
-  if (!isOpen) { story.classList.add('open'); btn.style.background='var(--gold)'; btn.style.color='var(--navy-dark)'; }
+  const body = document.getElementById('story-' + id);
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.story-body').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('.story-expand-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { body.classList.add('open'); btn.classList.add('open'); btn.textContent = '✕ Close'; }
+  else { btn.innerHTML = '📖 Read the full story'; }
 }
+
 function toggleFaq(btn) {
   const answer = btn.nextElementSibling;
-  const span = btn.querySelector('span');
   const isOpen = answer.classList.contains('open');
   document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
-  document.querySelectorAll('.faq-q span').forEach(s => s.textContent = '+');
-  if (!isOpen) { answer.classList.add('open'); span.textContent = '×'; }
+  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
 }
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-step').forEach(el => {
-  el.style.opacity = '0'; el.style.transform = 'translateY(24px)'; el.style.transition = 'opacity .5s, transform .5s';
-  observer.observe(el);
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.mock-product-card, .feature-card, .story-card, .proof-card, .how-step-card, .notaspy-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  revealObserver.observe(el);
 });
 </script>
-  <script>
+
+<!-- Analytics -->
+<script>
 (function () {
   function getDeviceType() {
     const w = window.innerWidth;
@@ -1097,16 +996,14 @@ document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-s
     if (w < 1024) return 'tablet';
     return 'desktop';
   }
-
   function getBrowser() {
     const ua = navigator.userAgent;
-    if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
-    if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
     if (ua.includes('Edg')) return 'Edge';
     if (ua.includes('Firefox')) return 'Firefox';
+    if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+    if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
     return 'Other';
   }
-
   function getSessionId() {
     let id = sessionStorage.getItem('drh_analytics_session');
     if (!id) {
@@ -1115,9 +1012,7 @@ document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-s
     }
     return id;
   }
-
   const params = new URLSearchParams(window.location.search);
-
   fetch('/api/analytics', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1131,10 +1026,7 @@ document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-s
       device_type: getDeviceType(),
       browser: getBrowser(),
       session_id: getSessionId(),
-      metadata: {
-        title: document.title,
-        url: window.location.href
-      }
+      metadata: { title: document.title, url: window.location.href }
     })
   }).catch(function () {});
 })();
