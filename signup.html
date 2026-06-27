@@ -43,6 +43,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
 .form-submit:hover{background:var(--gold-light);transform:translateY(-1px)}
 .form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .form-note{font-size:12px;color:var(--g400);text-align:center;margin-top:14px;line-height:1.5}
+.form-note strong{color:var(--g500)}
 .form-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--g300);font-size:12px}
 .form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--g200)}
 .login-link{text-align:center;font-size:14px;color:var(--g500)}
@@ -63,7 +64,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
   </a>
   <a href="index.html" class="nav-back">← Back to homepage</a>
 </nav>
-
 <div class="page">
   <div class="page-left">
     <div class="trial-badge">🎯 7-day free trial</div>
@@ -84,11 +84,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
       <div class="trust-item"><span>UK-focused</span> research</div>
     </div>
   </div>
-
   <div class="page-right">
     <div id="form-section">
       <div class="form-title">Create your account</div>
-      <div class="form-sub">Fill in your details then you'll be taken to secure payment.</div>
+      <div class="form-sub">Fill in your details to start your 7-day free trial.</div>
       <div class="error-msg" id="error-msg"></div>
       <div class="form-group">
         <label class="form-label">Full name</label>
@@ -106,80 +105,66 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
         <label class="form-label">Confirm password</label>
         <input class="form-input" type="password" id="confirm-password" placeholder="Repeat your password" autocomplete="new-password"/>
       </div>
-      <button class="form-submit" id="submit-btn" onclick="handleSignup()">Continue to payment →</button>
-      <div class="form-note">By signing up you agree to our Terms of Service.<br>Your card won't be charged until after your 7-day trial.</div>
+      <button class="form-submit" id="submit-btn" onclick="handleSignup()">Start my free trial →</button>
+      <div class="form-note"><strong>No charge for 7 days.</strong> Then £24.99/month — cancel anytime.<br>By signing up you agree to our Terms of Service.</div>
       <div class="form-divider">already have an account?</div>
       <div class="login-link"><a href="login.html">Sign in to your account →</a></div>
     </div>
   </div>
 </div>
-
 <script>
 function showError(msg) {
   const el = document.getElementById('error-msg');
   el.textContent = msg;
   el.classList.add('show');
 }
-
 async function handleSignup() {
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const confirm = document.getElementById('confirm-password').value;
   const btn = document.getElementById('submit-btn');
-
   document.getElementById('error-msg').classList.remove('show');
-
   if (!name) { showError('Please enter your full name.'); return; }
   if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
   if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
   if (password !== confirm) { showError('Passwords do not match.'); return; }
-
   btn.disabled = true;
-  btn.textContent = 'Creating your account...';
-
+  btn.textContent = 'Setting up your trial...';
   try {
-    // Register user in Supabase first
     const regRes = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'register', email, name, password })
     });
     const regData = await regRes.json();
-
     if (!regRes.ok) {
       showError(regData.error || 'Registration failed. Please try again.');
       btn.disabled = false;
-      btn.textContent = 'Continue to payment →';
+      btn.textContent = 'Start my free trial →';
       return;
     }
-
-    // Store user info in session
     sessionStorage.setItem('drh_pending_email', email);
     sessionStorage.setItem('drh_pending_name', name);
-
-    // Then redirect to Stripe checkout
     const stripeRes = await fetch('/api/stripe-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, name })
     });
     const stripeData = await stripeRes.json();
-
     if (stripeData.url) {
       window.location.href = stripeData.url;
     } else {
-      showError(stripeData.error || 'Payment setup failed. Please try again.');
+      showError(stripeData.error || 'Could not start trial. Please try again.');
       btn.disabled = false;
-      btn.textContent = 'Continue to payment →';
+      btn.textContent = 'Start my free trial →';
     }
   } catch(e) {
     showError('Something went wrong. Please try again.');
     btn.disabled = false;
-    btn.textContent = 'Continue to payment →';
+    btn.textContent = 'Start my free trial →';
   }
 }
-
 document.getElementById('confirm-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') handleSignup();
 });
