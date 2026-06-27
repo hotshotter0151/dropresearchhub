@@ -1027,21 +1027,42 @@ function analyticsStartDate() {
 async function loadAnalytics() {
   const section = document.getElementById('analytics');
   if (!section || !section.classList.contains('active')) return;
+
+  setText('ana-visitors', '...');
+  setText('ana-pageviews', '...');
+  setText('ana-trials', '...');
+  const live = document.getElementById('ana-live');
+  if (live) live.innerHTML = '<span class="analytics-live-dot"></span>...';
+
   try {
-    // Load the latest events first, then apply the date range in the browser.
-    // This avoids timezone issues where Supabase returns [] even though events exist.
-    const rows = await sbFetch(`analytics_events?select=event_name,page_path,referrer,source,medium,campaign,device_type,browser,session_id,created_at&order=created_at.desc&limit=1000`);
-    const sinceTs = new Date(analyticsStartDate()).getTime();
-    const filteredRows = (rows || []).filter(r => {
-      const ts = new Date(r.created_at).getTime();
-      return Number.isFinite(ts) && ts >= sinceTs;
+    // Read analytics through a secure server route.
+    // The browser/public Supabase key can insert rows but may return [] because of table policies.
+    const res = await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store'
     });
-    renderAnalytics(filteredRows);
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || data.details || `Analytics API error ${res.status}`);
+
+    const rows = Array.isArray(data.events) ? data.events : [];
+    renderAnalytics(rows);
   } catch(e) {
     const msg = `Analytics could not load: ${e.message}`;
-    ['ana-sources','ana-devices','ana-browsers'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML = `<div class="analytics-empty">⚠️ ${msg}</div>`; });
-    const pages=document.getElementById('ana-pages'); if(pages) pages.innerHTML = `<tr><td colspan="3" class="table-empty">⚠️ ${msg}</td></tr>`;
-    const events=document.getElementById('ana-events'); if(events) events.innerHTML = `<tr><td colspan="5" class="table-empty">⚠️ ${msg}</td></tr>`;
+    setText('ana-visitors', '0');
+    setText('ana-pageviews', '0');
+    setText('ana-trials', '0');
+    const live = document.getElementById('ana-live');
+    if (live) live.innerHTML = '<span class="analytics-live-dot"></span>0';
+    ['ana-sources','ana-devices','ana-browsers'].forEach(id => {
+      const el=document.getElementById(id);
+      if(el) el.innerHTML = `<div class="analytics-empty">⚠️ ${msg}</div>`;
+    });
+    const pages=document.getElementById('ana-pages');
+    if(pages) pages.innerHTML = `<tr><td colspan="3" class="table-empty">⚠️ ${msg}</td></tr>`;
+    const events=document.getElementById('ana-events');
+    if(events) events.innerHTML = `<tr><td colspan="5" class="table-empty">⚠️ ${msg}</td></tr>`;
   }
 }
 
