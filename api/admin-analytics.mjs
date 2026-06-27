@@ -1,22 +1,12 @@
-Got you. Here it is in the copyable format.
-
-**admin-analytics.mjs**
-
-```javascript
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== "GET") {
-    return res.status(405).json({
-      error: "Method not allowed",
-      message: "Use GET only"
-    });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -25,18 +15,16 @@ export default async function handler(req, res) {
 
     if (!supabaseUrl || !serviceRoleKey) {
       return res.status(500).json({
-        error: "Missing Supabase environment variables",
-        details: "SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing in Vercel"
+        error: "Missing Supabase environment variables"
       });
     }
 
     const range = String(req.query.range || "today").toLowerCase();
+
     const now = new Date();
     const startDate = new Date();
 
-    if (range === "today") {
-      startDate.setHours(0, 0, 0, 0);
-    } else if (range === "7d") {
+    if (range === "7d") {
       startDate.setDate(now.getDate() - 7);
     } else if (range === "30d") {
       startDate.setDate(now.getDate() - 30);
@@ -44,13 +32,15 @@ export default async function handler(req, res) {
       startDate.setHours(0, 0, 0, 0);
     }
 
-    const query = new URL(`${supabaseUrl}/rest/v1/analytics_events`);
-    query.searchParams.set("select", "*");
-    query.searchParams.set("created_at", `gte.${startDate.toISOString()}`);
-    query.searchParams.set("order", "created_at.desc");
-    query.searchParams.set("limit", "1000");
+    const cleanUrl = supabaseUrl.replace(/\/$/, "");
 
-    const response = await fetch(query.toString(), {
+    const url =
+      `${cleanUrl}/rest/v1/analytics_events` +
+      `?select=*` +
+      `&order=created_at.desc` +
+      `&limit=1000`;
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         apikey: serviceRoleKey,
@@ -59,30 +49,37 @@ export default async function handler(req, res) {
       }
     });
 
-    const text = await response.text();
+    const rawText = await response.text();
 
     if (!response.ok) {
-      return res.status(response.status).json({
+      return res.status(500).json({
         error: "Supabase analytics query failed",
-        details: text
+        details: rawText
       });
     }
 
     let rows = [];
 
     try {
-      rows = JSON.parse(text);
+      rows = JSON.parse(rawText);
     } catch (err) {
       return res.status(500).json({
-        error: "Could not parse Supabase response",
+        error: "Supabase returned invalid JSON",
         details: err.message
       });
     }
 
-    const events = rows.map((row) => {
-      const eventName = row.event_name || row.event || "page_view";
-      const pagePath = row.page_path || row.page || row.path || "/";
-      const deviceType = row.device_type || row.device || "Unknown";
+    if (!Array.isArray(rows)) rows = [];
+
+    const filteredRows = rows.filter((row) => {
+      if (!row.created_at) return true;
+      return new Date(row.created_at).getTime() >= startDate.getTime();
+    });
+
+    const events = filteredRows.map((row) => {
+      const eventName = row.event_name || "page_view";
+      const pagePath = row.page_path || "/";
+      const deviceType = row.device_type || "Unknown";
       const browser = row.browser || "Unknown";
       const source = row.source || row.referrer || "Direct";
 
@@ -97,8 +94,8 @@ export default async function handler(req, res) {
         device_type: deviceType,
         device: deviceType,
         browser: browser,
-        session_id: row.session_id || row.visitor_id || row.id || "",
-        created_at: row.created_at || row.timestamp || new Date().toISOString(),
+        session_id: row.session_id || row.id || "",
+        created_at: row.created_at || new Date().toISOString(),
         medium: row.medium || "",
         campaign: row.campaign || "",
         metadata: row.metadata || {}
@@ -111,11 +108,10 @@ export default async function handler(req, res) {
       count: events.length,
       events
     });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
-      error: "Admin analytics API failed",
-      details: error.message
+      error: "Admin analytics API crashed",
+      details: err.message
     });
   }
 }
-```
