@@ -1089,5 +1089,55 @@ document.querySelectorAll('.winning-card, .feature-card, .lifestyle-card, .how-s
   observer.observe(el);
 });
 </script>
+  <script>
+(function () {
+  function getDeviceType() {
+    const w = window.innerWidth;
+    if (w < 768) return 'mobile';
+    if (w < 1024) return 'tablet';
+    return 'desktop';
+  }
+
+  function getBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Chrome';
+    if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+    if (ua.includes('Edg')) return 'Edge';
+    if (ua.includes('Firefox')) return 'Firefox';
+    return 'Other';
+  }
+
+  function getSessionId() {
+    let id = sessionStorage.getItem('drh_analytics_session');
+    if (!id) {
+      id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random();
+      sessionStorage.setItem('drh_analytics_session', id);
+    }
+    return id;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+
+  fetch('/api/analytics', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event_name: 'page_view',
+      page_path: window.location.pathname,
+      referrer: document.referrer || '',
+      source: params.get('utm_source') || '',
+      medium: params.get('utm_medium') || '',
+      campaign: params.get('utm_campaign') || '',
+      device_type: getDeviceType(),
+      browser: getBrowser(),
+      session_id: getSessionId(),
+      metadata: {
+        title: document.title,
+        url: window.location.href
+      }
+    })
+  }).catch(function () {});
+})();
+</script>
 </body>
 </html>
