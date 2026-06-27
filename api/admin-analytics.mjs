@@ -1,3 +1,8 @@
+Got you. Here it is in the copyable format.
+
+**admin-analytics.mjs**
+
+```javascript
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
@@ -26,9 +31,8 @@ export default async function handler(req, res) {
     }
 
     const range = String(req.query.range || "today").toLowerCase();
-
     const now = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     if (range === "today") {
       startDate.setHours(0, 0, 0, 0);
@@ -76,18 +80,28 @@ export default async function handler(req, res) {
     }
 
     const events = rows.map((row) => {
+      const eventName = row.event_name || row.event || "page_view";
+      const pagePath = row.page_path || row.page || row.path || "/";
+      const deviceType = row.device_type || row.device || "Unknown";
+      const browser = row.browser || "Unknown";
+      const source = row.source || row.referrer || "Direct";
+
       return {
         id: row.id || "",
-        event_name: row.event_name || row.event || "page_view",
-        event: row.event_name || row.event || "page_view",
-        page_path: row.page_path || row.path || row.page || "/",
-        page: row.page_path || row.path || row.page || "/",
+        event_name: eventName,
+        event: eventName,
+        page_path: pagePath,
+        page: pagePath,
         referrer: row.referrer || "",
-        source: row.source || row.referrer || "Direct",
-        device: row.device || row.device_type || "Unknown",
-        browser: row.browser || "Unknown",
+        source: source,
+        device_type: deviceType,
+        device: deviceType,
+        browser: browser,
         session_id: row.session_id || row.visitor_id || row.id || "",
-        created_at: row.created_at || row.timestamp || new Date().toISOString()
+        created_at: row.created_at || row.timestamp || new Date().toISOString(),
+        medium: row.medium || "",
+        campaign: row.campaign || "",
+        metadata: row.metadata || {}
       };
     });
 
@@ -97,7 +111,6 @@ export default async function handler(req, res) {
       count: events.length,
       events
     });
-
   } catch (error) {
     return res.status(500).json({
       error: "Admin analytics API failed",
@@ -105,3 +118,4 @@ export default async function handler(req, res) {
     });
   }
 }
+```
