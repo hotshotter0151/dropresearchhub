@@ -165,6 +165,41 @@ select.filter-input{min-width:140px}
 .hub-note-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
 .hub-note-chip{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;color:var(--g500)}
 
+
+/* ─────────────────────────────────────────────
+   SHOPIFY-STYLE ANALYTICS DASHBOARD — DRH
+───────────────────────────────────────────── */
+.analytics-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.analytics-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.analytics-tab{border:1px solid var(--g200);background:#fff;color:var(--g700);border-radius:999px;padding:8px 13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s}
+.analytics-tab:hover{border-color:var(--navy);color:var(--navy)}
+.analytics-tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.analytics-mini-note{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.55;margin-bottom:16px}
+.analytics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.analytics-card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:18px 20px;box-shadow:0 2px 12px rgba(17,24,39,.04)}
+.analytics-card-label{font-size:11px;color:var(--g400);font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+.analytics-card-value{font-size:32px;font-weight:900;letter-spacing:-1px;margin-top:6px;color:var(--g900);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.analytics-card-note{font-size:12px;color:var(--g500);margin-top:2px}
+.analytics-live-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(22,163,74,.12);display:inline-block;animation:pulseLive 1.6s infinite}
+@keyframes pulseLive{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.75);opacity:.55}}
+.analytics-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin-bottom:16px}
+.analytics-bars{display:grid;gap:12px;padding:16px 20px}
+.analytics-bar-row{display:grid;grid-template-columns:110px 1fr 46px;align-items:center;gap:10px}
+.analytics-bar-label{font-size:12px;font-weight:800;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.analytics-bar-track{height:10px;background:var(--g100);border-radius:999px;overflow:hidden;border:1px solid var(--g200)}
+.analytics-bar-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:999px;min-width:3px}
+.analytics-bar-value{font-size:12px;font-weight:900;color:var(--g500);text-align:right}
+.analytics-empty{padding:22px;text-align:center;color:var(--g400);font-size:13px}
+.analytics-table{min-width:0}
+.analytics-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.analytics-full{margin-bottom:16px}
+.analytics-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:var(--g100);color:var(--g500)}
+.analytics-pill.green{background:var(--green-bg);color:#166534}
+.analytics-pill.gold{background:var(--amber-bg);color:#92400e}
+.analytics-pill.blue{background:var(--blue-bg);color:#1e40af}
+@media(max-width:1100px){.analytics-grid{grid-template-columns:repeat(2,1fr)}.analytics-layout,.analytics-two-col{grid-template-columns:1fr}}
+@media(max-width:900px){.analytics-toolbar{align-items:flex-start}.analytics-tabs{width:100%}.analytics-tab{flex:1;text-align:center}.analytics-grid{grid-template-columns:1fr}.analytics-bar-row{grid-template-columns:86px 1fr 40px}.analytics-card-value{font-size:28px}.analytics-table{min-width:620px}}
+
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
 
@@ -546,6 +581,7 @@ select.filter-input{min-width:140px}
       <div class="sb-section-label" style="margin-top:8px">Content</div>
       <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
       <button class="nav-btn" onclick="show('pulse',this)">🌍 Market Pulse</button>
+      <button class="nav-btn" onclick="show('analytics',this);loadAnalytics()">📈 Analytics</button>
       <div class="sb-section-label" style="margin-top:8px">Pages</div>
       <button class="nav-btn" onclick="window.open('dashboard.html','_blank')">🏠 Dashboard</button>
       <button class="nav-btn" onclick="window.open('members.html','_blank')">📈 Members Area</button>
@@ -718,6 +754,68 @@ select.filter-input{min-width:140px}
         💡 Generate every Monday alongside the product drop. Members see it on the <a href="pulse.html" target="_blank" style="color:#1e40af;font-weight:700">Market Pulse page →</a>
       </div>
     </div>
+
+
+    <!-- ANALYTICS -->
+    <section id="analytics" class="section">
+      <div class="analytics-toolbar">
+        <div>
+          <div class="panel-title">📈 DRH Analytics</div>
+          <div class="panel-sub">Shopify-style traffic and conversion intelligence powered by your analytics_events table.</div>
+        </div>
+        <div class="analytics-tabs">
+          <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
+          <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
+          <button class="analytics-tab" data-range="30d" onclick="setAnalyticsRange('30d',this)">30 days</button>
+          <button class="btn" onclick="loadAnalytics()">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div class="analytics-mini-note">💡 Page views are live now. Next we can track trial clicks, checkout starts, product analyses, saved products and Ask Hub actions.</div>
+
+      <div class="analytics-grid">
+        <div class="analytics-card"><div class="analytics-card-label">Visitors</div><div class="analytics-card-value" id="ana-visitors">—</div><div class="analytics-card-note">unique sessions</div></div>
+        <div class="analytics-card"><div class="analytics-card-label">Page Views</div><div class="analytics-card-value" id="ana-pageviews">—</div><div class="analytics-card-note">total tracked views</div></div>
+        <div class="analytics-card"><div class="analytics-card-label">Trial Intent</div><div class="analytics-card-value" id="ana-trials">—</div><div class="analytics-card-note">trial/checkout events</div></div>
+        <div class="analytics-card"><div class="analytics-card-label">Live Visitors</div><div class="analytics-card-value" id="ana-live"><span class="analytics-live-dot"></span>—</div><div class="analytics-card-note">active in last 5 mins</div></div>
+      </div>
+
+      <div class="analytics-layout">
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">Traffic Sources</div><div class="panel-sub">Where visitors are coming from</div></div><span class="analytics-pill blue">Acquisition</span></div>
+          <div class="analytics-bars" id="ana-sources"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">Devices</div><div class="panel-sub">Mobile, desktop and tablet split</div></div><span class="analytics-pill green">Behaviour</span></div>
+          <div class="analytics-bars" id="ana-devices"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
+        </div>
+      </div>
+
+      <div class="analytics-two-col">
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">Top Pages</div><div class="panel-sub">Most viewed pages in this period</div></div></div>
+          <table class="analytics-table"><thead><tr><th>Page</th><th>Views</th><th>Share</th></tr></thead><tbody id="ana-pages"><tr><td colspan="3" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
+        </div>
+        <div class="card">
+          <div class="panel-head"><div><div class="panel-title">Browsers</div><div class="panel-sub">Browser split</div></div></div>
+          <div class="analytics-bars" id="ana-browsers"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
+        </div>
+      </div>
+
+      <div class="card analytics-full">
+        <div class="panel-head"><div><div class="panel-title">Live Activity Feed</div><div class="panel-sub">Latest tracked visitor events</div></div><span class="analytics-pill gold">Real-time feel</span></div>
+        <table class="analytics-table"><thead><tr><th>Event</th><th>Page</th><th>Source</th><th>Device</th><th>When</th></tr></thead><tbody id="ana-events"><tr><td colspan="5" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
+      </div>
+
+      <div class="card">
+        <div class="panel-head"><div><div class="panel-title">🤖 Hub Intelligence</div><div class="panel-sub">Coming next once member actions are tracked</div></div></div>
+        <div class="card-pad mini-list">
+          <div class="mini-item"><div><b>Products Analysed</b><br><span class="sub">Track Analyse button usage across members</span></div><span class="badge gray">Next</span></div>
+          <div class="mini-item"><div><b>Saved Products</b><br><span class="sub">See which products members care about most</span></div><span class="badge gray">Next</span></div>
+          <div class="mini-item"><div><b>Market Pulse Views</b><br><span class="sub">Measure retention and weekly engagement</span></div><span class="badge gray">Next</span></div>
+        </div>
+      </div>
+    </section>
 
     <!-- CUSTOMERS -->
     <section id="customers" class="section">
@@ -892,6 +990,7 @@ async function sbFetch(path, options = {}) {
 const sectionTitles = {
   overview: ['Overview','Live data from Supabase & Stripe'],
   pulse: ['Market Pulse','Generate Hub weekly UK market intelligence'],
+  analytics: ['Analytics','Traffic, conversion and member behaviour insights'],
   products: ['Products','Generate and manage the weekly product feed'],
   customers: ['Customers','All registered users'],
   billing: ['Billing','Revenue and subscription stats']
@@ -905,7 +1004,111 @@ function show(id, btn) {
   const [title, sub] = sectionTitles[id] || ['Admin',''];
   document.getElementById('section-title').textContent = title;
   document.getElementById('section-sub').textContent = sub;
+  if (id === 'analytics') loadAnalytics();
 }
+
+let analyticsRange = 'today';
+
+function setAnalyticsRange(range, btn) {
+  analyticsRange = range;
+  document.querySelectorAll('.analytics-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadAnalytics();
+}
+
+function analyticsStartDate() {
+  const d = new Date();
+  if (analyticsRange === 'today') d.setHours(0,0,0,0);
+  else if (analyticsRange === '7d') d.setDate(d.getDate() - 7);
+  else if (analyticsRange === '30d') d.setDate(d.getDate() - 30);
+  return d.toISOString();
+}
+
+async function loadAnalytics() {
+  const section = document.getElementById('analytics');
+  if (!section || !section.classList.contains('active')) return;
+  try {
+    const since = analyticsStartDate();
+    const rows = await sbFetch(`analytics_events?created_at=gte.${encodeURIComponent(since)}&select=event_name,page_path,referrer,source,medium,campaign,device_type,browser,session_id,created_at&order=created_at.desc&limit=1000`);
+    renderAnalytics(rows || []);
+  } catch(e) {
+    const msg = `Analytics could not load: ${e.message}`;
+    ['ana-sources','ana-devices','ana-browsers'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML = `<div class="analytics-empty">⚠️ ${msg}</div>`; });
+    const pages=document.getElementById('ana-pages'); if(pages) pages.innerHTML = `<tr><td colspan="3" class="table-empty">⚠️ ${msg}</td></tr>`;
+    const events=document.getElementById('ana-events'); if(events) events.innerHTML = `<tr><td colspan="5" class="table-empty">⚠️ ${msg}</td></tr>`;
+  }
+}
+
+function renderAnalytics(rows) {
+  const pageViews = rows.filter(r => r.event_name === 'page_view');
+  const sessions = new Set(rows.map(r => r.session_id).filter(Boolean));
+  const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started'].includes(r.event_name)).length;
+  const liveCutoff = Date.now() - (5 * 60 * 1000);
+  const liveSessions = new Set(rows.filter(r => new Date(r.created_at).getTime() >= liveCutoff).map(r => r.session_id).filter(Boolean));
+
+  setText('ana-visitors', sessions.size || 0);
+  setText('ana-pageviews', pageViews.length || 0);
+  setText('ana-trials', trials || 0);
+  const live = document.getElementById('ana-live');
+  if (live) live.innerHTML = `<span class="analytics-live-dot"></span>${liveSessions.size || 0}`;
+
+  renderBars('ana-sources', countBy(rows.map(sourceLabel)), 'No traffic sources yet');
+  renderBars('ana-devices', countBy(rows.map(r => r.device_type || 'Unknown')), 'No device data yet');
+  renderBars('ana-browsers', countBy(rows.map(r => r.browser || 'Unknown')), 'No browser data yet');
+  renderTopPages(pageViews);
+  renderActivity(rows.slice(0, 12));
+}
+
+function sourceLabel(r) {
+  if (r.source) return titleCase(r.source);
+  const ref = (r.referrer || '').toLowerCase();
+  if (!ref) return 'Direct';
+  if (ref.includes('tiktok')) return 'TikTok';
+  if (ref.includes('instagram')) return 'Instagram';
+  if (ref.includes('facebook')) return 'Facebook';
+  if (ref.includes('linkedin')) return 'LinkedIn';
+  if (ref.includes('google')) return 'Google';
+  if (ref.includes('youtube')) return 'YouTube';
+  return 'Referral';
+}
+
+function countBy(items) {
+  return items.reduce((acc, item) => { const key = item || 'Unknown'; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
+}
+
+function renderBars(id, counts, emptyText) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 7);
+  const total = entries.reduce((s, [,v]) => s + v, 0);
+  if (!entries.length || !total) { el.innerHTML = `<div class="analytics-empty">${emptyText}</div>`; return; }
+  el.innerHTML = entries.map(([label, value]) => {
+    const pct = Math.round((value / total) * 100);
+    return `<div class="analytics-bar-row"><div class="analytics-bar-label">${esc(label)}</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:${pct}%"></div></div><div class="analytics-bar-value">${pct}%</div></div>`;
+  }).join('');
+}
+
+function renderTopPages(pageViews) {
+  const tbody = document.getElementById('ana-pages');
+  if (!tbody) return;
+  const counts = countBy(pageViews.map(r => r.page_path || '/'));
+  const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+  const total = pageViews.length || 0;
+  if (!entries.length) { tbody.innerHTML = '<tr><td colspan="3" class="table-empty">No page views yet</td></tr>'; return; }
+  tbody.innerHTML = entries.map(([page, views]) => `<tr><td><b>${esc(page)}</b></td><td>${views}</td><td>${total ? Math.round((views/total)*100) : 0}%</td></tr>`).join('');
+}
+
+function renderActivity(rows) {
+  const tbody = document.getElementById('ana-events');
+  if (!tbody) return;
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No activity yet</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r => `<tr><td><b>${esc(eventLabel(r.event_name))}</b></td><td>${esc(r.page_path || '—')}</td><td>${esc(sourceLabel(r))}</td><td>${esc(r.device_type || '—')}</td><td>${timeAgo(r.created_at)}</td></tr>`).join('');
+}
+
+function eventLabel(name) { return String(name || 'event').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+function titleCase(v) { return String(v || '').replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+function timeAgo(dateStr) { const diff = Math.max(0, Date.now() - new Date(dateStr).getTime()); const mins = Math.floor(diff / 60000); if (mins < 1) return 'just now'; if (mins < 60) return `${mins}m ago`; const hrs = Math.floor(mins / 60); if (hrs < 24) return `${hrs}h ago`; const days = Math.floor(hrs / 24); return `${days}d ago`; }
+function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
 
 let allUsers = [];
 async function loadUsers() {
