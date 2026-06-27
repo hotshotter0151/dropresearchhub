@@ -1028,9 +1028,15 @@ async function loadAnalytics() {
   const section = document.getElementById('analytics');
   if (!section || !section.classList.contains('active')) return;
   try {
-    const since = analyticsStartDate();
-    const rows = await sbFetch(`analytics_events?created_at=gte.${encodeURIComponent(since)}&select=event_name,page_path,referrer,source,medium,campaign,device_type,browser,session_id,created_at&order=created_at.desc&limit=1000`);
-    renderAnalytics(rows || []);
+    // Load the latest events first, then apply the date range in the browser.
+    // This avoids timezone issues where Supabase returns [] even though events exist.
+    const rows = await sbFetch(`analytics_events?select=event_name,page_path,referrer,source,medium,campaign,device_type,browser,session_id,created_at&order=created_at.desc&limit=1000`);
+    const sinceTs = new Date(analyticsStartDate()).getTime();
+    const filteredRows = (rows || []).filter(r => {
+      const ts = new Date(r.created_at).getTime();
+      return Number.isFinite(ts) && ts >= sinceTs;
+    });
+    renderAnalytics(filteredRows);
   } catch(e) {
     const msg = `Analytics could not load: ${e.message}`;
     ['ana-sources','ana-devices','ana-browsers'].forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML = `<div class="analytics-empty">⚠️ ${msg}</div>`; });
