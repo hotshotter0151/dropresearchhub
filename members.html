@@ -1056,7 +1056,7 @@ function buildAnalysisBody(p) {
   const confidenceTone = confidenceScore >= 85 ? 'var(--green)' : confidenceScore >= 70 ? 'var(--amber)' : 'var(--red)';
 
   // Build launch plan URL with product name and image
-  const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;
+  const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;window._currentLaunchUrl = launchUrl;
 
   body.innerHTML=`
     <div class="hub-analysis-complete">
@@ -1337,9 +1337,9 @@ function buildAnalysisBody(p) {
             <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:6px">Ready to launch ${p.name}?</div>
             <div style="font-size:13px;color:var(--g500);line-height:1.6">Hub will build your store concept, week-by-week launch roadmap and show you what your homepage could look like — all in one place.</div>
           </div>
-          <a href="${launchUrl}" style="display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:14px;padding:16px 28px;font-size:15px;font-weight:900;text-decoration:none;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
+          <button onclick="goToStoreBuilder()" id="launch-plan-btn" style="display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:14px;padding:16px 28px;font-size:15px;font-weight:900;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;flex-shrink:0" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">
             🚀 Build My Launch Plan →
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -1965,6 +1965,103 @@ async function loadPublishedProducts() {
 }
 
 // INJECTION 9: members_page_view fires on load, before the 3 required init calls
+
+// ── STORE BUILDER CREDIT GATE ────────────────────────────────────────────────
+async function goToStoreBuilder() {
+  const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  const email = session?.email || getUserEmail();
+  if (!email) { showToast('Please log in to use Store Builder'); return; }
+
+  try {
+    const res = await fetch('/api/store-credits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'check', email })
+    });
+    const data = await res.json();
+
+    if (data.credits > 0) {
+      // Has credits — go straight to dashboard
+      window.location.href = window._currentLaunchUrl || 'dashboard.html';
+    } else {
+      // No credits — show paywall modal
+      showCreditPaywall(email);
+    }
+  } catch(e) {
+    // On error, let them through
+    window.location.href = window._currentLaunchUrl || 'dashboard.html';
+  }
+}
+
+function showCreditPaywall(email) {
+  const existing = document.getElementById('credit-paywall-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'credit-paywall-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:24px;padding:36px;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3);text-align:center">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:64px;height:64px;border-radius:50%;border:2px solid rgba(245,158,11,.4);margin-bottom:16px" onerror="this.style.display='none'">
+      <div style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Store Builder</div>
+      <div style="font-size:22px;font-weight:900;color:var(--navy-dark);letter-spacing:-.5px;margin-bottom:10px">You've used your free generation</div>
+      <div style="font-size:14px;color:var(--g500);line-height:1.6;margin-bottom:24px">Get 3 more Store Builder generations for a one-off payment of <strong style="color:var(--navy)">£4.99</strong>. No subscription — pay once, use three times.</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button onclick="buyStoreCredits('${email}')" style="background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s" id="buy-credits-btn">
+          Get 3 generations — £4.99 →
+        </button>
+        <button onclick="document.getElementById('credit-paywall-modal').remove()" style="background:none;border:1px solid var(--g200);border-radius:14px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--g500)">
+          Maybe later
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+async function buyStoreCredits(email) {
+  const btn = document.getElementById('buy-credits-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Setting up payment...'; }
+  try {
+    const res = await fetch('/api/stripe-credits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast('Could not start payment — try again');
+      if (btn) { btn.disabled = false; btn.textContent = 'Get 3 generations — £4.99 →'; }
+    }
+  } catch(e) {
+    showToast('Could not start payment — try again');
+    if (btn) { btn.disabled = false; btn.textContent = 'Get 3 generations — £4.99 →'; }
+  }
+}
+
+// After Stripe payment success, add credits
+(async function checkCreditReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('credits') === 'added') {
+    const email = params.get('email') || getUserEmail();
+    if (email) {
+      try {
+        await fetch('/api/store-credits', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'add', email })
+        });
+        showToast('3 Store Builder credits added ✓');
+        // Clean URL
+        window.history.replaceState({}, '', '/members.html');
+      } catch(e) {}
+    }
+  }
+})();
+
 trackEvent('members_page_view');
 renderProductsGrid();
 loadPublishedProducts();
