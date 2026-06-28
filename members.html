@@ -509,6 +509,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     <div class="sb-section" style="margin-top:8px">Ask Hub</div>
     <button class="sb-item" onclick="showView('validator',this);closeSidebar()"><span class="sb-item-icon">🔍</span> About A Product</button>
     <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
+    <button class="sb-item" onclick="goToStoreBuilder();closeSidebar()"><span class="sb-item-icon">🏪</span> Store Builder</button>
     <div class="sb-section" style="margin-top:8px">Your Research</div>
     <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">💛</span> Saved Products</button>
     <button class="sb-item" onclick="showView('saved',this);loadSavedProducts();closeSidebar()"><span class="sb-item-icon">⚖️</span> Compare Products</button>
@@ -1982,14 +1983,14 @@ async function goToStoreBuilder() {
 
     if (data.credits > 0) {
       // Has credits — go straight to dashboard
-      window.location.href = window._currentLaunchUrl || 'dashboard.html';
+      window.location.href = window._currentLaunchUrl || 'storepage.html';
     } else {
       // No credits — show paywall modal
       showCreditPaywall(email);
     }
   } catch(e) {
     // On error, let them through
-    window.location.href = window._currentLaunchUrl || 'dashboard.html';
+    window.location.href = window._currentLaunchUrl || 'storepage.html';
   }
 }
 
