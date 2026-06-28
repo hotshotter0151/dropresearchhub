@@ -378,7 +378,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         </div>
         <div class="form-nav" style="border-top:1px solid var(--g100);margin-top:24px">
           <div></div>
-          <button class="btn-next" id="btn-next-1" onclick="nextStep(1)" disabled>Next — Upload images →</button>
+          <button class="btn-next" id="btn-next-1" onclick="nextStep(1)">Next — Upload images →</button>
         </div>
       </div>
     </div>
@@ -647,10 +647,28 @@ function showStep(n) {
 }
 
 function nextStep(current) {
-  if (current === 1 && !validateStep1()) return;
   if (current === 1) {
-    state.productName = document.getElementById('product-name').value.trim();
-    state.problem = document.getElementById('product-problem').value.trim();
+    const name = (document.getElementById('product-name').value || '').trim();
+    const problem = (document.getElementById('product-problem').value || '').trim();
+    const niche = document.getElementById('niche-select').value;
+    if (!niche || niche === '') {
+      const sel = document.getElementById('niche-select');
+      sel.style.border = '2px solid #dc2626';
+      setTimeout(() => sel.style.border = '', 2000);
+      showToast('Please select a product niche');
+      return;
+    }
+    if (name.length < 2) {
+      showToast('Please enter your product name');
+      return;
+    }
+    if (problem.length < 3) {
+      showToast('Please describe the problem your product solves');
+      return;
+    }
+    state.productName = name;
+    state.niche = niche !== 'other' ? niche : (document.getElementById('niche-other-input').value || '').trim();
+    state.problem = problem;
   }
   showStep(current + 1);
 }
@@ -1681,11 +1699,6 @@ function showToast(msg) {
 }
 
 // ── INIT ──
-// Run validation on load in case browser autofills fields
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(validateStep1, 100);
-});
-
 const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
 const _isAdmin = _session?.role === 'admin';
 const _isMember = _session?.email && (_session?.subscription_status === 'active' || _session?.subscription_status === 'trial' || _session?.role === 'admin');
