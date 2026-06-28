@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png">
 <title>DropResearch Hub — Find Products Before The Trend Starts</title>
-<meta name="description" content="DropResearch Hub finds emerging UK products weeks before they trend on TikTok, Amazon and social media. Weekly validated picks, 12-point scoring, ad scripts and Hub — your personal research partner. Start free for 7 days.">
+<meta name="description" content="DropResearch Hub finds emerging UK products weeks before they trend on TikTok, Amazon and social media. Weekly validated picks, 7-point scoring, ad scripts and Hub — your personal research partner. Start free for 7 days.">
 <link rel="canonical" href="https://dropresearchhub.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dropresearchhub.com/">
@@ -301,10 +301,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(20,40,64,.97
 .story-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:11px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .story-btn:hover{background:var(--navy-light)}
 .story-btn.open{background:var(--gold);color:var(--navy-dark)}
-.story-content{display:none;margin-top:14px;padding:14px 16px;background:var(--g50);border-radius:14px;border-left:3px solid var(--gold)}
-.story-content.open{display:block}
-.story-content p{font-size:13px;color:var(--g700);line-height:1.8;margin-bottom:10px}
-.story-content p:last-of-type{margin-bottom:12px}
+/* story-content removed — now uses modal */
 .story-hub-note{background:var(--navy);color:#fff;border-radius:11px;padding:13px 15px;font-size:12px;font-weight:700;line-height:1.65}
 .story-hub-note span{color:var(--gold)}
 
@@ -428,6 +425,32 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
   .nav-logo-text{font-size:13px}
   .section-title{font-size:24px}
 }
+
+/* ── STORY MODAL ── */
+.story-modal-overlay{position:fixed;inset:0;background:rgba(8,16,32,.85);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .25s ease}
+.story-modal-overlay.show{display:flex;opacity:1}
+.story-modal{background:#fff;border-radius:24px;width:min(600px,100%);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 40px 100px rgba(0,0,0,.45);transform:translateY(20px) scale(.97);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.story-modal-overlay.show .story-modal{transform:translateY(0) scale(1)}
+.story-modal-img{height:200px;overflow:hidden;position:relative;flex-shrink:0}
+.story-modal-img img{width:100%;height:100%;object-fit:cover}
+.story-modal-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(8,16,32,.8))}
+.story-modal-tag{position:absolute;bottom:14px;right:14px;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:11px;font-weight:900;padding:5px 12px}
+.story-modal-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:2}
+.story-modal-close:hover{background:rgba(255,255,255,.35)}
+.story-modal-body{padding:24px;overflow-y:auto;flex:1}
+.story-modal-name{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.story-modal-stats{display:flex;gap:10px;margin-bottom:18px}
+.story-modal-stat{flex:1;background:var(--g50);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--g100)}
+.story-modal-stat span{font-size:9px;color:var(--g400);text-transform:uppercase;font-weight:700;display:block;margin-bottom:2px;letter-spacing:.4px}
+.story-modal-stat b{font-size:16px;font-weight:900;color:var(--navy)}
+.story-modal-text p{font-size:14px;color:var(--g700);line-height:1.8;margin-bottom:14px}
+.story-modal-note{background:var(--navy);color:#fff;border-radius:12px;padding:14px 16px;font-size:13px;font-weight:700;line-height:1.65;margin-top:4px}
+.story-modal-note span{color:var(--gold)}
+.story-modal-footer{padding:16px 24px;border-top:1px solid var(--g100);flex-shrink:0}
+.story-modal-cta{width:100%;background:var(--gold);color:var(--navy-dark);border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s;text-decoration:none;display:block;text-align:center}
+.story-modal-cta:hover{background:var(--gold-light)}
+@media(max-width:600px){.story-modal-img{height:160px}.story-modal-body{padding:18px}.story-modal-name{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -459,7 +482,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
   <div class="hero-grid-overlay"></div>
   <div class="hero-inner">
     <div>
-      <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div>Weekly product intelligence — updated every Monday</div>
+      <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div>Weekly product intelligence — updated twice weekly — Monday & Friday</div>
       <h1>The best products are gone<br>by the time <em>most people find them.</em></h1>
       <p class="hero-subhead">Scrolling <strong>#TikTokMadeMeBuyIt</strong> for your next product? That hashtag means the trend already passed. <strong>Hub finds products in the weeks before the hashtag exists</strong> — when the margin is still there and the market isn't crowded yet.</p>
       <div class="hub-strip">
@@ -754,7 +777,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
     <div class="feed-header">
       <div class="section-eyebrow drh-reveal">Inside the platform</div>
       <h2 class="section-title drh-reveal drh-reveal-delay-1">Your weekly product feed.</h2>
-      <p class="section-sub drh-reveal drh-reveal-delay-2">Every Monday, Hub drops validated emerging products into your feed. Each one scored, researched and ready to act on — before the market catches up.</p>
+      <p class="section-sub drh-reveal drh-reveal-delay-2">Twice a week — every Monday and Friday — Hub drops validated emerging products into your feed. Each one scored, researched and ready to act on — before the market catches up.</p>
     </div>
     <div class="mock-feed">
       <div class="mock-product-card drh-reveal drh-reveal-delay-1">
@@ -821,7 +844,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
         </div>
       </div>
     </div>
-    <div class="feed-note drh-reveal">↑ A representative snapshot of the weekly member feed — products, scores and Hub's reasoning, updated every Monday.</div>
+    <div class="feed-note drh-reveal">↑ A representative snapshot of the weekly member feed — products, scores and Hub's reasoning, updated twice weekly — Monday & Friday.</div>
   </div>
 </section>
 
@@ -836,7 +859,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
         <div class="analysis-feature drh-reveal drh-reveal-delay-1">
           <div class="analysis-feature-icon">📊</div>
           <div class="analysis-feature-text">
-            <h4>12-point scoring breakdown</h4>
+            <h4>7-point scoring breakdown</h4>
             <p>UK Market Gap, Problem Intensity, Creative Potential, Profit Potential and 8 more — scored and explained in plain English.</p>
           </div>
         </div>
@@ -939,7 +962,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
       <div class="how-step drh-reveal drh-reveal-delay-2">
         <div class="how-step-num-bg">2</div>
         <div class="how-step-icon">📊</div>
-        <h3>Every product scored on 12 criteria</h3>
+        <h3>Every product scored on 7 criteria</h3>
         <p>Only products that pass Hub's full framework make the weekly feed. Problem-solving ability, video potential, margin strength, saturation risk and more — all scored and explained.</p>
       </div>
       <div class="how-step drh-reveal drh-reveal-delay-3">
@@ -980,13 +1003,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
             <div class="story-stat"><span>Market size</span><b>£500M+</b></div>
             <div class="story-stat"><span>Peak window</span><b>8 weeks</b></div>
           </div>
-          <button class="story-btn" onclick="toggleStory('fidget',this)">📖 Read the full story</button>
-          <div class="story-content" id="story-fidget">
-            <p>In early 2017, a small number of sellers noticed something unusual on AliExpress — a simple spinning toy, orders quietly creeping up. They listed it for £12–£18. Cost price: under £1.50.</p>
-            <p>Within 6 weeks it had exploded. Every school in the UK had them. Amazon sold out daily. Sellers who got in early were doing £10,000–£50,000 weeks from a spinner that cost less than a coffee.</p>
-            <p>By week 10 it was everywhere. Margins collapsed. The window had closed. The early movers had already made their money and moved on.</p>
-            <div class="story-hub-note">💡 The sellers who won found the fidget spinner <span>weeks before it went viral</span>. DropResearch Hub didn't exist in 2017. <span>It does now. The next one is already emerging.</span></div>
-          </div>
+          <button class="story-btn" onclick="openStoryModal('fidget')">📖 Read the full story</button>
         </div>
       </div>
       <div class="story-card drh-reveal drh-reveal-delay-2">
@@ -1002,13 +1019,7 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
             <div class="story-stat"><span>Market size</span><b>£30M+</b></div>
             <div class="story-stat"><span>Peak window</span><b>12 weeks</b></div>
           </div>
-          <button class="story-btn" onclick="toggleStory('posture',this)">📖 Read the full story</button>
-          <div class="story-content" id="story-posture">
-            <p>In 2019, remote work was rising. Back pain searches on Google were quietly trending upward. A product that had existed on AliExpress for years suddenly had a massive new audience of desk workers.</p>
-            <p>Early sellers spotted the Google Trends movement. They listed the product, shot a simple before/after video, and ran £20/day Facebook ads. ROAS hit 4x, 5x, 6x. They scaled fast.</p>
-            <p>By the time the mainstream caught on, first-movers had built branded stores, collected thousands of reviews, and owned the ad space. Latecomers paid double for half the return.</p>
-            <div class="story-hub-note">💡 This product was on AliExpress for 3 years before it blew up. <span>The timing was everything.</span> DropResearch Hub finds the next posture corrector <span>before the timing passes.</span></div>
-          </div>
+          <button class="story-btn" onclick="openStoryModal('posture')">📖 Read the full story</button>
         </div>
       </div>
       <div class="story-card drh-reveal drh-reveal-delay-3">
@@ -1024,13 +1035,28 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
             <div class="story-stat"><span>Margin</span><b>90%+</b></div>
             <div class="story-stat"><span>Peak window</span><b>6 weeks</b></div>
           </div>
-          <button class="story-btn" onclick="toggleStory('straws',this)">📖 Read the full story</button>
-          <div class="story-content" id="story-straws">
-            <p>In 2018, a video of a plastic straw being removed from a sea turtle's nose went viral. Within 24 hours, Google searches for "reusable straws" exploded. The UK government talked about plastic bans.</p>
-            <p>Sellers watching eco trends on AliExpress already had metal straws in their stores. They didn't scramble — they turned on their ads. Overnight, those stores were doing thousands of orders at 90%+ margins.</p>
-            <p>Within 3 weeks, every major retailer had caught up. But the dropshippers had already cashed out and moved on to the next thing.</p>
-            <div class="story-hub-note">💡 The sellers who won <span>weren't lucky</span> — they were watching the right signals. <span>DropResearch Hub watches those signals for you, every single week.</span></div>
-          </div>
+          <button class="story-btn" onclick="openStoryModal('straws')">📖 Read the full story</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORY MODAL -->
+    <div class="story-modal-overlay" id="story-modal-overlay" onclick="closeStoryModal(event)">
+      <div class="story-modal" id="story-modal">
+        <div class="story-modal-img" id="modal-img-wrap">
+          <img id="modal-img" src="" alt="">
+          <div class="story-modal-img-overlay"></div>
+          <div class="story-modal-tag" id="modal-tag"></div>
+          <button class="story-modal-close" onclick="closeStoryModal()">✕</button>
+        </div>
+        <div class="story-modal-body">
+          <div class="story-modal-name" id="modal-name"></div>
+          <div class="story-modal-stats" id="modal-stats"></div>
+          <div class="story-modal-text" id="modal-text"></div>
+          <div class="story-modal-note" id="modal-note"></div>
+        </div>
+        <div class="story-modal-footer">
+          <a href="signup.html" class="story-modal-cta">Start finding products before they trend →</a>
         </div>
       </div>
     </div>
@@ -1090,8 +1116,8 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
       <p class="section-sub drh-reveal drh-reveal-delay-2" style="margin:0 auto">Every feature included from day one. No add-ons, no tiers, no upgrades required.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card drh-reveal drh-reveal-delay-1"><div class="feature-icon-wrap">📈</div><h3>Weekly emerging product feed</h3><p>3–5 validated picks every Monday. Scored, researched and ready — before the market finds them.</p></div>
-      <div class="feature-card drh-reveal drh-reveal-delay-2"><div class="feature-icon-wrap">🎯</div><h3>12-point validation framework</h3><p>Every product scored on problem-solving, video potential, margin strength, competition risk and more. Only the best make the cut.</p></div>
+      <div class="feature-card drh-reveal drh-reveal-delay-1"><div class="feature-icon-wrap">📈</div><h3>Twice-weekly emerging product feed</h3><p>3–5 validated picks every Monday and Friday and Friday. Scored, researched and ready — before the market finds them.</p></div>
+      <div class="feature-card drh-reveal drh-reveal-delay-2"><div class="feature-icon-wrap">🎯</div><h3>7-point validation framework</h3><p>Every product scored on problem-solving, video potential, margin strength, competition risk and more. Only the best make the cut.</p></div>
       <div class="feature-card drh-reveal drh-reveal-delay-3"><div class="feature-icon-wrap">🎬</div><h3>Ad creative scripts</h3><p>3 ready-to-use TikTok and Meta ad script variations per product — hook, middle, CTA — ready to film or send to a creator.</p></div>
       <div class="feature-card drh-reveal drh-reveal-delay-1"><div class="feature-icon-wrap">✅</div><h3>Product validator</h3><p>Found something yourself? Paste any URL or product name and get Hub's full assessment — score, risks, angles and verdict.</p></div>
       <div class="feature-card drh-reveal drh-reveal-delay-2"><div class="feature-icon-wrap">💰</div><h3>Unit Economics Engine</h3><p>Model three profit scenarios before you spend a penny. Conservative, realistic and aggressive — with break-even and ROAS targets.</p></div>
@@ -1116,8 +1142,8 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
       <div class="pricing-trial">Start free for 7 days</div>
       <div class="pricing-then">Then just <strong>£24.99/month</strong></div>
       <div class="pricing-features">
-        <div class="pricing-feature">Weekly emerging product feed (3–5 products)</div>
-        <div class="pricing-feature">Full 12-point scoring breakdown per product</div>
+        <div class="pricing-feature">Twice-weekly emerging product feed (Monday & Friday)</div>
+        <div class="pricing-feature">Full 7-point scoring breakdown per product</div>
         <div class="pricing-feature">TikTok + Meta ad angles for every product</div>
         <div class="pricing-feature">3 ad creative script variations per product</div>
         <div class="pricing-feature">Unlimited product validator</div>
@@ -1142,11 +1168,11 @@ footer{background:var(--navy-dark);padding:56px 5% 30px;border-top:1px solid rgb
       <h2 class="section-title drh-reveal drh-reveal-delay-1">Common questions.</h2>
     </div>
     <div class="faq-list">
-      <div class="faq-item drh-reveal drh-reveal-delay-1"><button class="faq-q" onclick="toggleFaq(this)">What exactly is DropResearch Hub?<span class="faq-icon">+</span></button><div class="faq-a">DropResearch Hub is a weekly product research membership. Every week Hub — the platform's research character — finds emerging products before they peak, scores them on a 12-point framework and delivers a full research report to members. It also includes a product validator, launch plan builder, ad script generator and UK Market Pulse. Think of it as having a dedicated product researcher who works every week so you don't have to.</div></div>
+      <div class="faq-item drh-reveal drh-reveal-delay-1"><button class="faq-q" onclick="toggleFaq(this)">What exactly is DropResearch Hub?<span class="faq-icon">+</span></button><div class="faq-a">DropResearch Hub is a weekly product research membership. Every week Hub — the platform's research character — finds emerging products before they peak, scores them on a 7-point framework and delivers a full research report to members. It also includes a product validator, launch plan builder, ad script generator and UK Market Pulse. Think of it as having a dedicated product researcher who works every week so you don't have to.</div></div>
       <div class="faq-item drh-reveal drh-reveal-delay-2"><button class="faq-q" onclick="toggleFaq(this)">How is this different from a product spy tool?<span class="faq-icon">+</span></button><div class="faq-a">Spy tools show you what's already selling everywhere — by the time it appears in their database, thousands of sellers have already found it. DropResearch Hub finds products in the 4–8 week window before they reach mainstream awareness, when saturation is still low and margin is still strong. The difference between being first and being late.</div></div>
       <div class="faq-item drh-reveal drh-reveal-delay-3"><button class="faq-q" onclick="toggleFaq(this)">Is this only for dropshippers?<span class="faq-icon">+</span></button><div class="faq-a">No. DropResearch Hub works for anyone looking to capitalise on emerging product trends — dropshippers, TikTok Shop sellers, UGC creators looking for products to build content around, Amazon sellers, brand builders, and anyone who wants to find the right product before the market gets crowded.</div></div>
       <div class="faq-item drh-reveal drh-reveal-delay-4"><button class="faq-q" onclick="toggleFaq(this)">Do I need experience to use it?<span class="faq-icon">+</span></button><div class="faq-a">No experience needed. Every product comes with the research, the angles, the scripts and the supplier terms already done. You don't need to know how to do any of this yourself — Hub does it for you.</div></div>
-      <div class="faq-item drh-reveal drh-reveal-delay-5"><button class="faq-q" onclick="toggleFaq(this)">How many products do I get each week?<span class="faq-icon">+</span></button><div class="faq-a">Hub publishes products when they pass the 12-point framework — typically 3–5 per week. Quality over quantity. If Hub finds 10 that pass, you get 10. The point is that every product that reaches your feed has earned its place there.</div></div>
+      <div class="faq-item drh-reveal drh-reveal-delay-5"><button class="faq-q" onclick="toggleFaq(this)">How often are new products added?<span class="faq-icon">+</span></button><div class="faq-a">Hub publishes products when they pass the 7-point framework — typically 3–5 per week. Quality over quantity. If Hub finds 10 that pass, you get 10. The point is that every product that reaches your feed has earned its place there.</div></div>
       <div class="faq-item drh-reveal drh-reveal-delay-6"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel at any time?<span class="faq-icon">+</span></button><div class="faq-a">Yes. Cancel anytime from your account page. No questions, no hassle, no fees. Cancel during the trial and you won't be charged at all.</div></div>
     </div>
   </div>
@@ -1282,14 +1308,59 @@ const countObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.4 });
 if (analysisMock) countObs.observe(analysisMock);
 
-// ── STORY TOGGLES ──
-function toggleStory(id, btn) {
-  const body = document.getElementById('story-' + id);
-  const isOpen = body.classList.contains('open');
-  document.querySelectorAll('.story-content').forEach(s => s.classList.remove('open'));
-  document.querySelectorAll('.story-btn').forEach(b => { b.classList.remove('open'); b.textContent = '📖 Read the full story'; });
-  if (!isOpen) { body.classList.add('open'); btn.classList.add('open'); btn.textContent = '✕ Close story'; }
+// ── STORY MODAL ──
+const storyData = {
+  fidget: {
+    img: 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_07_31%20PM.png',
+    tag: '2017 · Viral',
+    name: '🌀 The Fidget Spinner',
+    stats: '<div class="story-modal-stat"><span>Market size</span><b>£500M+</b></div><div class="story-modal-stat"><span>Peak window</span><b>8 weeks</b></div>',
+    text: '<p>In early 2017, a small number of sellers noticed something unusual on AliExpress — a simple spinning toy, orders quietly creeping up. They listed it for £12–£18. Cost price: under £1.50.</p><p>Within 6 weeks it had exploded. Every school in the UK had them. Amazon sold out daily. Sellers who got in early were doing £10,000–£50,000 weeks from a spinner that cost less than a coffee.</p><p>By week 10 it was everywhere. Margins collapsed. The window had closed. The early movers had already made their money and moved on.</p>',
+    note: '💡 The sellers who won found the fidget spinner <span>weeks before it went viral</span>. DropResearch Hub didn\'t exist in 2017. <span>It does now. The next one is already emerging.</span>'
+  },
+  posture: {
+    img: 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_08_39%20PM.png',
+    tag: '2019 · Problem Solver',
+    name: '🦴 The Posture Corrector',
+    stats: '<div class="story-modal-stat"><span>Market size</span><b>£30M+</b></div><div class="story-modal-stat"><span>Peak window</span><b>12 weeks</b></div>',
+    text: '<p>In 2019, remote work was rising. Back pain searches on Google were quietly trending upward. A product that had existed on AliExpress for years suddenly had a massive new audience of desk workers.</p><p>Early sellers spotted the Google Trends movement. They listed the product, shot a simple before/after video, and ran £20/day Facebook ads. ROAS hit 4x, 5x, 6x. They scaled fast.</p><p>By the time the mainstream caught on, first-movers had built branded stores, collected thousands of reviews, and owned the ad space. Latecomers paid double for half the return.</p>',
+    note: '💡 This product was on AliExpress for 3 years before it blew up. <span>The timing was everything.</span> DropResearch Hub finds the next posture corrector <span>before the timing passes.</span>'
+  },
+  straws: {
+    img: 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/ChatGPT%20Image%20Jun%2013%2C%202026%2C%2007_10_24%20PM.png',
+    tag: '2018 · Eco Trend',
+    name: '🌿 Reusable Metal Straws',
+    stats: '<div class="story-modal-stat"><span>Margin</span><b>90%+</b></div><div class="story-modal-stat"><span>Peak window</span><b>6 weeks</b></div>',
+    text: '<p>In 2018, a video of a plastic straw being removed from a sea turtle\'s nose went viral. Within 24 hours, Google searches for "reusable straws" exploded. The UK government talked about plastic bans.</p><p>Sellers watching eco trends on AliExpress already had metal straws in their stores. They didn\'t scramble — they turned on their ads. Overnight, those stores were doing thousands of orders at 90%+ margins.</p><p>Within 3 weeks, every major retailer had caught up. But the dropshippers had already cashed out and moved on to the next thing.</p>',
+    note: '💡 The sellers who won <span>weren\'t lucky</span> — they were watching the right signals. <span>DropResearch Hub watches those signals for you, every Monday and Friday.</span>'
+  }
+};
+
+function openStoryModal(id) {
+  const d = storyData[id];
+  if (!d) return;
+  document.getElementById('modal-img').src = d.img;
+  document.getElementById('modal-img').alt = d.name;
+  document.getElementById('modal-tag').textContent = d.tag;
+  document.getElementById('modal-name').textContent = d.name;
+  document.getElementById('modal-stats').innerHTML = d.stats;
+  document.getElementById('modal-text').innerHTML = d.text;
+  document.getElementById('modal-note').innerHTML = d.note;
+  const overlay = document.getElementById('story-modal-overlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  document.body.style.overflow = 'hidden';
 }
+
+function closeStoryModal(e) {
+  if (e && e.target !== document.getElementById('story-modal-overlay') && !e.target.classList.contains('story-modal-close')) return;
+  const overlay = document.getElementById('story-modal-overlay');
+  overlay.classList.remove('show');
+  setTimeout(() => { overlay.style.display = 'none'; }, 260);
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStoryModal({target: document.getElementById('story-modal-overlay')}); });
 
 // ── FAQ TOGGLES ──
 function toggleFaq(btn) {
