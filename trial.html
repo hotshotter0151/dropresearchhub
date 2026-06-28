@@ -595,7 +595,7 @@ async function goUpgrade() {
     const res = await fetch('/api/stripe-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: session.email, name: session.name || '' })
+      body: JSON.stringify({ email: session.email, name: session.name || '', skipTrial: true })
     });
     const data = await res.json();
     if (data.url) { window.location.href = data.url; }
