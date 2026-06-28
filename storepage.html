@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Store Builder — DropResearch Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;
+  --gold:#F59E0B;--gold-light:#FCD34D;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;
+  --green:#16A34A;--green-bg:#DCFCE7;
+  --red:#DC2626;--red-bg:#FEE2E2;
+  --amber:#D97706;--amber-bg:#FEF3C7;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line-height:1.6;overflow-x:hidden}
+
+@keyframes hubFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-8px) rotate(1deg)}}
+@keyframes hubPulse{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes hubDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes buildPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}50%{box-shadow:0 0 0 12px rgba(245,158,11,.08)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:240px;background:var(--navy-dark);display:flex;flex-direction:column;z-index:200;overflow-y:auto}
+.sb-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-logo-icon{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:6px 5px;flex-shrink:0}
+.sb-bar{width:4px;border-radius:2px;background:var(--navy)}.sb-bar.g{background:var(--gold)}
+.sb-logo-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px}.sb-logo-text span{color:var(--gold)}
+.sb-hub{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sb-hub-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0}
+.sb-hub-avatar img{width:100%;height:100%;object-fit:cover;animation:hubFloat 3s ease-in-out infinite}
+.sb-hub-name{font-size:13px;font-weight:800;color:#fff}
+.sb-hub-status{font-size:11px;color:rgba(255,255,255,.45)}
+.sb-hub-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,.6)}
+.sb-nav{padding:12px;flex:1}
+.sb-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;transition:all .15s;cursor:pointer;border:none;background:none;width:100%;font-family:inherit;margin-bottom:2px}
+.sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.12);color:#fff}
+.sb-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-item-new{margin-left:auto;background:var(--gold);color:var(--navy-dark);border-radius:999px;font-size:9px;font-weight:900;padding:2px 7px}
+.sb-bottom{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
+.sb-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+.sb-overlay.show{display:block}
+.mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mobile-menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:8px;border-radius:8px}
+.mobile-logo-text{font-size:15px;font-weight:800;color:#fff}.mobile-logo-text span{color:var(--gold)}
+
+/* ── MAIN ── */
+.main{margin-left:240px;min-height:100vh}
+
+/* ── PAGE HEADER ── */
+.page-header{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);padding:40px 40px 36px;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(245,158,11,.08) 0%,transparent 65%);pointer-events:none}
+.page-header-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.page-header-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);border-radius:999px;padding:6px 14px;font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px}
+.page-header-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:hubPulse 2s ease-in-out infinite}
+.page-header h1{font-size:32px;font-weight:900;letter-spacing:-1px;color:#fff;margin-bottom:8px;line-height:1.1}
+.page-header h1 span{color:var(--gold)}
+.page-header-sub{font-size:15px;color:rgba(255,255,255,.55);max-width:560px;line-height:1.65;margin-bottom:20px}
+.free-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(22,163,74,.15);border:1px solid rgba(22,163,74,.3);border-radius:12px;padding:10px 16px}
+.free-badge-icon{font-size:18px}
+.free-badge-text{font-size:13px;font-weight:700;color:#86efac;line-height:1.4}
+.free-badge-text strong{color:#fff;font-weight:800}
+
+/* ── PROGRESS STEPS ── */
+.progress-wrap{background:#fff;border-bottom:1px solid var(--g200);padding:0 40px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.progress-inner{max-width:900px;margin:0 auto;display:flex;align-items:stretch}
+.progress-step{display:flex;align-items:center;gap:10px;padding:16px 20px 16px 0;position:relative;flex:1}
+.progress-step:not(:last-child)::after{content:'›';position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--g300);font-size:18px;font-weight:300}
+.progress-step.done .progress-num{background:var(--green);color:#fff;border-color:var(--green)}
+.progress-step.active .progress-num{background:var(--navy);color:#fff;border-color:var(--navy)}
+.progress-step.inactive .progress-num{background:#fff;color:var(--g400);border-color:var(--g200)}
+.progress-step.inactive .progress-label{color:var(--g400)}
+.progress-num{width:28px;height:28px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;transition:all .2s}
+.progress-label{font-size:12px;font-weight:700;color:var(--g700);white-space:nowrap}
+.progress-step.active .progress-label{color:var(--navy)}
+
+/* ── FORM CONTENT ── */
+.form-content{padding:40px;max-width:900px;margin:0 auto}
+
+/* Step cards */
+.step-card{background:#fff;border:1px solid var(--g200);border-radius:24px;overflow:hidden;margin-bottom:24px;display:none;animation:fadeUp .4s ease both}
+.step-card.active{display:block}
+.step-card-header{padding:24px 28px 20px;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:14px}
+.step-card-num{width:36px;height:36px;border-radius:10px;background:var(--navy);color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-card-title{font-size:18px;font-weight:800;color:var(--g900);letter-spacing:-.3px}
+.step-card-sub{font-size:13px;color:var(--g400);margin-top:2px}
+.step-card-body{padding:28px}
+
+/* ── STEP 1 ── */
+.form-group{margin-bottom:22px}
+.form-label{display:block;font-size:13px;font-weight:700;color:var(--g700);margin-bottom:8px}
+.form-label span{font-size:11px;font-weight:500;color:var(--g400);margin-left:6px}
+.form-input{width:100%;border:1.5px solid var(--g200);border-radius:12px;padding:13px 16px;font-size:15px;font-family:inherit;color:var(--g900);outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+.form-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,58,95,.08)}
+.form-input::placeholder{color:var(--g300)}
+
+/* ── STEP 2: IMAGES ── */
+.image-upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.image-upload-label{display:block;font-size:12px;font-weight:800;color:var(--g700);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.image-upload-label span{color:var(--gold)}
+.image-upload-desc{font-size:11px;color:var(--g400);margin-bottom:10px;font-weight:500;line-height:1.4}
+.image-drop-zone{border:2px dashed var(--g200);border-radius:16px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--g50);position:relative;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.image-drop-zone:hover,.image-drop-zone.dragover{border-color:var(--navy);background:#f0f4ff}
+.image-drop-zone.has-image{border-style:solid;border-color:var(--g200);padding:0;overflow:hidden}
+.image-drop-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.image-drop-icon{font-size:28px;color:var(--g300)}
+.image-drop-text{font-size:12px;font-weight:700;color:var(--g500)}
+.image-drop-hint{font-size:11px;color:var(--g400)}
+.image-preview{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
+.image-remove-btn{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;transition:background .15s}
+.image-remove-btn:hover{background:rgba(220,38,38,.8)}
+.image-drop-zone.has-image .image-remove-btn{display:flex}
+.image-drop-zone.has-image .image-drop-icon,
+.image-drop-zone.has-image .image-drop-text,
+.image-drop-zone.has-image .image-drop-hint{display:none}
+.image-quality-tip{background:linear-gradient(135deg,#fffbeb,#fef9ec);border:1px solid rgba(245,158,11,.25);border-radius:12px;padding:12px 16px;margin-top:16px;display:flex;align-items:flex-start;gap:10px}
+.image-quality-tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.image-quality-tip-text{font-size:12px;color:var(--g700);line-height:1.55}
+.image-quality-tip-text strong{color:var(--amber);font-weight:800}
+
+/* ── STEP 3: COLOURS ── */
+.colour-picker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.colour-picker-label{font-size:13px;font-weight:700;color:var(--g700);margin-bottom:4px}
+.colour-picker-desc{font-size:11px;color:var(--g400);margin-bottom:12px;line-height:1.4}
+.colour-picker-control{display:flex;align-items:center;gap:12px;background:var(--g50);border:1.5px solid var(--g200);border-radius:12px;padding:10px 14px;transition:border-color .15s}
+.colour-picker-control:focus-within{border-color:var(--navy)}
+.colour-swatch-wrap{position:relative;flex-shrink:0}
+.colour-swatch{width:40px;height:40px;border-radius:10px;border:2px solid rgba(0,0,0,.1);cursor:pointer;transition:transform .15s;display:block}
+.colour-swatch:hover{transform:scale(1.08)}
+.colour-input-native{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none;padding:0}
+.colour-hex-input{flex:1;border:none;background:transparent;font-size:14px;font-family:'Inter',monospace;font-weight:700;color:var(--g700);outline:none;letter-spacing:.5px}
+.colour-hex-label{font-size:11px;color:var(--g400);font-weight:600}
+.colour-palette-suggestions-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--g400);margin-bottom:10px}
+.colour-palette-grid{display:flex;gap:10px;flex-wrap:wrap}
+.colour-palette-preset{display:flex;gap:4px;cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid transparent;transition:all .15s;padding:2px}
+.colour-palette-preset:hover{border-color:var(--navy);transform:translateY(-1px)}
+.colour-palette-preset.selected{border-color:var(--gold)}
+.colour-palette-swatch{width:22px;height:32px}
+
+/* ── STEP 4: BRAND NAMES ── */
+.brand-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;gap:16px;text-align:center}
+.brand-loading-spinner{width:40px;height:40px;border:3px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite}
+.brand-loading-text{font-size:14px;color:var(--g500);font-weight:600}
+.brand-name-intro{background:linear-gradient(135deg,var(--navy-dark),var(--navy));border-radius:16px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.brand-name-intro-avatar{width:44px;height:44px;border-radius:50%;border:2px solid rgba(245,158,11,.4);overflow:hidden;flex-shrink:0}
+.brand-name-intro-avatar img{width:100%;height:100%;object-fit:cover;animation:hubFloat 3s ease-in-out infinite}
+.brand-name-intro-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-style:italic}
+.brand-name-intro-text strong{color:var(--gold);font-style:normal}
+.brand-name-grid{display:flex;flex-direction:column;gap:14px}
+.brand-name-card{border:2px solid var(--g200);border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .2s;background:#fff;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+.brand-name-card:hover{border-color:var(--navy-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,58,95,.1)}
+.brand-name-card.selected{border-color:var(--navy);background:linear-gradient(135deg,#f0f4ff,#fff);box-shadow:0 0 0 4px rgba(30,58,95,.08)}
+.brand-name-logo-preview{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;font-weight:900;color:#fff}
+.brand-name-text{font-size:20px;font-weight:900;color:var(--g900);letter-spacing:-.5px;margin-bottom:4px}
+.brand-name-rationale{font-size:13px;color:var(--g500);line-height:1.5}
+.brand-name-niche-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-top:6px}
+.brand-name-select-indicator{width:24px;height:24px;border-radius:50%;border:2px solid var(--g200);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.brand-name-card.selected .brand-name-select-indicator{background:var(--navy);border-color:var(--navy)}
+.brand-name-card.selected .brand-name-select-indicator::after{content:'✓';font-size:13px;font-weight:800;color:#fff}
+
+/* ── GENERATING OVERLAY ── */
+.generating-overlay{display:none;position:fixed;inset:0;background:rgba(8,16,32,.92);backdrop-filter:blur(10px);z-index:500;align-items:center;justify-content:center;padding:24px}
+.generating-overlay.show{display:flex}
+.generating-card{background:#fff;border-radius:28px;padding:40px;width:min(520px,100%);text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.4);animation:buildPulse 2s ease-in-out infinite}
+.generating-hub-wrap{position:relative;width:100px;height:100px;margin:0 auto 24px}
+.generating-hub-img{width:100px;height:100px;object-fit:contain;animation:hubFloat 2s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.15))}
+.generating-hub-dots{position:absolute;top:-12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.generating-hub-dot{width:8px;height:8px;border-radius:50%;animation:hubDot 1.4s ease-in-out infinite}
+.generating-hub-dot:nth-child(1){background:var(--gold)}
+.generating-hub-dot:nth-child(2){background:#3B82F6;animation-delay:.2s}
+.generating-hub-dot:nth-child(3){background:#10B981;animation-delay:.4s}
+.generating-title{font-size:22px;font-weight:900;color:var(--navy);letter-spacing:-.5px;margin-bottom:6px}
+.generating-step{font-size:14px;color:var(--g500);margin-bottom:28px;min-height:22px;animation:hubPulse 2s ease-in-out infinite}
+.generating-progress-track{height:6px;background:var(--g100);border-radius:999px;overflow:hidden;margin-bottom:8px}
+.generating-progress-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:999px;width:0%;transition:width .8s cubic-bezier(.16,1,.3,1)}
+.generating-progress-label{font-size:11px;color:var(--g400);font-weight:600}
+.generating-steps-list{display:flex;flex-direction:column;gap:8px;margin-top:24px;text-align:left}
+.generating-step-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--g400);transition:color .3s}
+.generating-step-item.active{color:var(--navy)}
+.generating-step-item.done{color:var(--green)}
+.generating-step-item-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .3s}
+.generating-step-item.active .generating-step-item-dot{border-color:var(--navy);background:var(--navy);color:#fff;animation:spin .8s linear infinite}
+.generating-step-item.done .generating-step-item-dot{border-color:var(--green);background:var(--green);color:#fff}
+.generating-step-item.done .generating-step-item-dot::after{content:'✓'}
+.generating-step-item.active .generating-step-item-dot::after{content:'⟳'}
+
+/* ── NAV BUTTONS ── */
+.form-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:24px;border-top:1px solid var(--g100)}
+.btn-back{background:#fff;border:1.5px solid var(--g200);color:var(--g700);border-radius:12px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:8px}
+.btn-back:hover{border-color:var(--g300);background:var(--g50)}
+.btn-next{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:8px}
+.btn-next:hover{background:var(--navy-light);transform:translateY(-1px)}
+.btn-next:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed;transform:none}
+.btn-generate{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy-dark);border:none;border-radius:12px;padding:15px 32px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(245,158,11,.25)}
+.btn-generate:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,158,11,.35)}
+.btn-generate:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── ERROR / TOAST ── */
+.error-msg{background:var(--red-bg);color:var(--red);border:1px solid #fecaca;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:16px;display:none}
+.error-msg.show{display:block}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding-top:58px}
+  .mobile-topbar{display:flex}
+  .page-header{padding:24px 18px}
+  .progress-wrap{padding:0 18px}
+  .progress-label{display:none}
+  .form-content{padding:20px 18px}
+  .image-upload-grid{grid-template-columns:1fr}
+  .colour-picker-grid{grid-template-columns:1fr}
+  .step-card-header{padding:18px 20px 16px}
+  .step-card-body{padding:20px}
+  .brand-name-card{grid-template-columns:auto 1fr}
+  .brand-name-select-indicator{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+<div class="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+  <div class="mobile-logo-text">Drop<span>Research</span> Hub</div>
+  <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)"></div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <a class="sb-logo-wrap" href="dashboard.html">
+      <div class="sb-logo-icon">
+        <div class="sb-bar" style="height:8px;opacity:.4"></div>
+        <div class="sb-bar" style="height:14px;opacity:.7"></div>
+        <div class="sb-bar" style="height:20px"></div>
+        <div class="sb-bar g" style="height:15px"></div>
+      </div>
+      <div class="sb-logo-text">Drop<span>Research</span> Hub</div>
+    </a>
+  </div>
+  <div class="sb-hub">
+    <div class="sb-hub-avatar">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+    </div>
+    <div style="flex:1;min-width:0">
+      <div class="sb-hub-name">Hub</div>
+      <div class="sb-hub-status">Ready to build</div>
+    </div>
+    <div class="sb-hub-dot"></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">This Week</div>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🏠</span> Dashboard</a>
+    <a class="sb-item" href="members.html"><span class="sb-item-icon">📈</span> Emerging Products</a>
+    <div class="sb-section" style="margin-top:8px">Hub's Research</div>
+    <a class="sb-item" href="pulse.html"><span class="sb-item-icon">🌍</span> UK Market Pulse</a>
+    <div class="sb-section" style="margin-top:8px">Ask Hub</div>
+    <a class="sb-item" href="members.html"><span class="sb-item-icon">🔍</span> About A Product</a>
+    <a class="sb-item" href="dashboard.html"><span class="sb-item-icon">🚀</span> For A Launch Plan</a>
+    <div class="sb-section" style="margin-top:8px">Your Research</div>
+    <a class="sb-item" href="members.html"><span class="sb-item-icon">💛</span> Saved Products</a>
+    <a class="sb-item" href="members.html"><span class="sb-item-icon">⚖️</span> Compare Products</a>
+    <div class="sb-section" style="margin-top:8px">Build</div>
+    <a class="sb-item active" href="storepage.html"><span class="sb-item-icon">🏪</span> Store Builder <span class="sb-item-new">FREE</span></a>
+  </nav>
+  <div class="sb-bottom">
+    <div class="sb-user" id="sb-user-email">Members area</div>
+    <button class="sb-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div class="page-header-eyebrow"><div class="page-header-eyebrow-dot"></div>Members exclusive · Hub-powered</div>
+      <h1>🏪 Store <span>Builder</span></h1>
+      <p class="page-header-sub">Tell Hub about your product and he'll build a complete branded store concept — hero, features, reviews, FAQ and more — in under 60 seconds.</p>
+      <div class="free-badge">
+        <div class="free-badge-icon">🎁</div>
+        <div class="free-badge-text"><strong>Your first store concept is free.</strong> Upload your product, pick your colours, choose your brand name — Hub does the rest.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <div class="progress-step active" id="prog-1"><div class="progress-num" id="prog-num-1">1</div><div class="progress-label">Your product</div></div>
+      <div class="progress-step inactive" id="prog-2"><div class="progress-num" id="prog-num-2">2</div><div class="progress-label">Upload images</div></div>
+      <div class="progress-step inactive" id="prog-3"><div class="progress-num" id="prog-num-3">3</div><div class="progress-label">Choose colours</div></div>
+      <div class="progress-step inactive" id="prog-4"><div class="progress-num" id="prog-num-4">4</div><div class="progress-label">Pick brand name</div></div>
+    </div>
+  </div>
+
+  <div class="form-content">
+    <div class="error-msg" id="error-msg"></div>
+
+    <!-- STEP 1 -->
+    <div class="step-card active" id="step-1">
+      <div class="step-card-header">
+        <div class="step-card-num">1</div>
+        <div><div class="step-card-title">Tell Hub about your product</div><div class="step-card-sub">Hub uses this to generate your brand name, copy and store design</div></div>
+      </div>
+      <div class="step-card-body">
+        <div class="form-group">
+          <label class="form-label">Product name <span>What is it called?</span></label>
+          <input class="form-input" type="text" id="product-name" placeholder="e.g. Cordless Neck Fan Pro, LED Scalp Massager..." oninput="validateStep1()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Product niche <span>Pick the closest category</span></label>
+          <select class="form-input" id="niche-select" onchange="handleNicheSelect(this)" style="cursor:pointer">
+            <option value="">Select your niche...</option>
+            <optgroup label="Tech & Electronics">
+              <option value="Tech & Gadgets">Tech & Gadgets</option>
+              <option value="Phone & Tech Accessories">Phone & Tech Accessories</option>
+              <option value="Gaming & Entertainment">Gaming & Entertainment</option>
+              <option value="Office & Productivity">Office & Productivity</option>
+              <option value="Lighting & Décor">Lighting & Décor</option>
+            </optgroup>
+            <optgroup label="Beauty & Wellness">
+              <option value="Beauty & Skincare">Beauty & Skincare</option>
+              <option value="Hair Care">Hair Care</option>
+              <option value="Wellness & Self Care">Wellness & Self Care</option>
+              <option value="Men's Grooming">Men's Grooming</option>
+              <option value="Sleep & Relaxation">Sleep & Relaxation</option>
+            </optgroup>
+            <optgroup label="Health & Fitness">
+              <option value="Fitness & Exercise">Fitness & Exercise</option>
+              <option value="Sports & Outdoors">Sports & Outdoors</option>
+              <option value="Travel & Adventure">Travel & Adventure</option>
+            </optgroup>
+            <optgroup label="Home & Kitchen">
+              <option value="Kitchen & Cooking">Kitchen & Cooking</option>
+              <option value="Home & Living">Home & Living</option>
+              <option value="Garden & Outdoor">Garden & Outdoor</option>
+              <option value="Cleaning & Organisation">Cleaning & Organisation</option>
+              <option value="Eco & Sustainable">Eco & Sustainable</option>
+            </optgroup>
+            <optgroup label="Fashion & Accessories">
+              <option value="Fashion & Clothing">Fashion & Clothing</option>
+              <option value="Women's Fashion">Women's Fashion</option>
+              <option value="Jewellery & Accessories">Jewellery & Accessories</option>
+              <option value="Bags & Luggage">Bags & Luggage</option>
+            </optgroup>
+            <optgroup label="Family & Lifestyle">
+              <option value="Baby & Kids">Baby & Kids</option>
+              <option value="Pet Products">Pet Products</option>
+              <option value="Food & Drink">Food & Drink</option>
+              <option value="Automotive & Car">Automotive & Car</option>
+            </optgroup>
+            <option value="other">Other — I'll describe it</option>
+          </select>
+          <div id="niche-other-wrap" style="display:none;margin-top:10px">
+            <input class="form-input" type="text" id="niche-other-input" placeholder="Describe your niche e.g. Sustainable baby clothing, Artisan coffee equipment..." oninput="handleNicheOther(this.value)">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">What problem does it solve? <span>One sentence — Hub uses this for your hero copy</span></label>
+          <input class="form-input" type="text" id="product-problem" placeholder="e.g. Keeps you cool without holding a fan or sweating through summer..." oninput="validateStep1()">
+        </div>
+        <div class="form-nav" style="border-top:1px solid var(--g100);margin-top:24px">
+          <div></div>
+          <button class="btn-next" id="btn-next-1" onclick="nextStep(1)" disabled>Next — Upload images →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-card" id="step-2">
+      <div class="step-card-header">
+        <div class="step-card-num">2</div>
+        <div><div class="step-card-title">Upload your product images</div><div class="step-card-sub">Three images make your store look like a real brand — not a generic mockup</div></div>
+      </div>
+      <div class="step-card-body">
+        <div class="image-upload-grid">
+          <div>
+            <div class="image-upload-label">Image 1 <span>★ Hero shot</span></div>
+            <div class="image-upload-desc">Clean product on white or minimal background. The first thing customers see.</div>
+            <div class="image-drop-zone" id="drop-1" ondragover="handleDragOver(event,1)" ondragleave="handleDragLeave(1)" ondrop="handleDrop(event,1)">
+              <input type="file" accept="image/*" onchange="handleFileInput(event,1)" id="file-input-1">
+              <button class="image-remove-btn" onclick="removeImage(1,event)">✕</button>
+              <img class="image-preview" id="preview-1" src="" alt="" style="display:none">
+              <div class="image-drop-icon">📸</div>
+              <div class="image-drop-text">Drop image here or click to upload</div>
+              <div class="image-drop-hint">JPG, PNG or WEBP · Max 5MB</div>
+            </div>
+          </div>
+          <div>
+            <div class="image-upload-label">Image 2 <span>Lifestyle shot</span></div>
+            <div class="image-upload-desc">Product being used in real life. Shows customers what their life looks like with it.</div>
+            <div class="image-drop-zone" id="drop-2" ondragover="handleDragOver(event,2)" ondragleave="handleDragLeave(2)" ondrop="handleDrop(event,2)">
+              <input type="file" accept="image/*" onchange="handleFileInput(event,2)" id="file-input-2">
+              <button class="image-remove-btn" onclick="removeImage(2,event)">✕</button>
+              <img class="image-preview" id="preview-2" src="" alt="" style="display:none">
+              <div class="image-drop-icon">🌟</div>
+              <div class="image-drop-text">Drop image here or click to upload</div>
+              <div class="image-drop-hint">JPG, PNG or WEBP · Max 5MB</div>
+            </div>
+          </div>
+          <div>
+            <div class="image-upload-label">Image 3 <span>Detail shot</span></div>
+            <div class="image-upload-desc">Close-up showing quality or a key feature. Builds trust before purchase.</div>
+            <div class="image-drop-zone" id="drop-3" ondragover="handleDragOver(event,3)" ondragleave="handleDragLeave(3)" ondrop="handleDrop(event,3)">
+              <input type="file" accept="image/*" onchange="handleFileInput(event,3)" id="file-input-3">
+              <button class="image-remove-btn" onclick="removeImage(3,event)">✕</button>
+              <img class="image-preview" id="preview-3" src="" alt="" style="display:none">
+              <div class="image-drop-icon">🔍</div>
+              <div class="image-drop-text">Drop image here or click to upload</div>
+              <div class="image-drop-hint">JPG, PNG or WEBP · Max 5MB</div>
+            </div>
+          </div>
+        </div>
+        <div class="image-quality-tip">
+          <div class="image-quality-tip-icon">💡</div>
+          <div class="image-quality-tip-text"><strong>Pro tip:</strong> The better your images, the more your store concept will look like a real brand. Hub will work with whatever you upload — you can always regenerate with better images later.</div>
+        </div>
+        <div class="form-nav">
+          <button class="btn-back" onclick="prevStep(2)">← Back</button>
+          <button class="btn-next" onclick="nextStep(2)">Next — Choose your colours →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-card" id="step-3">
+      <div class="step-card-header">
+        <div class="step-card-num">3</div>
+        <div><div class="step-card-title">Choose your brand colours</div><div class="step-card-sub">Hub uses these to style every section of your store</div></div>
+      </div>
+      <div class="step-card-body">
+        <div class="colour-picker-grid">
+          <div>
+            <div class="colour-picker-label">Primary colour</div>
+            <div class="colour-picker-desc">Main brand colour. Used on buttons, hero backgrounds and key headings.</div>
+            <div class="colour-picker-control">
+              <div class="colour-swatch-wrap">
+                <div class="colour-swatch" id="swatch-1" style="background:#1E3A5F"></div>
+                <input type="color" class="colour-input-native" id="colour-native-1" value="#1E3A5F" oninput="updateColour(1,this.value)">
+              </div>
+              <div>
+                <input class="colour-hex-input" id="colour-hex-1" value="#1E3A5F" maxlength="7" oninput="updateColourFromHex(1,this.value)">
+                <div class="colour-hex-label">Primary</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="colour-picker-label">Secondary colour</div>
+            <div class="colour-picker-desc">Accent colour. Used on badges, icons and highlights.</div>
+            <div class="colour-picker-control">
+              <div class="colour-swatch-wrap">
+                <div class="colour-swatch" id="swatch-2" style="background:#F59E0B"></div>
+                <input type="color" class="colour-input-native" id="colour-native-2" value="#F59E0B" oninput="updateColour(2,this.value)">
+              </div>
+              <div>
+                <input class="colour-hex-input" id="colour-hex-2" value="#F59E0B" maxlength="7" oninput="updateColourFromHex(2,this.value)">
+                <div class="colour-hex-label">Secondary</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="colour-picker-label">Accent colour</div>
+            <div class="colour-picker-desc">Background colour. Used for section backgrounds and subtle highlights.</div>
+            <div class="colour-picker-control">
+              <div class="colour-swatch-wrap">
+                <div class="colour-swatch" id="swatch-3" style="background:#F8FAFF"></div>
+                <input type="color" class="colour-input-native" id="colour-native-3" value="#F8FAFF" oninput="updateColour(3,this.value)">
+              </div>
+              <div>
+                <input class="colour-hex-input" id="colour-hex-3" value="#F8FAFF" maxlength="7" oninput="updateColourFromHex(3,this.value)">
+                <div class="colour-hex-label">Accent</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;margin-bottom:24px">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--g400);margin-bottom:10px">Your palette preview</div>
+          <div style="height:48px;border-radius:14px;overflow:hidden;display:flex;box-shadow:0 4px 16px rgba(0,0,0,.08)">
+            <div id="palette-preview-1" style="flex:2;background:#1E3A5F;transition:background .3s"></div>
+            <div id="palette-preview-2" style="flex:1;background:#F59E0B;transition:background .3s"></div>
+            <div id="palette-preview-3" style="flex:1;background:#F8FAFF;border-left:1px solid rgba(0,0,0,.06);transition:background .3s"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="colour-palette-suggestions-label">Or choose a preset palette</div>
+          <div class="colour-palette-grid">
+            <div class="colour-palette-preset selected" onclick="applyPreset(['#1E3A5F','#F59E0B','#F8FAFF'],this)" title="Navy & Gold">
+              <div class="colour-palette-swatch" style="background:#1E3A5F"></div>
+              <div class="colour-palette-swatch" style="background:#F59E0B"></div>
+              <div class="colour-palette-swatch" style="background:#F8FAFF"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#111827','#10B981','#F9FAFB'],this)" title="Black & Green">
+              <div class="colour-palette-swatch" style="background:#111827"></div>
+              <div class="colour-palette-swatch" style="background:#10B981"></div>
+              <div class="colour-palette-swatch" style="background:#F9FAFB"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#7C3AED','#F472B6','#FDF4FF'],this)" title="Purple & Pink">
+              <div class="colour-palette-swatch" style="background:#7C3AED"></div>
+              <div class="colour-palette-swatch" style="background:#F472B6"></div>
+              <div class="colour-palette-swatch" style="background:#FDF4FF"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#166534','#D97706','#F0FDF4'],this)" title="Forest & Amber">
+              <div class="colour-palette-swatch" style="background:#166534"></div>
+              <div class="colour-palette-swatch" style="background:#D97706"></div>
+              <div class="colour-palette-swatch" style="background:#F0FDF4"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#DC2626','#111827','#FFF5F5'],this)" title="Red & Black">
+              <div class="colour-palette-swatch" style="background:#DC2626"></div>
+              <div class="colour-palette-swatch" style="background:#111827"></div>
+              <div class="colour-palette-swatch" style="background:#FFF5F5"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#0C4A6E','#38BDF8','#F0F9FF'],this)" title="Ocean Blue">
+              <div class="colour-palette-swatch" style="background:#0C4A6E"></div>
+              <div class="colour-palette-swatch" style="background:#38BDF8"></div>
+              <div class="colour-palette-swatch" style="background:#F0F9FF"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#92400E','#FBBF24','#FFFBEB'],this)" title="Caramel">
+              <div class="colour-palette-swatch" style="background:#92400E"></div>
+              <div class="colour-palette-swatch" style="background:#FBBF24"></div>
+              <div class="colour-palette-swatch" style="background:#FFFBEB"></div>
+            </div>
+            <div class="colour-palette-preset" onclick="applyPreset(['#1F2937','#F9FAFB','#374151'],this)" title="Monochrome">
+              <div class="colour-palette-swatch" style="background:#1F2937"></div>
+              <div class="colour-palette-swatch" style="background:#F9FAFB"></div>
+              <div class="colour-palette-swatch" style="background:#374151"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="prevStep(3)">← Back</button>
+          <button class="btn-next" onclick="goToStep4()">Next — Pick your brand name →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-card" id="step-4">
+      <div class="step-card-header">
+        <div class="step-card-num">4</div>
+        <div><div class="step-card-title">Choose your brand name</div><div class="step-card-sub">Hub has generated three brand concepts based on your product and colours</div></div>
+      </div>
+      <div class="step-card-body">
+        <div class="brand-name-intro">
+          <div class="brand-name-intro-avatar">
+            <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='🤖'">
+          </div>
+          <div class="brand-name-intro-text" id="brand-intro-text">"I'm generating three brand concepts based on your product. Give me a moment..."</div>
+        </div>
+        <div id="brand-name-container">
+          <div class="brand-loading" id="brand-loading">
+            <div class="brand-loading-spinner"></div>
+            <div class="brand-loading-text">Hub is creating your brand concepts...</div>
+          </div>
+          <div class="brand-name-grid" id="brand-name-grid" style="display:none"></div>
+        </div>
+        <div class="form-nav" style="margin-top:28px">
+          <button class="btn-back" onclick="prevStep(4)">← Back</button>
+          <button class="btn-generate" id="btn-generate" onclick="startGeneration()" disabled>
+            <span>🏪</span> Build my store concept
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GENERATING OVERLAY -->
+<div class="generating-overlay" id="generating-overlay">
+  <div class="generating-card">
+    <div class="generating-hub-wrap">
+      <img class="generating-hub-img" src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.outerHTML='<div style=font-size:64px>🤖</div>'">
+      <div class="generating-hub-dots">
+        <div class="generating-hub-dot"></div>
+        <div class="generating-hub-dot"></div>
+        <div class="generating-hub-dot"></div>
+      </div>
+    </div>
+    <div class="generating-title">Hub is building your store</div>
+    <div class="generating-step" id="gen-step-text">Getting started...</div>
+    <div class="generating-progress-track">
+      <div class="generating-progress-fill" id="gen-progress"></div>
+    </div>
+    <div class="generating-progress-label" id="gen-progress-label">0% complete</div>
+    <div class="generating-steps-list">
+      <div class="generating-step-item" id="gen-item-1"><div class="generating-step-item-dot"></div>Creating your brand identity</div>
+      <div class="generating-step-item" id="gen-item-2"><div class="generating-step-item-dot"></div>Writing your hero section</div>
+      <div class="generating-step-item" id="gen-item-3"><div class="generating-step-item-dot"></div>Building product features</div>
+      <div class="generating-step-item" id="gen-item-4"><div class="generating-step-item-dot"></div>Generating customer reviews</div>
+      <div class="generating-step-item" id="gen-item-5"><div class="generating-step-item-dot"></div>Writing your FAQ</div>
+      <div class="generating-step-item" id="gen-item-6"><div class="generating-step-item-dot"></div>Assembling your store</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+const state = {
+  step: 1,
+  productName: '',
+  niche: '',
+  problem: '',
+  images: { 1: null, 2: null, 3: null },
+  colours: { primary: '#1E3A5F', secondary: '#F59E0B', accent: '#F8FAFF' },
+  brandName: '',
+  brandIcon: '',
+  generatedStore: null
+};
+
+// ── STEP NAVIGATION ──
+function showStep(n) {
+  state.step = n;
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  const card = document.getElementById('step-' + n);
+  if (card) card.classList.add('active');
+  for (let i = 1; i <= 4; i++) {
+    const prog = document.getElementById('prog-' + i);
+    const num = document.getElementById('prog-num-' + i);
+    prog.className = 'progress-step';
+    if (i < n) { prog.classList.add('done'); num.textContent = '✓'; }
+    else if (i === n) { prog.classList.add('active'); num.textContent = i; }
+    else { prog.classList.add('inactive'); num.textContent = i; }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(current) {
+  if (current === 1 && !validateStep1()) return;
+  if (current === 1) {
+    state.productName = document.getElementById('product-name').value.trim();
+    state.problem = document.getElementById('product-problem').value.trim();
+  }
+  showStep(current + 1);
+}
+
+function prevStep(current) { showStep(current - 1); }
+
+async function goToStep4() {
+  showStep(4);
+  await generateBrandNames();
+}
+
+// ── STEP 1 VALIDATION ──
+function validateStep1() {
+  const name = document.getElementById('product-name').value.trim();
+  const problem = document.getElementById('product-problem').value.trim();
+  const btn = document.getElementById('btn-next-1');
+  const valid = name.length >= 3 && state.niche.length > 0 && problem.length >= 10;
+  btn.disabled = !valid;
+  return valid;
+}
+
+function handleNicheSelect(select) {
+  const val = select.value;
+  const otherWrap = document.getElementById('niche-other-wrap');
+  if (val === 'other') {
+    otherWrap.style.display = 'block';
+    document.getElementById('niche-other-input').focus();
+    state.niche = '';
+  } else {
+    otherWrap.style.display = 'none';
+    state.niche = val;
+  }
+  validateStep1();
+}
+
+function handleNicheOther(val) {
+  state.niche = val.trim();
+  validateStep1();
+}
+
+// ── STEP 2: IMAGE UPLOADS ──
+const imageData = { 1: null, 2: null, 3: null };
+
+function handleFileInput(event, slot) {
+  const file = event.target.files[0];
+  if (file) processImageFile(file, slot);
+}
+
+function handleDragOver(event, slot) {
+  event.preventDefault();
+  document.getElementById('drop-' + slot).classList.add('dragover');
+}
+
+function handleDragLeave(slot) {
+  document.getElementById('drop-' + slot).classList.remove('dragover');
+}
+
+function handleDrop(event, slot) {
+  event.preventDefault();
+  document.getElementById('drop-' + slot).classList.remove('dragover');
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processImageFile(file, slot);
+  else showToast('Please drop an image file');
+}
+
+function processImageFile(file, slot) {
+  if (file.size > 5 * 1024 * 1024) { showToast('Image too large — max 5MB'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    imageData[slot] = e.target.result;
+    state.images[slot] = e.target.result;
+    const preview = document.getElementById('preview-' + slot);
+    const dropZone = document.getElementById('drop-' + slot);
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    dropZone.classList.add('has-image');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage(slot, event) {
+  event.stopPropagation();
+  imageData[slot] = null;
+  state.images[slot] = null;
+  const preview = document.getElementById('preview-' + slot);
+  const dropZone = document.getElementById('drop-' + slot);
+  preview.src = '';
+  preview.style.display = 'none';
+  dropZone.classList.remove('has-image');
+  document.getElementById('file-input-' + slot).value = '';
+}
+
+// ── STEP 3: COLOUR PICKERS ──
+function updateColour(slot, value) {
+  const key = slot === 1 ? 'primary' : slot === 2 ? 'secondary' : 'accent';
+  state.colours[key] = value;
+  document.getElementById('swatch-' + slot).style.background = value;
+  document.getElementById('colour-hex-' + slot).value = value.toUpperCase();
+  document.getElementById('palette-preview-' + slot).style.background = value;
+}
+
+function updateColourFromHex(slot, value) {
+  if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+    document.getElementById('colour-native-' + slot).value = value;
+    updateColour(slot, value);
+  }
+}
+
+function applyPreset(colours, btn) {
+  document.querySelectorAll('.colour-palette-preset').forEach(p => p.classList.remove('selected'));
+  btn.classList.add('selected');
+  colours.forEach((colour, i) => {
+    const slot = i + 1;
+    document.getElementById('colour-native-' + slot).value = colour;
+    updateColour(slot, colour);
+  });
+}
+
+// ── STEP 4: BRAND NAME GENERATION ──
+async function generateBrandNames() {
+  const loading = document.getElementById('brand-loading');
+  const grid = document.getElementById('brand-name-grid');
+  const introText = document.getElementById('brand-intro-text');
+
+  loading.style.display = 'flex';
+  grid.style.display = 'none';
+  document.getElementById('btn-generate').disabled = true;
+
+  try {
+    const res = await fetch('/api/store-generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'brand_names',
+        productName: state.productName,
+        niche: state.niche,
+        problem: state.problem,
+        colours: state.colours
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.brands) throw new Error(data.error || 'Brand name generation failed');
+
+    loading.style.display = 'none';
+    grid.style.display = 'flex';
+    grid.innerHTML = '';
+
+    // Gradient backgrounds based on primary colour
+    const gradients = [
+      `linear-gradient(135deg,${state.colours.primary},${state.colours.primary}99)`,
+      `linear-gradient(135deg,${state.colours.secondary},${state.colours.secondary}99)`,
+      `linear-gradient(135deg,${state.colours.primary}cc,${state.colours.secondary}99)`
+    ];
+
+    data.brands.forEach((brand, i) => {
+      const card = document.createElement('div');
+      card.className = 'brand-name-card';
+      card.dataset.brand = brand.name;
+      card.dataset.icon = brand.icon;
+      card.innerHTML = `
+        <div class="brand-name-logo-preview" style="background:${gradients[i]}">${brand.icon}</div>
+        <div class="brand-name-info">
+          <div class="brand-name-text">${brand.name}</div>
+          <div class="brand-name-rationale">${brand.rationale}</div>
+          <div class="brand-name-niche-tag">${brand.nicheTag}</div>
+        </div>
+        <div class="brand-name-select-indicator"></div>
+      `;
+      card.onclick = () => selectBrand(card);
+      grid.appendChild(card);
+    });
+
+    introText.innerHTML = '"I\'ve created three brand concepts for your product. <strong>Pick the one that feels most like the brand you want to build.</strong>"';
+
+  } catch (err) {
+    loading.style.display = 'none';
+    grid.style.display = 'flex';
+    grid.innerHTML = `<div style="padding:20px;text-align:center;color:var(--red);font-size:13px;font-weight:700">Could not generate brand names — please go back and try again.</div>`;
+    console.error('Brand name error:', err);
+  }
+}
+
+function selectBrand(card) {
+  document.querySelectorAll('.brand-name-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  state.brandName = card.dataset.brand;
+  state.brandIcon = card.dataset.icon;
+  document.getElementById('btn-generate').disabled = false;
+}
+
+// ── GENERATION ──
+async function startGeneration() {
+  const overlay = document.getElementById('generating-overlay');
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  // Animate steps while API call runs
+  const stepItems = ['gen-item-1','gen-item-2','gen-item-3','gen-item-4','gen-item-5','gen-item-6'];
+  const stepTexts = [
+    'Creating your brand identity...',
+    'Writing your hero section...',
+    'Building product features...',
+    'Generating customer reviews...',
+    'Writing your FAQ...',
+    'Assembling your store...'
+  ];
+  const stepProgress = [15, 30, 48, 64, 80, 95];
+
+  let currentStep = 0;
+  let animationDone = false;
+  let apiDone = false;
+  let apiResult = null;
+
+  function advanceAnimation() {
+    if (currentStep > 0) {
+      document.getElementById(stepItems[currentStep - 1]).classList.remove('active');
+      document.getElementById(stepItems[currentStep - 1]).classList.add('done');
+    }
+    if (currentStep < stepItems.length) {
+      document.getElementById(stepItems[currentStep]).classList.add('active');
+      document.getElementById('gen-step-text').textContent = stepTexts[currentStep];
+      document.getElementById('gen-progress').style.width = stepProgress[currentStep] + '%';
+      document.getElementById('gen-progress-label').textContent = stepProgress[currentStep] + '% complete';
+      currentStep++;
+      setTimeout(advanceAnimation, 800 + Math.random() * 400);
+    } else {
+      animationDone = true;
+      if (apiDone) finishGeneration(apiResult);
+    }
+  }
+
+  setTimeout(advanceAnimation, 300);
+
+  // Real API call
+  try {
+    const res = await fetch('/api/store-generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'generate_store',
+        productName: state.productName,
+        niche: state.niche,
+        problem: state.problem,
+        brandName: state.brandName,
+        brandIcon: state.brandIcon,
+        colours: state.colours
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Store generation failed');
+
+    apiResult = data;
+    apiDone = true;
+    if (animationDone) finishGeneration(data);
+
+  } catch (err) {
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+    showError('Could not generate your store — please try again.');
+    console.error('Generation error:', err);
+  }
+}
+
+function finishGeneration(data) {
+  const overlay = document.getElementById('generating-overlay');
+  document.getElementById('gen-progress').style.width = '100%';
+  document.getElementById('gen-progress-label').textContent = '100% complete';
+  document.getElementById('gen-step-text').textContent = 'Your store is ready!';
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+    // Open generated store in new tab
+    openGeneratedStore(data);
+  }, 800);
+}
+
+function openGeneratedStore(data) {
+  const { copy, fonts, colours, brand } = data;
+  const c = copy;
+  const img1 = state.images[1] || '';
+  const img2 = state.images[2] || '';
+  const img3 = state.images[3] || '';
+
+  const storeHTML = buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 });
+  const blob = new Blob([storeHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  showToast('✓ Your store concept is ready — check the new tab!');
+}
+
+function buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 }) {
+  const p = colours.primary;
+  const s = colours.secondary;
+  const a = colours.accent;
+  const textOnPrimary = isLight(p) ? '#111827' : '#ffffff';
+  const textOnSecondary = isLight(s) ? '#111827' : '#ffffff';
+
+  function isLight(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+  }
+
+  const headingFont = fonts?.heading || 'Inter';
+  const bodyFont = fonts?.body || 'Inter';
+  const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g,'+')}:wght@700;800;900&family=${bodyFont.replace(/ /g,'+')}:wght@400;500;600;700&display=swap`;
+
+  const trustStrip = (c.trustStrip || []).map(t => `
+    <div style="display:flex;align-items:center;gap:8px;padding:0 24px;border-right:1px solid rgba(0,0,0,.1)">
+      <span style="font-size:20px">${t.icon}</span>
+      <span style="font-size:13px;font-weight:700;white-space:nowrap">${t.text}</span>
+    </div>`).join('');
+
+  const features = (c.features || []).map(f => `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:36px;margin-bottom:14px">${f.icon}</div>
+      <div style="font-size:16px;font-weight:800;color:${p};margin-bottom:8px;font-family:'${headingFont}',sans-serif">${f.title}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.6">${f.body}</div>
+    </div>`).join('');
+
+  const reviews = (c.reviews || []).map(r => `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px">
+      <div style="color:${s};font-size:18px;letter-spacing:2px;margin-bottom:12px">${'★'.repeat(r.rating)}</div>
+      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:8px">${r.title}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.7;margin-bottom:16px;font-style:italic">"${r.body}"</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">${r.name[0]}</div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#111827">${r.name}</div>
+          <div style="font-size:11px;color:#9ca3af">${r.location} · ${r.verified ? '✓ Verified Buyer · ' : ''}${r.daysAgo} days ago</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const steps = (c.howItWorks?.steps || []).map((step, i) => `
+    <div style="text-align:center;flex:1;padding:0 16px">
+      <div style="width:56px;height:56px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin:0 auto 16px;font-family:'${headingFont}',sans-serif">${step.number}</div>
+      <div style="font-size:16px;font-weight:800;color:#111827;margin-bottom:8px;font-family:'${headingFont}',sans-serif">${step.title}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.6">${step.body}</div>
+    </div>
+    ${i < (c.howItWorks.steps.length - 1) ? `<div style="font-size:24px;color:#d1d5db;align-self:center;flex-shrink:0">→</div>` : ''}`).join('');
+
+  const faqItems = (c.faq?.items || []).map(item => `
+    <details style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff">
+      <summary style="padding:18px 20px;font-size:15px;font-weight:700;color:#111827;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+        ${item.q} <span style="font-size:18px;color:#9ca3af;flex-shrink:0;margin-left:12px">+</span>
+      </summary>
+      <div style="padding:0 20px 18px;font-size:14px;color:#6b7280;line-height:1.75">${item.a}</div>
+    </details>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>${brand.name} — ${c.meta?.tagline || ''}</title>
+<link href="${googleFontsUrl}" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'${bodyFont}',sans-serif;color:#111827;line-height:1.6;overflow-x:hidden;background:#fff}
+a{text-decoration:none;color:inherit}
+details summary::-webkit-details-marker{display:none}
+@media print{
+  .no-print{display:none!important}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:768px){
+  .hero-grid{grid-template-columns:1fr!important}
+  .features-grid{grid-template-columns:1fr!important}
+  .reviews-grid{grid-template-columns:1fr!important}
+  .how-steps{flex-direction:column!important}
+  .how-steps > div[style*="→"]{display:none!important}
+  .footer-grid{grid-template-columns:1fr!important}
+  .trust-strip{overflow-x:auto}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- SAVE CONCEPT BAR -->
+<div class="no-print" style="background:${p};color:${textOnPrimary};padding:10px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,.15)">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:16px">🏪</span>
+    <div>
+      <div style="font-size:13px;font-weight:800">${brand.name} — Store Concept</div>
+      <div style="font-size:11px;opacity:.75">Generated by Hub · DropResearch Hub</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button onclick="window.print()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.2)'">💾 Save my store concept</button>
+    <button onclick="window.close()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" >✕ Close</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav style="background:#fff;border-bottom:1px solid #e5e7eb;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:${textOnPrimary === '#ffffff' ? '52px' : '52px'};z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.06)" class="no-print-sticky">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="width:36px;height:36px;border-radius:9px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
+    <div style="font-size:18px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
+  </div>
+  <div class="nav-links" style="display:flex;gap:28px">
+    ${(c.nav?.links || ['Products','Reviews','FAQ']).map(l => `<a href="#" style="font-size:14px;font-weight:600;color:#6b7280;transition:color .15s" onmouseover="this.style.color='${p}'" onmouseout="this.style.color='#6b7280'">${l}</a>`).join('')}
+  </div>
+  <a href="#" style="background:${p};color:${textOnPrimary};border-radius:10px;padding:10px 20px;font-size:14px;font-weight:800;font-family:'${headingFont}',sans-serif;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.nav?.ctaText || 'Shop Now'}</a>
+</nav>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip" style="background:${a};border-bottom:1px solid #e5e7eb;padding:12px 5%;display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap">
+  ${trustStrip}
+</div>
+
+<!-- HERO -->
+<section style="background:${p};padding:80px 5%;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none"></div>
+  <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1200px;margin:0 auto;position:relative;z-index:1">
+    <div>
+      ${c.hero?.badge ? `<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:800;color:${textOnPrimary};text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px">${c.hero.badge}</div>` : ''}
+      <h1 style="font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.04;color:${textOnPrimary};margin-bottom:18px;font-family:'${headingFont}',sans-serif">${c.hero?.headline || brand.name}</h1>
+      <p style="font-size:18px;color:${textOnPrimary};opacity:.8;line-height:1.7;margin-bottom:32px;max-width:480px">${c.hero?.subheadline || ''}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="#" style="background:${s};color:${textOnSecondary};border-radius:12px;padding:16px 32px;font-size:16px;font-weight:900;font-family:'${headingFont}',sans-serif;transition:opacity .15s;display:inline-block" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.hero?.ctaText || 'Shop Now'}</a>
+        <a href="#" style="background:rgba(255,255,255,.12);color:${textOnPrimary};border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:16px 24px;font-size:15px;font-weight:700;transition:background .15s;display:inline-block" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">${c.hero?.ctaSecondary || 'Learn more'}</a>
+      </div>
+    </div>
+    <div style="border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);aspect-ratio:4/3;background:#f3f4f6;display:flex;align-items:center;justify-content:center">
+      ${img1 ? `<img src="${img1}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section style="padding:96px 5%;background:#fff">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+    <div style="border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:${a};display:flex;align-items:center;justify-content:center">
+      ${img2 ? `<img src="${img2}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name} lifestyle">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:10px">${c.problem?.eyebrow || 'The Problem'}</div>
+      <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#111827;margin-bottom:14px;font-family:'${headingFont}',sans-serif;line-height:1.1">${c.problem?.headline || ''}</h2>
+      <p style="font-size:16px;color:#6b7280;line-height:1.75;margin-bottom:32px">${c.problem?.body || ''}</p>
+      <div style="width:48px;height:3px;background:${s};border-radius:999px;margin-bottom:32px"></div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${p};margin-bottom:10px">${c.problem?.solutionEyebrow || 'The Solution'}</div>
+      <h3 style="font-size:clamp(20px,2.5vw,28px);font-weight:900;letter-spacing:-.5px;color:#111827;margin-bottom:12px;font-family:'${headingFont}',sans-serif">${c.problem?.solutionHeadline || ''}</h3>
+      <p style="font-size:15px;color:#6b7280;line-height:1.75">${c.problem?.solutionBody || ''}</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="padding:96px 5%;background:${a}">
+  <div style="max-width:1200px;margin:0 auto;text-align:center;margin-bottom:56px">
+    <h2 style="font-size:clamp(26px,3.5vw,42px);font-weight:900;letter-spacing:-1px;color:#111827;font-family:'${headingFont}',sans-serif">${brand.name} — built differently.</h2>
+  </div>
+  <div class="features-grid" style="display:grid;grid-template-columns:repeat(${Math.min(c.features?.length || 4,4)},1fr);gap:20px;max-width:1200px;margin:0 auto">
+    ${features}
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section style="padding:96px 5%;background:#fff">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;margin-bottom:48px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">What customers say</div>
+    <h2 style="font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">Real reviews from real people.</h2>
+  </div>
+  <div class="reviews-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto">
+    ${reviews}
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="padding:96px 5%;background:${a}">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;margin-bottom:56px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.howItWorks?.eyebrow || 'How It Works'}</div>
+    <h2 style="font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.howItWorks?.headline || 'Simple. Fast. Effective.'}</h2>
+  </div>
+  <div class="how-steps" style="display:flex;align-items:flex-start;gap:0;max-width:900px;margin:0 auto">
+    ${steps}
+  </div>
+</section>
+
+<!-- DETAIL IMAGE + CTA -->
+<section style="padding:96px 5%;background:${p}">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.finalCta?.eyebrow || 'Ready?'}</div>
+      <h2 style="font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.05;color:${textOnPrimary};margin-bottom:16px;font-family:'${headingFont}',sans-serif">${c.finalCta?.headline || 'Get yours today.'}</h2>
+      <p style="font-size:16px;color:${textOnPrimary};opacity:.75;margin-bottom:28px;line-height:1.7">${c.finalCta?.body || ''}</p>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+        <a href="#" style="background:${s};color:${textOnSecondary};border-radius:12px;padding:16px 32px;font-size:16px;font-weight:900;font-family:'${headingFont}',sans-serif;display:inline-block;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.finalCta?.ctaText || 'Shop Now'}</a>
+        <div style="font-size:13px;color:${textOnPrimary};opacity:.6">✓ ${c.finalCta?.guarantee || '30-day money back guarantee'}</div>
+        ${c.finalCta?.badge ? `<div style="font-size:12px;color:${textOnPrimary};opacity:.5">${c.finalCta.badge}</div>` : ''}
+      </div>
+    </div>
+    <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25);aspect-ratio:1;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center">
+      ${img3 ? `<img src="${img3}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name} detail">` : img1 ? `<img src="${img1}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    </div>
+  </div>
+</section>
+
+<!-- SOCIALS -->
+<section style="padding:72px 5%;background:#111827;text-align:center">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.4);margin-bottom:14px">Follow us on our socials</div>
+  <h2 style="font-size:clamp(22px,3vw,34px);font-weight:900;letter-spacing:-.8px;color:#fff;margin-bottom:8px;font-family:'${headingFont}',sans-serif">Join the ${brand.name} community</h2>
+  <p style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px">${c.meta?.socialHandle || '@' + brand.name.toLowerCase().replace(/\s+/g,'')}</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+    <!-- Instagram -->
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="url(#ig)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig)"/><defs><linearGradient id="ig" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#f09433"/><stop offset=".25" stop-color="#e6683c"/><stop offset=".5" stop-color="#dc2743"/><stop offset=".75" stop-color="#cc2366"/><stop offset="1" stop-color="#bc1888"/></linearGradient></defs></svg>
+      <span style="font-size:14px;font-weight:700;color:#fff">Follow on Instagram</span>
+    </a>
+    <!-- TikTok -->
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.138-1.009 6.372 6.372 0 0 1-1.296-3.295h.004C16.419.682 16.44 0 16.44 0h-4.123v16.028c0 .215 0 .428-.008.638a3.694 3.694 0 0 1-3.694-3.347 3.694 3.694 0 0 1 3.694-3.694c.363 0 .722.055 1.066.163V5.374a8.093 8.093 0 0 0-1.066-.07 7.909 7.909 0 0 0-7.909 7.909 7.909 7.909 0 0 0 7.909 7.909 7.909 7.909 0 0 0 7.909-7.909V8.678a10.525 10.525 0 0 0 6.151 1.965V6.53a5.162 5.162 0 0 1-3.057-.968z"/></svg>
+      <span style="font-size:14px;font-weight:700;color:#fff">Follow on TikTok</span>
+    </a>
+    <!-- Facebook -->
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      <span style="font-size:14px;font-weight:700;color:#fff">Follow on Facebook</span>
+    </a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:96px 5%;background:#fff">
+  <div style="max-width:720px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.faq?.eyebrow || 'FAQ'}</div>
+      <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.faq?.headline || 'Got questions?'}</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${faqItems}
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#111827;padding:56px 5% 28px">
+  <div class="footer-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto;margin-bottom:40px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:34px;height:34px;border-radius:8px;background:${p};display:flex;align-items:center;justify-content:center;font-size:16px">${brand.icon}</div>
+        <div style="font-size:16px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px">${c.footer?.tagline || c.meta?.tagline || ''}</p>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:16px">Quick Links</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${(c.nav?.links || ['Products','About']).map(l => `<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:16px">Legal</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${(c.footer?.links || ['Privacy Policy','Returns Policy','Contact Us']).map(l => `<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div style="font-size:12px;color:rgba(255,255,255,.3)">© 2026 ${brand.name}. All rights reserved.</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.2)">Store concept generated by Hub · DropResearch Hub</div>
+  </div>
+</footer>
+
+</body>
+</html>`;
+}
+
+// ── SIDEBAR ──
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sb-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ── UTILITIES ──
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ── INIT ──
+const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+if (_session?.email) {
+  document.getElementById('sb-user-email').textContent = _session.email;
+}
+</script>
+</body>
+</html>
