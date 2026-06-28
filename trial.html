@@ -233,11 +233,7 @@ async function checkTrialStatus() {
       window.location.href = 'login.html';
       return;
     }
-    if (data.subscription_status === 'active') {
-      // Paid member — send to members
-      window.location.href = 'members.html';
-      return;
-    }
+    // Never redirect away from trial.html — admin can preview, real trial users stay here
     // trialing or anything else — stay on trial page, update UI
     const sb = document.getElementById('sb-user-email');
     if (sb) sb.textContent = session.email;
