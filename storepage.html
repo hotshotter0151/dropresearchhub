@@ -967,231 +967,425 @@ function buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 }) {
   const p = colours.primary;
   const s = colours.secondary;
   const a = colours.accent;
-  const textOnPrimary = isLight(p) ? '#111827' : '#ffffff';
-  const textOnSecondary = isLight(s) ? '#111827' : '#ffffff';
 
   function isLight(hex) {
     const r = parseInt(hex.slice(1,3),16);
     const g = parseInt(hex.slice(3,5),16);
     const b = parseInt(hex.slice(5,7),16);
-    return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+    return (r*299 + g*587 + b*114)/1000 > 155;
   }
 
+  const textOnPrimary = isLight(p) ? '#111827' : '#ffffff';
+  const textOnSecondary = isLight(s) ? '#111827' : '#ffffff';
   const headingFont = fonts?.heading || 'Inter';
   const bodyFont = fonts?.body || 'Inter';
-  const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g,'+')}:wght@700;800;900&family=${bodyFont.replace(/ /g,'+')}:wght@400;500;600;700&display=swap`;
+  const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g,'+')}:wght@400;600;700;800;900&family=${bodyFont.replace(/ /g,'+')}:wght@400;500;600;700&display=swap`;
 
-  const trustStrip = (c.trustStrip || []).map(t => `
-    <div style="display:flex;align-items:center;gap:8px;padding:0 24px;border-right:1px solid rgba(0,0,0,.1)">
+  // Press publications based on niche
+  const press = c.press || ['Glamour','Women\'s Health','Good Housekeeping','Cosmopolitan','Refinery29'];
+
+  // Payment icons SVG row
+  const paymentIcons = `
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <img src="https://cdn.simpleicons.org/visa/1A1F71" width="38" height="24" style="object-fit:contain;border:1px solid #e5e7eb;border-radius:4px;padding:3px;background:#fff" alt="Visa">
+      <img src="https://cdn.simpleicons.org/mastercard/EB001B" width="38" height="24" style="object-fit:contain;border:1px solid #e5e7eb;border-radius:4px;padding:3px;background:#fff" alt="Mastercard">
+      <img src="https://cdn.simpleicons.org/paypal/003087" width="38" height="24" style="object-fit:contain;border:1px solid #e5e7eb;border-radius:4px;padding:3px;background:#fff" alt="PayPal">
+      <img src="https://cdn.simpleicons.org/applepay/000000" width="38" height="24" style="object-fit:contain;border:1px solid #e5e7eb;border-radius:4px;padding:3px;background:#fff" alt="Apple Pay">
+      <img src="https://cdn.simpleicons.org/googlepay/4285F4" width="38" height="24" style="object-fit:contain;border:1px solid #e5e7eb;border-radius:4px;padding:3px;background:#fff" alt="Google Pay">
+    </div>`;
+
+  // Stars
+  const stars = `<span style="color:#F59E0B;font-size:16px;letter-spacing:2px">★★★★★</span><span style="font-size:13px;color:#6b7280;margin-left:8px;font-weight:600">4.9 · 134 reviews</span>`;
+
+  // Product bullets
+  const bullets = (c.features||[]).slice(0,3).map(f=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+      <div style="width:20px;height:20px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;margin-top:1px">✓</div>
+      <div style="font-size:14px;font-weight:700;color:#111827">${f.title}</div>
+    </div>`).join('');
+
+  // Trust strip items
+  const trustItems = (c.trustStrip||[]).map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:12px 24px;border-right:1px solid #e5e7eb">
       <span style="font-size:20px">${t.icon}</span>
-      <span style="font-size:13px;font-weight:700;white-space:nowrap">${t.text}</span>
+      <span style="font-size:13px;font-weight:700;color:#374151;white-space:nowrap">${t.text}</span>
     </div>`).join('');
 
-  const features = (c.features || []).map(f => `
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;text-align:center">
-      <div style="font-size:36px;margin-bottom:14px">${f.icon}</div>
-      <div style="font-size:16px;font-weight:800;color:${p};margin-bottom:8px;font-family:'${headingFont}',sans-serif">${f.title}</div>
-      <div style="font-size:14px;color:#6b7280;line-height:1.6">${f.body}</div>
+  // Features cards
+  const featureCards = (c.features||[]).map(f=>`
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:28px 24px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,.1)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+      <div style="font-size:36px;margin-bottom:16px">${f.icon}</div>
+      <div style="font-size:16px;font-weight:800;color:${p};margin-bottom:8px;font-family:'${headingFont}',sans-serif;letter-spacing:-.3px">${f.title}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.7">${f.body}</div>
     </div>`).join('');
 
-  const reviews = (c.reviews || []).map(r => `
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px">
-      <div style="color:${s};font-size:18px;letter-spacing:2px;margin-bottom:12px">${'★'.repeat(r.rating)}</div>
-      <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:8px">${r.title}</div>
-      <div style="font-size:14px;color:#6b7280;line-height:1.7;margin-bottom:16px;font-style:italic">"${r.body}"</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">${r.name[0]}</div>
+  // Reviews
+  const reviewCards = (c.reviews||[]).map(r=>`
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${p},${s})"></div>
+      <div style="color:#F59E0B;font-size:16px;letter-spacing:3px;margin-bottom:14px">★★★★★</div>
+      <div style="font-size:16px;font-weight:800;color:#111827;margin-bottom:10px;font-family:'${headingFont}',sans-serif">"${r.title}"</div>
+      <div style="font-size:14px;color:#4b5563;line-height:1.75;margin-bottom:20px">${r.body}</div>
+      <div style="display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid #f3f4f6">
+        <div style="width:40px;height:40px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;font-family:'${headingFont}',sans-serif">${r.name[0]}</div>
         <div>
-          <div style="font-size:13px;font-weight:800;color:#111827">${r.name}</div>
-          <div style="font-size:11px;color:#9ca3af">${r.location} · ${r.verified ? '✓ Verified Buyer · ' : ''}${r.daysAgo} days ago</div>
+          <div style="font-size:14px;font-weight:800;color:#111827">${r.name}</div>
+          <div style="font-size:12px;color:#9ca3af">${r.location}${r.verified?' · ✓ Verified Buyer':''} · ${r.daysAgo} days ago</div>
         </div>
       </div>
     </div>`).join('');
 
-  const steps = (c.howItWorks?.steps || []).map((step, i) => `
-    <div style="text-align:center;flex:1;padding:0 16px">
-      <div style="width:56px;height:56px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin:0 auto 16px;font-family:'${headingFont}',sans-serif">${step.number}</div>
+  // How it works steps
+  const howSteps = (c.howItWorks?.steps||[]).map((step,i)=>`
+    <div style="text-align:center;flex:1;padding:0 20px;position:relative">
+      ${i < (c.howItWorks.steps.length-1) ? `<div style="position:absolute;top:28px;right:-10px;font-size:20px;color:#d1d5db;display:none" class="step-arrow">→</div>` : ''}
+      <div style="width:56px;height:56px;border-radius:50%;background:${p};color:${textOnPrimary};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;margin:0 auto 18px;font-family:'${headingFont}',sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.15)">${step.number}</div>
       <div style="font-size:16px;font-weight:800;color:#111827;margin-bottom:8px;font-family:'${headingFont}',sans-serif">${step.title}</div>
-      <div style="font-size:14px;color:#6b7280;line-height:1.6">${step.body}</div>
+      <div style="font-size:14px;color:#6b7280;line-height:1.65">${step.body}</div>
     </div>
-    ${i < (c.howItWorks.steps.length - 1) ? `<div style="font-size:24px;color:#d1d5db;align-self:center;flex-shrink:0">→</div>` : ''}`).join('');
+    ${i < (c.howItWorks.steps.length-1) ? '<div style="font-size:24px;color:#d1d5db;align-self:center;flex-shrink:0;padding-top:10px">→</div>' : ''}`).join('');
 
-  const faqItems = (c.faq?.items || []).map(item => `
-    <details style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff">
-      <summary style="padding:18px 20px;font-size:15px;font-weight:700;color:#111827;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
-        ${item.q} <span style="font-size:18px;color:#9ca3af;flex-shrink:0;margin-left:12px">+</span>
-      </summary>
-      <div style="padding:0 20px 18px;font-size:14px;color:#6b7280;line-height:1.75">${item.a}</div>
-    </details>`).join('');
+  // Comparison table rows
+  const compRows = (c.comparison||[
+    {feature:'Free UK Delivery',brand:true,generic:false,retailer:true},
+    {feature:'30-Day Returns',brand:true,generic:false,retailer:true},
+    {feature:'UK Warranty',brand:true,generic:false,retailer:false},
+    {feature:'Problem-solving design',brand:true,generic:false,retailer:false},
+    {feature:'Premium quality',brand:true,generic:false,retailer:false},
+    {feature:'Under £40',brand:true,generic:true,retailer:false},
+  ]).map((row,i)=>`
+    <tr style="background:${i%2===0?'#fff':'#f9fafb'}">
+      <td style="padding:14px 20px;font-size:14px;font-weight:600;color:#374151;border-bottom:1px solid #f3f4f6">${row.feature}</td>
+      <td style="padding:14px 20px;text-align:center;border-bottom:1px solid #f3f4f6"><span style="color:#16A34A;font-size:18px;font-weight:900">✓</span></td>
+      <td style="padding:14px 20px;text-align:center;border-bottom:1px solid #f3f4f6"><span style="color:#dc2626;font-size:18px;font-weight:900">✗</span></td>
+      <td style="padding:14px 20px;text-align:center;border-bottom:1px solid #f3f4f6"><span style="color:${row.retailer?'#16A34A':'#dc2626'};font-size:18px;font-weight:900">${row.retailer?'✓':'✗'}</span></td>
+    </tr>`).join('');
+
+  // FAQ accordion
+  const faqItems = (c.faq?.items||[]).map((item,i)=>`
+    <div style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;background:#fff" id="faq-${i}">
+      <button onclick="toggleFaq(${i})" style="width:100%;padding:20px 24px;background:none;border:none;text-align:left;font-size:15px;font-weight:700;color:#111827;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'${bodyFont}',sans-serif">
+        ${item.q}
+        <span id="faq-icon-${i}" style="font-size:22px;color:#9ca3af;flex-shrink:0;transition:transform .25s;line-height:1">+</span>
+      </button>
+      <div id="faq-body-${i}" style="max-height:0;overflow:hidden;transition:max-height .35s ease">
+        <div style="padding:0 24px 20px;font-size:14px;color:#6b7280;line-height:1.8">${item.a}</div>
+      </div>
+    </div>`).join('');
+
+  // Guarantee icons
+  const guaranteeItems = [
+    {icon:'↩️', title:'30-Day Returns', body:'Not happy? Send it back. No questions, no hassle, full refund.'},
+    {icon:'🔒', title:'Secure Checkout', body:'256-bit SSL encryption. Your payment details are always protected.'},
+    {icon:'🚚', title:'Free UK Delivery', body:'Free standard delivery on all orders. Express options available at checkout.'},
+  ];
+
+  // Product page image+text sections
+  const imgTextSections = [img1,img2,img3].filter(Boolean).map((img,i)=>{
+    const feature = (c.features||[])[i] || {};
+    const isEven = i%2===0;
+    return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1100px;margin:0 auto;padding:64px 5%">
+      ${isEven ? `
+        <div style="border-radius:20px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:340px;padding:32px">
+          <img src="${img}" style="max-width:100%;max-height:400px;object-fit:contain;border-radius:12px" alt="${brand.name}">
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">${feature.icon||'✦'} Feature ${i+1}</div>
+          <h3 style="font-size:clamp(22px,3vw,32px);font-weight:900;letter-spacing:-.8px;color:#111827;margin-bottom:16px;font-family:'${headingFont}',sans-serif;line-height:1.1">${feature.title||brand.name}</h3>
+          <p style="font-size:16px;color:#6b7280;line-height:1.8">${feature.body||''}</p>
+        </div>
+      ` : `
+        <div>
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">${feature.icon||'✦'} Feature ${i+1}</div>
+          <h3 style="font-size:clamp(22px,3vw,32px);font-weight:900;letter-spacing:-.8px;color:#111827;margin-bottom:16px;font-family:'${headingFont}',sans-serif;line-height:1.1">${feature.title||brand.name}</h3>
+          <p style="font-size:16px;color:#6b7280;line-height:1.8">${feature.body||''}</p>
+        </div>
+        <div style="border-radius:20px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:340px;padding:32px">
+          <img src="${img}" style="max-width:100%;max-height:400px;object-fit:contain;border-radius:12px" alt="${brand.name}">
+        </div>
+      `}
+    </div>
+    ${i < 2 ? `<div style="height:1px;background:#f3f4f6;max-width:1100px;margin:0 auto 0 5%"></div>` : ''}`;
+  }).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>${brand.name} — ${c.meta?.tagline || ''}</title>
+<title>${brand.name} — ${c.meta?.tagline||''}</title>
 <link href="${googleFontsUrl}" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{font-family:'${bodyFont}',sans-serif;color:#111827;line-height:1.6;overflow-x:hidden;background:#fff}
 a{text-decoration:none;color:inherit}
-details summary::-webkit-details-marker{display:none}
-@media print{
-  .no-print{display:none!important}
-  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
+img{max-width:100%;display:block}
+.page{display:none}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page.active{animation:fadeIn .3s ease}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media print{.no-print{display:none!important}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 @media(max-width:768px){
-  .hero-grid{grid-template-columns:1fr!important}
-  .features-grid{grid-template-columns:1fr!important}
-  .reviews-grid{grid-template-columns:1fr!important}
-  .how-steps{flex-direction:column!important}
-  .how-steps > div[style*="→"]{display:none!important}
+  .hero-grid,.prob-grid,.prod-grid,.img-text-grid{grid-template-columns:1fr!important}
+  .feat-grid{grid-template-columns:1fr 1fr!important}
+  .rev-grid{grid-template-columns:1fr!important}
+  .how-flex{flex-direction:column!important}
+  .how-arrow{display:none!important}
+  .comp-table{font-size:12px}
+  .nav-links{display:none!important}
   .footer-grid{grid-template-columns:1fr!important}
-  .trust-strip{overflow-x:auto}
-  .nav-links{display:none}
+  .carousel-main{height:280px!important}
 }
 </style>
 </head>
 <body>
 
-<!-- SAVE CONCEPT BAR -->
+<!-- SAVE BAR -->
 <div class="no-print" style="background:${p};color:${textOnPrimary};padding:10px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,.15)">
   <div style="display:flex;align-items:center;gap:10px">
     <span style="font-size:16px">🏪</span>
     <div>
       <div style="font-size:13px;font-weight:800">${brand.name} — Store Concept</div>
-      <div style="font-size:11px;opacity:.75">Generated by Hub · DropResearch Hub</div>
+      <div style="font-size:11px;opacity:.7">Generated by Hub · DropResearch Hub</div>
     </div>
   </div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap">
-    <button onclick="downloadStoreConcept('${brand.name}')" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.2)'">💾 Save my store concept</button>
-    <button onclick="window.close()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" >✕ Close</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="downloadStoreConcept('${brand.name}')" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">💾 Save my store concept</button>
+    <button onclick="window.close()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✕ Close</button>
   </div>
 </div>
 
+<!-- EMAIL POPUP -->
+<div id="email-popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closePopup()">
+  <div style="background:#fff;border-radius:24px;width:min(480px,100%);overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.4);animation:fadeIn .3s ease">
+    <div style="background:${p};padding:32px;text-align:center;position:relative">
+      <button onclick="closePopup()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.2);border:none;color:${textOnPrimary};width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700">✕</button>
+      <div style="font-size:36px;margin-bottom:12px">🎁</div>
+      <h3 style="font-size:26px;font-weight:900;color:${textOnPrimary};letter-spacing:-.8px;font-family:'${headingFont}',sans-serif;margin-bottom:6px">Before you go...</h3>
+      <p style="font-size:15px;color:${textOnPrimary};opacity:.85">Get 15% off your first order</p>
+    </div>
+    <div style="padding:28px">
+      <input type="email" placeholder="Enter your email address" style="width:100%;border:1.5px solid #e5e7eb;border-radius:12px;padding:14px 16px;font-size:15px;font-family:inherit;outline:none;margin-bottom:12px;color:#111827">
+      <button style="width:100%;background:${p};color:${textOnPrimary};border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:900;cursor:pointer;font-family:'${headingFont}',sans-serif;margin-bottom:14px">Claim my 15% off →</button>
+      <div style="text-align:center;font-size:13px;color:#9ca3af;cursor:pointer" onclick="closePopup()">No thanks, I'll pay full price</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HOMEPAGE
+══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
 <!-- NAV -->
-<nav style="background:#fff;border-bottom:1px solid #e5e7eb;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:${textOnPrimary === '#ffffff' ? '52px' : '52px'};z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.06)" class="no-print-sticky">
+<nav style="background:#fff;border-bottom:1px solid #f3f4f6;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:42px;z-index:100;box-shadow:0 1px 12px rgba(0,0,0,.06)">
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:36px;height:36px;border-radius:9px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
-    <div style="font-size:18px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
+    <div style="width:38px;height:38px;border-radius:10px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
+    <div style="font-size:20px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
   </div>
-  <div class="nav-links" style="display:flex;gap:28px">
-    ${(c.nav?.links || ['Products','Reviews','FAQ']).map(l => `<a href="#" style="font-size:14px;font-weight:600;color:#6b7280;transition:color .15s" onmouseover="this.style.color='${p}'" onmouseout="this.style.color='#6b7280'">${l}</a>`).join('')}
+  <div class="nav-links" style="display:flex;gap:32px">
+    ${(c.nav?.links||['Shop','Reviews','FAQ','About']).map(l=>`<a href="#" style="font-size:14px;font-weight:600;color:#6b7280;transition:color .15s" onmouseover="this.style.color='${p}'" onmouseout="this.style.color='#6b7280'">${l}</a>`).join('')}
   </div>
-  <a href="#" style="background:${p};color:${textOnPrimary};border-radius:10px;padding:10px 20px;font-size:14px;font-weight:800;font-family:'${headingFont}',sans-serif;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.nav?.ctaText || 'Shop Now'}</a>
+  <button onclick="showPage('product')" style="background:${p};color:${textOnPrimary};border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:'${headingFont}',sans-serif;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Shop Now</button>
 </nav>
 
 <!-- TRUST STRIP -->
-<div class="trust-strip" style="background:${a};border-bottom:1px solid #e5e7eb;padding:12px 5%;display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap">
-  ${trustStrip}
+<div style="background:#fff;border-bottom:1px solid #f3f4f6;padding:12px 5%;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;overflow-x:auto">
+  ${trustItems}
 </div>
 
 <!-- HERO -->
-<section style="background:${p};padding:80px 5%;position:relative;overflow:hidden">
-  <div style="position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none"></div>
+<section style="background:#fff;padding:88px 5% 80px;position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;right:0;width:40%;height:100%;background:${a};clip-path:polygon(12% 0,100% 0,100% 100%,0% 100%);opacity:.5;pointer-events:none"></div>
   <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1200px;margin:0 auto;position:relative;z-index:1">
     <div>
-      ${c.hero?.badge ? `<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:800;color:${textOnPrimary};text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px">${c.hero.badge}</div>` : ''}
-      <h1 style="font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.04;color:${textOnPrimary};margin-bottom:18px;font-family:'${headingFont}',sans-serif">${c.hero?.headline || brand.name}</h1>
-      <p style="font-size:18px;color:${textOnPrimary};opacity:.8;line-height:1.7;margin-bottom:32px;max-width:480px">${c.hero?.subheadline || ''}</p>
+      ${c.hero?.badge ? `<div style="display:inline-flex;align-items:center;gap:8px;background:${a};border:1px solid ${s}33;border-radius:999px;padding:7px 16px;font-size:12px;font-weight:800;color:${p};text-transform:uppercase;letter-spacing:.6px;margin-bottom:20px">${c.hero.badge}</div>` : ''}
+      <h1 style="font-size:clamp(34px,4.5vw,58px);font-weight:900;letter-spacing:-2px;line-height:1.02;color:#111827;margin-bottom:18px;font-family:'${headingFont}',sans-serif">${c.hero?.headline||brand.name}</h1>
+      <p style="font-size:18px;color:#6b7280;line-height:1.75;margin-bottom:32px;max-width:480px">${c.hero?.subheadline||''}</p>
       <div style="display:flex;gap:14px;flex-wrap:wrap">
-        <a href="#" style="background:${s};color:${textOnSecondary};border-radius:12px;padding:16px 32px;font-size:16px;font-weight:900;font-family:'${headingFont}',sans-serif;transition:opacity .15s;display:inline-block" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.hero?.ctaText || 'Shop Now'}</a>
-        <a href="#" style="background:rgba(255,255,255,.12);color:${textOnPrimary};border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:16px 24px;font-size:15px;font-weight:700;transition:background .15s;display:inline-block" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">${c.hero?.ctaSecondary || 'Learn more'}</a>
+        <button onclick="showPage('product')" style="background:${p};color:${textOnPrimary};border:none;border-radius:12px;padding:16px 32px;font-size:16px;font-weight:900;font-family:'${headingFont}',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 8px 24px rgba(0,0,0,.15)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 32px rgba(0,0,0,.2)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(0,0,0,.15)'">Discover ${brand.name} →</button>
+        <button onclick="document.getElementById('reviews').scrollIntoView({behavior:'smooth'})" style="background:#fff;color:#374151;border:1.5px solid #e5e7eb;border-radius:12px;padding:16px 24px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='${p}';this.style.color='${p}'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#374151'">${c.hero?.ctaSecondary||'See reviews'}</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:24px">
+        <span style="color:#F59E0B;font-size:16px">★★★★★</span>
+        <span style="font-size:13px;color:#6b7280;font-weight:600">4.9/5 from 134 verified reviews</span>
       </div>
     </div>
-    <div style="border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;min-height:320px;padding:20px">
-      ${img1 ? `<img src="${img1}" style="max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;display:block;border-radius:12px;filter:drop-shadow(0 16px 40px rgba(0,0,0,.3))" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
+    <div style="position:relative">
+      <div style="border-radius:24px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:400px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,.1)" id="hero-img-wrap">
+        ${img1 ? `<img src="${img1}" style="max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;border-radius:12px;filter:drop-shadow(0 16px 40px rgba(0,0,0,.15))" alt="${brand.name}">` : `<div style="font-size:100px;text-align:center">${brand.icon}</div>`}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESS STRIP -->
+<section style="background:#f9fafb;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;padding:28px 5%">
+  <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;white-space:nowrap">As seen in</div>
+    ${(press).map(pub=>`<div style="font-size:15px;font-weight:800;color:#9ca3af;letter-spacing:-.3px;font-family:'${headingFont}',sans-serif;white-space:nowrap;transition:color .15s" onmouseover="this.style.color='${p}'" onmouseout="this.style.color='#9ca3af'">${pub}</div>`).join('<div style="width:1px;height:20px;background:#e5e7eb"></div>')}
+  </div>
+</section>
+
+<!-- PRODUCT SECTION -->
+<section style="background:#fff;padding:96px 5%" id="product-section">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="prod-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start">
+      <div style="border-radius:20px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:400px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.06)">
+        ${img1 ? `<img src="${img1}" style="max-width:100%;max-height:460px;object-fit:contain;border-radius:12px" alt="${brand.name}">` : `<div style="font-size:100px;text-align:center">${brand.icon}</div>`}
+      </div>
+      <div style="padding-top:8px">
+        <div style="margin-bottom:10px">${stars}</div>
+        <h2 style="font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-1px;color:#111827;margin-bottom:20px;font-family:'${headingFont}',sans-serif;line-height:1.1">${brand.name} ${c.hero?.headline?.split('?')[0]||''}</h2>
+        <div style="margin-bottom:24px">${bullets}</div>
+        <div style="font-size:34px;font-weight:900;color:${p};letter-spacing:-1px;font-family:'${headingFont}',sans-serif;margin-bottom:24px">£29.99</div>
+        <button onclick="showPage('product')" style="width:100%;background:${p};color:${textOnPrimary};border:none;border-radius:14px;padding:18px;font-size:16px;font-weight:900;cursor:pointer;font-family:'${headingFont}',sans-serif;margin-bottom:14px;transition:all .2s;box-shadow:0 8px 24px rgba(0,0,0,.15)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Add to Cart — £29.99</button>
+        ${paymentIcons}
+        <div style="display:flex;align-items:center;gap:8px;padding:14px 0;border-top:1px solid #f3f4f6;margin-top:14px;font-size:13px;color:#6b7280;font-weight:600">
+          <span>🔒</span><span>Secure checkout · Free UK delivery · 30-day returns</span>
+        </div>
+        <!-- ACCORDION -->
+        <div style="border-top:1px solid #f3f4f6;margin-top:4px">
+          ${[
+            {id:'acc-desc', label:'Product Description', content: c.problem?.solutionBody || 'Full product description here.'},
+            {id:'acc-use', label:'How To Use', content: (c.howItWorks?.steps||[]).map((s,i)=>`<strong>${s.number}.</strong> ${s.title} — ${s.body}`).join('<br><br>')},
+            {id:'acc-ship', label:'Shipping & Returns', content: (c.faq?.items||[]).find(f=>f.q.toLowerCase().includes('ship')||f.q.toLowerCase().includes('deliver'))?.a || 'Free standard UK delivery on all orders. Express available. 30-day returns, no questions asked.'}
+          ].map(acc=>`
+            <div style="border-bottom:1px solid #f3f4f6">
+              <button onclick="toggleAcc('${acc.id}')" style="width:100%;padding:16px 0;background:none;border:none;text-align:left;font-size:14px;font-weight:700;color:#111827;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'${bodyFont}',sans-serif">
+                ${acc.label}<span id="${acc.id}-icon" style="color:#9ca3af;font-size:20px;transition:transform .25s">+</span>
+              </button>
+              <div id="${acc.id}" style="max-height:0;overflow:hidden;transition:max-height .35s ease">
+                <div style="padding:0 0 16px;font-size:14px;color:#6b7280;line-height:1.8">${acc.content}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- PROBLEM / SOLUTION -->
-<section style="padding:96px 5%;background:#fff">
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
-    <div style="border-radius:20px;overflow:hidden;background:${a};display:flex;align-items:center;justify-content:center;min-height:280px;padding:24px">
-      ${img2 ? `<img src="${img2}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px" alt="${brand.name} lifestyle">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
+<section style="background:#f9fafb;padding:96px 5%">
+  <div class="prob-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto">
+    <div style="border-radius:24px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;min-height:340px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.06)">
+      ${img2 ? `<img src="${img2}" style="max-width:100%;max-height:420px;object-fit:contain;border-radius:12px" alt="${brand.name} lifestyle">` : `<div style="font-size:100px;text-align:center">${brand.icon}</div>`}
     </div>
     <div>
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:10px">${c.problem?.eyebrow || 'The Problem'}</div>
-      <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#111827;margin-bottom:14px;font-family:'${headingFont}',sans-serif;line-height:1.1">${c.problem?.headline || ''}</h2>
-      <p style="font-size:16px;color:#6b7280;line-height:1.75;margin-bottom:32px">${c.problem?.body || ''}</p>
-      <div style="width:48px;height:3px;background:${s};border-radius:999px;margin-bottom:32px"></div>
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${p};margin-bottom:10px">${c.problem?.solutionEyebrow || 'The Solution'}</div>
-      <h3 style="font-size:clamp(20px,2.5vw,28px);font-weight:900;letter-spacing:-.5px;color:#111827;margin-bottom:12px;font-family:'${headingFont}',sans-serif">${c.problem?.solutionHeadline || ''}</h3>
-      <p style="font-size:15px;color:#6b7280;line-height:1.75">${c.problem?.solutionBody || ''}</p>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">${c.problem?.eyebrow||'The Problem'}</div>
+      <h2 style="font-size:clamp(26px,3vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;margin-bottom:16px;font-family:'${headingFont}',sans-serif;line-height:1.1">${c.problem?.headline||''}</h2>
+      <p style="font-size:16px;color:#6b7280;line-height:1.8;margin-bottom:32px">${c.problem?.body||''}</p>
+      <div style="width:48px;height:3px;background:${s};border-radius:999px;margin-bottom:28px"></div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${p};margin-bottom:12px">${c.problem?.solutionEyebrow||'The Solution'}</div>
+      <h3 style="font-size:clamp(22px,2.5vw,30px);font-weight:900;letter-spacing:-.5px;color:#111827;margin-bottom:12px;font-family:'${headingFont}',sans-serif;line-height:1.15">${c.problem?.solutionHeadline||''}</h3>
+      <p style="font-size:15px;color:#6b7280;line-height:1.8">${c.problem?.solutionBody||''}</p>
     </div>
   </div>
 </section>
 
 <!-- FEATURES -->
-<section style="padding:96px 5%;background:${a}">
-  <div style="max-width:1200px;margin:0 auto;text-align:center;margin-bottom:56px">
-    <h2 style="font-size:clamp(26px,3.5vw,42px);font-weight:900;letter-spacing:-1px;color:#111827;font-family:'${headingFont}',sans-serif">${brand.name} — built differently.</h2>
-  </div>
-  <div class="features-grid" style="display:grid;grid-template-columns:repeat(${Math.min(c.features?.length || 4,4)},1fr);gap:20px;max-width:1200px;margin:0 auto">
-    ${features}
+<section style="background:#fff;padding:96px 5%">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:56px">
+      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:900;letter-spacing:-1.2px;color:#111827;font-family:'${headingFont}',sans-serif">${brand.name} — built differently.</h2>
+    </div>
+    <div class="feat-grid" style="display:grid;grid-template-columns:repeat(${Math.min(c.features?.length||4,4)},1fr);gap:20px">
+      ${featureCards}
+    </div>
   </div>
 </section>
 
-<!-- SOCIAL PROOF -->
-<section style="padding:96px 5%;background:#fff">
-  <div style="max-width:1100px;margin:0 auto;text-align:center;margin-bottom:48px">
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">What customers say</div>
-    <h2 style="font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">Real reviews from real people.</h2>
+<!-- LIFESTYLE IMAGE BREAK -->
+${img2 ? `
+<div style="width:100%;height:420px;overflow:hidden;position:relative">
+  <img src="${img2}" style="width:100%;height:100%;object-fit:cover;object-position:center" alt="${brand.name} lifestyle">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.2) 100%);display:flex;align-items:center;justify-content:flex-start;padding:0 8%">
+    <div>
+      <h2 style="font-size:clamp(28px,4vw,52px);font-weight:900;color:#fff;letter-spacing:-1.5px;font-family:'${headingFont}',sans-serif;margin-bottom:16px;max-width:560px;line-height:1.05">${c.finalCta?.headline||brand.name}</h2>
+      <button onclick="showPage('product')" style="background:${s};color:${textOnSecondary};border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:800;cursor:pointer;font-family:'${headingFont}',sans-serif">Shop ${brand.name} →</button>
+    </div>
   </div>
-  <div class="reviews-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto">
-    ${reviews}
+</div>` : ''}
+
+<!-- SOCIAL PROOF -->
+<section style="background:#f9fafb;padding:96px 5%" id="reviews">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">What customers say</div>
+      <h2 style="font-size:clamp(26px,3.2vw,40px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">Real reviews from real people.</h2>
+      <div style="margin-top:12px">${stars}</div>
+    </div>
+    <div class="rev-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      ${reviewCards}
+    </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section style="padding:96px 5%;background:${a}">
-  <div style="max-width:1100px;margin:0 auto;text-align:center;margin-bottom:56px">
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.howItWorks?.eyebrow || 'How It Works'}</div>
-    <h2 style="font-size:clamp(24px,3vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.howItWorks?.headline || 'Simple. Fast. Effective.'}</h2>
-  </div>
-  <div class="how-steps" style="display:flex;align-items:flex-start;gap:0;max-width:900px;margin:0 auto">
-    ${steps}
+<section style="background:#fff;padding:96px 5%">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:56px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">${c.howItWorks?.eyebrow||'How It Works'}</div>
+      <h2 style="font-size:clamp(26px,3.2vw,40px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.howItWorks?.headline||'Simple. Fast. Effective.'}</h2>
+    </div>
+    <div class="how-flex" style="display:flex;align-items:flex-start;gap:0;position:relative">
+      ${howSteps}
+    </div>
   </div>
 </section>
 
-<!-- DETAIL IMAGE + CTA -->
-<section style="padding:96px 5%;background:${p}">
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
-    <div>
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.finalCta?.eyebrow || 'Ready?'}</div>
-      <h2 style="font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.05;color:${textOnPrimary};margin-bottom:16px;font-family:'${headingFont}',sans-serif">${c.finalCta?.headline || 'Get yours today.'}</h2>
-      <p style="font-size:16px;color:${textOnPrimary};opacity:.75;margin-bottom:28px;line-height:1.7">${c.finalCta?.body || ''}</p>
-      <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
-        <a href="#" style="background:${s};color:${textOnSecondary};border-radius:12px;padding:16px 32px;font-size:16px;font-weight:900;font-family:'${headingFont}',sans-serif;display:inline-block;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">${c.finalCta?.ctaText || 'Shop Now'}</a>
-        <div style="font-size:13px;color:${textOnPrimary};opacity:.6">✓ ${c.finalCta?.guarantee || '30-day money back guarantee'}</div>
-        ${c.finalCta?.badge ? `<div style="font-size:12px;color:${textOnPrimary};opacity:.5">${c.finalCta.badge}</div>` : ''}
-      </div>
+<!-- COMPARISON TABLE -->
+<section style="background:#f9fafb;padding:96px 5%">
+  <div style="max-width:900px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">Why ${brand.name}</div>
+      <h2 style="font-size:clamp(26px,3.2vw,40px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">Why choose us over the rest?</h2>
     </div>
-    <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;min-height:280px;padding:24px">
-      ${img3 ? `<img src="${img3}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.2))" alt="${brand.name} detail">` : img1 ? `<img src="${img1}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06)">
+      <table class="comp-table" style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:${p}">
+            <th style="padding:18px 20px;text-align:left;font-size:13px;font-weight:700;color:${textOnPrimary}">Feature</th>
+            <th style="padding:18px 20px;text-align:center;font-size:13px;font-weight:900;color:${textOnPrimary}">${brand.name} ✓</th>
+            <th style="padding:18px 20px;text-align:center;font-size:13px;font-weight:700;color:${textOnPrimary};opacity:.8">Generic brands</th>
+            <th style="padding:18px 20px;text-align:center;font-size:13px;font-weight:700;color:${textOnPrimary};opacity:.8">Big retailers</th>
+          </tr>
+        </thead>
+        <tbody>${compRows}</tbody>
+      </table>
     </div>
+  </div>
+</section>
+
+<!-- GUARANTEE BLOCK -->
+<section style="background:#fff;padding:72px 5%">
+  <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    ${guaranteeItems.map(g=>`
+      <div style="text-align:center;padding:32px 20px;border:1px solid #f3f4f6;border-radius:18px;transition:all .2s" onmouseover="this.style.borderColor='${p}33';this.style.boxShadow='0 8px 24px rgba(0,0,0,.06)'" onmouseout="this.style.borderColor='#f3f4f6';this.style.boxShadow='none'">
+        <div style="font-size:36px;margin-bottom:14px">${g.icon}</div>
+        <div style="font-size:16px;font-weight:800;color:#111827;margin-bottom:8px;font-family:'${headingFont}',sans-serif">${g.title}</div>
+        <div style="font-size:14px;color:#6b7280;line-height:1.6">${g.body}</div>
+      </div>`).join('')}
   </div>
 </section>
 
 <!-- SOCIALS -->
-<section style="padding:72px 5%;background:#111827;text-align:center">
+<section style="background:#111827;padding:72px 5%;text-align:center">
   <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.4);margin-bottom:14px">Follow us on our socials</div>
-  <h2 style="font-size:clamp(22px,3vw,34px);font-weight:900;letter-spacing:-.8px;color:#fff;margin-bottom:8px;font-family:'${headingFont}',sans-serif">Join the ${brand.name} community</h2>
-  <p style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px">${c.meta?.socialHandle || '@' + brand.name.toLowerCase().replace(/\s+/g,'')}</p>
-  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-    <!-- Instagram -->
-    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="url(#ig)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig)"/><defs><linearGradient id="ig" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#f09433"/><stop offset=".25" stop-color="#e6683c"/><stop offset=".5" stop-color="#dc2743"/><stop offset=".75" stop-color="#cc2366"/><stop offset="1" stop-color="#bc1888"/></linearGradient></defs></svg>
+  <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#fff;margin-bottom:8px;font-family:'${headingFont}',sans-serif">Join the ${brand.name} community</h2>
+  <p style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px">${c.meta?.socialHandle||'@'+brand.name.toLowerCase().replace(/\s+/g,'')}</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig1)" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="url(#ig1)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="url(#ig1)"/><defs><linearGradient id="ig1" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#f09433"/><stop offset=".5" stop-color="#dc2743"/><stop offset="1" stop-color="#bc1888"/></linearGradient></defs></svg>
       <span style="font-size:14px;font-weight:700;color:#fff">Follow on Instagram</span>
     </a>
-    <!-- TikTok -->
-    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.138-1.009 6.372 6.372 0 0 1-1.296-3.295h.004C16.419.682 16.44 0 16.44 0h-4.123v16.028c0 .215 0 .428-.008.638a3.694 3.694 0 0 1-3.694-3.347 3.694 3.694 0 0 1 3.694-3.694c.363 0 .722.055 1.066.163V5.374a8.093 8.093 0 0 0-1.066-.07 7.909 7.909 0 0 0-7.909 7.909 7.909 7.909 0 0 0 7.909 7.909 7.909 7.909 0 0 0 7.909-7.909V8.678a10.525 10.525 0 0 0 6.151 1.965V6.53a5.162 5.162 0 0 1-3.057-.968z"/></svg>
       <span style="font-size:14px;font-weight:700;color:#fff">Follow on TikTok</span>
     </a>
-    <!-- Facebook -->
-    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s;text-decoration:none" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
+    <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 24px;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
       <span style="font-size:14px;font-weight:700;color:#fff">Follow on Facebook</span>
     </a>
@@ -1199,11 +1393,11 @@ details summary::-webkit-details-marker{display:none}
 </section>
 
 <!-- FAQ -->
-<section style="padding:96px 5%;background:#fff">
+<section style="background:#fff;padding:96px 5%">
   <div style="max-width:720px;margin:0 auto">
     <div style="text-align:center;margin-bottom:48px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:12px">${c.faq?.eyebrow || 'FAQ'}</div>
-      <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.faq?.headline || 'Got questions?'}</h2>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${s};margin-bottom:12px">${c.faq?.eyebrow||'FAQ'}</div>
+      <h2 style="font-size:clamp(26px,3.2vw,38px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">${c.faq?.headline||'Got questions? We have answers.'}</h2>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px">
       ${faqItems}
@@ -1211,38 +1405,236 @@ details summary::-webkit-details-marker{display:none}
   </div>
 </section>
 
+<!-- FINAL CTA -->
+<section style="background:${p};padding:104px 5%;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none"></div>
+  <div style="position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:rgba(255,255,255,.04);border-radius:50%;pointer-events:none"></div>
+  <div style="position:relative;z-index:1;max-width:620px;margin:0 auto">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:${textOnPrimary};opacity:.7;margin-bottom:14px">${c.finalCta?.eyebrow||'Ready?'}</div>
+    <h2 style="font-size:clamp(32px,5vw,56px);font-weight:900;letter-spacing:-2px;line-height:1.02;color:${textOnPrimary};margin-bottom:16px;font-family:'${headingFont}',sans-serif">${c.finalCta?.headline||'Get yours today.'}</h2>
+    <p style="font-size:17px;color:${textOnPrimary};opacity:.8;margin-bottom:36px;line-height:1.7">${c.finalCta?.body||''}</p>
+    <button onclick="showPage('product')" style="background:#fff;color:${p};border:none;border-radius:14px;padding:18px 40px;font-size:17px;font-weight:900;cursor:pointer;font-family:'${headingFont}',sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.2);transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">${c.finalCta?.ctaText||'Shop Now'}</button>
+    <div style="margin-top:20px;font-size:14px;color:${textOnPrimary};opacity:.65">✓ ${c.finalCta?.guarantee||'30-day money back guarantee'} · ${c.finalCta?.badge||'Free UK delivery'}</div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer style="background:#111827;padding:56px 5% 28px">
-  <div class="footer-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto;margin-bottom:40px">
+  <div class="footer-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto 40px">
     <div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <div style="width:34px;height:34px;border-radius:8px;background:${p};display:flex;align-items:center;justify-content:center;font-size:16px">${brand.icon}</div>
-        <div style="font-size:16px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
+        <div style="font-size:17px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
       </div>
-      <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px">${c.footer?.tagline || c.meta?.tagline || ''}</p>
+      <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px">${c.footer?.tagline||c.meta?.tagline||''}</p>
     </div>
     <div>
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:16px">Quick Links</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        ${(c.nav?.links || ['Products','About']).map(l => `<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
+        ${(c.nav?.links||['Shop','About']).map(l=>`<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
+        <a onclick="showPage('product')" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;cursor:pointer;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Product Page</a>
       </div>
     </div>
     <div>
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:16px">Legal</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        ${(c.footer?.links || ['Privacy Policy','Returns Policy','Contact Us']).map(l => `<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
+        ${(c.footer?.links||['Privacy Policy','Returns Policy','Shipping Info','Contact Us']).map(l=>`<a href="#" style="font-size:13px;color:rgba(255,255,255,.5);font-weight:600;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">${l}</a>`).join('')}
       </div>
     </div>
   </div>
   <div style="max-width:1200px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <div style="font-size:12px;color:rgba(255,255,255,.3)">© 2026 ${brand.name}. All rights reserved.</div>
-    <div style="font-size:11px;color:rgba(255,255,255,.2)">Store concept generated by Hub · DropResearch Hub</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.2)">Store concept by Hub · DropResearch Hub</div>
   </div>
 </footer>
+</div><!-- end page-home -->
 
+
+<!-- ══════════════════════════════════════════
+     PRODUCT PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-product">
+
+<!-- NAV -->
+<nav style="background:#fff;border-bottom:1px solid #f3f4f6;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:42px;z-index:100;box-shadow:0 1px 12px rgba(0,0,0,.06)">
+  <button onclick="showPage('home')" style="display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0">
+    <div style="width:38px;height:38px;border-radius:10px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
+    <div style="font-size:20px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
+  </button>
+  <div class="nav-links" style="display:flex;gap:8px;align-items:center">
+    <button onclick="showPage('home')" style="background:none;border:1px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;color:#374151;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.borderColor='${p}';this.style.color='${p}'" onmouseout="this.style.borderColor='#e5e7eb';this.style.color='#374151'">← Back to store</button>
+  </div>
+  <button style="background:${p};color:${textOnPrimary};border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:'${headingFont}',sans-serif">Add to Cart</button>
+</nav>
+
+<!-- BREADCRUMB -->
+<div style="background:#f9fafb;border-bottom:1px solid #f3f4f6;padding:12px 5%;font-size:13px;color:#9ca3af">
+  <span onclick="showPage('home')" style="cursor:pointer;transition:color .15s" onmouseover="this.style.color='${p}'" onmouseout="this.style.color='#9ca3af'">Home</span>
+  <span style="margin:0 8px">›</span>
+  <span style="color:#374151;font-weight:600">${brand.name}</span>
+</div>
+
+<!-- PRODUCT HERO -->
+<section style="background:#fff;padding:56px 5%">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="prod-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start">
+
+      <!-- IMAGE CAROUSEL -->
+      <div>
+        <div class="carousel-main" style="border-radius:20px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;height:440px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,.08);margin-bottom:14px;position:relative">
+          ${[img1,img2,img3].filter(Boolean).map((img,i)=>`
+            <img id="carousel-img-${i}" src="${img}" style="max-width:100%;max-height:380px;object-fit:contain;border-radius:12px;position:absolute;transition:opacity .3s ease;opacity:${i===0?'1':'0'}" alt="${brand.name} image ${i+1}">`).join('')}
+          ${!img1&&!img2&&!img3 ? `<div style="font-size:100px">${brand.icon}</div>` : ''}
+        </div>
+        <!-- THUMBNAILS -->
+        <div style="display:flex;gap:10px;justify-content:center">
+          ${[img1,img2,img3].filter(Boolean).map((img,i)=>`
+            <div id="thumb-${i}" onclick="setCarouselImg(${i})" style="width:72px;height:72px;border-radius:12px;overflow:hidden;background:#f9fafb;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid ${i===0?p:'#e5e7eb'};transition:border-color .15s;padding:6px">
+              <img src="${img}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px" alt="Thumbnail ${i+1}">
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- PRODUCT INFO -->
+      <div style="padding-top:8px">
+        <div style="margin-bottom:10px">${stars}</div>
+        <h1 style="font-size:clamp(28px,3.5vw,42px);font-weight:900;letter-spacing:-1.2px;color:#111827;margin-bottom:20px;font-family:'${headingFont}',sans-serif;line-height:1.05">${brand.name}</h1>
+
+        <!-- 3 BENEFIT BULLETS -->
+        <div style="margin-bottom:28px">${bullets}</div>
+
+        <!-- PRICE -->
+        <div style="font-size:36px;font-weight:900;color:${p};letter-spacing:-1px;font-family:'${headingFont}',sans-serif;margin-bottom:28px">£29.99 <span style="font-size:18px;color:#9ca3af;text-decoration:line-through;font-weight:500">£39.99</span></div>
+
+        <!-- ADD TO CART -->
+        <button style="width:100%;background:${p};color:${textOnPrimary};border:none;border-radius:14px;padding:18px;font-size:17px;font-weight:900;cursor:pointer;font-family:'${headingFont}',sans-serif;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:all .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Add to Cart — £29.99</button>
+
+        <!-- PAYMENT ICONS -->
+        ${paymentIcons}
+
+        <!-- SECURE LINE -->
+        <div style="display:flex;align-items:center;gap:8px;padding:16px 0;border-top:1px solid #f3f4f6;margin-top:14px;font-size:13px;color:#6b7280;font-weight:600">
+          <span>🔒</span><span>Secure checkout · Free UK delivery · 30-day returns</span>
+        </div>
+
+        <!-- ACCORDION -->
+        <div style="border-top:1px solid #f3f4f6">
+          ${[
+            {id:'pacc-desc', label:'Product Description', content: (c.problem?.solutionBody||'') + '<br><br>' + (c.problem?.body||'')},
+            {id:'pacc-use', label:'How To Use', content: (c.howItWorks?.steps||[]).map((s,i)=>`<strong style="color:#111827">${s.number}.</strong> <strong>${s.title}</strong> — ${s.body}`).join('<br><br>')},
+            {id:'pacc-ship', label:'Shipping & Returns', content: (c.faq?.items||[]).find(f=>f.q.toLowerCase().includes('ship')||f.q.toLowerCase().includes('deliver'))?.a || 'Free standard UK delivery on all orders. Orders dispatched within 24 hours. Express delivery available at checkout. 30-day hassle-free returns — no questions asked.'}
+          ].map(acc=>`
+            <div style="border-bottom:1px solid #f3f4f6">
+              <button onclick="toggleAcc('${acc.id}')" style="width:100%;padding:18px 0;background:none;border:none;text-align:left;font-size:15px;font-weight:700;color:#111827;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'${bodyFont}',sans-serif">
+                ${acc.label}<span id="${acc.id}-icon" style="color:#9ca3af;font-size:22px;transition:transform .25s">+</span>
+              </button>
+              <div id="${acc.id}" style="max-height:0;overflow:hidden;transition:max-height .35s ease">
+                <div style="padding:0 0 18px;font-size:14px;color:#6b7280;line-height:1.85">${acc.content}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE + TEXT SECTIONS -->
+<section style="background:#f9fafb;padding:48px 0">
+  ${imgTextSections}
+</section>
+
+<!-- REVIEWS ON PRODUCT PAGE -->
+<section style="background:#fff;padding:80px 5%">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:40px">
+      <h2 style="font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.8px;color:#111827;font-family:'${headingFont}',sans-serif">What our customers say</h2>
+      <div style="margin-top:10px">${stars}</div>
+    </div>
+    <div class="rev-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      ${reviewCards}
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT PAGE FOOTER -->
+<footer style="background:#111827;padding:32px 5%">
+  <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:30px;height:30px;border-radius:7px;background:${p};display:flex;align-items:center;justify-content:center;font-size:14px">${brand.icon}</div>
+      <div style="font-size:15px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
+    </div>
+    <div style="font-size:12px;color:rgba(255,255,255,.3)">© 2026 ${brand.name}. All rights reserved.</div>
+    <button onclick="showPage('home')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">← Back to homepage</button>
+  </div>
+</footer>
+</div><!-- end page-product -->
+
+<script>
+// ── PAGE SWITCHING ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── CAROUSEL ──
+var currentImg = 0;
+var totalImgs = ${[img1,img2,img3].filter(Boolean).length};
+function setCarouselImg(idx) {
+  for(var i=0;i<totalImgs;i++){
+    var el=document.getElementById('carousel-img-'+i);
+    var th=document.getElementById('thumb-'+i);
+    if(el) el.style.opacity = i===idx?'1':'0';
+    if(th) th.style.borderColor = i===idx?'${p}':'#e5e7eb';
+  }
+  currentImg=idx;
+}
+
+// ── ACCORDION ──
+function toggleAcc(id) {
+  var body = document.getElementById(id);
+  var icon = document.getElementById(id+'-icon');
+  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+  body.style.maxHeight = isOpen ? '0' : '500px';
+  if(icon) icon.textContent = isOpen ? '+' : '−';
+}
+
+// ── FAQ ──
+function toggleFaq(i) {
+  var body = document.getElementById('faq-body-'+i);
+  var icon = document.getElementById('faq-icon-'+i);
+  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+  document.querySelectorAll('[id^="faq-body-"]').forEach(function(el){ el.style.maxHeight='0'; });
+  document.querySelectorAll('[id^="faq-icon-"]').forEach(function(el){ el.textContent='+'; });
+  if(!isOpen){ body.style.maxHeight='400px'; if(icon) icon.textContent='−'; }
+}
+
+// ── EMAIL POPUP ──
+setTimeout(function(){ 
+  var p = document.getElementById('email-popup');
+  if(p) p.style.display='flex';
+}, 8000);
+function closePopup(){ 
+  var p=document.getElementById('email-popup');
+  if(p) p.style.display='none';
+}
+
+// ── DOWNLOAD ──
+function downloadStoreConcept(brandName){
+  var h='<!DOCTYPE html>'+document.documentElement.outerHTML;
+  var b=new Blob([h],{type:'text/html'});
+  var u=URL.createObjectURL(b);
+  var a=document.createElement('a');
+  a.href=u;
+  a.download=(brandName||'store').toLowerCase().replace(/\s+/g,'-')+'-store-concept.html';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(u);
+}
+</script>
 </body>
 </html>`;
 }
+
 
 // ── SIDEBAR ──
 function openSidebar() {
