@@ -942,7 +942,11 @@ function openGeneratedStore(data, storeTab) {
   const img2 = state.images[2] || '';
   const img3 = state.images[3] || '';
 
-  const storeHTML = buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 });
+  let storeHTML = buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 });
+
+  // Inject download function — split tag to avoid parser issues
+  const dlScript = '<scr'+'ipt>function downloadStoreConcept(n){var h="<!DOCTYPE html>"+document.documentElement.outerHTML;var b=new Blob([h],{type:"text/html"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=(n||"store").toLowerCase().replace(/\s+/g,"-")+"-store-concept.html";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}<'+'/script>';
+  storeHTML = storeHTML.replace('</body>', dlScript + '</body>');
 
   // Write into the already-open tab — no popup blocker
   if (storeTab && !storeTab.closed) {
@@ -1236,20 +1240,6 @@ details summary::-webkit-details-marker{display:none}
   </div>
 </footer>
 
-<script>
-function downloadStoreConcept(brandName) {
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = (brandName || 'store-concept').toLowerCase().replace(/\s+/g, '-') + '-store-concept.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-</script>
 </body>
 </html>`;
 }
