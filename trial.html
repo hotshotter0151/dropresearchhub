@@ -210,31 +210,40 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 <body>
 
 <script>
-// Auth check
+// Auth check — do NOT redirect 'member' auth here; let checkTrialStatus() decide based on Supabase
 const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
 const _auth = sessionStorage.getItem('drh_auth');
 if (!_auth && !_session?.email) {
   window.location.href = 'login.html';
 }
-if (_auth === 'member') {
-  window.location.href = 'members.html';
-}
+// Only redirect to members.html if Supabase confirms active subscription
 async function checkTrialStatus() {
   const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  if (!session?.email) return;
+  if (!session?.email) {
+    // No session email — if no auth at all, go to login
+    if (!_auth) window.location.href = 'login.html';
+    return;
+  }
   try {
     const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
     const data = await res.json();
-    if (data.success && data.subscription_status === 'active') {
+    if (!data.success) {
+      // Invalid session
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+      return;
+    }
+    if (data.subscription_status === 'active') {
+      // Paid member — send to members
       window.location.href = 'members.html';
+      return;
     }
-    if (data.success && session.email) {
-      const el = document.getElementById('user-email-display');
-      if (el) el.textContent = session.email;
-      const sb = document.getElementById('sb-user-email');
-      if (sb) sb.textContent = session.email;
-    }
-  } catch(e) {}
+    // trialing or anything else — stay on trial page, update UI
+    const sb = document.getElementById('sb-user-email');
+    if (sb) sb.textContent = session.email;
+  } catch(e) {
+    // Network error — stay on page, don't redirect
+  }
 }
 checkTrialStatus();
 </script>
