@@ -344,6 +344,27 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;border-top:1px solid rgb
   .hero h1{font-size:30px}
   .nav-logo-text{font-size:13px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
+
+/* ── PLATFORM LOGOS BAR ── */
+.platforms-bar{background:var(--navy-dark);border-bottom:1px solid rgba(255,255,255,.08);padding:36px 5%}
+.platforms-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.platforms-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.platforms-row-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);white-space:nowrap;min-width:200px}
+.platforms-logos{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.platform-logo-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:8px 14px;transition:all .15s;cursor:default}
+.platform-logo-item:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16)}
+.platform-svg{width:20px;height:20px;flex-shrink:0}
+.platform-logo-item span{font-size:12px;font-weight:700;color:rgba(255,255,255,.75);white-space:nowrap}
+.platforms-divider{height:1px;background:rgba(255,255,255,.07);width:100%}
+@media(max-width:768px){
+  .platforms-bar{padding:28px 18px}
+  .platforms-row{flex-direction:column;align-items:flex-start;gap:14px}
+  .platforms-row-label{min-width:unset}
+  .platforms-logos{gap:6px}
+  .platform-logo-item{padding:7px 11px}
+  .platform-logo-item span{font-size:11px}
+}
+
 </style>
 </head>
 <body>
@@ -412,6 +433,100 @@ footer{background:var(--navy-dark);padding:54px 5% 28px;border-top:1px solid rgb
     </div>
   </div>
 </section>
+
+
+<!-- PLATFORM LOGOS BAR -->
+<div class="platforms-bar">
+  <div class="platforms-inner">
+
+    <div class="platforms-row">
+      <div class="platforms-row-label">Hub monitors signals across</div>
+      <div class="platforms-logos">
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 24 24" fill="none" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.138-1.009 6.372 6.372 0 0 1-1.296-3.295h.004C16.419.682 16.44 0 16.44 0h-4.123v16.028c0 .215 0 .428-.008.638-.01.23-.013.458-.024.682a3.647 3.647 0 0 1-.42 1.527 3.67 3.67 0 0 1-1.992 1.573 3.694 3.694 0 0 1-1.162.189 3.694 3.694 0 0 1-3.694-3.694 3.694 3.694 0 0 1 3.694-3.694c.363 0 .722.055 1.066.163V9.3a8.093 8.093 0 0 0-1.066-.07 7.909 7.909 0 0 0-5.59 2.315A7.909 7.909 0 0 0 1 17.137a7.855 7.855 0 0 0 2.315 5.59A7.909 7.909 0 0 0 8.906 25a7.909 7.909 0 0 0 5.59-2.315A7.855 7.855 0 0 0 16.81 17.1V8.678a10.525 10.525 0 0 0 6.151 1.965V6.53a5.162 5.162 0 0 1-3.64-.968z" fill="#000"/></svg>
+          <span>TikTok</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#FF6900"/><path d="M24 10C16.268 10 10 16.268 10 24s6.268 14 14 14 14-6.268 14-14S31.732 10 24 10zm0 4c1.06 0 2.08.17 3.04.48L13.48 27.04A10.02 10.02 0 0 1 14 24c0-5.52 4.48-10 10-10zm0 20c-1.06 0-2.08-.17-3.04-.48l13.56-13.56c.31.96.48 1.98.48 3.04 0 5.52-4.48 10-10 10z" fill="#fff"/></svg>
+          <span>AliExpress</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#FF9900"/><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial" fill="#000">a</text></svg>
+          <span>Amazon</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><path d="M44.5 20H24v8h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6-6C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.5-4z" fill="#4285F4"/><path d="M6.3 14.7l7 5.1C15.1 16.1 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6-6C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.5 6.3 14.7z" fill="#EA4335"/><path d="M24 44c5.4 0 10.3-1.9 14.1-5.1l-6.5-5.4C29.6 35 26.9 36 24 36c-6 0-10.6-3.9-11.8-9.2l-7 5.4C8.7 39.5 15.8 44 24 44z" fill="#34A853"/><path d="M43.6 20H24v8h11.8c-1 2.7-2.8 4.9-5.1 6.5l6.5 5.4C41.2 36.3 44 30.5 44 24c0-1.3-.1-2.7-.4-4z" fill="#FBBC05"/></svg>
+          <span>Google</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#0866FF"/><path d="M32 48V30h6l1-7h-7v-4c0-2 .6-3.4 3.6-3.4H39V9.1C38.2 9 36 8.8 33.4 8.8c-5.4 0-9.1 3.3-9.1 9.4V23h-6v7h6v18h7.7z" fill="#fff"/></svg>
+          <span>Meta</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#E60023"/><path d="M24 4C13 4 4 13 4 24c0 8.5 5.3 15.8 12.8 18.8-.2-1.6-.3-4.1.1-5.9.4-1.6 2.6-11 2.6-11s-.7-1.3-.7-3.3c0-3.1 1.8-5.4 4-5.4 1.9 0 2.8 1.4 2.8 3.1 0 1.9-1.2 4.8-1.8 7.4-.5 2.2 1.1 4 3.3 4 4 0 7-4.2 7-10.2 0-5.3-3.8-9.1-9.3-9.1-6.3 0-10 4.7-10 9.6 0 1.9.7 4 1.7 5.1.2.2.2.4.1.6-.2.7-.6 2.2-.6 2.5-.1.4-.3.5-.7.3-2.8-1.3-4.5-5.4-4.5-8.6 0-7 5.1-13.4 14.7-13.4 7.7 0 13.7 5.5 13.7 12.8 0 7.6-4.8 13.8-11.5 13.8-2.2 0-4.3-1.2-5-2.5l-1.4 5.2c-.5 1.9-1.8 4.3-2.7 5.8C21.4 43.9 22.7 44 24 44c11 0 20-9 20-20S35 4 24 4z" fill="#fff"/></svg>
+          <span>Pinterest</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="platforms-divider"></div>
+
+    <div class="platforms-row">
+      <div class="platforms-row-label">Built for sellers on</div>
+      <div class="platforms-logos">
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 24 24" fill="none" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.138-1.009 6.372 6.372 0 0 1-1.296-3.295h.004C16.419.682 16.44 0 16.44 0h-4.123v16.028c0 .215 0 .428-.008.638-.01.23-.013.458-.024.682a3.647 3.647 0 0 1-.42 1.527 3.67 3.67 0 0 1-1.992 1.573 3.694 3.694 0 0 1-1.162.189 3.694 3.694 0 0 1-3.694-3.694 3.694 3.694 0 0 1 3.694-3.694c.363 0 .722.055 1.066.163V9.3a8.093 8.093 0 0 0-1.066-.07 7.909 7.909 0 0 0-5.59 2.315A7.909 7.909 0 0 0 1 17.137a7.855 7.855 0 0 0 2.315 5.59A7.909 7.909 0 0 0 8.906 25a7.909 7.909 0 0 0 5.59-2.315A7.855 7.855 0 0 0 16.81 17.1V8.678a10.525 10.525 0 0 0 6.151 1.965V6.53a5.162 5.162 0 0 1-3.64-.968z" fill="#000"/></svg>
+          <span>TikTok Shop</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#96BF48"/><path d="M33.6 10.6c-.1-.6-.5-1-1-1.1L25.3 8.3l-3.2-6.5c-.2-.4-.7-.7-1.2-.7s-1 .3-1.2.7L16.5 8.3l-7.3 1.2c-.6.1-1 .5-1.1 1.1-.1.6.1 1.1.5 1.5l5.3 5.1-1.3 7.3c-.1.6.2 1.1.7 1.4.3.2.5.2.8.2.2 0 .5-.1.7-.2l6.5-3.4 6.5 3.4c.5.3 1.1.2 1.5-.2.4-.4.6-.9.5-1.4L28 17.2l5.3-5.1c.4-.4.6-1 .3-1.5z" fill="#fff"/></svg>
+          <span>Shopify</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#FF9900"/><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial" fill="#000">a</text></svg>
+          <span>Amazon</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#fff"/><text x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="900" font-family="Arial" fill="#E53238">e</text><text x="50%" y="62%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="900" font-family="Arial" fill="#0064D2">B</text><text x="35%" y="51%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="900" font-family="Arial" fill="#F5AF02">a</text><text x="65%" y="51%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="900" font-family="Arial" fill="#86B817">y</text></svg>
+          <span>eBay</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#F1641E"/><path d="M14 12v4h-4v4h4v12c0 4.4 3.6 8 8 8h6v-4h-6c-2.2 0-4-1.8-4-4V20h10v-4H18v-4h-4z" fill="#fff"/></svg>
+          <span>Etsy</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#FF6900"/><path d="M24 10c-7.7 0-14 6.3-14 14s6.3 14 14 14 14-6.3 14-14-6.3-14-14-14zm6.8 19.4c-.5.5-1.2.8-1.9.8s-1.4-.3-1.9-.8l-3-3-3 3c-.5.5-1.2.8-1.9.8s-1.4-.3-1.9-.8c-1.1-1.1-1.1-2.8 0-3.8l3-3-3-3c-1.1-1.1-1.1-2.8 0-3.8 1.1-1.1 2.8-1.1 3.8 0l3 3 3-3c1.1-1.1 2.8-1.1 3.8 0 1.1 1.1 1.1 2.8 0 3.8l-3 3 3 3c1.1 1 1.1 2.7 0 3.8z" fill="#fff"/></svg>
+          <span>Alibaba</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="8" fill="#0866FF"/><path d="M32 48V30h6l1-7h-7v-4c0-2 .6-3.4 3.6-3.4H39V9.1C38.2 9 36 8.8 33.4 8.8c-5.4 0-9.1 3.3-9.1 9.4V23h-6v7h6v18h7.7z" fill="#fff"/></svg>
+          <span>Facebook</span>
+        </div>
+
+        <div class="platform-logo-item">
+          <svg viewBox="0 0 48 48" class="platform-svg" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ig1" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="48" height="48" rx="12" fill="url(#ig1)"/><rect x="12" y="12" width="24" height="24" rx="6" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="6" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="32" cy="14" r="2" fill="#fff"/></svg>
+          <span>Instagram</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <!-- HASHTAG TRUTH -->
 <section class="hashtag-section">
