@@ -948,6 +948,70 @@ function openGeneratedStore(data, storeTab) {
   const dlScript = '<scr'+'ipt>function downloadStoreConcept(n){var h="<!DOCTYPE html>"+document.documentElement.outerHTML;var b=new Blob([h],{type:"text/html"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=(n||"store").toLowerCase().replace(/\s+/g,"-")+"-store-concept.html";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}<'+'/script>';
   storeHTML = storeHTML.replace('</body>', dlScript + '</body>');
 
+  // Inject script block via string concatenation — avoids parser issues
+  const injectedScript = '<scr' + 'ipt>\n' + `// ── PAGE SWITCHING ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── CAROUSEL ──
+var currentImg = 0;
+var totalImgs = \${[img1,img2,img3].filter(Boolean).length};
+function setCarouselImg(idx) {
+  for(var i=0;i<totalImgs;i++){
+    var el=document.getElementById('carousel-img-'+i);
+    var th=document.getElementById('thumb-'+i);
+    if(el) el.style.opacity = i===idx?'1':'0';
+    if(th) th.style.borderColor = i===idx?'\${p}':'#e5e7eb';
+  }
+  currentImg=idx;
+}
+
+// ── ACCORDION ──
+function toggleAcc(id) {
+  var body = document.getElementById(id);
+  var icon = document.getElementById(id+'-icon');
+  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+  body.style.maxHeight = isOpen ? '0' : '500px';
+  if(icon) icon.textContent = isOpen ? '+' : '−';
+}
+
+// ── FAQ ──
+function toggleFaq(i) {
+  var body = document.getElementById('faq-body-'+i);
+  var icon = document.getElementById('faq-icon-'+i);
+  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
+  document.querySelectorAll('[id^="faq-body-"]').forEach(function(el){ el.style.maxHeight='0'; });
+  document.querySelectorAll('[id^="faq-icon-"]').forEach(function(el){ el.textContent='+'; });
+  if(!isOpen){ body.style.maxHeight='400px'; if(icon) icon.textContent='−'; }
+}
+
+// ── EMAIL POPUP ──
+setTimeout(function(){ 
+  var p = document.getElementById('email-popup');
+  if(p) p.style.display='flex';
+}, 8000);
+function closePopup(){ 
+  var p=document.getElementById('email-popup');
+  if(p) p.style.display='none';
+}
+
+// ── DOWNLOAD ──
+function downloadStoreConcept(brandName){
+  var h='<!DOCTYPE html>'+document.documentElement.outerHTML;
+  var b=new Blob([h],{type:'text/html'});
+  var u=URL.createObjectURL(b);
+  var a=document.createElement('a');
+  a.href=u;
+  a.download=(brandName||'store').toLowerCase().replace(/\\s+/g,'-')+'-store-concept.html';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(u);
+}
+` + '\n<\/scr' + 'ipt>';
+  storeHTML = storeHTML.replace('</body>', injectedScript + '</body>');
+
   // Write into the already-open tab — no popup blocker
   if (storeTab && !storeTab.closed) {
     storeTab.document.open();
@@ -1569,68 +1633,6 @@ ${img2 ? `
 </footer>
 </div><!-- end page-product -->
 
-<script>
-// ── PAGE SWITCHING ──
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// ── CAROUSEL ──
-var currentImg = 0;
-var totalImgs = ${[img1,img2,img3].filter(Boolean).length};
-function setCarouselImg(idx) {
-  for(var i=0;i<totalImgs;i++){
-    var el=document.getElementById('carousel-img-'+i);
-    var th=document.getElementById('thumb-'+i);
-    if(el) el.style.opacity = i===idx?'1':'0';
-    if(th) th.style.borderColor = i===idx?'${p}':'#e5e7eb';
-  }
-  currentImg=idx;
-}
-
-// ── ACCORDION ──
-function toggleAcc(id) {
-  var body = document.getElementById(id);
-  var icon = document.getElementById(id+'-icon');
-  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
-  body.style.maxHeight = isOpen ? '0' : '500px';
-  if(icon) icon.textContent = isOpen ? '+' : '−';
-}
-
-// ── FAQ ──
-function toggleFaq(i) {
-  var body = document.getElementById('faq-body-'+i);
-  var icon = document.getElementById('faq-icon-'+i);
-  var isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '';
-  document.querySelectorAll('[id^="faq-body-"]').forEach(function(el){ el.style.maxHeight='0'; });
-  document.querySelectorAll('[id^="faq-icon-"]').forEach(function(el){ el.textContent='+'; });
-  if(!isOpen){ body.style.maxHeight='400px'; if(icon) icon.textContent='−'; }
-}
-
-// ── EMAIL POPUP ──
-setTimeout(function(){ 
-  var p = document.getElementById('email-popup');
-  if(p) p.style.display='flex';
-}, 8000);
-function closePopup(){ 
-  var p=document.getElementById('email-popup');
-  if(p) p.style.display='none';
-}
-
-// ── DOWNLOAD ──
-function downloadStoreConcept(brandName){
-  var h='<!DOCTYPE html>'+document.documentElement.outerHTML;
-  var b=new Blob([h],{type:'text/html'});
-  var u=URL.createObjectURL(b);
-  var a=document.createElement('a');
-  a.href=u;
-  a.download=(brandName||'store').toLowerCase().replace(/\s+/g,'-')+'-store-concept.html';
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(u);
-}
-</script>
 </body>
 </html>`;
 }
