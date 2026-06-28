@@ -322,11 +322,11 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <div class="step-card-body">
         <div class="form-group">
           <label class="form-label">Product name <span>What is it called?</span></label>
-          <input class="form-input" type="text" id="product-name" placeholder="e.g. Cordless Neck Fan Pro, LED Scalp Massager..." oninput="validateStep1()">
+          <input class="form-input" type="text" id="product-name" placeholder="e.g. Cordless Neck Fan Pro, LED Scalp Massager..." oninput="validateStep1()" onkeyup="validateStep1()">
         </div>
         <div class="form-group">
           <label class="form-label">Product niche <span>Pick the closest category</span></label>
-          <select class="form-input" id="niche-select" onchange="handleNicheSelect(this)" style="cursor:pointer">
+          <select class="form-input" id="niche-select" onchange="handleNicheSelect(this)" oninput="handleNicheSelect(this)" style="cursor:pointer">
             <option value="">Select your niche...</option>
             <optgroup label="Tech & Electronics">
               <option value="Tech & Gadgets">Tech & Gadgets</option>
@@ -374,7 +374,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         </div>
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">What problem does it solve? <span>One sentence — Hub uses this for your hero copy</span></label>
-          <input class="form-input" type="text" id="product-problem" placeholder="e.g. Keeps you cool without holding a fan or sweating through summer..." oninput="validateStep1()">
+          <input class="form-input" type="text" id="product-problem" placeholder="e.g. Keeps you cool without holding a fan or sweating through summer..." oninput="validateStep1()" onkeyup="validateStep1()">
         </div>
         <div class="form-nav" style="border-top:1px solid var(--g100);margin-top:24px">
           <div></div>
@@ -664,11 +664,12 @@ async function goToStep4() {
 
 // ── STEP 1 VALIDATION ──
 function validateStep1() {
-  const name = document.getElementById('product-name').value.trim();
-  const problem = document.getElementById('product-problem').value.trim();
+  const name = (document.getElementById('product-name').value || '').trim();
+  const problem = (document.getElementById('product-problem').value || '').trim();
   const btn = document.getElementById('btn-next-1');
-  const valid = name.length >= 3 && state.niche.length > 0 && problem.length >= 10;
-  btn.disabled = !valid;
+  const nicheOk = state.niche && state.niche.length > 0;
+  const valid = name.length >= 2 && nicheOk && problem.length >= 3;
+  if (btn) btn.disabled = !valid;
   return valid;
 }
 
@@ -1680,6 +1681,11 @@ function showToast(msg) {
 }
 
 // ── INIT ──
+// Run validation on load in case browser autofills fields
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(validateStep1, 100);
+});
+
 const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
 const _isAdmin = _session?.role === 'admin';
 const _isMember = _session?.email && (_session?.subscription_status === 'active' || _session?.subscription_status === 'trial' || _session?.role === 'admin');
