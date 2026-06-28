@@ -848,7 +848,13 @@ async function startGeneration() {
   overlay.classList.add('show');
   document.body.style.overflow = 'hidden';
 
-  // Animate steps while API call runs
+  // ── Open tab immediately (must be synchronous with user click) ──
+  const storeTab = window.open('about:blank', '_blank');
+  if (storeTab) {
+    storeTab.document.write('<html><head><title>Building your store...</title><style>body{font-family:Inter,sans-serif;background:#0d1c34;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;gap:20px}.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.15);border-top-color:#F59E0B;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}p{font-size:16px;color:rgba(255,255,255,.6);font-weight:600}strong{color:#F59E0B}</style></head><body><div class="spinner"></div><strong>Hub is building your store...</strong><p>This tab will update automatically when ready.</p></body></html>');
+    storeTab.document.close();
+  }
+
   const stepItems = ['gen-item-1','gen-item-2','gen-item-3','gen-item-4','gen-item-5','gen-item-6'];
   const stepTexts = [
     'Creating your brand identity...',
@@ -879,13 +885,12 @@ async function startGeneration() {
       setTimeout(advanceAnimation, 800 + Math.random() * 400);
     } else {
       animationDone = true;
-      if (apiDone) finishGeneration(apiResult);
+      if (apiDone) finishGeneration(apiResult, storeTab);
     }
   }
 
   setTimeout(advanceAnimation, 300);
 
-  // Real API call
   try {
     const res = await fetch('/api/store-generate', {
       method: 'POST',
@@ -906,17 +911,18 @@ async function startGeneration() {
 
     apiResult = data;
     apiDone = true;
-    if (animationDone) finishGeneration(data);
+    if (animationDone) finishGeneration(data, storeTab);
 
   } catch (err) {
     overlay.classList.remove('show');
     document.body.style.overflow = '';
+    if (storeTab && !storeTab.closed) storeTab.close();
     showError('Could not generate your store — please try again.');
     console.error('Generation error:', err);
   }
 }
 
-function finishGeneration(data) {
+function finishGeneration(data, storeTab) {
   const overlay = document.getElementById('generating-overlay');
   document.getElementById('gen-progress').style.width = '100%';
   document.getElementById('gen-progress-label').textContent = '100% complete';
@@ -925,12 +931,11 @@ function finishGeneration(data) {
   setTimeout(() => {
     overlay.classList.remove('show');
     document.body.style.overflow = '';
-    // Open generated store in new tab
-    openGeneratedStore(data);
+    openGeneratedStore(data, storeTab);
   }, 800);
 }
 
-function openGeneratedStore(data) {
+function openGeneratedStore(data, storeTab) {
   const { copy, fonts, colours, brand } = data;
   const c = copy;
   const img1 = state.images[1] || '';
@@ -938,9 +943,19 @@ function openGeneratedStore(data) {
   const img3 = state.images[3] || '';
 
   const storeHTML = buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 });
-  const blob = new Blob([storeHTML], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
+
+  // Write into the already-open tab — no popup blocker
+  if (storeTab && !storeTab.closed) {
+    storeTab.document.open();
+    storeTab.document.write(storeHTML);
+    storeTab.document.close();
+    storeTab.focus();
+  } else {
+    // Fallback if tab was closed
+    const blob = new Blob([storeHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  }
   showToast('✓ Your store concept is ready — check the new tab!');
 }
 
@@ -1045,7 +1060,7 @@ details summary::-webkit-details-marker{display:none}
     </div>
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap">
-    <button onclick="window.print()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.2)'">💾 Save my store concept</button>
+    <button onclick="downloadStoreConcept('${brand.name}')" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.2)'">💾 Save my store concept</button>
     <button onclick="window.close()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:${textOnPrimary};border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" >✕ Close</button>
   </div>
 </div>
@@ -1080,8 +1095,8 @@ details summary::-webkit-details-marker{display:none}
         <a href="#" style="background:rgba(255,255,255,.12);color:${textOnPrimary};border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:16px 24px;font-size:15px;font-weight:700;transition:background .15s;display:inline-block" onmouseover="this.style.background='rgba(255,255,255,.2)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">${c.hero?.ctaSecondary || 'Learn more'}</a>
       </div>
     </div>
-    <div style="border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);aspect-ratio:4/3;background:#f3f4f6;display:flex;align-items:center;justify-content:center">
-      ${img1 ? `<img src="${img1}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    <div style="border-radius:20px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;min-height:320px;padding:20px">
+      ${img1 ? `<img src="${img1}" style="max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;display:block;border-radius:12px;filter:drop-shadow(0 16px 40px rgba(0,0,0,.3))" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
     </div>
   </div>
 </section>
@@ -1089,8 +1104,8 @@ details summary::-webkit-details-marker{display:none}
 <!-- PROBLEM / SOLUTION -->
 <section style="padding:96px 5%;background:#fff">
   <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
-    <div style="border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:${a};display:flex;align-items:center;justify-content:center">
-      ${img2 ? `<img src="${img2}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name} lifestyle">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    <div style="border-radius:20px;overflow:hidden;background:${a};display:flex;align-items:center;justify-content:center;min-height:280px;padding:24px">
+      ${img2 ? `<img src="${img2}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px" alt="${brand.name} lifestyle">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
     </div>
     <div>
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${s};margin-bottom:10px">${c.problem?.eyebrow || 'The Problem'}</div>
@@ -1149,8 +1164,8 @@ details summary::-webkit-details-marker{display:none}
         ${c.finalCta?.badge ? `<div style="font-size:12px;color:${textOnPrimary};opacity:.5">${c.finalCta.badge}</div>` : ''}
       </div>
     </div>
-    <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25);aspect-ratio:1;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center">
-      ${img3 ? `<img src="${img3}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name} detail">` : img1 ? `<img src="${img1}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center">${brand.icon}</div>`}
+    <div style="border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;min-height:280px;padding:24px">
+      ${img3 ? `<img src="${img3}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.2))" alt="${brand.name} detail">` : img1 ? `<img src="${img1}" style="max-width:100%;max-height:420px;width:auto;height:auto;object-fit:contain;display:block;border-radius:10px" alt="${brand.name}">` : `<div style="font-size:80px;text-align:center;padding:40px">${brand.icon}</div>`}
     </div>
   </div>
 </section>
@@ -1221,6 +1236,20 @@ details summary::-webkit-details-marker{display:none}
   </div>
 </footer>
 
+<script>
+function downloadStoreConcept(brandName) {
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (brandName || 'store-concept').toLowerCase().replace(/\s+/g, '-') + '-store-concept.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
 </body>
 </html>`;
 }
@@ -1254,8 +1283,23 @@ function showToast(msg) {
 
 // ── INIT ──
 const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+const _isAdmin = _session?.role === 'admin';
+const _isMember = _session?.email && (_session?.subscription_status === 'active' || _session?.subscription_status === 'trial' || _session?.role === 'admin');
+
+if (!_isMember && !_isAdmin) {
+  window.location.href = 'login.html';
+}
+
 if (_session?.email) {
-  document.getElementById('sb-user-email').textContent = _session.email;
+  document.getElementById('sb-user-email').textContent = _isAdmin ? 'Admin — Billy' : _session.email;
+}
+
+// Admin banner
+if (_isAdmin) {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'background:linear-gradient(90deg,#1E3A5F,#2B4F82);color:#fff;padding:10px 40px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap';
+  banner.innerHTML = '<span>🔧 Admin Preview Mode — Store Builder</span><a href="admin.html" style="color:#F59E0B;font-weight:800;font-size:12px;text-decoration:none">← Back to Admin Panel</a>';
+  document.querySelector('.main').prepend(banner);
 }
 </script>
 </body>
