@@ -11,9 +11,9 @@ export default async function handler(req, res) {
     if (!anthropicKey) return res.status(500).json({ error: "Missing ANTHROPIC_API_KEY" });
 
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    const { productName, niche, problem, brandName, brandIcon, colours, action } = body || {};
+    const { productName, niche, problem, brandName, brandIcon, colours, images, action } = body || {};
 
-    // ── BRAND NAMES ──────────────────────────────────────────────────────────
+    // ── ACTION: GENERATE BRAND NAMES ──────────────────────────────────────────
     if (action === "brand_names") {
       if (!productName || !niche) return res.status(400).json({ error: "productName and niche required" });
 
@@ -24,7 +24,7 @@ A seller is launching a product and needs a brand name. Generate exactly 3 brand
 Product: ${productName}
 Niche: ${niche}
 Problem it solves: ${problem || "Not specified"}
-Brand colours: Primary ${colours?.primary || "#1E3A5F"}, Secondary ${colours?.secondary || "#F59E0B"}
+Brand colours chosen: Primary ${colours?.primary || "#1E3A5F"}, Secondary ${colours?.secondary || "#F59E0B"}
 
 Rules:
 - Each name must be 1-2 words maximum
@@ -41,22 +41,22 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       "name": "BrandName",
       "icon": "single relevant emoji",
       "rationale": "One sentence explaining the personality and why it works for this product (max 20 words)",
-      "angle": "Premium",
-      "nicheTag": "Best for: X · Y · Z"
+      "angle": "Premium / Bold / Friendly / Minimal / Natural / Tech / Lifestyle (pick one)",
+      "nicheTag": "Best for: X · Y · Z (3 descriptors max)"
     },
     {
       "name": "BrandName2",
       "icon": "single relevant emoji",
       "rationale": "One sentence explaining the personality and why it works for this product (max 20 words)",
-      "angle": "Bold",
-      "nicheTag": "Best for: X · Y · Z"
+      "angle": "Premium / Bold / Friendly / Minimal / Natural / Tech / Lifestyle (pick one)",
+      "nicheTag": "Best for: X · Y · Z (3 descriptors max)"
     },
     {
       "name": "BrandName3",
       "icon": "single relevant emoji",
       "rationale": "One sentence explaining the personality and why it works for this product (max 20 words)",
-      "angle": "Friendly",
-      "nicheTag": "Best for: X · Y · Z"
+      "angle": "Premium / Bold / Friendly / Minimal / Natural / Tech / Lifestyle (pick one)",
+      "nicheTag": "Best for: X · Y · Z (3 descriptors max)"
     }
   ]
 }`;
@@ -87,7 +87,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       return res.status(200).json({ success: true, brands: parsed.brands });
     }
 
-    // ── GENERATE STORE ────────────────────────────────────────────────────────
+    // ── ACTION: GENERATE FULL STORE ───────────────────────────────────────────
     if (action === "generate_store") {
       if (!productName || !niche || !brandName) {
         return res.status(400).json({ error: "productName, niche and brandName required" });
@@ -97,59 +97,64 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       const secondaryColour = colours?.secondary || "#F59E0B";
       const accentColour = colours?.accent || "#F8FAFF";
 
+      // Determine font pairing based on niche
       const fontPairs = {
         "Tech & Gadgets": { heading: "Space Grotesk", body: "Inter" },
         "Phone & Tech Accessories": { heading: "Space Grotesk", body: "Inter" },
         "Gaming & Entertainment": { heading: "Space Grotesk", body: "Inter" },
-        "Office & Productivity": { heading: "Space Grotesk", body: "Inter" },
         "Beauty & Skincare": { heading: "Playfair Display", body: "Lato" },
         "Hair Care": { heading: "Playfair Display", body: "Lato" },
         "Wellness & Self Care": { heading: "Cormorant Garamond", body: "Lato" },
         "Sleep & Relaxation": { heading: "Cormorant Garamond", body: "Lato" },
-        "Men's Grooming": { heading: "Playfair Display", body: "Inter" },
         "Fitness & Exercise": { heading: "Bebas Neue", body: "Inter" },
         "Sports & Outdoors": { heading: "Bebas Neue", body: "Inter" },
-        "Travel & Adventure": { heading: "Josefin Sans", body: "Inter" },
         "Kitchen & Cooking": { heading: "Merriweather", body: "Inter" },
         "Home & Living": { heading: "Merriweather", body: "Inter" },
-        "Garden & Outdoor": { heading: "Josefin Sans", body: "Lato" },
         "Eco & Sustainable": { heading: "Josefin Sans", body: "Lato" },
-        "Cleaning & Organisation": { heading: "Inter", body: "Inter" },
-        "Lighting & Décor": { heading: "Cormorant Garamond", body: "Lato" },
-        "Fashion & Clothing": { heading: "Cormorant Garamond", body: "Lato" },
-        "Women's Fashion": { heading: "Cormorant Garamond", body: "Lato" },
-        "Jewellery & Accessories": { heading: "Cormorant Garamond", body: "Lato" },
-        "Bags & Luggage": { heading: "Josefin Sans", body: "Inter" },
+        "Garden & Outdoor": { heading: "Josefin Sans", body: "Lato" },
         "Baby & Kids": { heading: "Nunito", body: "Nunito" },
         "Pet Products": { heading: "Nunito", body: "Inter" },
-        "Food & Drink": { heading: "Merriweather", body: "Lato" },
-        "Automotive & Car": { heading: "Space Grotesk", body: "Inter" },
+        "Fashion & Clothing": { heading: "Cormorant Garamond", body: "Lato" },
+        "Jewellery & Accessories": { heading: "Cormorant Garamond", body: "Lato" },
       };
       const fonts = fontPairs[niche] || { heading: "Inter", body: "Inter" };
 
-      const prompt = `You are an expert ecommerce copywriter specialising in UK DTC brands. Write compelling, conversion-focused copy that feels human, not AI-generated. Every word must be specific to this product — never generic.
+      const prompt = `You are an expert ecommerce copywriter and brand strategist specialising in UK DTC brands. You write compelling, conversion-focused copy that feels human, not AI-generated.
+
+Generate complete store copy for a Shopify-style homepage. Every word must be specific to this product — never generic.
 
 PRODUCT DETAILS:
-- Product: ${productName}
+- Product name: ${productName}
 - Niche: ${niche}
-- Problem solved: ${problem || "Makes life easier and more enjoyable"}
+- Problem it solves: ${problem || "Makes life easier and more enjoyable"}
 - Brand name: ${brandName}
-- Colours: Primary ${primaryColour}, Secondary ${secondaryColour}
+- Brand colours: Primary ${primaryColour}, Secondary ${secondaryColour}
 
-RULES:
-- UK English throughout (colour, favourite, specialise)
-- Hero headline: pain-first or desire-first, max 8 words, punchy
-- Reviews: sound like real UK customers, conversational, specific
-- FAQ: honest, reassuring, specific to this product
-- Never use: game-changer, revolutionary, best in class, innovative solution
-- Features: benefit-led not feature-led
+COPY RULES:
+- Hero headline: Pain-first or desire-first, punchy, max 8 words, no fluff
+- All copy must be UK English (colour not color, favourite not favorite)
+- Reviews must sound like real UK customers — conversational, specific, believable
+- FAQ answers must be honest, reassuring and specific to this product
+- Never use: "game-changer", "revolutionary", "best in class", "innovative solution"
+- Trust strip: short, punchy, 4 trust signals
+- Features: benefit-led not feature-led (what it DOES for the customer, not what it IS)
+- Social handle: create a believable @handle based on the brand name
 
-Respond ONLY with valid JSON, no markdown, no backticks:
+Respond ONLY with valid JSON, no markdown, no backticks, no comments:
 {
   "meta": {
     "tagline": "3-5 word brand tagline",
     "socialHandle": "@brandhandle"
   },
+  "press": ["Publication 1","Publication 2","Publication 3","Publication 4","Publication 5"],
+  "comparison": [
+    {"feature":"Free UK Delivery","brand":true,"generic":false,"retailer":true},
+    {"feature":"30-Day Returns","brand":true,"generic":false,"retailer":true},
+    {"feature":"UK Warranty","brand":true,"generic":false,"retailer":false},
+    {"feature":"Problem-solving design","brand":true,"generic":false,"retailer":false},
+    {"feature":"Premium quality","brand":true,"generic":false,"retailer":false},
+    {"feature":"Great value","brand":true,"generic":true,"retailer":false}
+  ],
   "nav": {
     "links": ["Products", "Reviews", "FAQ", "About"],
     "ctaText": "Shop Now"
@@ -162,24 +167,24 @@ Respond ONLY with valid JSON, no markdown, no backticks:
   ],
   "hero": {
     "headline": "Pain-first headline max 8 words",
-    "subheadline": "1-2 sentences, max 25 words, specific to the product benefit",
+    "subheadline": "1-2 sentences expanding on the headline, specific to the product benefit. Max 25 words.",
     "ctaText": "Shop ${brandName}",
     "ctaSecondary": "See how it works",
-    "badge": "Short social proof badge e.g. Over 2,000 UK customers"
+    "badge": "Short urgency or social proof badge text e.g. Over 2,000 UK customers"
   },
   "problem": {
-    "eyebrow": "The Problem",
-    "headline": "Headline naming the problem",
-    "body": "2-3 sentences describing the frustration before finding this product. Empathetic, specific.",
+    "eyebrow": "Short eyebrow label e.g. The Problem",
+    "headline": "Headline naming the problem this product solves",
+    "body": "2-3 sentences describing the frustration/pain point the customer feels before they find this product. Empathetic, specific, relatable.",
     "solutionEyebrow": "The Solution",
     "solutionHeadline": "Headline introducing the product as the answer",
-    "solutionBody": "2-3 sentences explaining how it solves the problem. Confident, benefit-led."
+    "solutionBody": "2-3 sentences explaining how the product solves the problem. Confident, specific, benefit-led."
   },
   "features": [
-    {"icon": "emoji", "title": "Benefit-led title", "body": "One sentence, specific to what this does for the customer."},
-    {"icon": "emoji", "title": "Benefit-led title", "body": "One sentence, specific to what this does for the customer."},
-    {"icon": "emoji", "title": "Benefit-led title", "body": "One sentence, specific to what this does for the customer."},
-    {"icon": "emoji", "title": "Benefit-led title", "body": "One sentence, specific to what this does for the customer."}
+    {"icon": "emoji", "title": "Benefit-led feature title", "body": "One sentence describing what this does for the customer. Specific, not generic."},
+    {"icon": "emoji", "title": "Benefit-led feature title", "body": "One sentence describing what this does for the customer. Specific, not generic."},
+    {"icon": "emoji", "title": "Benefit-led feature title", "body": "One sentence describing what this does for the customer. Specific, not generic."},
+    {"icon": "emoji", "title": "Benefit-led feature title", "body": "One sentence describing what this does for the customer. Specific, not generic."}
   ],
   "reviews": [
     {
@@ -187,7 +192,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       "location": "UK city",
       "rating": 5,
       "title": "Short review title",
-      "body": "2-3 sentences. Real UK customer voice. Mentions a specific benefit.",
+      "body": "2-3 sentences. Sounds like a real UK customer. Mentions a specific benefit or moment. Conversational.",
       "verified": true,
       "daysAgo": 3
     },
@@ -196,7 +201,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       "location": "UK city",
       "rating": 5,
       "title": "Short review title",
-      "body": "2-3 sentences. Different angle. Mentions a different benefit.",
+      "body": "2-3 sentences. Different angle to review 1. Mentions a different benefit.",
       "verified": true,
       "daysAgo": 7
     },
@@ -205,7 +210,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
       "location": "UK city",
       "rating": 5,
       "title": "Short review title",
-      "body": "2-3 sentences. Could mention gifting or recommending to others.",
+      "body": "2-3 sentences. Different angle again. Could mention gifting or sharing.",
       "verified": true,
       "daysAgo": 12
     }
@@ -214,19 +219,19 @@ Respond ONLY with valid JSON, no markdown, no backticks:
     "eyebrow": "How It Works",
     "headline": "Simple headline about ease of use",
     "steps": [
-      {"number": "01", "title": "Step title", "body": "One sentence."},
-      {"number": "02", "title": "Step title", "body": "One sentence."},
-      {"number": "03", "title": "Step title", "body": "One sentence."}
+      {"number": "01", "title": "Step title", "body": "One sentence describing this step."},
+      {"number": "02", "title": "Step title", "body": "One sentence describing this step."},
+      {"number": "03", "title": "Step title", "body": "One sentence describing this step."}
     ]
   },
   "faq": {
     "eyebrow": "FAQ",
     "headline": "Got questions? We have answers.",
     "items": [
-      {"q": "Product-specific question 1", "a": "Honest answer. 2-3 sentences."},
-      {"q": "Product-specific question 2", "a": "Honest answer. 2-3 sentences."},
-      {"q": "Shipping or delivery question", "a": "Specific UK delivery answer."},
-      {"q": "Returns or guarantee question", "a": "Reassuring purchase protection answer."}
+      {"q": "Product-specific question 1", "a": "Honest, reassuring answer. 2-3 sentences."},
+      {"q": "Product-specific question 2", "a": "Honest, reassuring answer. 2-3 sentences."},
+      {"q": "Shipping or delivery question", "a": "Specific answer about UK delivery."},
+      {"q": "Returns or guarantee question", "a": "Reassuring answer about their purchase protection."}
     ]
   },
   "finalCta": {
@@ -235,7 +240,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
     "body": "One sentence reinforcing the main benefit and reducing purchase anxiety.",
     "ctaText": "Shop ${brandName} Now",
     "guarantee": "30-day money back guarantee",
-    "badge": "Join 2,000+ happy customers"
+    "badge": "Join X+ happy customers"
   },
   "footer": {
     "tagline": "Brand tagline for footer",
