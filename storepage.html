@@ -177,7 +177,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .generating-overlay.show{display:flex}
 .generating-card{background:#fff;border-radius:28px;padding:40px;width:min(520px,100%);text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.4);animation:buildPulse 2s ease-in-out infinite}
 .generating-hub-wrap{position:relative;width:100px;height:100px;margin:0 auto 24px}
-.generating-hub-img{width:100px;height:100px;object-fit:contain;animation:hubFloat 2s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.15))}
+.generating-hub-img{width:80px;height:80px;object-fit:contain;border-radius:50%;border:3px solid rgba(245,158,11,.3);animation:hubPulse 2s ease-in-out infinite}
 .generating-hub-dots{position:absolute;top:-12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
 .generating-hub-dot{width:8px;height:8px;border-radius:50%;animation:hubDot 1.4s ease-in-out infinite}
 .generating-hub-dot:nth-child(1){background:var(--gold)}
@@ -1091,10 +1091,16 @@ function buildStoreHTML({ c, fonts, colours, brand, img1, img2, img3 }) {
   }).join('');
 
   // Features cards
-  const featureCards = (c.features||[]).map(f=>`
+  const featureSvgIcons = [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"/></svg>'
+  ];
+  const featureCards = (c.features||[]).map((f,fi)=>`
     <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:28px 24px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,.1)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-      <div style="font-size:36px;margin-bottom:16px">${f.icon}</div>
-      <div style="font-size:16px;font-weight:800;color:${p};margin-bottom:8px;font-family:'${headingFont}',sans-serif;letter-spacing:-.3px">${f.title}</div>
+      <div style="width:48px;height:48px;border-radius:12px;background:${p}15;display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:${p}">${featureSvgIcons[Math.min(fi,3)]}</div>
+      <div style="font-size:16px;font-weight:800;color:#111827;margin-bottom:8px;font-family:'${headingFont}',sans-serif;letter-spacing:-.3px">${f.title}</div>
       <div style="font-size:14px;color:#6b7280;line-height:1.7">${f.body}</div>
     </div>`).join('');
 
@@ -1265,8 +1271,10 @@ img{max-width:100%;display:block}
 
 <!-- NAV -->
 <nav style="background:#fff;border-bottom:1px solid #f3f4f6;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:42px;z-index:100;box-shadow:0 1px 12px rgba(0,0,0,.06)">
-  <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:38px;height:38px;border-radius:10px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:36px;height:36px;border-radius:9px;background:${p};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="${textOnPrimary}"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
+    </div>
     <div style="font-size:20px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
   </div>
   <div class="nav-links" style="display:flex;gap:32px">
@@ -1508,7 +1516,9 @@ ${img2 ? `
   <div class="footer-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto 40px">
     <div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div style="width:34px;height:34px;border-radius:8px;background:${p};display:flex;align-items:center;justify-content:center;font-size:16px">${brand.icon}</div>
+        <div style="width:34px;height:34px;border-radius:8px;background:${p};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="${textOnPrimary}"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
+        </div>
         <div style="font-size:17px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
       </div>
       <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px">${c.footer?.tagline||c.meta?.tagline||''}</p>
@@ -1543,7 +1553,9 @@ ${img2 ? `
 <!-- NAV -->
 <nav style="background:#fff;border-bottom:1px solid #f3f4f6;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:42px;z-index:100;box-shadow:0 1px 12px rgba(0,0,0,.06)">
   <button onclick="showPage('home')" style="display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0">
-    <div style="width:38px;height:38px;border-radius:10px;background:${p};display:flex;align-items:center;justify-content:center;font-size:18px">${brand.icon}</div>
+    <div style="width:36px;height:36px;border-radius:9px;background:${p};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="${textOnPrimary}"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
+    </div>
     <div style="font-size:20px;font-weight:900;color:${p};font-family:'${headingFont}',sans-serif;letter-spacing:-.5px">${brand.name}</div>
   </button>
   <div class="nav-links" style="display:flex;gap:8px;align-items:center">
@@ -1645,7 +1657,9 @@ ${img2 ? `
 <footer style="background:#111827;padding:32px 5%">
   <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
     <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:30px;height:30px;border-radius:7px;background:${p};display:flex;align-items:center;justify-content:center;font-size:14px">${brand.icon}</div>
+      <div style="width:30px;height:30px;border-radius:7px;background:${p};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="${textOnPrimary}"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg>
+      </div>
       <div style="font-size:15px;font-weight:900;color:#fff;font-family:'${headingFont}',sans-serif">${brand.name}</div>
     </div>
     <div style="font-size:12px;color:rgba(255,255,255,.3)">© 2026 ${brand.name}. All rights reserved.</div>
