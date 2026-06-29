@@ -1833,7 +1833,9 @@ function updateCreditUI(credits) {
     title.textContent = credits === 1
       ? '1 store concept remaining — your free one'
       : credits + ' store concepts remaining';
-    sub.textContent = 'Your first is free. Each generation builds a complete branded store concept.';
+    sub.textContent = credits === 1
+      ? 'This is your free generation — use it to build your first store concept. Need more? Get 3 additional generations for £4.99.'
+      : 'Each generation builds a complete branded store concept. Get 3 more for £4.99 when you run out.';
     if (buyBtn) buyBtn.style.display = 'none';
   } else {
     title.textContent = 'No credits remaining';
