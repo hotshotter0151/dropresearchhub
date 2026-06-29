@@ -152,11 +152,21 @@ Fill in all string values based on the live data. 4 opportunities total. Focus o
     }
 
     async function getImage(opp) {
-      // Try AliExpress first (more product-specific)
+      // 1. Try AliExpress DataHub with full search term
       let img = await getAliImage(opp.aliSearchTerm);
       if (img) return img;
-      // Fall back to SerpAPI Google Images
+
+      // 2. Try AliExpress with simplified title (first 3 words)
+      const shortTerm = opp.title.split(' ').slice(0, 3).join(' ');
+      img = await getAliImage(shortTerm);
+      if (img) return img;
+
+      // 3. Try SerpAPI with full ali search term
       img = await getSerpImage(opp.aliSearchTerm, opp.title);
+      if (img) return img;
+
+      // 4. Try SerpAPI with just the product title
+      img = await getSerpImage(opp.title, opp.title);
       return img;
     }
 
