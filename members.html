@@ -1366,7 +1366,17 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Use these exact search terms on AliExpress to find the best suppliers. Try all three — results vary.</p>
         <div class="supplier-terms">
-          ${supplierTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('')}
+          ${supplierTerms.slice(0,3).map((term,i)=>{
+            const isUK = p.sourceType === 'uk';
+            const links = isUK ? [
+              {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
+              {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
+              {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
+            ] : [
+              {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
+            ];
+            return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(l=>'<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>').join('')+'</div></div>';
+          }).join('')}
         </div>
         <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">
           💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.
@@ -1391,7 +1401,7 @@ function buildAnalysisBody(p) {
             <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
             <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
           </a>
-          <a class="research-link" href="https://www.aliexpress.com/wholesale?SearchText=${aliQ}" target="_blank">
+          <a class="research-link" href="${p.sourceType==='uk'?'https://app.avasam.com/search?q='+aliQ:'https://www.aliexpress.com/wholesale?SearchText='+aliQ}" target="_blank">
             <div class="research-link-icon" style="background:#fff0e6">🛒</div>
             <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
           </a>
@@ -1534,7 +1544,19 @@ async function generateProjection(btn) {
       }
       if (data.supplierSearchTerms) {
         const wrap = document.querySelector('.supplier-terms');
-        if (wrap) wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>`<div class="supplier-term"><div class="supplier-term-num">${i+1}</div><div class="supplier-term-text">${term}</div><a class="supplier-term-link" href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(term)}" target="_blank">Search AliExpress →</a></div>`).join('');
+        if (wrap) {
+          const isUK = p.sourceType === 'uk';
+          wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>{
+            const links = isUK ? [
+              {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
+              {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
+              {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
+            ] : [
+              {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
+            ];
+            return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(l=>'<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>').join('')+'</div></div>';
+          }).join('');
+        }
       }
       buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
     }, 600);
@@ -2159,9 +2181,23 @@ function renderFulfilmentPanel(p) {
     `<a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(t)}" target="_blank" style="display:inline-block;background:#fff0e6;border:1px solid #fed7aa;color:#c2410c;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;text-decoration:none;margin:2px">${t} ↗</a>`
   ).join('');
 
-  const ukSearchTerms = (f.ukSupplierSearchTerms || []).map(t =>
-    `<span style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;margin:2px">${t}</span>`
-  ).join('');
+  const ukSearchTerms = (f.ukSupplierSearchTerms || []).map(t => {
+    // Detect which platform the term mentions and build the right search URL
+    const q = encodeURIComponent(t);
+    let url;
+    if (t.toLowerCase().includes('avasam')) {
+      url = 'https://app.avasam.com/search?q=' + encodeURIComponent(t.replace(/avasam/i,'').trim());
+    } else if (t.toLowerCase().includes('syncee')) {
+      url = 'https://syncee.com/search?q=' + encodeURIComponent(t.replace(/syncee/i,'').trim());
+    } else if (t.toLowerCase().includes('cj') || t.toLowerCase().includes('cjdrop')) {
+      url = 'https://cjdropshipping.com/search?q=' + encodeURIComponent(t.replace(/cj dropshipping|cjdropshipping|cj/i,'').trim());
+    } else if (t.toLowerCase().includes('go dropship') || t.toLowerCase().includes('godropship')) {
+      url = 'https://www.godropship.co.uk/search?type=product&q=' + encodeURIComponent(t.replace(/go dropship|godropship/i,'').trim());
+    } else {
+      url = 'https://www.google.com/search?q=' + q + '+UK+dropship+supplier';
+    }
+    return '<a href="' + url + '" target="_blank" rel="noopener" style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;margin:2px;text-decoration:none;transition:all .15s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">' + t + ' ↗</a>';
+  }).join('');
 
   panel.innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
