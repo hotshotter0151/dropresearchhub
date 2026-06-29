@@ -581,11 +581,11 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <div class="toolbar-left" id="niche-filters"></div>
       <div class="toolbar-right" id="toolbar-count"></div>
     </div>
-    <div class="source-filter-wrap" id="source-filter-wrap">
-      <span class="source-filter-label">Source:</span>
-      <button class="source-btn active" id="src-all" onclick="setSourceFilter('all',this)">🌐 All Products</button>
-      <button class="source-btn" id="src-international" onclick="setSourceFilter('international',this)">✈️ International</button>
-      <button class="source-btn" id="src-uk" onclick="setSourceFilter('uk',this)">🇬🇧 UK Supplier</button>
+    <div style="display:flex;align-items:center;gap:6px;padding:10px 0 6px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-right:4px">Source</span>
+      <button id="src-all" onclick="setSourceFilter('all',this)" style="background:var(--navy);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s">All</button>
+      <button id="src-international" onclick="setSourceFilter('international',this)" style="background:#fff;color:var(--g500);border:1.5px solid var(--g200);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s">🇨🇳 International</button>
+      <button id="src-uk" onclick="setSourceFilter('uk',this)" style="background:#fff;color:var(--g500);border:1.5px solid var(--g200);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s">🇬🇧 UK Supplier</button>
     </div>
     <div id="members-hub-area" class="hub-loading" style="display:none;grid-column:1/-1"></div>
     <div class="products-grid" id="products-grid">
@@ -900,14 +900,13 @@ let activeSource = 'all';
 
 function setSourceFilter(source, btn) {
   activeSource = source;
-  document.querySelectorAll('.source-btn').forEach(b => {
-    b.classList.remove('active', 'active-uk');
+  ['src-all','src-international','src-uk'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) { b.style.background='#fff'; b.style.color='var(--g500)'; b.style.border='1.5px solid var(--g200)'; }
   });
-  if (source === 'uk') {
-    btn.classList.add('active-uk');
-  } else {
-    btn.classList.add('active');
-  }
+  btn.style.background = source === 'uk' ? 'var(--green)' : 'var(--navy)';
+  btn.style.color = '#fff';
+  btn.style.border = 'none';
   renderProductsGrid();
 }
 
@@ -968,7 +967,7 @@ function renderProductsGrid() {
         ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
         <div class="product-star-badge ${isCurrentTop ? 'current' : ''}">${starBadge}</div>
-        <div style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.08);border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800;color:#374151;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px)">${p.sourceType==='uk'?'🇬🇧 UK':'🇨🇳 CN'}</div>
+        <div style="position:absolute;top:10px;left:10px;font-size:22px;line-height:1" title="${p.sourceType==='uk'?'UK Sourced':'International'}">${p.sourceType==='uk'?'🇬🇧':'🇨🇳'}</div>
       </div>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
