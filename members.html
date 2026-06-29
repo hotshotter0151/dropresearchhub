@@ -896,8 +896,8 @@ function getProductStarBadge(p) {
   return p.stage || 'Emerging';
 }
 
-const FLAG_UK = 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 60 30%22%3E%3Cpath d%3D%22M0 0h60v30H0z%22 fill%3D%22%23012169%22%2F%3E%3Cpath d%3D%22M0 0l60 30M60 0L0 30%22 stroke%3D%22%23fff%22 stroke-width%3D%226%22%2F%3E%3Cpath d%3D%22M0 0l60 30M60 0L0 30%22 stroke%3D%22%23C8102E%22 stroke-width%3D%224%22%2F%3E%3Cpath d%3D%22M30 0v30M0 15h60%22 stroke%3D%22%23fff%22 stroke-width%3D%2210%22%2F%3E%3Cpath d%3D%22M30 0v30M0 15h60%22 stroke%3D%22%23C8102E%22 stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E';
-const FLAG_CN = 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 30 20%22%3E%3Crect width%3D%2230%22 height%3D%2220%22 fill%3D%22%23DE2910%22%2F%3E%3Ctext x%3D%225%22 y%3D%2214%22 font-size%3D%2212%22 fill%3D%22%23FFDE00%22%3E%E2%98%85%3C%2Ftext%3E%3C%2Fsvg%3E';
+const FLAG_UK = 'https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg';
+const FLAG_CN = 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Flag_of_the_People%27s_Republic_of_China.svg';
 function getFlag(sourceType) {
   const src = sourceType === 'uk' ? FLAG_UK : FLAG_CN;
   const alt = sourceType === 'uk' ? 'UK' : 'CN';
