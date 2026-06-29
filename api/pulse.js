@@ -8,6 +8,7 @@ export default async function handler(req, res) {
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const serpApiKey = process.env.SERP_API_KEY;
+  const rapidApiKey = process.env.RAPIDAPI_KEY;
 
   // ── GET — fetch latest pulse ──────────────────────────────────────────
   if (req.method === 'GET') {
@@ -23,10 +24,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── POST — generate or publish pulse ────────────────────────────────────
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Publish mode — save pre-generated pulse to Supabase
+  // ── PUBLISH — save pre-generated pulse to Supabase ───────────────────
   if (req.body?.publish && req.body?.pulse) {
     try {
       const pulse = req.body.pulse;
@@ -41,12 +41,13 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: e.message });
     }
   }
+
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const weekOf = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 
-  // Fetch trending signals
+  // ── FETCH TRENDING SIGNALS ────────────────────────────────────────────
   const signals = [];
 
   try {
@@ -77,7 +78,7 @@ export default async function handler(req, res) {
     }
   } catch(e) {}
 
-  // Generate pulse with Haiku
+  // ── GENERATE PULSE WITH HAIKU ─────────────────────────────────────────
   const prompt = `You are Hub, a UK ecommerce researcher. Today: ${today}.
 
 LIVE UK MARKET DATA:
@@ -103,48 +104,73 @@ Fill in all string values based on the live data. 4 opportunities total. Focus o
     const e = cleaned.lastIndexOf('}');
     if (s === -1 || e === -1) return res.status(500).json({ error: 'No JSON in response' });
     cleaned = cleaned.slice(s, e + 1);
-    
-    // Fix common JSON issues from Haiku
     cleaned = cleaned
-      .replace(/,\s*}/g, '}')      // trailing commas in objects
-      .replace(/,\s*]/g, ']')      // trailing commas in arrays
-      .replace(/[‘’]/g, "'")  // curly single quotes
-      .replace(/[“”]/g, '"'); // curly double quotes
-    
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']')
+      .replace(/['']/g, "'")
+      .replace(/[""]/g, '"');
+
     let pulse;
     try {
       pulse = JSON.parse(cleaned);
     } catch(parseErr) {
-      console.error('[PULSE] Parse error:', parseErr.message, cleaned.slice(0, 200));
       return res.status(500).json({ error: 'JSON parse error: ' + parseErr.message });
     }
 
-    // Fetch images in parallel with short timeout
-    async function getImage(aliTerm, title) {
-      if (!serpApiKey) return '';
+    // ── IMAGE FETCH — try AliExpress DataHub first, fall back to SerpAPI ──
+    async function getAliImage(searchTerm) {
+      if (!rapidApiKey || !searchTerm) return '';
       try {
-        const query = aliTerm || title;
-        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product')}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
-        const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
+        const url = `https://aliexpress-datahub.p.rapidapi.com/item_search_2?q=${encodeURIComponent(searchTerm)}&page=1&sort=default`;
+        const r = await fetch(url, {
+          headers: {
+            'x-rapidapi-key': rapidApiKey,
+            'x-rapidapi-host': 'aliexpress-datahub.p.rapidapi.com'
+          },
+          signal: AbortSignal.timeout(5000)
+        });
         if (!r.ok) return '';
         const d = await r.json();
-        const results = d?.images_results || [];
-        const product = results.find(i => i.original && i.is_product);
-        return product?.original || results[0]?.original || results[0]?.thumbnail || '';
+        const items = d?.result?.resultList || d?.data?.result?.resultList || [];
+        const img = items[0]?.item?.image || items[1]?.item?.image || items[0]?.item?.mainImageUrl || '';
+        return img;
       } catch(e) { return ''; }
     }
 
-    // Fetch all images in parallel
-    const imgs = await Promise.all(pulse.opportunities.map(o => getImage(o.aliSearchTerm, o.title)));
+    async function getSerpImage(searchTerm, title) {
+      if (!serpApiKey) return '';
+      try {
+        const query = searchTerm || title;
+        const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query + ' product white background')}&api_key=${serpApiKey}&num=5&gl=gb&hl=en&safe=off&tbm=isch`;
+        const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+        if (!r.ok) return '';
+        const d = await r.json();
+        const results = d?.images_results || [];
+        // Prefer smaller thumbnails that are more likely to load
+        return results[0]?.original || results[0]?.thumbnail || '';
+      } catch(e) { return ''; }
+    }
 
-    // Add images and links to opportunities
-    pulse.opportunities = await Promise.all(pulse.opportunities.map(async (opp, idx) => ({
+    async function getImage(opp) {
+      // Try AliExpress first (more product-specific)
+      let img = await getAliImage(opp.aliSearchTerm);
+      if (img) return img;
+      // Fall back to SerpAPI Google Images
+      img = await getSerpImage(opp.aliSearchTerm, opp.title);
+      return img;
+    }
+
+    // Fetch all images in parallel
+    const imgs = await Promise.all(pulse.opportunities.map(opp => getImage(opp)));
+
+    // Build final opportunities with images and links
+    pulse.opportunities = pulse.opportunities.map((opp, idx) => ({
       ...opp,
       img: imgs[idx] || '',
       amazonUrl: `https://www.amazon.co.uk/s?k=${encodeURIComponent(opp.amazonSearchTerm || opp.title)}&ref=nb_sb_noss`,
       aliUrl: `https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(opp.aliSearchTerm || opp.title)}`,
-      tiktokUrl: `https://www.tiktok.com/tag/${encodeURIComponent(opp.tiktokHashtag || opp.title.replace(/\s+/g, ''))}`
-    })));
+      tiktokUrl: `https://www.tiktok.com/tag/${encodeURIComponent((opp.tiktokHashtag || opp.title).replace(/[^a-zA-Z0-9]/g, ''))}`
+    }));
 
     pulse.generatedAt = new Date().toISOString();
 
