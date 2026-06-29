@@ -896,6 +896,14 @@ function getProductStarBadge(p) {
   return p.stage || 'Emerging';
 }
 
+const FLAG_UK = 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 60 30%22%3E%3Cpath d%3D%22M0 0h60v30H0z%22 fill%3D%22%23012169%22%2F%3E%3Cpath d%3D%22M0 0l60 30M60 0L0 30%22 stroke%3D%22%23fff%22 stroke-width%3D%226%22%2F%3E%3Cpath d%3D%22M0 0l60 30M60 0L0 30%22 stroke%3D%22%23C8102E%22 stroke-width%3D%224%22%2F%3E%3Cpath d%3D%22M30 0v30M0 15h60%22 stroke%3D%22%23fff%22 stroke-width%3D%2210%22%2F%3E%3Cpath d%3D%22M30 0v30M0 15h60%22 stroke%3D%22%23C8102E%22 stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E';
+const FLAG_CN = 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 30 20%22%3E%3Crect width%3D%2230%22 height%3D%2220%22 fill%3D%22%23DE2910%22%2F%3E%3Ctext x%3D%225%22 y%3D%2214%22 font-size%3D%2212%22 fill%3D%22%23FFDE00%22%3E%E2%98%85%3C%2Ftext%3E%3C%2Fsvg%3E';
+function getFlag(sourceType) {
+  const src = sourceType === 'uk' ? FLAG_UK : FLAG_CN;
+  const alt = sourceType === 'uk' ? 'UK' : 'CN';
+  return '<img src="' + src + '" style="width:100%;height:100%;object-fit:cover;display:block" alt="' + alt + '">';
+}
+
 let activeSource = 'all';
 
 function setSourceFilter(source, btn) {
@@ -967,7 +975,7 @@ function renderProductsGrid() {
         ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
         <div class="product-star-badge ${isCurrentTop ? 'current' : ''}">${starBadge}</div>
-        <div style="position:absolute;bottom:10px;left:10px;z-index:3;box-shadow:0 1px 6px rgba(0,0,0,.25);border-radius:4px;overflow:hidden;width:36px;height:24px;border:1.5px solid rgba(255,255,255,.8)"><img src="${p.sourceType==='uk'?'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3CclipPath id='a'%3E%3Cpath d='M0 0v30h60V0z'/%3E%3C/clipPath%3E%3CclipPath id='b'%3E%3Cpath d='M30 15h30v15zv15H0zH0V0zV0h30z'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23a)'%3E%3Cpath d='M0 0v30h60V0z' fill='%23012169'/%3E%3Cpath d='M0 0l60 30m0-30L0 30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0 0l60 30m0-30L0 30' clip-path='url(%23b)' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30 0v30M0 15h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E':'data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 600'%3E%3Crect width='900' height='600' fill='%23DE2910'/%3E%3Cg fill='%23FFDE00'%3E%3Cpolygon points='150,60 179,144 261,144 197,196 220,280 150,232 80,280 103,196 39,144 121,144' transform='scale(1.2) translate(-25,-10)'/%3E%3Cpolygon points='270,30 280,60 312,60 287,78 297,108 270,90 243,108 253,78 228,60 260,60' transform='translate(50,20)'/%3E%3Cpolygon points='270,30 280,60 312,60 287,78 297,108 270,90 243,108 253,78 228,60 260,60' transform='translate(80,80)'/%3E%3Cpolygon points='270,30 280,60 312,60 287,78 297,108 270,90 243,108 253,78 228,60 260,60' transform='translate(60,150)'/%3E%3Cpolygon points='270,30 280,60 312,60 287,78 297,108 270,90 243,108 253,78 228,60 260,60' transform='translate(20,200)'/%3E%3C/g%3E%3C/svg%3E'}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${p.sourceType==='uk'?'UK':'CN'}"></div>
+        <div style="position:absolute;bottom:10px;left:10px;z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.2);border-radius:4px;overflow:hidden;width:36px;height:24px;border:1.5px solid rgba(255,255,255,.8)">${getFlag(p.sourceType)}</div>
       </div>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
