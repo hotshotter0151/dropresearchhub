@@ -581,6 +581,12 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <div class="toolbar-left" id="niche-filters"></div>
       <div class="toolbar-right" id="toolbar-count"></div>
     </div>
+    <div class="source-filter-wrap" id="source-filter-wrap">
+      <span class="source-filter-label">Source:</span>
+      <button class="source-btn active" id="src-all" onclick="setSourceFilter('all',this)">🌐 All Products</button>
+      <button class="source-btn" id="src-international" onclick="setSourceFilter('international',this)">✈️ International</button>
+      <button class="source-btn" id="src-uk" onclick="setSourceFilter('uk',this)">🇬🇧 UK Supplier</button>
+    </div>
     <div id="members-hub-area" class="hub-loading" style="display:none;grid-column:1/-1"></div>
     <div class="products-grid" id="products-grid">
       <div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back soon.</p></div>
@@ -890,26 +896,84 @@ function getProductStarBadge(p) {
   return p.stage || 'Emerging';
 }
 
+let activeSource = 'all';
+
+function setSourceFilter(source, btn) {
+  activeSource = source;
+  document.querySelectorAll('.source-btn').forEach(b => {
+    b.classList.remove('active', 'active-uk');
+  });
+  if (source === 'uk') {
+    btn.classList.add('active-uk');
+  } else {
+    btn.classList.add('active');
+  }
+  renderProductsGrid();
+}
+
+function getSourceBadges(p) {
+  const f = p.fulfilment || {};
+  const badges = [];
+  const ukConf = f.ukSupplierConfidence || '';
+  const ukAvail = f.ukSupplierAvailable;
+  const intlAvail = f.internationalAvailable !== false;
+
+  if (ukAvail && (ukConf === 'High' || ukConf === 'Medium')) {
+    if (ukConf === 'High') {
+      badges.push('<span class="fulfilment-badge badge-uk-fast">🇬🇧 UK Fast Fulfilment</span>');
+    } else {
+      badges.push('<span class="fulfilment-badge badge-uk">🇬🇧 UK Supplier Possible</span>');
+    }
+  }
+  if (intlAvail && !ukAvail) {
+    badges.push('<span class="fulfilment-badge badge-overseas-only">✈️ Overseas Only</span>');
+  } else if (intlAvail) {
+    badges.push('<span class="fulfilment-badge badge-international">✈️ International</span>');
+  }
+  return badges.join('');
+}
+
+function productMatchesSource(p) {
+  if (activeSource === 'all') return true;
+  const f = p.fulfilment || {};
+  if (activeSource === 'international') return f.internationalAvailable !== false;
+  if (activeSource === 'uk') {
+    const ukConf = f.ukSupplierConfidence || '';
+    return f.ukSupplierAvailable === true && (ukConf === 'High' || ukConf === 'Medium');
+  }
+  return true;
+}
+
 function renderProductsGrid() {
   const grid = document.getElementById('products-grid');
-  const list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche||'').toLowerCase() === activeNiche.toLowerCase());
+  let list = activeNiche === 'all' ? allProducts : allProducts.filter(p => (p.niche||'').toLowerCase() === activeNiche.toLowerCase());
+  list = list.filter(p => productMatchesSource(p));
   document.getElementById('toolbar-count').textContent = `${list.length} product${list.length!==1?'s':''}`;
-  if (!list.length) { grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products yet</h3><p>The admin generates the weekly product feed. Check back Monday when new products drop.</p></div>`; return; }
+  if (!list.length) {
+    const msg = activeSource === 'uk'
+      ? 'No UK-sourceable products this week. Switch to All Products to see the full drop.'
+      : 'No products yet. The admin generates the weekly product feed. Check back Monday.';
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products found</h3><p>${msg}</p></div>`;
+    return;
+  }
   grid.innerHTML = list.map((p,i) => {
     const productIdx = allProducts.indexOf(p);
     const safeIdx = productIdx >= 0 ? productIdx : i;
     const starBadge = getProductStarBadge(p);
     const isCurrentTop = starBadge.includes("Hub's #1");
+    const sourceBadges = getSourceBadges(p);
     return `
     <div class="product-card">
       <div class="product-card-img" style="background:#fff">
         ${p.img?`<img src="${p.img}" alt="${p.name}" style="max-width:100%;max-height:196px;width:auto;height:auto;object-fit:contain;display:block;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span style="display:none;font-size:52px;width:100%;height:100%;align-items:center;justify-content:center">${p.emoji||'📦'}</span>`:`<span>${p.emoji||'📦'}</span>`}
         <div class="trend-badge" style="background:${gradeColor(p.grade)}">Grade ${p.grade||'?'}</div>
         <div class="product-star-badge ${isCurrentTop ? 'current' : ''}">${starBadge}</div>
+        <div style="position:absolute;top:10px;left:10px;font-size:20px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))">${p.sourceType==='uk'?'🇬🇧':'🇨🇳'}</div>
       </div>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
         <div class="product-card-niche">${p.niche} · ${p.season||'Evergreen'}</div>
+        ${sourceBadges ? `<div style="margin-bottom:8px">${sourceBadges}</div>` : ''}
         <div class="product-card-why" style="flex:1;margin-bottom:12px">${p.whyEmerging||p.whyNow||'Early growth signal detected.'}</div>
         <div class="mini-scores" style="margin-bottom:14px">
           <div class="mini-score"><div class="mini-score-label">Trend</div><div class="mini-score-val" style="color:var(--navy)">${p.trendScore||'—'}</div></div>
@@ -973,6 +1037,7 @@ function renderAnalysisView(p, subtitle) {
   document.getElementById('analysis-product-name').textContent = p.name;
   document.getElementById('analysis-product-niche').textContent = subtitle;
   buildAnalysisBody(p);
+  renderFulfilmentPanel(p);
 }
 
 function openAnalysis(idx) {
@@ -1215,7 +1280,14 @@ function buildAnalysisBody(p) {
       </div>
     </div>
 
-        <div class="analysis-panel">
+        <div class="analysis-panel" id="fulfilment-panel">
+      <div class="analysis-panel-head"><span style="font-size:20px">🚚</span><h2>Supplier & Fulfilment Options</h2></div>
+      <div class="analysis-panel-body" id="fulfilment-body">
+        <p style="font-size:13px;color:var(--g400)">No fulfilment data available for this product.</p>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
       <div class="analysis-panel-head"><span style="font-size:20px">💰</span><h2>Unit Economics Engine</h2><span style="background:#EFF6FF;color:#1D4ED8;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;margin-left:auto">Hub exclusive</span></div>
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your numbers — Hub models three scenarios and tells you exactly what success looks like before you spend a penny.</p>
@@ -2062,6 +2134,77 @@ async function buyStoreCredits(email) {
     }
   }
 })();
+
+// ── FULFILMENT PANEL ─────────────────────────────────────────────────────
+function renderFulfilmentPanel(p) {
+  const panel = document.getElementById('fulfilment-body');
+  if (!panel) return;
+  const f = p.fulfilment;
+  if (!f) {
+    panel.innerHTML = '<p style="font-size:13px;color:var(--g400)">No fulfilment data for this product yet. Regenerate the product to include supplier routing.</p>';
+    return;
+  }
+
+  const ukConf = f.ukSupplierConfidence || 'Low';
+  const ukAvail = f.ukSupplierAvailable;
+  const ukConfColor = ukConf === 'High' ? 'var(--green)' : ukConf === 'Medium' ? 'var(--amber)' : 'var(--g400)';
+
+  const intlSearchTerms = (f.internationalSupplierSearchTerms || []).map(t =>
+    `<a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(t)}" target="_blank" style="display:inline-block;background:#fff0e6;border:1px solid #fed7aa;color:#c2410c;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;text-decoration:none;margin:2px">${t} ↗</a>`
+  ).join('');
+
+  const ukSearchTerms = (f.ukSupplierSearchTerms || []).map(t =>
+    `<span style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;margin:2px">${t}</span>`
+  ).join('');
+
+  panel.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+
+      <!-- INTERNATIONAL -->
+      <div style="background:#fff8f0;border:1.5px solid #fed7aa;border-radius:16px;padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="font-size:20px">✈️</span>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--g900)">International Route</div>
+            <div style="font-size:11px;color:var(--g400)">${f.internationalSupplierType || 'AliExpress'} · ${f.internationalDeliveryEstimate || '7–14 days'}</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--g700);line-height:1.6;margin-bottom:10px">
+          <div style="margin-bottom:4px"><strong style="color:var(--green)">✓ Pros:</strong> Higher margin, wider product range, easy to test</div>
+          <div><strong style="color:var(--red)">✗ Cons:</strong> Longer delivery time, higher return friction</div>
+        </div>
+        ${intlSearchTerms ? `<div style="margin-top:10px"><div style="font-size:10px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Search AliExpress</div>${intlSearchTerms}</div>` : ''}
+      </div>
+
+      <!-- UK SUPPLIER -->
+      <div style="background:${ukAvail ? '#f0fdf4' : '#f9fafb'};border:1.5px solid ${ukAvail ? '#bbf7d0' : 'var(--g200)'};border-radius:16px;padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="font-size:20px">🇬🇧</span>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--g900)">UK Supplier Route</div>
+            <div style="font-size:11px;color:${ukConfColor};font-weight:700">${ukConf} confidence · ${f.ukDeliveryEstimate || '2–5 working days'}</div>
+          </div>
+        </div>
+        ${!ukAvail ? `<div style="font-size:12px;color:var(--g400)">UK supplier route not identified for this product. Sourcing from international supplier recommended.</div>` : `
+        <div style="font-size:12px;color:var(--g700);line-height:1.6;margin-bottom:10px">
+          <div style="margin-bottom:4px"><strong style="color:var(--green)">✓ Pros:</strong> Faster delivery, better customer experience, lower return rates</div>
+          <div><strong style="color:var(--red)">✗ Cons:</strong> May have lower margin, less product variety</div>
+        </div>
+        ${ukConf !== 'High' ? `<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11px;color:#92400e;font-weight:600;margin-bottom:10px">⚠️ UK supplier not fully verified — use search terms below to confirm availability before committing.</div>` : ''}
+        ${ukSearchTerms ? `<div><div style="font-size:10px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Search UK suppliers</div>${ukSearchTerms}</div>` : ''}`}
+      </div>
+    </div>
+
+    <!-- RECOMMENDED ROUTE -->
+    <div style="background:var(--navy);border-radius:14px;padding:16px 18px;display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:20px;flex-shrink:0">🎯</span>
+      <div>
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Hub's recommended route</div>
+        <div style="font-size:13px;color:#fff;font-weight:700">${f.recommendedRoute || 'Start with international sourcing to validate demand, then explore UK supplier options for faster fulfilment at scale.'}</div>
+      </div>
+    </div>
+  `;
+}
 
 trackEvent('members_page_view');
 renderProductsGrid();
