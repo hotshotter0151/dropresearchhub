@@ -1,9 +1,23 @@
+const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+async function sbFetch(path, method = 'GET', body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_SERVICE_KEY,
+      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  return res.json();
+}
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const serpApiKey = process.env.SERP_API_KEY;
@@ -14,6 +28,7 @@ export default async function handler(req, res) {
   const body = req.body;
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
+  // ── IMAGE FUNCTIONS — UNTOUCHED ──────────────────────────────────────
   async function searchImage(query) {
     try {
       const url = `https://serpapi.com/search.json?engine=google_images&q=${encodeURIComponent(query)}&api_key=${serpApiKey}&num=3&safe=off&gl=gb&hl=en`;
@@ -36,6 +51,7 @@ export default async function handler(req, res) {
     } catch (e) { return ''; }
   }
 
+  // ── ALI API — UNTOUCHED ──────────────────────────────────────────────
   async function enrichFromAliExpress(aliSearchTerm) {
     const rapidApiKey = process.env.RAPIDAPI_KEY;
     if (!rapidApiKey || !aliSearchTerm) return null;
@@ -63,6 +79,7 @@ export default async function handler(req, res) {
     } catch (e) { console.log('[ALI] Error:', e.message); return null; }
   }
 
+  // ── TRENDING DATA — UNTOUCHED ────────────────────────────────────────
   async function fetchTrendingData() {
     const results = [];
     try {
@@ -84,6 +101,7 @@ export default async function handler(req, res) {
     return results.join('\n');
   }
 
+  // ── HISTORY — UNTOUCHED ──────────────────────────────────────────────
   async function fetchPublishedHistory() {
     if (!supabaseKey) return { names: [], recentNiches: [] };
     try {
@@ -94,6 +112,7 @@ export default async function handler(req, res) {
     } catch(e) { return { names: [], recentNiches: [] }; }
   }
 
+  // ── NICHE POOL — UNTOUCHED ───────────────────────────────────────────
   const NICHE_POOL = ['Pet care','Garden & outdoor','Car accessories','Baby & toddler','Sports & fitness','Kitchen gadgets','Home organisation','Beauty & skincare','Tech accessories','Office & desk','Travel accessories','Cleaning & household','Sleep & wellness','Mens grooming','Womens fashion accessories','Cycling accessories','Kids toys','Crafts & hobbies','Fishing & outdoors','DIY & tools'];
 
   function pickNiches(recentNiches) {
@@ -103,6 +122,7 @@ export default async function handler(req, res) {
     return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   }
 
+  // ── EMERGING MODE ────────────────────────────────────────────────────
   if (body.mode === 'emerging') {
     console.log('[DRH] Starting...');
     const [trendingContext, history] = await Promise.all([fetchTrendingData(), fetchPublishedHistory()]);
@@ -118,15 +138,23 @@ ${trendingContext || 'Use mid-2026 UK ecommerce knowledge.'}
 ALREADY PUBLISHED (never repeat): ${publishedNames.slice(0,20).join(', ') || 'none'}
 
 Find 3 emerging UK dropshipping products — one per niche:
-1. ${niches[0]}
-2. ${niches[1]}  
-3. ${niches[2]}
+1. ${niches[0]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+2. ${niches[1]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+3. ${niches[2]} — UK SOURCED (choose a product that realistically has UK dropship suppliers on platforms like Avasam, Syncee, CJdropshipping UK warehouse, or Go Dropship — must be a practical physical product a UK supplier would stock)
 
-Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats), sourceable on AliExpress, evergreen demand, strong video potential.
+Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats), evergreen demand, strong video potential.
+Products 1 and 2 must be sourceable on AliExpress.
+Product 3 must be a product type realistically stocked by UK dropship suppliers.
 
 Return ONLY valid JSON array of 3 objects. No markdown.
 
-Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}]}
+Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}],"sourceType":"international|uk","fulfilment":{"internationalAvailable":true,"internationalSupplierType":"AliExpress","internationalDeliveryEstimate":"7-14 days","ukSupplierAvailable":false,"ukSupplierConfidence":"Low","ukDeliveryEstimate":"","ukSupplierSearchTerms":[],"recommendedRoute":"string"}}
+
+IMPORTANT for fulfilment field:
+- Products 1 and 2 (international): sourceType="international", ukSupplierAvailable=false, ukSupplierConfidence="Low", ukSupplierSearchTerms=[], internationalAvailable=true
+- Product 3 (UK sourced): sourceType="uk", ukSupplierAvailable=true, ukSupplierConfidence="High" or "Medium", ukDeliveryEstimate="1-3 working days", internationalAvailable=false, ukSupplierSearchTerms=["[product name] Avasam","[product name] Syncee UK","[product name] CJ dropshipping UK","[product name] Go Dropship","[product name] UK dropship supplier"], recommendedRoute="UK supplier for fast 1-3 day delivery — check Avasam and Syncee first"
+- For products 1 and 2 recommendedRoute="International sourcing via AliExpress for best margin"
+- aliSearchTerm: for product 3 (UK) still provide an AliExpress search term as a fallback reference
 
 scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensity 20, creativePotential 10, profitPotential 12, competitionBarrier 20, easeOfEntry 8, earlySignalStrength 15.`;
 
@@ -159,6 +187,7 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
     try { products = JSON.parse(cleaned); }
     catch(e) { console.error('[DRH] Parse error:', e.message); return res.status(500).json({ error: 'Parse error: ' + e.message }); }
 
+    // ── UNTOUCHED — scoring fix ──────────────────────────────────────
     products = products.map(p => p.investmentTest === 'PASS' ? { ...p, verdict: 'Watch List', confidence: 'Speculative' } : p);
 
     const SCORING_MAXES = { ukMarketGap: 25, problemIntensity: 20, creativePotential: 10, profitPotential: 12, competitionBarrier: 20, easeOfEntry: 8, earlySignalStrength: 15 };
@@ -173,6 +202,7 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
       return { ...p, scoring: fixedScoring, emergingScore: fixedEmergingScore };
     });
 
+    // ── UNTOUCHED — Ali enrichment + image fetch ─────────────────────
     console.log('[DRH] Got', products.length, 'products, enriching...');
     const enrichments = await Promise.all(products.map(p => enrichFromAliExpress(p.aliSearchTerm)));
     const serpImages = await Promise.all(products.map((p,i) => (enrichments[i]?.img) ? Promise.resolve('') : fetchProductImage(p.name)));
@@ -193,6 +223,7 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
     return res.status(200).json({ content: [{ type: 'text', text: JSON.stringify(products) }] });
   }
 
+  // ── VALIDATOR MODE — UNTOUCHED ───────────────────────────────────────
   if (body.productName) {
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -214,6 +245,7 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
     } catch(e) { return res.status(500).json({ error: 'Validator parse error' }); }
   }
 
+  // ── PASSTHROUGH MODE — UNTOUCHED ─────────────────────────────────────
   if (body.system && body.messages) {
     const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
