@@ -1062,10 +1062,13 @@ function openAnalysisFromSaved(idx) {
 
 function buildSupplierTermHtml(term, i, sourceType) {
   var isUK = sourceType === 'uk';
+  // Avasam, Syncee and CJ Dropshipping require login before in-app search works,
+  // so there is no public ?q= search URL for any of them. Google site-search is
+  // the only link that reliably works without an account.
   var links = isUK ? [
-    {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
-    {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
-    {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
+    {label:'Search Avasam →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:app.avasam.com'},
+    {label:'Search Syncee →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:syncee.com'},
+    {label:'Search CJ UK →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:cjdropshipping.com'}
   ] : [
     {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
   ];
@@ -1403,7 +1406,7 @@ function buildAnalysisBody(p) {
             <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
             <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
           </a>
-          <a class="research-link" href="${p.sourceType==='uk'?'https://app.avasam.com/search?q='+aliQ:'https://www.aliexpress.com/wholesale?SearchText='+aliQ}" target="_blank">
+          <a class="research-link" href="${p.sourceType==='uk'?'https://www.google.com/search?q='+aliQ+'+site:app.avasam.com':'https://www.aliexpress.com/wholesale?SearchText='+aliQ}" target="_blank">
             <div class="research-link-icon" style="background:#fff0e6">🛒</div>
             <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
           </a>
@@ -2174,17 +2177,21 @@ function renderFulfilmentPanel(p) {
   ).join('');
 
   const ukSearchTerms = (f.ukSupplierSearchTerms || []).map(t => {
-    // Detect which platform the term mentions and build the right search URL
-    const q = encodeURIComponent(t);
+    // Avasam, Syncee, CJ Dropshipping and Go Dropship all require login before
+    // in-app search works — none expose a public ?q= search URL, so direct
+    // links to them 404. Google site-search is the only link that works
+    // without an account.
+    const cleanTerm = t.replace(/avasam|syncee|cj dropshipping|cjdropshipping|\bcj\b|go dropship|godropship/gi, '').trim() || t;
+    const q = encodeURIComponent(cleanTerm);
     let url;
     if (t.toLowerCase().includes('avasam')) {
-      url = 'https://app.avasam.com/search?q=' + encodeURIComponent(t.replace(/avasam/i,'').trim());
+      url = 'https://www.google.com/search?q=' + q + '+site:app.avasam.com';
     } else if (t.toLowerCase().includes('syncee')) {
-      url = 'https://syncee.com/search?q=' + encodeURIComponent(t.replace(/syncee/i,'').trim());
+      url = 'https://www.google.com/search?q=' + q + '+site:syncee.com';
     } else if (t.toLowerCase().includes('cj') || t.toLowerCase().includes('cjdrop')) {
-      url = 'https://cjdropshipping.com/search?q=' + encodeURIComponent(t.replace(/cj dropshipping|cjdropshipping|cj/i,'').trim());
+      url = 'https://www.google.com/search?q=' + q + '+site:cjdropshipping.com';
     } else if (t.toLowerCase().includes('go dropship') || t.toLowerCase().includes('godropship')) {
-      url = 'https://www.godropship.co.uk/search?type=product&q=' + encodeURIComponent(t.replace(/go dropship|godropship/i,'').trim());
+      url = 'https://www.google.com/search?q=' + q + '+site:godropship.co.uk';
     } else {
       url = 'https://www.google.com/search?q=' + q + '+UK+dropship+supplier';
     }
