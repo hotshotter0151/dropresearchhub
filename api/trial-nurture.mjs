@@ -81,7 +81,7 @@ function discountOfferEmail(name, couponCode) {
   const greeting = name ? `Hi ${name},` : 'Hi,';
   const body = `
     <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px">${greeting}</p>
-    <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px">I wanted to make it easier to jump back in — here's your first month back for <strong>£14.99</strong> instead of £24.99. After that, it reverts to the normal price automatically, no strings attached.</p>
+    <p style="font-size:15px;color:#374151;line-height:1.6;margin:0 0 16px">Still not sure about using our platform?. Heres your first month discounted for <strong>£14.99</strong> instead of £24.99. After that, it reverts to the normal price automatically, no strings attached.</p>
     <div style="background:#F9FAFB;border:2px dashed #F59E0B;border-radius:12px;padding:18px;text-align:center;margin:0 0 16px">
       <div style="font-size:10px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Your code</div>
       <div style="font-size:22px;font-weight:900;color:#142840;letter-spacing:1px;font-family:monospace">${couponCode}</div>
