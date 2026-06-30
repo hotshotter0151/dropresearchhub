@@ -130,6 +130,38 @@ export default async function handler(req, res) {
     const niches = pickNiches(recentNiches);
     console.log('[DRH] Niches:', niches.join(' | '));
 
+    // sourceMode: 'mixed' (default, 2 international + 1 UK), 'uk' (all 3 UK), 'international' (all 3 international)
+    const sourceMode = ['uk', 'international'].includes(body.sourceMode) ? body.sourceMode : 'mixed';
+
+    let sourceLines, sourceRules, fulfilmentRules;
+    if (sourceMode === 'uk') {
+      sourceLines = `1. ${niches[0]} — UK SOURCED (choose a product that realistically has UK dropship suppliers on platforms like Avasam, Syncee, CJdropshipping UK warehouse, or Go Dropship — must be a practical physical product a UK supplier would stock)
+2. ${niches[1]} — UK SOURCED (same criteria as above)
+3. ${niches[2]} — UK SOURCED (same criteria as above)`;
+      sourceRules = `All 3 products must be a product type realistically stocked by UK dropship suppliers.`;
+      fulfilmentRules = `IMPORTANT for fulfilment field:
+- All 3 products are UK sourced: sourceType="uk", ukSupplierAvailable=true, ukSupplierConfidence="High" or "Medium", ukDeliveryEstimate="1-3 working days", internationalAvailable=false, ukSupplierSearchTerms=["[product name] Avasam","[product name] Syncee UK","[product name] CJ dropshipping UK","[product name] Go Dropship","[product name] UK dropship supplier"], recommendedRoute="UK supplier for fast 1-3 day delivery — check Avasam and Syncee first"
+- aliSearchTerm: still provide an AliExpress search term as a fallback reference`;
+    } else if (sourceMode === 'international') {
+      sourceLines = `1. ${niches[0]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+2. ${niches[1]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+3. ${niches[2]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)`;
+      sourceRules = `All 3 products must be sourceable on AliExpress.`;
+      fulfilmentRules = `IMPORTANT for fulfilment field:
+- All 3 products are international: sourceType="international", ukSupplierAvailable=false, ukSupplierConfidence="Low", ukSupplierSearchTerms=[], internationalAvailable=true, recommendedRoute="International sourcing via AliExpress for best margin"`;
+    } else {
+      sourceLines = `1. ${niches[0]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+2. ${niches[1]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
+3. ${niches[2]} — UK SOURCED (choose a product that realistically has UK dropship suppliers on platforms like Avasam, Syncee, CJdropshipping UK warehouse, or Go Dropship — must be a practical physical product a UK supplier would stock)`;
+      sourceRules = `Products 1 and 2 must be sourceable on AliExpress.
+Product 3 must be a product type realistically stocked by UK dropship suppliers.`;
+      fulfilmentRules = `IMPORTANT for fulfilment field:
+- Products 1 and 2 (international): sourceType="international", ukSupplierAvailable=false, ukSupplierConfidence="Low", ukSupplierSearchTerms=[], internationalAvailable=true
+- Product 3 (UK sourced): sourceType="uk", ukSupplierAvailable=true, ukSupplierConfidence="High" or "Medium", ukDeliveryEstimate="1-3 working days", internationalAvailable=false, ukSupplierSearchTerms=["[product name] Avasam","[product name] Syncee UK","[product name] CJ dropshipping UK","[product name] Go Dropship","[product name] UK dropship supplier"], recommendedRoute="UK supplier for fast 1-3 day delivery — check Avasam and Syncee first"
+- For products 1 and 2 recommendedRoute="International sourcing via AliExpress for best margin"
+- aliSearchTerm: for product 3 (UK) still provide an AliExpress search term as a fallback reference`;
+    }
+
     const prompt = `UK dropshipping product researcher. Today: ${today}.
 
 LIVE SIGNALS:
@@ -138,23 +170,16 @@ ${trendingContext || 'Use mid-2026 UK ecommerce knowledge.'}
 ALREADY PUBLISHED (never repeat): ${publishedNames.slice(0,20).join(', ') || 'none'}
 
 Find 3 emerging UK dropshipping products — one per niche:
-1. ${niches[0]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
-2. ${niches[1]} — INTERNATIONAL SOURCE (AliExpress/overseas supplier)
-3. ${niches[2]} — UK SOURCED (choose a product that realistically has UK dropship suppliers on platforms like Avasam, Syncee, CJdropshipping UK warehouse, or Go Dropship — must be a practical physical product a UK supplier would stock)
+${sourceLines}
 
 Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats), evergreen demand, strong video potential.
-Products 1 and 2 must be sourceable on AliExpress.
-Product 3 must be a product type realistically stocked by UK dropship suppliers.
+${sourceRules}
 
 Return ONLY valid JSON array of 3 objects. No markdown.
 
 Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}],"sourceType":"international|uk","fulfilment":{"internationalAvailable":true,"internationalSupplierType":"AliExpress","internationalDeliveryEstimate":"7-14 days","ukSupplierAvailable":false,"ukSupplierConfidence":"Low","ukDeliveryEstimate":"","ukSupplierSearchTerms":[],"recommendedRoute":"string"}}
 
-IMPORTANT for fulfilment field:
-- Products 1 and 2 (international): sourceType="international", ukSupplierAvailable=false, ukSupplierConfidence="Low", ukSupplierSearchTerms=[], internationalAvailable=true
-- Product 3 (UK sourced): sourceType="uk", ukSupplierAvailable=true, ukSupplierConfidence="High" or "Medium", ukDeliveryEstimate="1-3 working days", internationalAvailable=false, ukSupplierSearchTerms=["[product name] Avasam","[product name] Syncee UK","[product name] CJ dropshipping UK","[product name] Go Dropship","[product name] UK dropship supplier"], recommendedRoute="UK supplier for fast 1-3 day delivery — check Avasam and Syncee first"
-- For products 1 and 2 recommendedRoute="International sourcing via AliExpress for best margin"
-- aliSearchTerm: for product 3 (UK) still provide an AliExpress search term as a fallback reference
+${fulfilmentRules}
 
 scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensity 20, creativePotential 10, profitPotential 12, competitionBarrier 20, easeOfEntry 8, earlySignalStrength 15.`;
 
