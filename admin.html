@@ -20,11 +20,6 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sb-nav-inner{padding:12px;flex:1}
 .sb-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.8px;padding:8px 8px 4px}
 .sb-bottom-wrap{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
-.logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;text-decoration:none;color:#fff}
-.logo-icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px}
-.logo-bar{width:4px;border-radius:2px;background:var(--navy)}.logo-bar.gold{background:var(--gold)}
-.logo-text{font-size:15px;font-weight:800}.logo-text span{color:var(--gold)}
-.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.38);font-weight:700;margin:18px 8px 6px}
 .nav-btn{width:100%;border:none;background:transparent;color:rgba(255,255,255,.65);font:inherit;font-size:13px;font-weight:600;padding:10px 12px;border-radius:9px;display:flex;align-items:center;gap:9px;cursor:pointer;text-align:left;margin-bottom:2px;transition:all .15s}
 .nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
 .nav-btn.active{background:#fff;color:var(--navy)}
@@ -66,6 +61,7 @@ tr:hover td{background:var(--g50)}
 .btn.danger{background:#FEE2E2;border-color:#FECACA;color:var(--red)}
 .btn.danger:hover{background:var(--red);color:#fff}
 .btn.sm{padding:5px 10px;font-size:11px}
+.btn.active-filter{background:var(--navy);border-color:var(--navy);color:#fff}
 .two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
 .filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .filter-input{border:1px solid var(--g200);border-radius:9px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;min-width:200px}
@@ -93,28 +89,14 @@ select.filter-input{min-width:140px}
 #toast.show{opacity:1;transform:translateY(0)}
 #toast.success{background:#166534}
 #toast.error{background:var(--red)}
-.stage-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;transition:all .3s;opacity:.4}
-.stage-row.active{opacity:1;background:#fff;border-color:var(--navy);box-shadow:0 2px 12px rgba(30,58,95,.08)}
-.stage-row.done{opacity:1;background:#f0fdf4;border-color:#bbf7d0}
-.stage-row.done .stage-icon{font-size:18px}
-.stage-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
-.stage-content{flex:1}
-.stage-title{font-size:14px;font-weight:700;color:var(--g900)}
-.stage-sub{font-size:12px;color:var(--g500);margin-top:2px}
-.stage-status{font-size:12px;font-weight:700;flex-shrink:0}
-.stage-row.active .stage-status::before{content:'';display:inline-block;width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-.stage-row.done .stage-status{color:var(--green);font-weight:800}.stage-row.done .stage-status::after{content:' ✓';font-size:14px;color:var(--green)}
 .gen-btn{background:var(--navy);color:#fff;border:none;border-radius:12px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all .15s}
 .gen-btn:hover:not(:disabled){background:var(--navy-light)}
 .gen-btn:disabled{opacity:.5;cursor:not-allowed}
-.status-messages{display:none;flex-direction:column;gap:6px;margin-top:16px;background:var(--g50);border:1px solid var(--g200);border-radius:14px;padding:16px}
-.status-messages.show{display:flex}
-.status-line{font-size:13px;color:var(--g400);padding:4px 0;display:none}
-.status-line.show{display:flex;align-items:center;gap:8px}
-.status-line.active{color:var(--g700);font-weight:600}
-.status-line.active::before{content:'';width:14px;height:14px;border:2px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-.status-line.done{color:var(--green)}
-.status-line.done::before{content:'✓';color:var(--green);font-weight:900;width:14px;flex-shrink:0}
+.gen-btn.uk{background:var(--green)}
+.gen-btn.uk:hover:not(:disabled){background:#15803d}
+.gen-btn.intl{background:#c2410c}
+.gen-btn.intl:hover:not(:disabled){background:#9a3412}
+.gen-btn-row{display:flex;gap:10px;flex-wrap:wrap}
 .product-row{display:flex;gap:14px;align-items:flex-start;padding:16px;border-bottom:1px solid var(--g100);flex-wrap:wrap}
 .product-row:last-child{border-bottom:none}
 .product-emoji{font-size:32px;width:44px;text-align:center;flex-shrink:0;margin-top:4px}
@@ -133,7 +115,6 @@ select.filter-input{min-width:140px}
 .toggle-btn.on{background:var(--green)}
 .toggle-btn.on::after{left:22px}
 .toggle-label{font-size:10px;color:var(--g400);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-
 .personal-topline{font-size:12px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
 .workbench-note{font-size:12px;color:var(--g500);margin-top:4px}
 .gen-workbench{display:none;background:linear-gradient(135deg,#fff 0%,#f8fafc 100%);border:1px solid var(--g200);border-radius:16px;padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
@@ -154,7 +135,6 @@ select.filter-input{min-width:140px}
 .gen-log-row.active .gen-log-icon{width:16px;height:16px;border:2px solid #bfdbfe;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-top:2px;color:transparent}
 .gen-complete-note{display:none;margin-top:14px;background:var(--green-bg);border:1px solid #bbf7d0;color:#166534;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:750}
 .gen-complete-note.show{display:block}
-
 .hub-note-card{background:linear-gradient(135deg,#fff7ed 0%,#fff 48%,#f8fafc 100%);border:1px solid #fed7aa;border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(245,158,11,.08);position:relative;overflow:hidden}
 .hub-note-card::after{content:'';position:absolute;right:-34px;top:-34px;width:120px;height:120px;border-radius:50%;background:rgba(245,158,11,.08)}
 .hub-note-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:relative;z-index:1}
@@ -164,11 +144,6 @@ select.filter-input{min-width:140px}
 .hub-note-tag{background:#fff;border:1px solid #fde68a;color:#92400e;border-radius:999px;padding:5px 10px;font-size:11px;font-weight:900;white-space:nowrap}
 .hub-note-footer{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1}
 .hub-note-chip{background:#fff;border:1px solid var(--g200);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;color:var(--g500)}
-
-
-/* ─────────────────────────────────────────────
-   SHOPIFY-STYLE ANALYTICS DASHBOARD — DRH
-───────────────────────────────────────────── */
 .analytics-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .analytics-tabs{display:flex;gap:8px;flex-wrap:wrap}
 .analytics-tab{border:1px solid var(--g200);background:#fff;color:var(--g700);border-radius:999px;padding:8px 13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s}
@@ -199,362 +174,61 @@ select.filter-input{min-width:140px}
 .analytics-pill.blue{background:var(--blue-bg);color:#1e40af}
 @media(max-width:1100px){.analytics-grid{grid-template-columns:repeat(2,1fr)}.analytics-layout,.analytics-two-col{grid-template-columns:1fr}}
 @media(max-width:900px){.analytics-toolbar{align-items:flex-start}.analytics-tabs{width:100%}.analytics-tab{flex:1;text-align:center}.analytics-grid{grid-template-columns:1fr}.analytics-bar-row{grid-template-columns:86px 1fr 40px}.analytics-card-value{font-size:28px}.analytics-table{min-width:620px}}
-
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
 @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;width:calc(100% - 200px);padding:20px}}
-
-/* ─────────────────────────────────────────────
-   MOBILE ADMIN OPTIMISATION — private workbench
-   Keeps desktop admin unchanged, makes mobile usable
-───────────────────────────────────────────── */
-.mobile-admin-bar,
-.mobile-nav-overlay{display:none}
-
+.mobile-admin-bar,.mobile-nav-overlay{display:none}
 @media(max-width:900px){
   body{background:#f8fafc}
   .app{display:block;min-height:100vh}
-
-  .mobile-admin-bar{
-    display:flex;
-    position:sticky;
-    top:0;
-    z-index:260;
-    height:62px;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:10px 14px;
-    background:rgba(20,40,64,.98);
-    color:#fff;
-    border-bottom:1px solid rgba(255,255,255,.08);
-    box-shadow:0 10px 30px rgba(15,23,42,.18);
-  }
-  .mobile-admin-brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    min-width:0;
-    font-size:13px;
-    font-weight:900;
-    letter-spacing:-.2px;
-    color:#fff;
-  }
+  .mobile-admin-bar{display:flex;position:sticky;top:0;z-index:260;height:62px;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:rgba(20,40,64,.98);color:#fff;border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(15,23,42,.18)}
+  .mobile-admin-brand{display:flex;align-items:center;gap:9px;min-width:0;font-size:13px;font-weight:900;letter-spacing:-.2px;color:#fff}
   .mobile-admin-brand span{color:var(--gold)}
-  .mobile-admin-icon{
-    width:34px;
-    height:34px;
-    background:#fff;
-    border-radius:9px;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    gap:3px;
-    padding:7px 6px;
-    flex-shrink:0;
-  }
-  .mobile-admin-icon i{
-    width:4px;
-    border-radius:2px;
-    background:var(--navy);
-    display:block;
-  }
+  .mobile-admin-icon{width:34px;height:34px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px;flex-shrink:0}
+  .mobile-admin-icon i{width:4px;border-radius:2px;background:var(--navy);display:block}
   .mobile-admin-icon i:nth-child(4){background:var(--gold)}
-  .mobile-menu-btn{
-    border:1px solid rgba(255,255,255,.16);
-    background:rgba(255,255,255,.08);
-    color:#fff;
-    border-radius:12px;
-    padding:9px 12px;
-    font:inherit;
-    font-size:13px;
-    font-weight:900;
-    cursor:pointer;
-    white-space:nowrap;
-  }
-
-  .mobile-nav-overlay{
-    display:block;
-    position:fixed;
-    inset:0;
-    z-index:240;
-    background:rgba(15,23,42,.46);
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .2s ease;
-  }
-  body.mobile-nav-open .mobile-nav-overlay{
-    opacity:1;
-    pointer-events:auto;
-  }
-
-  .sidebar{
-    width:292px;
-    max-width:86vw;
-    transform:translateX(-102%);
-    transition:transform .22s ease;
-    box-shadow:24px 0 64px rgba(15,23,42,.28);
-    z-index:250;
-  }
+  .mobile-menu-btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;border-radius:12px;padding:9px 12px;font:inherit;font-size:13px;font-weight:900;cursor:pointer;white-space:nowrap}
+  .mobile-nav-overlay{display:block;position:fixed;inset:0;z-index:240;background:rgba(15,23,42,.46);opacity:0;pointer-events:none;transition:opacity .2s ease}
+  body.mobile-nav-open .mobile-nav-overlay{opacity:1;pointer-events:auto}
+  .sidebar{width:292px;max-width:86vw;transform:translateX(-102%);transition:transform .22s ease;box-shadow:24px 0 64px rgba(15,23,42,.28);z-index:250}
   body.mobile-nav-open .sidebar{transform:translateX(0)}
-
-  .main{
-    margin-left:0;
-    width:100%;
-    padding:18px 14px 54px;
-  }
-
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:12px;
-    margin-bottom:18px;
-  }
-  .topbar h1{
-    font-size:25px;
-    line-height:1.1;
-    letter-spacing:-.8px;
-  }
-  .topbar p{font-size:12px}
-  .workbench-note{font-size:12px;line-height:1.45}
-  .admin-pill{
-    align-self:flex-start;
-    padding:6px 12px 6px 7px;
-  }
-
-  .kpi-grid{
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-bottom:14px;
-  }
-  .kpi-card{
-    padding:15px 16px;
-    border-radius:14px;
-  }
+  .main{margin-left:0;width:100%;padding:18px 14px 54px}
+  .topbar{align-items:flex-start;flex-direction:column;gap:12px;margin-bottom:18px}
+  .topbar h1{font-size:25px;line-height:1.1;letter-spacing:-.8px}
+  .kpi-grid{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+  .kpi-card{padding:15px 16px;border-radius:14px}
   .kpi-value{font-size:28px}
-
   .two-col{grid-template-columns:1fr;gap:14px}
-
-  .card{
-    border-radius:15px;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
+  .card{border-radius:15px;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .card-pad{padding:15px}
-  .panel-head{
-    align-items:flex-start;
-    flex-direction:column;
-    padding:14px;
-    gap:12px;
-  }
-  .panel-title{font-size:15px}
-  .panel-sub{font-size:12px;line-height:1.45}
-
-  .filter-bar,
-  .panel-head > div[style*="display:flex"],
-  .modal-actions{
-    width:100%;
-  }
-  .filter-input,
-  select.filter-input{
-    min-width:0;
-    width:100%;
-  }
-  .btn,
-  .gen-btn{
-    min-height:40px;
-  }
-  .panel-head .btn,
-  .panel-head .gen-btn{
-    flex:1 1 140px;
-    justify-content:center;
-    text-align:center;
-  }
-
-  table{
-    min-width:680px;
-    white-space:nowrap;
-  }
+  .panel-head{align-items:flex-start;flex-direction:column;padding:14px;gap:12px}
+  table{min-width:680px;white-space:nowrap}
   th,td{padding:10px 12px;font-size:12px}
-
-  .mini-item{
-    align-items:flex-start;
-    gap:12px;
-    padding:12px;
-  }
-  .mini-item .btn{flex-shrink:0}
-
-  .hub-note-card{
-    padding:15px;
-    margin-bottom:14px;
-    border-radius:15px;
-  }
-  .hub-note-top{
-    flex-direction:column;
-    gap:10px;
-  }
-  .hub-note-title{
-    font-size:16px;
-    line-height:1.25;
-  }
-  .hub-note-body{
-    font-size:12px;
-    line-height:1.58;
-  }
-  .hub-note-tag{
-    align-self:flex-start;
-  }
-
-  .gen-workbench{
-    padding:14px;
-    border-radius:15px;
-  }
-  .gen-workbench-head{
-    flex-direction:column;
-    gap:12px;
-  }
-  .gen-workbench-title{
-    font-size:16px;
-    line-height:1.25;
-  }
-  .gen-workbench-sub{
-    font-size:12px;
-    line-height:1.55;
-  }
-  .gen-timer-box{
-    width:100%;
-    min-width:0;
-  }
-  .gen-timer{font-size:32px}
-  .gen-hint{
-    font-size:12px;
-    line-height:1.45;
-  }
-  .gen-log-row{
-    font-size:12px;
-    line-height:1.45;
-  }
-
-  .product-row{
-    display:grid;
-    grid-template-columns:auto 1fr;
-    gap:11px;
-    padding:14px;
-    align-items:start;
-  }
-  .product-emoji{
-    width:36px;
-    font-size:28px;
-    margin-top:0;
-  }
-  .product-info{
-    min-width:0;
-    width:100%;
-  }
-  .product-name{
-    font-size:14px;
-    line-height:1.25;
-    word-break:break-word;
-  }
-  .product-meta,
-  .product-why{
-    font-size:11px;
-    line-height:1.45;
-  }
-  .product-thumb{
-    width:100%;
-    max-width:180px;
-    height:auto;
-    aspect-ratio:4/3;
-  }
-  .product-links a{
-    font-size:10px;
-    padding:5px 8px;
-  }
-  .product-controls{
-    grid-column:1 / -1;
-    width:100%;
-    margin-left:0;
-    flex-direction:row;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    padding-top:10px;
-    border-top:1px solid var(--g100);
-  }
-  .grade-badge{padding:5px 10px}
-  .toggle-label{font-size:10px}
-  .product-controls .btn{
-    padding:7px 10px;
-  }
-
-  #pulse-review-list > div[style],
-  #all-products-list > div[style]{
-    max-width:100%;
-  }
-
-  .modal-bg{
-    align-items:flex-end;
-    padding:14px;
-  }
-  .modal{
-    width:100%;
-    max-width:none;
-    border-radius:18px;
-    padding:22px;
-  }
-  .modal-actions{
-    justify-content:stretch;
-  }
-  .modal-actions .btn{
-    flex:1;
-  }
-
-  #toast{
-    left:14px;
-    right:14px;
-    bottom:14px;
-    text-align:center;
-  }
+  .product-row{display:grid;grid-template-columns:auto 1fr;gap:11px;padding:14px;align-items:start}
+  .product-emoji{width:36px;font-size:28px;margin-top:0}
+  .product-info{min-width:0;width:100%}
+  .product-name{font-size:14px;line-height:1.25;word-break:break-word}
+  .product-controls{grid-column:1 / -1;width:100%;margin-left:0;flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-top:10px;border-top:1px solid var(--g100)}
+  .modal-bg{align-items:flex-end;padding:14px}
+  .modal{width:100%;max-width:none;border-radius:18px;padding:22px}
+  .modal-actions{justify-content:stretch}
+  .modal-actions .btn{flex:1}
+  #toast{left:14px;right:14px;bottom:14px;text-align:center}
 }
-
 @media(max-width:520px){
   .main{padding-left:12px;padding-right:12px}
   .mobile-admin-bar{padding-left:12px;padding-right:12px}
-  .sb-logo-wrap{padding:18px 18px 14px}
-  .sb-nav-inner{padding:10px}
-  .sb-bottom-wrap{padding:14px 18px}
   .topbar h1{font-size:23px}
-  .personal-topline{font-size:11px}
   .kpi-card{padding:14px}
   .kpi-value{font-size:26px}
-  .panel-head .btn,
-  .panel-head .gen-btn{
-    flex-basis:100%;
-    width:100%;
-  }
-  .product-row{
-    grid-template-columns:1fr;
-  }
-  .product-emoji{
-    width:auto;
-    text-align:left;
-  }
-  .product-controls{
-    flex-wrap:wrap;
-  }
-  .product-controls .btn{
-    flex:1 1 100%;
-  }
-  .toggle-btn{
-    margin-left:auto;
-  }
+  .product-row{grid-template-columns:1fr}
+  .product-controls{flex-wrap:wrap}
+  .product-controls .btn{flex:1 1 100%}
+  .toggle-btn{margin-left:auto}
 }
-
 </style>
 </head>
 <body>
 <div class="app">
-
   <div class="mobile-admin-bar">
     <div class="mobile-admin-brand">
       <div class="mobile-admin-icon"><i style="height:8px"></i><i style="height:14px"></i><i style="height:20px"></i><i style="height:15px"></i></div>
@@ -579,18 +253,16 @@ select.filter-input{min-width:140px}
       <button class="nav-btn" onclick="show('customers',this)">👥 Customers</button>
       <button class="nav-btn" onclick="show('billing',this)">💳 Billing</button>
       <div class="sb-section-label" style="margin-top:8px">Content</div>
-      <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Products</button>
       <button class="nav-btn" onclick="show('products',this);loadAllProducts()">✨ Generate Products</button>
       <button class="nav-btn" onclick="show('pulse',this)">🌍 Market Pulse</button>
       <button class="nav-btn" onclick="show('analytics',this);loadAnalytics()">📈 Analytics</button>
       <div class="sb-section-label" style="margin-top:8px">Pages</div>
       <button class="nav-btn" onclick="window.open('dashboard.html','_blank')">🏠 Dashboard</button>
       <button class="nav-btn" onclick="window.open('members.html','_blank')">📈 Members Area</button>
-       <button class="nav-btn" onclick="window.open('index.html','_blank')">🌐 Homepage</button>
+      <button class="nav-btn" onclick="window.open('index.html','_blank')">🌐 Homepage</button>
       <button class="nav-btn" onclick="window.open('pulse.html','_blank')">🌍 Market Pulse</button>
       <button class="nav-btn" onclick="window.open('trial.html','_blank')">🔒 Trial Area</button>
-      <button class="nav-btn" onclick="window.open('index.html','_blank')">🌐 Homepage</button>
-       <button class="nav-btn" onclick="window.open('storepage.html','_blank')">🏪 Store Builder</button>
+      <button class="nav-btn" onclick="window.open('storepage.html','_blank')">🏪 Store Builder</button>
       <div class="sb-section-label" style="margin-top:8px">External</div>
       <button class="nav-btn" onclick="window.open('https://dashboard.stripe.com','_blank')">💳 Stripe</button>
       <button class="nav-btn" onclick="window.open('https://supabase.com/dashboard/project/qpkpvtsoxiqcrkztkagn','_blank')">🗄️ Supabase</button>
@@ -611,7 +283,6 @@ select.filter-input{min-width:140px}
       <div class="admin-pill"><div class="avatar">BH</div>Admin</div>
     </div>
 
-    <!-- OVERVIEW -->
     <section id="overview" class="section active">
       <div class="kpi-grid">
         <div class="kpi-card"><div class="kpi-label">Total Users</div><div class="kpi-value" id="kpi-total">—</div><div class="kpi-note">registered accounts</div></div>
@@ -636,10 +307,7 @@ select.filter-input{min-width:140px}
       </div>
     </section>
 
-    <!-- PRODUCTS -->
     <section id="products" class="section">
-
-      <!-- Hub's Notes -->
       <div class="hub-note-card" id="hub-note-card">
         <div class="hub-note-top">
           <div>
@@ -652,11 +320,14 @@ select.filter-input{min-width:140px}
         <div class="hub-note-footer" id="hub-note-footer"></div>
       </div>
 
-      <!-- Generate -->
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
-          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Generate a controlled 3-product drop for your review queue.</div></div>
-          <button class="gen-btn" id="gen-btn" onclick="adminGenerate()"><span id="gen-text">✨ Generate 3 products</span></button>
+          <div><div class="panel-title">✨ Generate Emerging Products</div><div class="panel-sub">Generate a controlled 3-product drop for your review queue. Choose a mix, or force all 3 from one source.</div></div>
+          <div class="gen-btn-row">
+            <button class="gen-btn" id="gen-btn-mixed" onclick="adminGenerate('mixed')"><span id="gen-text-mixed">✨ Generate (2 Intl + 1 UK)</span></button>
+            <button class="gen-btn uk" id="gen-btn-uk" onclick="adminGenerate('uk')"><span id="gen-text-uk">🇬🇧 Generate UK only</span></button>
+            <button class="gen-btn intl" id="gen-btn-intl" onclick="adminGenerate('international')"><span id="gen-text-intl">🇨🇳 Generate International only</span></button>
+          </div>
         </div>
         <div class="card-pad">
           <div class="gen-workbench" id="status-messages">
@@ -682,11 +353,14 @@ select.filter-input{min-width:140px}
         </div>
       </div>
 
-      <!-- Review Queue -->
       <div class="card" id="pending-card" style="display:none;margin-bottom:16px">
         <div class="panel-head">
           <div><div class="panel-title">📋 Review Queue <span id="pending-count-badge" style="background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;margin-left:8px">0</span></div><div class="panel-sub">Toggle on what you want to publish. Generate more batches to keep adding.</div></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="btn" id="pfilter-all" onclick="setPendingSourceFilter('all',this)">All</button>
+            <button class="btn" id="pfilter-uk" onclick="setPendingSourceFilter('uk',this)">🇬🇧 UK</button>
+            <button class="btn" id="pfilter-intl" onclick="setPendingSourceFilter('international',this)">🇨🇳 International</button>
+            <span style="width:1px;height:20px;background:var(--g200);margin:0 4px"></span>
             <button class="btn" onclick="toggleAllPending(true)">✓ All on</button>
             <button class="btn" onclick="toggleAllPending(false)">✕ All off</button>
             <button class="btn" style="background:var(--green-bg);border-color:#bbf7d0;color:var(--green)" onclick="selectGradeA()">⭐ Grade A only</button>
@@ -697,11 +371,14 @@ select.filter-input{min-width:140px}
         <div id="pending-list"></div>
       </div>
 
-      <!-- All Products (historical) -->
       <div class="card">
         <div class="panel-head">
           <div><div class="panel-title">🗂️ All Products</div><div class="panel-sub">Every product ever generated. Toggle to publish/unpublish. Remove to permanently delete.</div></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="afilter-all" onclick="setAllProductsSourceFilter('all',this)">All</button>
+            <button class="btn" id="afilter-uk" onclick="setAllProductsSourceFilter('uk',this)">🇬🇧 UK</button>
+            <button class="btn" id="afilter-intl" onclick="setAllProductsSourceFilter('international',this)">🇨🇳 International</button>
+            <span style="width:1px;height:20px;background:var(--g200);margin:0 4px"></span>
             <button class="btn" onclick="selectAllProducts(true)">✓ All live</button>
             <button class="btn" onclick="selectAllProducts(false)">✕ All hidden</button>
             <button class="btn danger" onclick="massDeleteProducts()">🗑️ Delete selected</button>
@@ -711,28 +388,21 @@ select.filter-input{min-width:140px}
         </div>
         <div id="all-products-list"><div class="table-empty"><span class="spinner"></span>Loading...</div></div>
       </div>
-
     </section>
 
-    <!-- VALIDATOR -->
     <section id="validator" class="section">
       <div class="card">
-        <div class="panel-head">
-          <div><div class="panel-title">✅ Product Validator</div><div class="panel-sub">Enter any product name to get a full market assessment</div></div>
-        </div>
+        <div class="panel-head"><div><div class="panel-title">✅ Product Validator</div><div class="panel-sub">Enter any product name to get a full market assessment</div></div></div>
         <div class="card-pad">
           <div style="display:flex;gap:0;background:var(--g50);border:1px solid var(--g200);border-radius:12px;overflow:hidden;margin-bottom:16px">
             <input id="admin-validator-input" placeholder="Enter a product name e.g. Portable Neck Fan..." style="flex:1;border:none;outline:none;padding:12px 16px;font-size:14px;font-family:inherit;background:transparent;color:var(--g900)" onkeydown="if(event.key==='Enter')runAdminValidator()">
             <button onclick="runAdminValidator()" style="background:var(--navy);color:#fff;border:none;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">Analyse →</button>
           </div>
-          <div id="admin-validator-result" style="min-height:80px">
-            <div style="text-align:center;padding:40px;color:var(--g400);font-size:13px">Enter a product name above to get started</div>
-          </div>
+          <div id="admin-validator-result" style="min-height:80px"><div style="text-align:center;padding:40px;color:var(--g400);font-size:13px">Enter a product name above to get started</div></div>
         </div>
       </div>
     </section>
 
-    <!-- MARKET PULSE -->
     <div id="pulse" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
@@ -758,14 +428,9 @@ select.filter-input{min-width:140px}
       </div>
     </div>
 
-
-    <!-- ANALYTICS -->
     <section id="analytics" class="section">
       <div class="analytics-toolbar">
-        <div>
-          <div class="panel-title">📈 DRH Analytics</div>
-          <div class="panel-sub">Shopify-style traffic and conversion intelligence powered by your analytics_events table.</div>
-        </div>
+        <div><div class="panel-title">📈 DRH Analytics</div><div class="panel-sub">Shopify-style traffic and conversion intelligence powered by your analytics_events table.</div></div>
         <div class="analytics-tabs">
           <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
           <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
@@ -773,51 +438,27 @@ select.filter-input{min-width:140px}
           <button class="btn" onclick="loadAnalytics()">↻ Refresh</button>
         </div>
       </div>
-
       <div class="analytics-mini-note">💡 Page views are live now. Next we can track trial clicks, checkout starts, product analyses, saved products and Ask Hub actions.</div>
-
       <div class="analytics-grid">
         <div class="analytics-card"><div class="analytics-card-label">Visitors</div><div class="analytics-card-value" id="ana-visitors">—</div><div class="analytics-card-note">unique sessions</div></div>
         <div class="analytics-card"><div class="analytics-card-label">Page Views</div><div class="analytics-card-value" id="ana-pageviews">—</div><div class="analytics-card-note">total tracked views</div></div>
         <div class="analytics-card"><div class="analytics-card-label">Trial Intent</div><div class="analytics-card-value" id="ana-trials">—</div><div class="analytics-card-note">trial/checkout events</div></div>
         <div class="analytics-card"><div class="analytics-card-label">Live Visitors</div><div class="analytics-card-value" id="ana-live"><span class="analytics-live-dot"></span>—</div><div class="analytics-card-note">active in last 5 mins</div></div>
       </div>
-
       <div class="analytics-layout">
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Traffic Sources</div><div class="panel-sub">Where visitors are coming from</div></div><span class="analytics-pill blue">Acquisition</span></div>
-          <div class="analytics-bars" id="ana-sources"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
-        </div>
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Devices</div><div class="panel-sub">Mobile, desktop and tablet split</div></div><span class="analytics-pill green">Behaviour</span></div>
-          <div class="analytics-bars" id="ana-devices"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
-        </div>
+        <div class="card"><div class="panel-head"><div><div class="panel-title">Traffic Sources</div><div class="panel-sub">Where visitors are coming from</div></div><span class="analytics-pill blue">Acquisition</span></div><div class="analytics-bars" id="ana-sources"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div></div>
+        <div class="card"><div class="panel-head"><div><div class="panel-title">Devices</div><div class="panel-sub">Mobile, desktop and tablet split</div></div><span class="analytics-pill green">Behaviour</span></div><div class="analytics-bars" id="ana-devices"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div></div>
       </div>
-
       <div class="analytics-two-col">
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Top Pages</div><div class="panel-sub">Most viewed pages in this period</div></div></div>
-          <table class="analytics-table"><thead><tr><th>Page</th><th>Views</th><th>Share</th></tr></thead><tbody id="ana-pages"><tr><td colspan="3" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
-        </div>
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Browsers</div><div class="panel-sub">Browser split</div></div></div>
-          <div class="analytics-bars" id="ana-browsers"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div>
-        </div>
+        <div class="card"><div class="panel-head"><div><div class="panel-title">Top Pages</div><div class="panel-sub">Most viewed pages in this period</div></div></div><table class="analytics-table"><thead><tr><th>Page</th><th>Views</th><th>Share</th></tr></thead><tbody id="ana-pages"><tr><td colspan="3" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table></div>
+        <div class="card"><div class="panel-head"><div><div class="panel-title">Browsers</div><div class="panel-sub">Browser split</div></div></div><div class="analytics-bars" id="ana-browsers"><div class="analytics-empty"><span class="spinner"></span>Loading…</div></div></div>
       </div>
-
       <div class="card analytics-full">
         <div class="panel-head"><div><div class="panel-title">Live Activity Feed</div><div class="panel-sub">Latest tracked visitor events</div></div><span class="analytics-pill gold">Real-time feel</span></div>
         <table class="analytics-table"><thead><tr><th>Event</th><th>Page</th><th>Source</th><th>Device</th><th>When</th></tr></thead><tbody id="ana-events"><tr><td colspan="5" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
       </div>
-
       <div class="card">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">🤖 Hub Intelligence</div>
-            <div class="panel-sub">Live member behaviour from product analysis, saved products, Ask Hub and creative tools.</div>
-          </div>
-          <span class="analytics-pill gold" id="hub-intel-status">Live</span>
-        </div>
+        <div class="panel-head"><div><div class="panel-title">🤖 Hub Intelligence</div><div class="panel-sub">Live member behaviour from product analysis, saved products, Ask Hub and creative tools.</div></div><span class="analytics-pill gold" id="hub-intel-status">Live</span></div>
         <div class="card-pad mini-list">
           <div class="mini-item"><div><b>Products Analysed</b><br><span class="sub">How often members clicked Analyse</span></div><span class="badge blue" id="hub-products-analysed">0</span></div>
           <div class="mini-item"><div><b>Saved Products</b><br><span class="sub">Products saved to member research lists</span></div><span class="badge gold" id="hub-products-saved">0</span></div>
@@ -831,7 +472,6 @@ select.filter-input{min-width:140px}
       </div>
     </section>
 
-    <!-- CUSTOMERS -->
     <section id="customers" class="section">
       <div class="card" style="margin-bottom:16px">
         <div class="panel-head">
@@ -847,14 +487,10 @@ select.filter-input{min-width:140px}
             <button class="btn" onclick="exportUsersCSV()">↓ Export CSV</button>
           </div>
         </div>
-        <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Stripe Customer</th><th>Joined</th><th>Actions</th></tr></thead>
-          <tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody>
-        </table>
+        <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Stripe Customer</th><th>Joined</th><th>Actions</th></tr></thead><tbody id="users-table"><tr><td colspan="6" class="table-empty"><span class="spinner"></span>Loading…</td></tr></tbody></table>
       </div>
     </section>
 
-    <!-- BILLING -->
     <section id="billing" class="section">
       <div class="kpi-grid" style="margin-bottom:20px">
         <div class="kpi-card"><div class="kpi-label">MRR</div><div class="kpi-value" id="bill-mrr" style="color:var(--green)">—</div><div class="kpi-note">monthly recurring revenue</div></div>
@@ -863,10 +499,7 @@ select.filter-input{min-width:140px}
         <div class="kpi-card"><div class="kpi-label">Trial → Paid</div><div class="kpi-value" id="bill-conversion">—</div><div class="kpi-note">conversion rate</div></div>
       </div>
       <div class="two-col">
-        <div class="card">
-          <div class="panel-head"><div><div class="panel-title">Subscription Breakdown</div><div class="panel-sub">Live from Supabase</div></div></div>
-          <div class="card-pad" id="billing-breakdown"><div class="table-empty"><span class="spinner"></span>Loading…</div></div>
-        </div>
+        <div class="card"><div class="panel-head"><div><div class="panel-title">Subscription Breakdown</div><div class="panel-sub">Live from Supabase</div></div></div><div class="card-pad" id="billing-breakdown"><div class="table-empty"><span class="spinner"></span>Loading…</div></div></div>
         <div class="card">
           <div class="panel-head"><div><div class="panel-title">Quick Links</div></div></div>
           <div class="card-pad mini-list">
@@ -882,7 +515,6 @@ select.filter-input{min-width:140px}
   </main>
 </div>
 
-<!-- Status Modal -->
 <div class="modal-bg" id="status-modal">
   <div class="modal">
     <h2>Change Subscription Status</h2>
@@ -892,8 +524,6 @@ select.filter-input{min-width:140px}
     <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveStatus()">Save Changes</button></div>
   </div>
 </div>
-
-<!-- Delete Modal -->
 <div class="modal-bg" id="delete-modal">
   <div class="modal">
     <h2>Delete User</h2>
@@ -905,66 +535,51 @@ select.filter-input{min-width:140px}
 <div id="toast"></div>
 
 <script>
+function toggleMobileNav(){document.body.classList.toggle('mobile-nav-open')}
+function closeMobileNav(){document.body.classList.remove('mobile-nav-open')}
+const SUPABASE_URL='https://qpkpvtsoxiqcrkztkagn.supabase.co';
+const SUPABASE_KEY='sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
 
-function toggleMobileNav() {
-  document.body.classList.toggle('mobile-nav-open');
-}
-function closeMobileNav() {
-  document.body.classList.remove('mobile-nav-open');
-}
-const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
-
-(function() {
-  let session = null;
-  try { session = JSON.parse(sessionStorage.getItem('drh_session') || 'null'); } catch(e) {}
-  if (!session || session.role !== 'admin') {
-    window.location.href = 'admin-login.html';
-  }
+(function(){
+  let session=null;
+  try{session=JSON.parse(sessionStorage.getItem('drh_session')||'null')}catch(e){}
+  if(!session||session.role!=='admin'){window.location.href='admin-login.html'}
 })();
 
-let pendingPulse = null;
+let pendingPulse=null;
 
-async function generatePulse() {
-  const btn = document.getElementById('pulse-gen-btn');
-  const statusEl = document.getElementById('pulse-status');
-  btn.disabled = true;
-  document.getElementById('pulse-gen-text').innerHTML = '<span class="spinner"></span> Generating...';
-  statusEl.style.display = 'block';
-  statusEl.style.background = 'var(--g50)';
-  statusEl.style.border = '1px solid var(--g200)';
-  statusEl.style.color = 'var(--g600)';
-  statusEl.style.padding = '12px 16px';
-  statusEl.textContent = 'Hub is scanning UK market signals...';
-  try {
-    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({preview: true}) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Generation failed');
-    pendingPulse = data.pulse;
-    statusEl.textContent = pendingPulse.opportunities.length + ' opportunities generated — review and publish below.';
-    statusEl.style.color = 'var(--green)';
+async function generatePulse(){
+  const btn=document.getElementById('pulse-gen-btn');
+  const statusEl=document.getElementById('pulse-status');
+  btn.disabled=true;
+  document.getElementById('pulse-gen-text').innerHTML='<span class="spinner"></span> Generating...';
+  statusEl.style.display='block';statusEl.style.background='var(--g50)';statusEl.style.border='1px solid var(--g200)';statusEl.style.color='var(--g600)';statusEl.style.padding='12px 16px';
+  statusEl.textContent='Hub is scanning UK market signals...';
+  try{
+    const res=await fetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preview:true})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Generation failed');
+    pendingPulse=data.pulse;
+    statusEl.textContent=pendingPulse.opportunities.length+' opportunities generated — review and publish below.';
+    statusEl.style.color='var(--green)';
     renderPulseQueue();
-    document.getElementById('pulse-review-card').style.display = 'block';
-  } catch(e) {
-    statusEl.textContent = 'Error: ' + e.message;
-    statusEl.style.color = 'var(--red)';
-  }
-  btn.disabled = false;
-  document.getElementById('pulse-gen-text').textContent = '🌍 Generate Market Pulse';
+    document.getElementById('pulse-review-card').style.display='block';
+  }catch(e){statusEl.textContent='Error: '+e.message;statusEl.style.color='var(--red)'}
+  btn.disabled=false;document.getElementById('pulse-gen-text').textContent='🌍 Generate Market Pulse';
 }
 
-function renderPulseQueue() {
-  if (!pendingPulse) return;
-  const opps = pendingPulse.opportunities || [];
-  document.getElementById('pulse-count-badge').textContent = opps.length;
-  const list = document.getElementById('pulse-review-list');
-  list.innerHTML = opps.map((opp, i) => `
+function renderPulseQueue(){
+  if(!pendingPulse)return;
+  const opps=pendingPulse.opportunities||[];
+  document.getElementById('pulse-count-badge').textContent=opps.length;
+  const list=document.getElementById('pulse-review-list');
+  list.innerHTML=opps.map((opp,i)=>`
     <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--g100);flex-wrap:wrap">
-      <div style="font-size:28px;flex-shrink:0">${opp.emoji || '📊'}</div>
+      <div style="font-size:28px;flex-shrink:0">${opp.emoji||'📊'}</div>
       <div style="flex:1;min-width:200px">
         <div style="font-size:14px;font-weight:700;color:var(--g900);margin-bottom:2px">${opp.title}</div>
         <div style="font-size:12px;color:var(--g400)">${opp.confidence} Confidence · ${opp.stage} · Window: ${opp.window}</div>
-        <div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">"${opp.hubTake || ''}"</div>
+        <div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">"${opp.hubTake||''}"</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
         <button class="toggle-btn on" id="ptoggle-pulse-${i}" onclick="this.classList.toggle('on')"></button>
@@ -973,471 +588,315 @@ function renderPulseQueue() {
     </div>`).join('');
 }
 
-function deletePulseOpp(i) { pendingPulse.opportunities.splice(i, 1); renderPulseQueue(); }
-function toggleAllPulse(on) { document.querySelectorAll('[id^="ptoggle-pulse-"]').forEach(b => { b.className = 'toggle-btn' + (on ? ' on' : ''); }); }
-function clearPulseQueue() { if (!confirm('Clear the pulse review queue?')) return; pendingPulse = null; document.getElementById('pulse-review-card').style.display = 'none'; document.getElementById('pulse-review-list').innerHTML = ''; }
+function deletePulseOpp(i){pendingPulse.opportunities.splice(i,1);renderPulseQueue()}
+function toggleAllPulse(on){document.querySelectorAll('[id^="ptoggle-pulse-"]').forEach(b=>{b.className='toggle-btn'+(on?' on':'')})}
+function clearPulseQueue(){if(!confirm('Clear the pulse review queue?'))return;pendingPulse=null;document.getElementById('pulse-review-card').style.display='none';document.getElementById('pulse-review-list').innerHTML=''}
 
-async function publishPulse() {
-  if (!pendingPulse) return;
-  const selected = pendingPulse.opportunities.filter((_, i) => { const btn = document.getElementById('ptoggle-pulse-' + i); return btn && btn.classList.contains('on'); });
-  if (!selected.length) { toast('Toggle on at least one opportunity', 'error'); return; }
-  const publishData = { ...pendingPulse, opportunities: selected };
-  try {
-    const res = await fetch('/api/pulse', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ publish: true, pulse: publishData }) });
-    if (!res.ok) throw new Error('Publish failed');
-    toast('Market Pulse published! Members can see it now.', 'success');
-    clearPulseQueue();
-  } catch(e) { toast('Error: ' + e.message, 'error'); }
+async function publishPulse(){
+  if(!pendingPulse)return;
+  const selected=pendingPulse.opportunities.filter((_,i)=>{const btn=document.getElementById('ptoggle-pulse-'+i);return btn&&btn.classList.contains('on')});
+  if(!selected.length){toast('Toggle on at least one opportunity','error');return}
+  const publishData={...pendingPulse,opportunities:selected};
+  try{
+    const res=await fetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publish:true,pulse:publishData})});
+    if(!res.ok)throw new Error('Publish failed');
+    toast('Market Pulse published! Members can see it now.','success');clearPulseQueue();
+  }catch(e){toast('Error: '+e.message,'error')}
 }
 
-function logout() { sessionStorage.removeItem('drh_session'); sessionStorage.removeItem('drh_auth'); window.location.href = 'admin-login.html'; }
+function logout(){sessionStorage.removeItem('drh_session');sessionStorage.removeItem('drh_auth');window.location.href='admin-login.html'}
 
-async function sbFetch(path, options = {}) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    ...options,
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...(options.headers||{}) }
-  });
-  if (!res.ok) throw new Error(`Supabase error ${res.status}`);
+async function sbFetch(path,options={}){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+  if(!res.ok)throw new Error(`Supabase error ${res.status}`);
   return res.json();
 }
 
-const sectionTitles = {
-  overview: ['Overview','Live data from Supabase & Stripe'],
-  pulse: ['Market Pulse','Generate Hub weekly UK market intelligence'],
-  analytics: ['Analytics','Traffic, conversion and member behaviour insights'],
-  products: ['Products','Generate and manage the weekly product feed'],
-  customers: ['Customers','All registered users'],
-  billing: ['Billing','Revenue and subscription stats']
-};
-function show(id, btn) {
+const sectionTitles={overview:['Overview','Live data from Supabase & Stripe'],pulse:['Market Pulse','Generate Hub weekly UK market intelligence'],analytics:['Analytics','Traffic, conversion and member behaviour insights'],products:['Products','Generate and manage the weekly product feed'],customers:['Customers','All registered users'],billing:['Billing','Revenue and subscription stats']};
+function show(id,btn){
   closeMobileNav();
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  const [title, sub] = sectionTitles[id] || ['Admin',''];
-  document.getElementById('section-title').textContent = title;
-  document.getElementById('section-sub').textContent = sub;
-  if (id === 'analytics') loadAnalytics();
+  if(btn)btn.classList.add('active');
+  const[title,sub]=sectionTitles[id]||['Admin',''];
+  document.getElementById('section-title').textContent=title;
+  document.getElementById('section-sub').textContent=sub;
+  if(id==='analytics')loadAnalytics();
 }
 
-let analyticsRange = 'today';
+let analyticsRange='today';
+function setAnalyticsRange(range,btn){analyticsRange=range;document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');loadAnalytics()}
 
-function setAnalyticsRange(range, btn) {
-  analyticsRange = range;
-  document.querySelectorAll('.analytics-tab').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  loadAnalytics();
-}
-
-function analyticsStartDate() {
-  const d = new Date();
-  if (analyticsRange === 'today') d.setHours(0,0,0,0);
-  else if (analyticsRange === '7d') d.setDate(d.getDate() - 7);
-  else if (analyticsRange === '30d') d.setDate(d.getDate() - 30);
-  return d.toISOString();
-}
-
-async function loadAnalytics() {
-  const section = document.getElementById('analytics');
-  if (!section || !section.classList.contains('active')) return;
-
-  setText('ana-visitors', '...');
-  setText('ana-pageviews', '...');
-  setText('ana-trials', '...');
-  const live = document.getElementById('ana-live');
-  if (live) live.innerHTML = '<span class="analytics-live-dot"></span>...';
-
-  try {
-    // Read analytics through a secure server route.
-    // The browser/public Supabase key can insert rows but may return [] because of table policies.
-    const res = await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' },
-      cache: 'no-store'
-    });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || data.details || `Analytics API error ${res.status}`);
-
-    const rows = Array.isArray(data.events) ? data.events : [];
-    renderAnalytics(rows);
-  } catch(e) {
-    const msg = `Analytics could not load: ${e.message}`;
-    setText('ana-visitors', '0');
-    setText('ana-pageviews', '0');
-    setText('ana-trials', '0');
-    const live = document.getElementById('ana-live');
-    if (live) live.innerHTML = '<span class="analytics-live-dot"></span>0';
-    ['ana-sources','ana-devices','ana-browsers'].forEach(id => {
-      const el=document.getElementById(id);
-      if(el) el.innerHTML = `<div class="analytics-empty">⚠️ ${msg}</div>`;
-    });
-    const pages=document.getElementById('ana-pages');
-    if(pages) pages.innerHTML = `<tr><td colspan="3" class="table-empty">⚠️ ${msg}</td></tr>`;
-    const events=document.getElementById('ana-events');
-    if(events) events.innerHTML = `<tr><td colspan="5" class="table-empty">⚠️ ${msg}</td></tr>`;
+async function loadAnalytics(){
+  const section=document.getElementById('analytics');
+  if(!section||!section.classList.contains('active'))return;
+  setText('ana-visitors','...');setText('ana-pageviews','...');setText('ana-trials','...');
+  const live=document.getElementById('ana-live');if(live)live.innerHTML='<span class="analytics-live-dot"></span>...';
+  try{
+    const res=await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||data.details||`Analytics API error ${res.status}`);
+    renderAnalytics(Array.isArray(data.events)?data.events:[]);
+  }catch(e){
+    const msg=`Analytics could not load: ${e.message}`;
+    setText('ana-visitors','0');setText('ana-pageviews','0');setText('ana-trials','0');
+    const live=document.getElementById('ana-live');if(live)live.innerHTML='<span class="analytics-live-dot"></span>0';
+    ['ana-sources','ana-devices','ana-browsers'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=`<div class="analytics-empty">⚠️ ${msg}</div>`});
+    const pages=document.getElementById('ana-pages');if(pages)pages.innerHTML=`<tr><td colspan="3" class="table-empty">⚠️ ${msg}</td></tr>`;
+    const events=document.getElementById('ana-events');if(events)events.innerHTML=`<tr><td colspan="5" class="table-empty">⚠️ ${msg}</td></tr>`;
   }
 }
 
-function renderAnalytics(rows) {
-  rows = normaliseAnalyticsRows(rows);
-
-  const pageViews = rows.filter(r => r.event_name === 'page_view' || r.event_name === 'members_page_view' || r.event_name === 'market_pulse_view');
-  const sessions = new Set(rows.map(r => r.session_id).filter(Boolean));
-  const trials = rows.filter(r => ['trial_click','start_trial_click','checkout_started','checkout_start','signup_click'].includes(r.event_name)).length;
-  const liveCutoff = Date.now() - (5 * 60 * 1000);
-  const liveSessions = new Set(rows.filter(r => new Date(r.created_at).getTime() >= liveCutoff).map(r => r.session_id).filter(Boolean));
-
-  setText('ana-visitors', sessions.size || 0);
-  setText('ana-pageviews', pageViews.length || 0);
-  setText('ana-trials', trials || 0);
-  const live = document.getElementById('ana-live');
-  if (live) live.innerHTML = `<span class="analytics-live-dot"></span>${liveSessions.size || 0}`;
-
-  renderBars('ana-sources', countBy(rows.map(sourceLabel)), 'No traffic sources yet');
-  renderBars('ana-devices', countBy(rows.map(r => r.device_type || 'Unknown')), 'No device data yet');
-  renderBars('ana-browsers', countBy(rows.map(r => r.browser || 'Unknown')), 'No browser data yet');
-  renderTopPages(pageViews);
-  renderActivity(rows.slice(0, 12));
-  renderHubIntelligence(rows);
+function renderAnalytics(rows){
+  rows=normaliseAnalyticsRows(rows);
+  const pageViews=rows.filter(r=>r.event_name==='page_view'||r.event_name==='members_page_view'||r.event_name==='market_pulse_view');
+  const sessions=new Set(rows.map(r=>r.session_id).filter(Boolean));
+  const trials=rows.filter(r=>['trial_click','start_trial_click','checkout_started','checkout_start','signup_click'].includes(r.event_name)).length;
+  const liveCutoff=Date.now()-(5*60*1000);
+  const liveSessions=new Set(rows.filter(r=>new Date(r.created_at).getTime()>=liveCutoff).map(r=>r.session_id).filter(Boolean));
+  setText('ana-visitors',sessions.size||0);setText('ana-pageviews',pageViews.length||0);setText('ana-trials',trials||0);
+  const live=document.getElementById('ana-live');if(live)live.innerHTML=`<span class="analytics-live-dot"></span>${liveSessions.size||0}`;
+  renderBars('ana-sources',countBy(rows.map(sourceLabel)),'No traffic sources yet');
+  renderBars('ana-devices',countBy(rows.map(r=>r.device_type||'Unknown')),'No device data yet');
+  renderBars('ana-browsers',countBy(rows.map(r=>r.browser||'Unknown')),'No browser data yet');
+  renderTopPages(pageViews);renderActivity(rows.slice(0,12));renderHubIntelligence(rows);
 }
 
-function normaliseAnalyticsRows(rows) {
-  if (!Array.isArray(rows)) return [];
-  return rows.map(row => {
-    const meta = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
-    const eventName = String(row.event_name || row.event || 'page_view').trim();
-    const pagePath = row.page_path || row.page || row.path || '/';
-    const deviceType = row.device_type || row.device || row.deviceType || 'Unknown';
-    const browser = row.browser || 'Unknown';
-    const sessionId = row.session_id || row.visitor_id || row.id || '';
-    return {
-      ...row,
-      metadata: meta,
-      event_name: eventName,
-      page_path: pagePath,
-      device_type: deviceType,
-      browser: browser,
-      session_id: sessionId,
-      created_at: row.created_at || row.timestamp || new Date().toISOString(),
-      source: row.source || '',
-      referrer: row.referrer || ''
-    };
+function normaliseAnalyticsRows(rows){
+  if(!Array.isArray(rows))return[];
+  return rows.map(row=>{
+    const meta=row.metadata&&typeof row.metadata==='object'?row.metadata:{};
+    return{...row,metadata:meta,event_name:String(row.event_name||row.event||'page_view').trim(),page_path:row.page_path||row.page||row.path||'/',device_type:row.device_type||row.device||row.deviceType||'Unknown',browser:row.browser||'Unknown',session_id:row.session_id||row.visitor_id||row.id||'',created_at:row.created_at||row.timestamp||new Date().toISOString(),source:row.source||'',referrer:row.referrer||''};
   });
 }
 
-function eventMatches(eventName, names) {
-  const clean = String(eventName || '').toLowerCase();
-  return names.some(name => clean === name || clean.includes(name));
+function eventMatches(eventName,names){const clean=String(eventName||'').toLowerCase();return names.some(name=>clean===name||clean.includes(name))}
+function getMetaValue(row,keys){const meta=row.metadata&&typeof row.metadata==='object'?row.metadata:{};for(const key of keys){if(row[key])return row[key];if(meta[key])return meta[key]}return''}
+
+function renderHubIntelligence(rows){
+  const productAnalyseEvents=rows.filter(r=>eventMatches(r.event_name,['product_analyse_click','product_analyze_click','analyse_product','analyze_product','analysis_opened']));
+  const savedEvents=rows.filter(r=>eventMatches(r.event_name,['product_saved','save_product','product_save_click']));
+  const askHubEvents=rows.filter(r=>eventMatches(r.event_name,['ask_hub_used','validator_used','product_validator','admin_validator','launch_plan']));
+  const creativeEvents=rows.filter(r=>eventMatches(r.event_name,['creative_pack_generated','creative_pack','ad_angles','generate_creative','creative_generated']));
+  const memberActionEvents=rows.filter(r=>!eventMatches(r.event_name,['page_view','members_page_view','market_pulse_view']));
+  setText('hub-products-analysed',productAnalyseEvents.length);setText('hub-products-saved',savedEvents.length);setText('hub-ask-hub-used',askHubEvents.length);setText('hub-creative-packs',creativeEvents.length);
+  const topAction=topEntry(countBy(memberActionEvents.map(r=>eventLabel(r.event_name))));
+  setText('hub-top-action',topAction?`${topAction[0]} (${topAction[1]})`:'No actions yet');
+  const topPage=topEntry(countBy(rows.map(r=>r.page_path||'Unknown')));
+  setText('hub-top-page',topPage?`${topPage[0]} (${topPage[1]})`:'No visits yet');
+  const productNames=rows.map(r=>getMetaValue(r,['product_name','productName','name','product','title'])).filter(Boolean).map(v=>String(v).trim()).filter(v=>v&&v!=='Unknown');
+  const topProduct=topEntry(countBy(productNames));
+  setText('hub-hottest-product',topProduct?`${topProduct[0]} (${topProduct[1]})`:'No product signal yet');
+  const engagementScore=(productAnalyseEvents.length*3)+(savedEvents.length*4)+(askHubEvents.length*5)+(creativeEvents.length*4)+memberActionEvents.length;
+  setText('hub-engagement-score',engagementScore);
+  const status=document.getElementById('hub-intel-status');
+  if(status){status.textContent=memberActionEvents.length?'Live':'Waiting for actions';status.className=memberActionEvents.length?'analytics-pill green':'analytics-pill gold'}
 }
 
-function getMetaValue(row, keys) {
-  const meta = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
-  for (const key of keys) {
-    if (row[key]) return row[key];
-    if (meta[key]) return meta[key];
-  }
-  return '';
+function topEntry(counts){const entries=Object.entries(counts||{}).filter(([,v])=>Number(v)>0).sort((a,b)=>b[1]-a[1]);return entries[0]||null}
+function sourceLabel(r){if(r.source)return titleCase(r.source);const ref=(r.referrer||'').toLowerCase();if(!ref)return'Direct';if(ref.includes('tiktok'))return'TikTok';if(ref.includes('instagram'))return'Instagram';if(ref.includes('facebook'))return'Facebook';if(ref.includes('linkedin'))return'LinkedIn';if(ref.includes('google'))return'Google';if(ref.includes('youtube'))return'YouTube';return'Referral'}
+function countBy(items){return items.reduce((acc,item)=>{const key=item||'Unknown';acc[key]=(acc[key]||0)+1;return acc},{})}
+function renderBars(id,counts,emptyText){const el=document.getElementById(id);if(!el)return;const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);const total=entries.reduce((s,[,v])=>s+v,0);if(!entries.length||!total){el.innerHTML=`<div class="analytics-empty">${emptyText}</div>`;return}el.innerHTML=entries.map(([label,value])=>{const pct=Math.round((value/total)*100);return`<div class="analytics-bar-row"><div class="analytics-bar-label">${esc(label)}</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:${pct}%"></div></div><div class="analytics-bar-value">${pct}%</div></div>`}).join('')}
+function renderTopPages(pageViews){const tbody=document.getElementById('ana-pages');if(!tbody)return;const counts=countBy(pageViews.map(r=>r.page_path||'/'));const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);const total=pageViews.length||0;if(!entries.length){tbody.innerHTML='<tr><td colspan="3" class="table-empty">No page views yet</td></tr>';return}tbody.innerHTML=entries.map(([page,views])=>`<tr><td><b>${esc(page)}</b></td><td>${views}</td><td>${total?Math.round((views/total)*100):0}%</td></tr>`).join('')}
+function renderActivity(rows){const tbody=document.getElementById('ana-events');if(!tbody)return;if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="table-empty">No activity yet</td></tr>';return}tbody.innerHTML=rows.map(r=>`<tr><td><b>${esc(eventLabel(r.event_name))}</b></td><td>${esc(r.page_path||'—')}</td><td>${esc(sourceLabel(r))}</td><td>${esc(r.device_type||'—')}</td><td>${timeAgo(r.created_at)}</td></tr>`).join('')}
+function eventLabel(name){return String(name||'event').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+function titleCase(v){return String(v||'').replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+function timeAgo(dateStr){const diff=Math.max(0,Date.now()-new Date(dateStr).getTime());const mins=Math.floor(diff/60000);if(mins<1)return'just now';if(mins<60)return`${mins}m ago`;const hrs=Math.floor(mins/60);if(hrs<24)return`${hrs}h ago`;const days=Math.floor(hrs/24);return`${days}d ago`}
+function setText(id,value){const el=document.getElementById(id);if(el)el.textContent=value}
+
+let allUsers=[];
+async function loadUsers(){
+  try{
+    const res=await fetch('/api/admin-users');const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Failed to load users');
+    const users=data.users||[];allUsers=users;
+    renderUsersTable(users);renderRecentSignups(users.slice(0,10));renderKPIs(users);renderBilling(users);
+    document.getElementById('customer-count').textContent=`${users.length} total user${users.length!==1?'s':''}`;
+  }catch(err){document.getElementById('users-table').innerHTML=`<tr><td colspan="6" class="table-empty">⚠️ ${err.message}</td></tr>`}
 }
 
-function renderHubIntelligence(rows) {
-  const productAnalyseEvents = rows.filter(r => eventMatches(r.event_name, ['product_analyse_click','product_analyze_click','analyse_product','analyze_product','analysis_opened']));
-  const savedEvents = rows.filter(r => eventMatches(r.event_name, ['product_saved','save_product','product_save_click']));
-  const askHubEvents = rows.filter(r => eventMatches(r.event_name, ['ask_hub_used','validator_used','product_validator','admin_validator','launch_plan']));
-  const creativeEvents = rows.filter(r => eventMatches(r.event_name, ['creative_pack_generated','creative_pack','ad_angles','generate_creative','creative_generated']));
-  const memberActionEvents = rows.filter(r => !eventMatches(r.event_name, ['page_view','members_page_view','market_pulse_view']));
-
-  setText('hub-products-analysed', productAnalyseEvents.length);
-  setText('hub-products-saved', savedEvents.length);
-  setText('hub-ask-hub-used', askHubEvents.length);
-  setText('hub-creative-packs', creativeEvents.length);
-
-  const topAction = topEntry(countBy(memberActionEvents.map(r => eventLabel(r.event_name))));
-  setText('hub-top-action', topAction ? `${topAction[0]} (${topAction[1]})` : 'No actions yet');
-
-  const topPage = topEntry(countBy(rows.map(r => r.page_path || 'Unknown')));
-  setText('hub-top-page', topPage ? `${topPage[0]} (${topPage[1]})` : 'No visits yet');
-
-  const productNames = rows
-    .map(r => getMetaValue(r, ['product_name','productName','name','product','title']))
-    .filter(Boolean)
-    .map(v => String(v).trim())
-    .filter(v => v && v !== 'Unknown');
-
-  const topProduct = topEntry(countBy(productNames));
-  setText('hub-hottest-product', topProduct ? `${topProduct[0]} (${topProduct[1]})` : 'No product signal yet');
-
-  const engagementScore = (productAnalyseEvents.length * 3) + (savedEvents.length * 4) + (askHubEvents.length * 5) + (creativeEvents.length * 4) + memberActionEvents.length;
-  setText('hub-engagement-score', engagementScore);
-
-  const status = document.getElementById('hub-intel-status');
-  if (status) {
-    status.textContent = memberActionEvents.length ? 'Live' : 'Waiting for actions';
-    status.className = memberActionEvents.length ? 'analytics-pill green' : 'analytics-pill gold';
-  }
+function renderKPIs(users){
+  document.getElementById('kpi-total').textContent=users.length;
+  document.getElementById('kpi-active').textContent=users.filter(u=>u.subscription_status==='active').length;
+  document.getElementById('kpi-trial').textContent=users.filter(u=>u.subscription_status==='trial').length;
+  document.getElementById('kpi-cancelled').textContent=users.filter(u=>u.subscription_status==='cancelled').length;
 }
 
-function topEntry(counts) {
-  const entries = Object.entries(counts || {}).filter(([,v]) => Number(v) > 0).sort((a,b) => b[1] - a[1]);
-  return entries[0] || null;
+function renderRecentSignups(users){
+  const tbody=document.getElementById('recent-signups');
+  if(!users.length){tbody.innerHTML='<tr><td colspan="4" class="table-empty">No users yet</td></tr>';return}
+  tbody.innerHTML=users.map(u=>`<tr><td><b>${esc(u.name||'—')}</b></td><td>${esc(u.email)}</td><td>${statusBadge(u.subscription_status)}</td><td>${formatDate(u.created_at)}</td></tr>`).join('');
 }
 
-function sourceLabel(r) {
-  if (r.source) return titleCase(r.source);
-  const ref = (r.referrer || '').toLowerCase();
-  if (!ref) return 'Direct';
-  if (ref.includes('tiktok')) return 'TikTok';
-  if (ref.includes('instagram')) return 'Instagram';
-  if (ref.includes('facebook')) return 'Facebook';
-  if (ref.includes('linkedin')) return 'LinkedIn';
-  if (ref.includes('google')) return 'Google';
-  if (ref.includes('youtube')) return 'YouTube';
-  return 'Referral';
+function renderUsersTable(users){
+  const tbody=document.getElementById('users-table');
+  if(!users.length){tbody.innerHTML='<tr><td colspan="6" class="table-empty">No users found</td></tr>';return}
+  tbody.innerHTML=users.map(u=>`<tr><td><b>${esc(u.name||'—')}</b></td><td>${esc(u.email)}</td><td>${statusBadge(u.subscription_status)}</td><td>${u.stripe_customer_id?`<a href="https://dashboard.stripe.com/customers/${u.stripe_customer_id}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none">${u.stripe_customer_id.slice(0,18)}… ↗</a>`:'<span style="color:var(--g400)">—</span>'}</td><td>${formatDate(u.created_at)}</td><td style="display:flex;gap:6px"><button class="btn sm" onclick="openStatusModal('${esc(u.email)}','${u.subscription_status}')">Edit</button><button class="btn sm danger" onclick="openDeleteModal('${esc(u.email)}','${esc(u.id)}')">Delete</button></td></tr>`).join('');
 }
 
-function countBy(items) {
-  return items.reduce((acc, item) => { const key = item || 'Unknown'; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
-}
-
-function renderBars(id, counts, emptyText) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 7);
-  const total = entries.reduce((s, [,v]) => s + v, 0);
-  if (!entries.length || !total) { el.innerHTML = `<div class="analytics-empty">${emptyText}</div>`; return; }
-  el.innerHTML = entries.map(([label, value]) => {
-    const pct = Math.round((value / total) * 100);
-    return `<div class="analytics-bar-row"><div class="analytics-bar-label">${esc(label)}</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:${pct}%"></div></div><div class="analytics-bar-value">${pct}%</div></div>`;
-  }).join('');
-}
-
-function renderTopPages(pageViews) {
-  const tbody = document.getElementById('ana-pages');
-  if (!tbody) return;
-  const counts = countBy(pageViews.map(r => r.page_path || '/'));
-  const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 10);
-  const total = pageViews.length || 0;
-  if (!entries.length) { tbody.innerHTML = '<tr><td colspan="3" class="table-empty">No page views yet</td></tr>'; return; }
-  tbody.innerHTML = entries.map(([page, views]) => `<tr><td><b>${esc(page)}</b></td><td>${views}</td><td>${total ? Math.round((views/total)*100) : 0}%</td></tr>`).join('');
-}
-
-function renderActivity(rows) {
-  const tbody = document.getElementById('ana-events');
-  if (!tbody) return;
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No activity yet</td></tr>'; return; }
-  tbody.innerHTML = rows.map(r => `<tr><td><b>${esc(eventLabel(r.event_name))}</b></td><td>${esc(r.page_path || '—')}</td><td>${esc(sourceLabel(r))}</td><td>${esc(r.device_type || '—')}</td><td>${timeAgo(r.created_at)}</td></tr>`).join('');
-}
-
-function eventLabel(name) { return String(name || 'event').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
-function titleCase(v) { return String(v || '').replace(/[_-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
-function timeAgo(dateStr) { const diff = Math.max(0, Date.now() - new Date(dateStr).getTime()); const mins = Math.floor(diff / 60000); if (mins < 1) return 'just now'; if (mins < 60) return `${mins}m ago`; const hrs = Math.floor(mins / 60); if (hrs < 24) return `${hrs}h ago`; const days = Math.floor(hrs / 24); return `${days}d ago`; }
-function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
-
-let allUsers = [];
-async function loadUsers() {
-  try {
-    const res = await fetch('/api/admin-users');
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed to load users');
-    const users = data.users || [];
-    allUsers = users;
-    renderUsersTable(users);
-    renderRecentSignups(users.slice(0,10));
-    renderKPIs(users);
-    renderBilling(users);
-    document.getElementById('customer-count').textContent = `${users.length} total user${users.length!==1?'s':''}`;
-  } catch(err) {
-    document.getElementById('users-table').innerHTML = `<tr><td colspan="6" class="table-empty">⚠️ ${err.message}</td></tr>`;
-  }
-}
-
-function renderKPIs(users) {
-  document.getElementById('kpi-total').textContent = users.length;
-  document.getElementById('kpi-active').textContent = users.filter(u=>u.subscription_status==='active').length;
-  document.getElementById('kpi-trial').textContent = users.filter(u=>u.subscription_status==='trial').length;
-  document.getElementById('kpi-cancelled').textContent = users.filter(u=>u.subscription_status==='cancelled').length;
-}
-
-function renderRecentSignups(users) {
-  const tbody = document.getElementById('recent-signups');
-  if (!users.length) { tbody.innerHTML = '<tr><td colspan="4" class="table-empty">No users yet</td></tr>'; return; }
-  tbody.innerHTML = users.map(u => `<tr><td><b>${esc(u.name||'—')}</b></td><td>${esc(u.email)}</td><td>${statusBadge(u.subscription_status)}</td><td>${formatDate(u.created_at)}</td></tr>`).join('');
-}
-
-function renderUsersTable(users) {
-  const tbody = document.getElementById('users-table');
-  if (!users.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No users found</td></tr>'; return; }
-  tbody.innerHTML = users.map(u => `<tr>
-    <td><b>${esc(u.name||'—')}</b></td>
-    <td>${esc(u.email)}</td>
-    <td>${statusBadge(u.subscription_status)}</td>
-    <td>${u.stripe_customer_id?`<a href="https://dashboard.stripe.com/customers/${u.stripe_customer_id}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none">${u.stripe_customer_id.slice(0,18)}… ↗</a>`:'<span style="color:var(--g400)">—</span>'}</td>
-    <td>${formatDate(u.created_at)}</td>
-    <td style="display:flex;gap:6px"><button class="btn sm" onclick="openStatusModal('${esc(u.email)}','${u.subscription_status}')">Edit</button><button class="btn sm danger" onclick="openDeleteModal('${esc(u.email)}','${esc(u.id)}')">Delete</button></td>
-  </tr>`).join('');
-}
-
-function filterUsers() {
-  const q = document.getElementById('search-users').value.toLowerCase();
-  const status = document.getElementById('filter-status').value;
-  const filtered = allUsers.filter(u => (!q||u.email.toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q))&&(!status||u.subscription_status===status));
+function filterUsers(){
+  const q=document.getElementById('search-users').value.toLowerCase();
+  const status=document.getElementById('filter-status').value;
+  const filtered=allUsers.filter(u=>(!q||u.email.toLowerCase().includes(q)||(u.name||'').toLowerCase().includes(q))&&(!status||u.subscription_status===status));
   renderUsersTable(filtered);
-  document.getElementById('customer-count').textContent = `${filtered.length} of ${allUsers.length} users`;
+  document.getElementById('customer-count').textContent=`${filtered.length} of ${allUsers.length} users`;
 }
 
-function exportUsersCSV() {
-  const rows = [['Name','Email','Status','Stripe ID','Joined']];
-  allUsers.forEach(u => rows.push([u.name||'',u.email,u.subscription_status,u.stripe_customer_id||'',u.created_at]));
-  const csv = rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = `drh-customers-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
+function exportUsersCSV(){
+  const rows=[['Name','Email','Status','Stripe ID','Joined']];
+  allUsers.forEach(u=>rows.push([u.name||'',u.email,u.subscription_status,u.stripe_customer_id||'',u.created_at]));
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=`drh-customers-${new Date().toISOString().slice(0,10)}.csv`;a.click();
   toast('CSV downloaded','success');
 }
 
-function renderBilling(users) {
-  const active = users.filter(u=>u.subscription_status==='active').length;
-  const trial = users.filter(u=>u.subscription_status==='trial').length;
-  const cancelled = users.filter(u=>u.subscription_status==='cancelled').length;
-  const mrr = active * 24.99;
-  const churn = users.length ? Math.round((cancelled/users.length)*100) : 0;
-  const conversion = (trial+active) ? Math.round((active/(trial+active))*100) : 0;
-  document.getElementById('bill-mrr').textContent = `£${mrr.toFixed(2)}`;
-  document.getElementById('bill-churn').textContent = `${churn}%`;
-  document.getElementById('bill-conversion').textContent = `${conversion}%`;
-  document.getElementById('billing-breakdown').innerHTML = `<div class="mini-list">
-    <div class="mini-item"><div><b>Active (Paid)</b><br><span class="sub">${active} × £24.99/mo</span></div><span class="badge green">£${(active*24.99).toFixed(2)}/mo</span></div>
-    <div class="mini-item"><div><b>On Trial</b><br><span class="sub">${trial} users in 7-day trial</span></div><span class="badge gold">${trial} users</span></div>
-    <div class="mini-item"><div><b>Cancelled</b></div><span class="badge red">${cancelled} users</span></div>
-    <div class="mini-item"><div><b>Total Registered</b></div><span class="badge blue">${users.length} users</span></div>
-  </div>`;
+function renderBilling(users){
+  const active=users.filter(u=>u.subscription_status==='active').length;
+  const trial=users.filter(u=>u.subscription_status==='trial').length;
+  const cancelled=users.filter(u=>u.subscription_status==='cancelled').length;
+  const mrr=active*24.99;
+  const churn=users.length?Math.round((cancelled/users.length)*100):0;
+  const conversion=(trial+active)?Math.round((active/(trial+active))*100):0;
+  document.getElementById('bill-mrr').textContent=`£${mrr.toFixed(2)}`;
+  document.getElementById('bill-churn').textContent=`${churn}%`;
+  document.getElementById('bill-conversion').textContent=`${conversion}%`;
+  document.getElementById('billing-breakdown').innerHTML=`<div class="mini-list"><div class="mini-item"><div><b>Active (Paid)</b><br><span class="sub">${active} × £24.99/mo</span></div><span class="badge green">£${(active*24.99).toFixed(2)}/mo</span></div><div class="mini-item"><div><b>On Trial</b><br><span class="sub">${trial} users in 7-day trial</span></div><span class="badge gold">${trial} users</span></div><div class="mini-item"><div><b>Cancelled</b></div><span class="badge red">${cancelled} users</span></div><div class="mini-item"><div><b>Total Registered</b></div><span class="badge blue">${users.length} users</span></div></div>`;
 }
 
-let pendingProducts = [];
+let pendingProducts=[];
+let pendingSourceFilter='all';
+let allProductsSourceFilter='all';
+let lastAllProducts=[];
+let genTimerInterval=null;
+let genStartedAt=null;
 
-let genTimerInterval = null;
-let genStartedAt = null;
+function formatElapsed(ms){const total=Math.max(0,Math.floor(ms/1000));const mins=String(Math.floor(total/60)).padStart(2,'0');const secs=String(total%60).padStart(2,'0');return`${mins}:${secs}`}
 
-function formatElapsed(ms) {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  const mins = String(Math.floor(total / 60)).padStart(2, '0');
-  const secs = String(total % 60).padStart(2, '0');
-  return `${mins}:${secs}`;
+function setGenLog(id,state,text){
+  const row=document.getElementById(id);if(!row)return;
+  row.className='gen-log-row'+(state?` ${state}`:'');
+  const icon=row.querySelector('.gen-log-icon');const label=row.querySelector('span:last-child');
+  if(icon)icon.textContent=state==='done'?'✓':state==='error'?'✕':'○';
+  if(label&&text)label.textContent=text;
 }
 
-function setGenLog(id, state, text) {
-  const row = document.getElementById(id);
-  if (!row) return;
-  row.className = 'gen-log-row' + (state ? ` ${state}` : '');
-  const icon = row.querySelector('.gen-log-icon');
-  const label = row.querySelector('span:last-child');
-  if (icon) icon.textContent = state === 'done' ? '✓' : state === 'error' ? '✕' : '○';
-  if (label && text) label.textContent = text;
+function resetGenWorkbench(){
+  const timer=document.getElementById('gen-timer');if(timer)timer.textContent='00:00';
+  ['gen-log-request','gen-log-ai','gen-log-supplier','gen-log-queue'].forEach(id=>setGenLog(id,'',null));
+  const complete=document.getElementById('gen-complete-note');
+  if(complete){complete.className='gen-complete-note';complete.textContent='';complete.removeAttribute('style')}
 }
 
-function resetGenWorkbench() {
-  const timer = document.getElementById('gen-timer');
-  if (timer) timer.textContent = '00:00';
-  ['gen-log-request','gen-log-ai','gen-log-supplier','gen-log-queue'].forEach(id => setGenLog(id, '', null));
-  const complete = document.getElementById('gen-complete-note');
-  if (complete) { complete.className = 'gen-complete-note'; complete.textContent = ''; complete.removeAttribute('style'); }
+function setGenButtonsDisabled(disabled){
+  ['gen-btn-mixed','gen-btn-uk','gen-btn-intl'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=disabled});
 }
 
-async function adminGenerate() {
-  const btn = document.getElementById('gen-btn');
-  const genText = document.getElementById('gen-text');
-  const statusBox = document.getElementById('status-messages');
-  const timerEl = document.getElementById('gen-timer');
-  const complete = document.getElementById('gen-complete-note');
+async function adminGenerate(sourceMode){
+  sourceMode = sourceMode || 'mixed';
+  const labelMap = { mixed: '✨ Generate (2 Intl + 1 UK)', uk: '🇬🇧 Generate UK only', international: '🇨🇳 Generate International only' };
+  const textIdMap = { mixed: 'gen-text-mixed', uk: 'gen-text-uk', international: 'gen-text-intl' };
+  const activeTextId = textIdMap[sourceMode];
+  const activeText = document.getElementById(activeTextId);
 
-  btn.disabled = true;
-  genText.innerHTML = '<span class="spinner"></span> Generating...';
-  statusBox.className = 'gen-workbench show';
+  const statusBox=document.getElementById('status-messages');
+  const timerEl=document.getElementById('gen-timer');
+  const complete=document.getElementById('gen-complete-note');
+
+  setGenButtonsDisabled(true);
+  if (activeText) activeText.innerHTML = '<span class="spinner"></span> Generating...';
+  statusBox.className='gen-workbench show';
   resetGenWorkbench();
+  document.querySelector('.gen-workbench-title').textContent = sourceMode === 'uk'
+    ? "Hub is generating this week's UK-only products"
+    : sourceMode === 'international'
+      ? "Hub is generating this week's international-only products"
+      : "Hub is generating this week's products";
 
-  genStartedAt = Date.now();
-  if (timerEl) timerEl.textContent = '00:00';
+  genStartedAt=Date.now();if(timerEl)timerEl.textContent='00:00';
   clearInterval(genTimerInterval);
-  genTimerInterval = setInterval(() => {
-    if (timerEl) timerEl.textContent = formatElapsed(Date.now() - genStartedAt);
-  }, 1000);
-
-  setGenLog('gen-log-request', 'done', 'Request sent to Hub');
-  setGenLog('gen-log-ai', 'active', 'Waiting for AI product research');
-
-  try {
-    const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({mode:'emerging'}) });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error || 'Generate failed');
-
-    setGenLog('gen-log-ai', 'done', 'AI product research complete');
-    setGenLog('gen-log-supplier', 'active', 'Reading supplier-enriched product data');
-
-    const t = (d.content||[]).map(i=>i.text||'').join('');
-    let c = t.replace(/```json|```/g,'').trim();
-    const s = c.indexOf('['), e = c.lastIndexOf(']');
-    if (s===-1||e===-1) throw new Error('No product array found');
-    const newProducts = JSON.parse(c.slice(s,e+1)).map(normaliseProductImage);
-
-    setGenLog('gen-log-supplier', 'done', 'Supplier data read successfully');
-    setGenLog('gen-log-queue', 'active', 'Preparing review queue');
-
-    pendingProducts = [...pendingProducts, ...newProducts];
+  genTimerInterval=setInterval(()=>{if(timerEl)timerEl.textContent=formatElapsed(Date.now()-genStartedAt)},1000);
+  setGenLog('gen-log-request','done','Request sent to Hub');
+  setGenLog('gen-log-ai','active','Waiting for AI product research');
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging',sourceMode})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error||'Generate failed');
+    setGenLog('gen-log-ai','done','AI product research complete');
+    setGenLog('gen-log-supplier','active','Reading supplier-enriched product data');
+    const t=(d.content||[]).map(i=>i.text||'').join('');
+    let c=t.replace(/```json|```/g,'').trim();
+    const s=c.indexOf('['),e=c.lastIndexOf(']');
+    if(s===-1||e===-1)throw new Error('No product array found');
+    const newProducts=JSON.parse(c.slice(s,e+1)).map(normaliseProductImage);
+    setGenLog('gen-log-supplier','done','Supplier data read successfully');
+    setGenLog('gen-log-queue','active','Preparing review queue');
+    pendingProducts=[...pendingProducts,...newProducts];
     renderPendingList();
-    document.getElementById('pending-card').style.display = 'block';
-
-    setGenLog('gen-log-queue', 'done', `${newProducts.length} products added to review queue`);
+    document.getElementById('pending-card').style.display='block';
+    setGenLog('gen-log-queue','done',`${newProducts.length} products added to review queue`);
     clearInterval(genTimerInterval);
-    const elapsed = timerEl ? timerEl.textContent : formatElapsed(Date.now() - genStartedAt);
-    if (complete) {
-      complete.className = 'gen-complete-note show';
-      complete.textContent = `Hub finished in ${elapsed}. ${newProducts.length} products are ready for review below.`;
-    }
-    toast(`✅ ${newProducts.length} products added to queue (${pendingProducts.length} total)`, 'success');
-  } catch(err) {
-    clearInterval(genTimerInterval);
-    setGenLog('gen-log-ai', 'error', 'Generation stopped');
-    if (complete) {
-      complete.className = 'gen-complete-note show';
-      complete.style.background = '#fef2f2';
-      complete.style.borderColor = '#fecaca';
-      complete.style.color = 'var(--red)';
-      complete.textContent = 'Error: ' + err.message;
-    }
-    toast('Generate failed: ' + err.message, 'error');
+    const elapsed=timerEl?timerEl.textContent:formatElapsed(Date.now()-genStartedAt);
+    if(complete){complete.className='gen-complete-note show';complete.textContent=`Hub finished in ${elapsed}. ${newProducts.length} products are ready for review below.`}
+    toast(`✅ ${newProducts.length} products added to queue (${pendingProducts.length} total)`,'success');
+  }catch(err){
+    clearInterval(genTimerInterval);setGenLog('gen-log-ai','error','Generation stopped');
+    if(complete){complete.className='gen-complete-note show';complete.style.background='#fef2f2';complete.style.borderColor='#fecaca';complete.style.color='var(--red)';complete.textContent='Error: '+err.message}
+    toast('Generate failed: '+err.message,'error');
   }
-
-  btn.disabled = false;
-  genText.textContent = '✨ Generate 3 products';
+  setGenButtonsDisabled(false);
+  if (activeText) activeText.textContent = labelMap[sourceMode];
 }
 
+function getProductImage(p){return p?.img||p?.image||p?.imageUrl||p?.image_url||p?.productImage||p?.product_image||p?.thumbnail||p?.thumb||p?.photo||p?.picture||p?.supplierImage||p?.supplier_image||p?.aliImage||p?.ali_image||p?.aliexpressImage||p?.aliexpress_image||p?.mainImage||p?.main_image||p?.primaryImage||p?.primary_image||p?.supplier?.image||p?.supplier?.imageUrl||p?.supplier?.thumbnail||p?.supplierData?.image||p?.supplierData?.imageUrl||p?.supplierData?.thumbnail||p?.aliExpress?.image||p?.aliExpress?.imageUrl||p?.aliexpress?.image||p?.aliexpress?.imageUrl||''}
+function normaliseProductImage(p){const img=getProductImage(p);return img?{...p,img}:p}
+function productImageHtml(p){const img=getProductImage(p);if(!img)return'<div class="product-thumb product-thumb-empty">No image returned</div>';return`<img class="product-thumb" src="${esc(String(img))}" onerror="this.outerHTML='<div class=&quot;product-thumb product-thumb-empty&quot;>Image unavailable</div>'">`}
 
-function getProductImage(p) {
-  return p?.img || p?.image || p?.imageUrl || p?.image_url || p?.productImage || p?.product_image || p?.thumbnail || p?.thumb || p?.photo || p?.picture || p?.supplierImage || p?.supplier_image || p?.aliImage || p?.ali_image || p?.aliexpressImage || p?.aliexpress_image || p?.mainImage || p?.main_image || p?.primaryImage || p?.primary_image || p?.supplier?.image || p?.supplier?.imageUrl || p?.supplier?.thumbnail || p?.supplierData?.image || p?.supplierData?.imageUrl || p?.supplierData?.thumbnail || p?.aliExpress?.image || p?.aliExpress?.imageUrl || p?.aliexpress?.image || p?.aliexpress?.imageUrl || '';
+function getAdminFlag(sourceType) {
+  const type = String(sourceType || '').toLowerCase();
+  if (type === 'uk') {
+    return '<svg viewBox="0 0 60 40" width="28" height="19" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#012169"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/><path d="M30 0 V40 M0 20 H60" stroke="#fff" stroke-width="13"/><path d="M30 0 V40 M0 20 H60" stroke="#C8102E" stroke-width="7"/></svg>';
+  }
+  return '<svg viewBox="0 0 60 40" width="28" height="19" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#DE2910"/><polygon fill="#FFDE00" points="10,6 11.8,11.5 17.6,11.5 12.9,14.9 14.7,20.4 10,17 5.3,20.4 7.1,14.9 2.4,11.5 8.2,11.5"/><polygon fill="#FFDE00" points="23,4 24,6.8 27,6.8 24.6,8.6 25.5,11.4 23,9.7 20.5,11.4 21.4,8.6 19,6.8 22,6.8"/><polygon fill="#FFDE00" points="29,10 30,12.8 33,12.8 30.6,14.6 31.5,17.4 29,15.7 26.5,17.4 27.4,14.6 25,12.8 28,12.8"/><polygon fill="#FFDE00" points="29,19 30,21.8 33,21.8 30.6,23.6 31.5,26.4 29,24.7 26.5,26.4 27.4,23.6 25,21.8 28,21.8"/><polygon fill="#FFDE00" points="23,26 24,28.8 27,28.8 24.6,30.6 25.5,33.4 23,31.7 20.5,33.4 21.4,30.6 19,28.8 22,28.8"/></svg>';
 }
 
-function normaliseProductImage(p) {
-  const img = getProductImage(p);
-  return img ? { ...p, img } : p;
+function setPendingSourceFilter(filter, btn) {
+  pendingSourceFilter = filter;
+  ['pfilter-all','pfilter-uk','pfilter-intl'].forEach(id => { const b=document.getElementById(id); if(b) b.classList.remove('active-filter'); });
+  if (btn) btn.classList.add('active-filter');
+  renderPendingList();
 }
 
-function productImageHtml(p) {
-  const img = getProductImage(p);
-  if (!img) return '<div class="product-thumb product-thumb-empty">No image returned</div>';
-  return `<img class="product-thumb" src="${esc(String(img))}" onerror="this.outerHTML='<div class=&quot;product-thumb product-thumb-empty&quot;>Image unavailable</div>'">`;
+function setAllProductsSourceFilter(filter, btn) {
+  allProductsSourceFilter = filter;
+  ['afilter-all','afilter-uk','afilter-intl'].forEach(id => { const b=document.getElementById(id); if(b) b.classList.remove('active-filter'); });
+  if (btn) btn.classList.add('active-filter');
+  renderAllProductsList(lastAllProducts);
 }
 
-function renderPendingList() {
-  const list = document.getElementById('pending-list');
-  document.getElementById('pending-count-badge').textContent = pendingProducts.length;
-  if (!pendingProducts.length) { list.innerHTML = '<div class="table-empty">Queue is empty</div>'; return; }
-  list.innerHTML = pendingProducts.map((p,i) => `
+function matchesSourceFilter(p, filter) {
+  if (filter === 'all') return true;
+  const type = String(p.sourceType || '').toLowerCase();
+  if (filter === 'uk') return type === 'uk';
+  if (filter === 'international') return type === 'international' || type === 'intl' || type === '';
+  return true;
+}
+
+function renderPendingList(){
+  const list=document.getElementById('pending-list');
+  const filtered = pendingProducts.filter(p => matchesSourceFilter(p, pendingSourceFilter));
+  document.getElementById('pending-count-badge').textContent=pendingProducts.length;
+  if(!pendingProducts.length){list.innerHTML='<div class="table-empty">Queue is empty</div>';return}
+  if(!filtered.length){list.innerHTML='<div class="table-empty">No products match this filter</div>';return}
+  list.innerHTML=filtered.map((p)=>{
+    const i = pendingProducts.indexOf(p);
+    return `
     <div class="product-row">
       <div class="product-emoji">${p.emoji||'📦'}</div>
       <div class="product-info">
-        <div class="product-name">${p.name}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <div style="border-radius:3px;overflow:hidden;flex-shrink:0;line-height:0">${getAdminFlag(p.sourceType)}</div>
+          <div class="product-name" style="margin-bottom:0">${p.name}</div>
+        </div>
         <div class="product-meta">${p.niche||''} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'} · Sat Risk: ${p.saturationRisk||'—'}</div>
         <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
         ${productImageHtml(p)}
@@ -1453,124 +912,118 @@ function renderPendingList() {
         <button class="toggle-btn on" id="ptoggle-${i}" onclick="this.classList.toggle('on')"></button>
         <button class="btn sm danger" onclick="removePending(${i})">🗑️ Remove</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-function removePending(i) { pendingProducts.splice(i,1); renderPendingList(); }
-function clearPending() { if(!confirm('Clear all products from the review queue?')) return; pendingProducts=[]; renderPendingList(); document.getElementById('pending-card').style.display='none'; }
-function toggleAllPending(on) { pendingProducts.forEach((_,i)=>{ const b=document.getElementById('ptoggle-'+i); if(b) b.className='toggle-btn'+(on?' on':''); }); }
-function selectGradeA() { pendingProducts.forEach((p,i)=>{ const b=document.getElementById('ptoggle-'+i); const isA=p.grade&&(p.grade==='A+'||p.grade==='A'); if(b) b.className='toggle-btn'+(isA?' on':''); }); toast('Grade A and A+ selected'); }
+function removePending(i){pendingProducts.splice(i,1);renderPendingList()}
+function clearPending(){if(!confirm('Clear all products from the review queue?'))return;pendingProducts=[];renderPendingList();document.getElementById('pending-card').style.display='none'}
+function toggleAllPending(on){pendingProducts.forEach((p,i)=>{ if(!matchesSourceFilter(p, pendingSourceFilter)) return; const b=document.getElementById('ptoggle-'+i);if(b)b.className='toggle-btn'+(on?' on':'')})}
+function selectGradeA(){pendingProducts.forEach((p,i)=>{ if(!matchesSourceFilter(p, pendingSourceFilter)) return; const b=document.getElementById('ptoggle-'+i);const isA=p.grade&&(p.grade==='A+'||p.grade==='A');if(b)b.className='toggle-btn'+(isA?' on':'')});toast('Grade A and A+ selected')}
 
-async function publishSelected() {
-  const selected = pendingProducts.filter((_,i) => { const b=document.getElementById('ptoggle-'+i); return b&&b.classList.contains('on'); });
-  if (!selected.length) { toast('Toggle on at least one product first'); return; }
-  try {
-    const r = await fetch('/api/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({products: selected}) });
-    if (!r.ok) throw new Error('Publish failed');
-    const selectedNames = new Set(selected.map(p=>p.name));
-    pendingProducts = pendingProducts.filter(p => !selectedNames.has(p.name));
+async function publishSelected(){
+  const selected=pendingProducts.filter((_,i)=>{const b=document.getElementById('ptoggle-'+i);return b&&b.classList.contains('on')});
+  if(!selected.length){toast('Toggle on at least one product first');return}
+  try{
+    const r=await fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:selected})});
+    if(!r.ok)throw new Error('Publish failed');
+    const selectedNames=new Set(selected.map(p=>p.name));
+    pendingProducts=pendingProducts.filter(p=>!selectedNames.has(p.name));
     renderPendingList();
-    if (!pendingProducts.length) document.getElementById('pending-card').style.display = 'none';
-    toast(`✅ ${selected.length} products published to live feed!`, 'success');
-    loadAllProducts();
-  } catch(e) { toast('Publish failed: ' + e.message, 'error'); }
+    if(!pendingProducts.length)document.getElementById('pending-card').style.display='none';
+    toast(`✅ ${selected.length} products published to live feed!`,'success');loadAllProducts();
+  }catch(e){toast('Publish failed: '+e.message,'error')}
 }
 
-// ── NOTIFY MEMBERS ────────────────────────────────────────────────────────
-async function notifyMembers() {
-  const btn = document.getElementById('notify-btn');
-  if (!confirm('Send the weekly product notification email to all active members now?')) return;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Sending...';
-  try {
-    const res = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed');
-    toast(`✅ Sent to ${data.sent} member${data.sent !== 1 ? 's' : ''} — ${data.totalProducts} products previewed`, 'success');
-  } catch(e) {
-    toast('Notify failed: ' + e.message, 'error');
+async function notifyMembers(){
+  const btn=document.getElementById('notify-btn');
+  if(!confirm('Send the weekly product notification email to all active members now?'))return;
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending...';
+  try{
+    const res=await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'}});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
+    toast(`✅ Sent to ${data.sent} member${data.sent!==1?'s':''} — ${data.totalProducts} products previewed`,'success');
+  }catch(e){toast('Notify failed: '+e.message,'error')}
+  btn.disabled=false;btn.textContent='📧 Notify members';
+}
+
+async function loadAllProducts(){
+  const list=document.getElementById('all-products-list');
+  list.innerHTML='<div class="table-empty"><span class="spinner"></span>Loading...</div>';
+  try{
+    const r=await fetch('/api/products?all=true');const d=await r.json();const products=d.products||[];
+    lastAllProducts = products;
+    renderAllProductsList(products);
+  }catch(e){list.innerHTML=`<div class="table-empty">Error: ${e.message}</div>`}
+}
+
+function renderAllProductsList(products){
+  const list=document.getElementById('all-products-list');
+  if(!products.length){list.innerHTML='<div class="table-empty">No products yet — generate some above</div>';return}
+  const filtered = products.filter(p => matchesSourceFilter(p, allProductsSourceFilter));
+  const live=products.filter(p=>p.is_live).length;
+  if(!filtered.length){
+    list.innerHTML=`<div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500)">${products.length} total products · <span style="color:var(--green);font-weight:700">${live} live</span></div><div class="table-empty">No products match this filter</div>`;
+    return;
   }
-  btn.disabled = false;
-  btn.textContent = '📧 Notify members';
-}
-
-async function loadAllProducts() {
-  const list = document.getElementById('all-products-list');
-  list.innerHTML = '<div class="table-empty"><span class="spinner"></span>Loading...</div>';
-  try {
-    const r = await fetch('/api/products?all=true');
-    const d = await r.json();
-    const products = d.products || [];
-    if (!products.length) { list.innerHTML = '<div class="table-empty">No products yet — generate some above</div>'; return; }
-    const live = products.filter(p=>p.is_live).length;
-    list.innerHTML = `
-      <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500);display:flex;justify-content:space-between;align-items:center">
-        <span>${products.length} total products · <span style="color:var(--green);font-weight:700">${live} live</span> · <span style="color:var(--g400)">${products.length-live} hidden</span></span>
-      </div>
-      ${products.map((p, i) => `
-        <div class="product-row" id="allrow-${i}">
-          <div style="display:flex;align-items:flex-start;padding-top:4px"><input type="checkbox" class="product-checkbox" id="pcheck-${i}" data-name="${p.name}" style="width:16px;height:16px;cursor:pointer;accent-color:var(--navy);flex-shrink:0"></div>
-          <div class="product-emoji">${p.emoji||'📦'}</div>
-          <div class="product-info">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-              <div class="product-name" style="margin-bottom:0">${p.name}</div>
-              ${p.is_live ? '<span class="badge green" style="font-size:10px">Live</span>' : '<span class="badge gray" style="font-size:10px">Hidden</span>'}
-            </div>
-            <div class="product-meta">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'}</div>
-            <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
-            ${productImageHtml(p)}
+  list.innerHTML=`
+    <div style="padding:12px 20px;background:var(--g50);border-bottom:1px solid var(--g200);font-size:13px;color:var(--g500);display:flex;justify-content:space-between;align-items:center">
+      <span>${products.length} total products · <span style="color:var(--green);font-weight:700">${live} live</span> · <span style="color:var(--g400)">${products.length-live} hidden</span></span>
+    </div>
+    ${filtered.map((p)=>{
+      const i = products.indexOf(p);
+      return `
+      <div class="product-row" id="allrow-${i}">
+        <div style="display:flex;align-items:flex-start;padding-top:4px"><input type="checkbox" class="product-checkbox" id="pcheck-${i}" data-name="${p.name}" style="width:16px;height:16px;cursor:pointer;accent-color:var(--navy);flex-shrink:0"></div>
+        <div class="product-emoji">${p.emoji||'📦'}</div>
+        <div class="product-info">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div style="border-radius:3px;overflow:hidden;flex-shrink:0;line-height:0">${getAdminFlag(p.sourceType)}</div>
+            <div class="product-name" style="margin-bottom:0">${p.name}</div>
+            ${p.is_live?'<span class="badge green" style="font-size:10px">Live</span>':'<span class="badge gray" style="font-size:10px">Hidden</span>'}
           </div>
-          <div class="product-controls">
-            <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'—'}</div>
-            <div class="toggle-label">${p.is_live ? 'Live' : 'Hidden'}</div>
-            <button class="toggle-btn ${p.is_live?'on':''}" id="ltoggle-${i}" onclick="toggleLiveProduct('${esc(p.name)}', ${i})"></button>
-            <button class="btn sm danger" onclick="deleteProduct('${esc(p.name)}', ${i})">🗑️ Remove</button>
-          </div>
-        </div>`).join('')}`;
-  } catch(e) { list.innerHTML = `<div class="table-empty">Error: ${e.message}</div>`; }
+          <div class="product-meta">${p.niche||''} · Grade ${p.grade||'—'} · Trend: ${p.trendScore||'—'}/100 · Margin: ${p.margin||'—'}</div>
+          <div class="product-why">${p.whyEmerging||p.mainAngle||''}</div>
+          ${productImageHtml(p)}
+        </div>
+        <div class="product-controls">
+          <div class="grade-badge" style="background:${gradeColorBg(p.grade)};color:${gradeColor(p.grade)}">Grade ${p.grade||'—'}</div>
+          <div class="toggle-label">${p.is_live?'Live':'Hidden'}</div>
+          <button class="toggle-btn ${p.is_live?'on':''}" id="ltoggle-${i}" onclick="toggleLiveProduct('${esc(p.name)}',${i})"></button>
+          <button class="btn sm danger" onclick="deleteProduct('${esc(p.name)}',${i})">🗑️ Remove</button>
+        </div>
+      </div>`;
+    }).join('')}`;
 }
 
-async function toggleLiveProduct(name, idx) {
-  const btn = document.getElementById('ltoggle-'+idx);
-  const newState = !btn.classList.contains('on');
-  btn.classList.toggle('on');
-  try {
-    const r = await fetch('/api/products', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name, is_live: newState}) });
-    if (!r.ok) throw new Error('Toggle failed');
-    toast(newState ? `✅ "${name}" is now live` : `"${name}" hidden from feed`, newState?'success':'');
-    const row = document.getElementById('allrow-'+idx);
-    if (row) {
-      const label = row.querySelector('.toggle-label');
-      if (label) label.textContent = newState ? 'Live' : 'Hidden';
-      const badge = row.querySelector('.badge');
-      if (badge) { badge.textContent = newState ? 'Live' : 'Hidden'; badge.className = 'badge ' + (newState ? 'green' : 'gray'); }
-    }
-  } catch(e) { btn.classList.toggle('on'); toast('Toggle failed: ' + e.message, 'error'); }
+async function toggleLiveProduct(name,idx){
+  const btn=document.getElementById('ltoggle-'+idx);const newState=!btn.classList.contains('on');btn.classList.toggle('on');
+  try{
+    const r=await fetch('/api/products',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name,is_live:newState})});
+    if(!r.ok)throw new Error('Toggle failed');
+    toast(newState?`✅ "${name}" is now live`:`"${name}" hidden from feed`,newState?'success':'');
+    const row=document.getElementById('allrow-'+idx);
+    if(row){const label=row.querySelector('.toggle-label');if(label)label.textContent=newState?'Live':'Hidden';const badge=row.querySelector('.badge');if(badge){badge.textContent=newState?'Live':'Hidden';badge.className='badge '+(newState?'green':'gray')}}
+  }catch(e){btn.classList.toggle('on');toast('Toggle failed: '+e.message,'error')}
 }
 
-async function deleteProduct(name, idx) {
-  if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
-  try {
-    const r = await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: name}) });
-    if (!r.ok) throw new Error('Delete failed');
-    toast(`Deleted: ${name}`, 'success');
-    loadAllProducts();
-  } catch(e) { toast('Delete failed: ' + e.message, 'error'); }
+async function deleteProduct(name,idx){
+  if(!confirm(`Permanently delete "${name}"? This cannot be undone.`))return;
+  try{const r=await fetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name})});if(!r.ok)throw new Error('Delete failed');toast(`Deleted: ${name}`,'success');loadAllProducts()}catch(e){toast('Delete failed: '+e.message,'error')}
 }
 
-async function runAdminValidator() {
-  const input = document.getElementById('admin-validator-input').value.trim();
-  const result = document.getElementById('admin-validator-result');
-  if (!input) { toast('Enter a product name first'); return; }
-  result.innerHTML = '<div style="text-align:center;padding:30px;color:var(--g500)"><span class="spinner"></span> Analysing ' + input + '...</div>';
-  try {
-    const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: input}) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Failed');
-    const score = data.opportunityScore || 'B';
-    const sc = s => s.includes('A') ? '#166534' : s.includes('B') ? '#92400E' : '#991B1B';
-    const scBg = s => s.includes('A') ? '#DCFCE7' : s.includes('B') ? '#FEF3C7' : '#FEE2E2';
-    result.innerHTML = `
+async function runAdminValidator(){
+  const input=document.getElementById('admin-validator-input').value.trim();
+  const result=document.getElementById('admin-validator-result');
+  if(!input){toast('Enter a product name first');return}
+  result.innerHTML='<div style="text-align:center;padding:30px;color:var(--g500)"><span class="spinner"></span> Analysing '+input+'...</div>';
+  try{
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:input})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
+    const score=data.opportunityScore||'B';
+    const sc=s=>s.includes('A')?'#166534':s.includes('B')?'#92400E':'#991B1B';
+    const scBg=s=>s.includes('A')?'#DCFCE7':s.includes('B')?'#FEF3C7':'#FEE2E2';
+    result.innerHTML=`
       <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;margin-bottom:14px">
         <div style="flex:1"><div style="font-size:16px;font-weight:800;color:var(--g900)">${input}</div><div style="font-size:13px;color:var(--g500);margin-top:3px">${data.verdict||'Assessment complete'}</div></div>
         <div style="background:${scBg(score)};color:${sc(score)};border-radius:10px;padding:8px 18px;font-size:22px;font-weight:900">${score}</div>
@@ -1585,130 +1038,84 @@ async function runAdminValidator() {
         <div style="background:#FEE2E2;border:1px solid #fecaca;border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:800;color:#b91c1c;margin-bottom:6px">⚠️ Risks</div><ul style="padding-left:14px;font-size:12px;color:#991b1b;line-height:1.7">${(data.risks||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
         <div style="background:#EFF6FF;border:1px solid #bfdbfe;border-radius:10px;padding:12px"><div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:6px">🎬 Creative angles</div><ul style="padding-left:14px;font-size:12px;color:#1e40af;line-height:1.7">${(data.creativeAngles||[]).map(i=>`<li>${i}</li>`).join('')}</ul></div>
       </div>`;
-  } catch(e) {
-    result.innerHTML = `<div style="text-align:center;padding:30px;color:var(--red)">⚠️ ${e.message}</div>`;
+  }catch(e){
+    result.innerHTML=`<div style="text-align:center;padding:30px;color:var(--red)">⚠️ ${e.message}</div>`;
   }
 }
 
-function gradeColor(g) { if(!g)return'#374151'; if(g==='A+'||g==='A')return'#166534'; if(g==='B+'||g==='B')return'#92400E'; return'#991B1B'; }
-function gradeColorBg(g) { if(!g)return'#F3F4F6'; if(g==='A+'||g==='A')return'#DCFCE7'; if(g==='B+'||g==='B')return'#FEF3C7'; return'#FEE2E2'; }
+function gradeColor(g){if(!g)return'#374151';if(g==='A+'||g==='A')return'#166534';if(g==='B+'||g==='B')return'#92400E';return'#991B1B'}
+function gradeColorBg(g){if(!g)return'#F3F4F6';if(g==='A+'||g==='A')return'#DCFCE7';if(g==='B+'||g==='B')return'#FEF3C7';return'#FEE2E2'}
+function selectAllProducts(check){document.querySelectorAll('.product-checkbox').forEach(cb=>cb.checked=check)}
 
-function selectAllProducts(check) { document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = check); }
-
-async function massDeleteProducts() {
-  const checked = [...document.querySelectorAll('.product-checkbox:checked')];
-  if (!checked.length) { toast('Select at least one product first'); return; }
-  if (!confirm(`Permanently delete ${checked.length} product${checked.length!==1?'s':''}? This cannot be undone.`)) return;
-  let deleted = 0;
-  for (const cb of checked) {
-    try {
-      const r = await fetch('/api/products', { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({productName: cb.dataset.name}) });
-      if (r.ok) deleted++;
-    } catch(e) {}
-  }
-  toast(`Deleted ${deleted} product${deleted!==1?'s':''}`, 'success');
-  loadAllProducts();
+async function massDeleteProducts(){
+  const checked=[...document.querySelectorAll('.product-checkbox:checked')];
+  if(!checked.length){toast('Select at least one product first');return}
+  if(!confirm(`Permanently delete ${checked.length} product${checked.length!==1?'s':''}? This cannot be undone.`))return;
+  let deleted=0;
+  for(const cb of checked){try{const r=await fetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:cb.dataset.name})});if(r.ok)deleted++}catch(e){}}
+  toast(`Deleted ${deleted} product${deleted!==1?'s':''}`,'success');loadAllProducts();
 }
 
-async function loadHealth() {
-  ['supabase','claude','stripe'].forEach(k => setHealth(k,'gold','Checking…','…'));
-  try { await sbFetch('users?select=id&limit=1'); setHealth('supabase','green','Connected','Online'); } catch { setHealth('supabase','red','Connection failed','Error'); }
-  try { const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})}); setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning'); } catch { setHealth('claude','gold','Could not reach','Unknown'); }
-  try { await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})}); setHealth('stripe','green','API key configured','Online'); } catch { setHealth('stripe','red','Could not reach','Error'); }
+async function loadHealth(){
+  ['supabase','claude','stripe'].forEach(k=>setHealth(k,'gold','Checking…','…'));
+  try{await sbFetch('users?select=id&limit=1');setHealth('supabase','green','Connected','Online')}catch{setHealth('supabase','red','Connection failed','Error')}
+  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})});setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning')}catch{setHealth('claude','gold','Could not reach','Unknown')}
+  try{await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})});setHealth('stripe','green','API key configured','Online')}catch{setHealth('stripe','red','Could not reach','Error')}
 }
-function setHealth(key,color,sub,badge) {
-  const dot=document.getElementById(`dot-${key}`), subEl=document.getElementById(`status-${key}`), badgeEl=document.getElementById(`badge-${key}`);
-  if(dot) dot.className=`dot ${color}`;
-  if(subEl) subEl.textContent=sub;
-  if(badgeEl) { badgeEl.textContent=badge; badgeEl.className=`badge ${color==='green'?'green':color==='red'?'red':'gold'}`; }
+function setHealth(key,color,sub,badge){
+  const dot=document.getElementById(`dot-${key}`),subEl=document.getElementById(`status-${key}`),badgeEl=document.getElementById(`badge-${key}`);
+  if(dot)dot.className=`dot ${color}`;if(subEl)subEl.textContent=sub;
+  if(badgeEl){badgeEl.textContent=badge;badgeEl.className=`badge ${color==='green'?'green':color==='red'?'red':'gold'}`}
 }
 
 let modalEmail='';
-function openStatusModal(email,status) { modalEmail=email; document.getElementById('modal-email').value=email; document.getElementById('modal-status').value=status||'trial'; document.getElementById('status-modal').classList.add('open'); }
-function closeModal() { document.getElementById('status-modal').classList.remove('open'); }
-async function saveStatus() {
+function openStatusModal(email,status){modalEmail=email;document.getElementById('modal-email').value=email;document.getElementById('modal-status').value=status||'trial';document.getElementById('status-modal').classList.add('open')}
+function closeModal(){document.getElementById('status-modal').classList.remove('open')}
+async function saveStatus(){
   const newStatus=document.getElementById('modal-status').value;
-  try { await sbFetch(`users?email=eq.${encodeURIComponent(modalEmail)}`,{method:'PATCH',body:JSON.stringify({subscription_status:newStatus})}); toast('Status updated','success'); closeModal(); loadUsers(); } catch(err) { toast('Failed: '+err.message,'error'); }
+  try{await sbFetch(`users?email=eq.${encodeURIComponent(modalEmail)}`,{method:'PATCH',body:JSON.stringify({subscription_status:newStatus})});toast('Status updated','success');closeModal();loadUsers()}catch(err){toast('Failed: '+err.message,'error')}
 }
 let deleteEmail='',deleteId='';
-function openDeleteModal(email,id) { deleteEmail=email; deleteId=id; document.getElementById('delete-email').textContent=email; document.getElementById('delete-modal').classList.add('open'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('open'); }
-async function confirmDelete() {
-  try { await sbFetch(`users?id=eq.${deleteId}`,{method:'DELETE'}); toast('User deleted','success'); closeDeleteModal(); loadUsers(); } catch(err) { toast('Failed: '+err.message,'error'); }
+function openDeleteModal(email,id){deleteEmail=email;deleteId=id;document.getElementById('delete-email').textContent=email;document.getElementById('delete-modal').classList.add('open')}
+function closeDeleteModal(){document.getElementById('delete-modal').classList.remove('open')}
+async function confirmDelete(){
+  try{await sbFetch(`users?id=eq.${deleteId}`,{method:'DELETE'});toast('User deleted','success');closeDeleteModal();loadUsers()}catch(err){toast('Failed: '+err.message,'error')}
 }
-['status-modal','delete-modal'].forEach(id => { document.getElementById(id).addEventListener('click',e=>{ if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); }); });
+['status-modal','delete-modal'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')})});
 
-function statusBadge(s) { const map={active:'green',trial:'gold',cancelled:'red'}; return `<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`; }
-function formatDate(d) { if(!d)return'—'; return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function statusBadge(s){const map={active:'green',trial:'gold',cancelled:'red'};return`<span class="badge ${map[s]||'gray'}">${s||'unknown'}</span>`}
+function formatDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 let toastTimer;
-function toast(msg,type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className=`show ${type}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className='',3000); }
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`show ${type}`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='',3000)}
 
-
-
-function updateHubNote() {
-  const notes = [
-    {
-      day: 'Sunday', tag: 'Planning', title: 'Set up next week before it starts',
-      body: 'Use today to think ahead. The best product drops feel calm because the weak ideas have already been filtered out before members ever see them.',
-      chips: ['Plan next drop', 'Check weak niches', 'Keep it simple']
-    },
-    {
-      day: 'Monday', tag: 'Product Drop', title: 'Build this week\'s product drop',
-      body: 'Start with quality over volume. Three strong products with clear UK demand, simple use cases and strong visuals will beat a bigger list of average finds.',
-      chips: ['Generate products', 'Review carefully', 'Publish only the best']
-    },
-    {
-      day: 'Tuesday', tag: 'Supplier Check', title: 'Images and supplier confidence matter today',
-      body: 'Before you trust a product, look at the basics: does it have a strong image, a sensible supplier route, a believable cost price and enough clarity for a beginner to understand it?',
-      chips: ['Image quality', 'Supplier clarity', 'Cost check']
-    },
-    {
-      day: 'Wednesday', tag: 'Creative Angles', title: 'Think like the advert, not the spreadsheet',
-      body: 'A product needs a scroll-stopping reason to exist. If you cannot explain the problem, the audience and the first video hook quickly, it probably is not ready for members.',
-      chips: ['Hook test', 'Problem angle', 'Beginner friendly']
-    },
-    {
-      day: 'Thursday', tag: 'Margin Day', title: 'Check the money before the hype',
-      body: 'A product can look exciting but still be poor if the margin is thin. Prioritise products with enough room for ads, returns, discounts and beginner mistakes.',
-      chips: ['Margin check', 'Sell price', 'Ad room']
-    },
-    {
-      day: 'Friday', tag: 'Publish Check', title: 'Make sure the member feed feels sharp',
-      body: 'Before you publish, check the products have strong images, clear UK use and simple ad angles. A weaker product with a great image can still outperform a clever product nobody understands.',
-      chips: ['Final review', 'Publish selected', 'Notify members']
-    },
-    {
-      day: 'Saturday', tag: 'Light Review', title: 'Step back and look for patterns',
-      body: 'Use today to spot what keeps appearing across the week. Repeated problems, seasonal demand and simple household fixes often become better drops than random viral products.',
-      chips: ['Pattern spotting', 'Seasonal demand', 'Next ideas']
-    }
+function updateHubNote(){
+  const notes=[
+    {day:'Sunday',tag:'Planning',title:'Set up next week before it starts',body:'Use today to think ahead. The best product drops feel calm because the weak ideas have already been filtered out before members ever see them.',chips:['Plan next drop','Check weak niches','Keep it simple']},
+    {day:'Monday',tag:'Product Drop',title:"Build this week's product drop",body:'Start with quality over volume. Three strong products with clear UK demand, simple use cases and strong visuals will beat a bigger list of average finds.',chips:['Generate products','Review carefully','Publish only the best']},
+    {day:'Tuesday',tag:'Supplier Check',title:'Images and supplier confidence matter today',body:'Before you trust a product, look at the basics: does it have a strong image, a sensible supplier route, a believable cost price and enough clarity for a beginner to understand it?',chips:['Image quality','Supplier clarity','Cost check']},
+    {day:'Wednesday',tag:'Creative Angles',title:'Think like the advert, not the spreadsheet',body:'A product needs a scroll-stopping reason to exist. If you cannot explain the problem, the audience and the first video hook quickly, it probably is not ready for members.',chips:['Hook test','Problem angle','Beginner friendly']},
+    {day:'Thursday',tag:'Margin Day',title:'Check the money before the hype',body:'A product can look exciting but still be poor if the margin is thin. Prioritise products with enough room for ads, returns, discounts and beginner mistakes.',chips:['Margin check','Sell price','Ad room']},
+    {day:'Friday',tag:'Publish Check',title:'Make sure the member feed feels sharp',body:'Before you publish, check the products have strong images, clear UK use and simple ad angles. A weaker product with a great image can still outperform a clever product nobody understands.',chips:['Final review','Publish selected','Notify members']},
+    {day:'Saturday',tag:'Light Review',title:'Step back and look for patterns',body:'Use today to spot what keeps appearing across the week. Repeated problems, seasonal demand and simple household fixes often become better drops than random viral products.',chips:['Pattern spotting','Seasonal demand','Next ideas']}
   ];
-  const now = new Date();
-  const note = notes[now.getDay()] || notes[1];
-  const kicker = document.getElementById('hub-note-kicker');
-  const title = document.getElementById('hub-note-title');
-  const body = document.getElementById('hub-note-body');
-  const tag = document.getElementById('hub-note-tag');
-  const footer = document.getElementById('hub-note-footer');
-  if (kicker) kicker.textContent = `Hub's Note — ${note.day}`;
-  if (title) title.textContent = note.title;
-  if (body) body.textContent = note.body;
-  if (tag) tag.textContent = note.tag;
-  if (footer) footer.innerHTML = note.chips.map(c => `<span class="hub-note-chip">${esc(c)}</span>`).join('');
+  const now=new Date();const note=notes[now.getDay()]||notes[1];
+  const kicker=document.getElementById('hub-note-kicker');const title=document.getElementById('hub-note-title');const body=document.getElementById('hub-note-body');const tag=document.getElementById('hub-note-tag');const footer=document.getElementById('hub-note-footer');
+  if(kicker)kicker.textContent=`Hub's Note — ${note.day}`;
+  if(title)title.textContent=note.title;
+  if(body)body.textContent=note.body;
+  if(tag)tag.textContent=note.tag;
+  if(footer)footer.innerHTML=note.chips.map(c=>`<span class="hub-note-chip">${esc(c)}</span>`).join('');
 }
 
-function updatePersonalGreeting() {
-  const el = document.getElementById('personal-greeting');
-  if (!el) return;
-  const hour = new Date().getHours();
-  let greeting = 'Good evening';
-  if (hour < 12) greeting = 'Good morning';
-  else if (hour < 17) greeting = 'Good afternoon';
-  el.textContent = `${greeting}, Billy`;
+function updatePersonalGreeting(){
+  const el=document.getElementById('personal-greeting');if(!el)return;
+  const hour=new Date().getHours();
+  let greeting='Good evening';
+  if(hour<12)greeting='Good morning';else if(hour<17)greeting='Good afternoon';
+  el.textContent=`${greeting}, Billy`;
 }
 
-// Init
 updatePersonalGreeting();
 updateHubNote();
 loadUsers();
