@@ -1060,6 +1060,18 @@ function openAnalysisFromSaved(idx) {
   runHubAnalyseTransition(p, () => renderAnalysisView(p, `${p.niche||''} · Saved product`));
 }
 
+function buildSupplierTermHtml(term, i, sourceType) {
+  var isUK = sourceType === 'uk';
+  var links = isUK ? [
+    {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
+    {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
+    {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
+  ] : [
+    {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
+  ];
+  return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(function(l){return '<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>';}).join('')+'</div></div>';
+}
+
 function buildAnalysisBody(p) {
   const body=document.getElementById('analysis-body');
   const aliQ=encodeURIComponent(p.aliSearchTerm||p.name);
@@ -1366,17 +1378,7 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:14px">Use these exact search terms on AliExpress to find the best suppliers. Try all three — results vary.</p>
         <div class="supplier-terms">
-          ${supplierTerms.slice(0,3).map((term,i)=>{
-            const isUK = p.sourceType === 'uk';
-            const links = isUK ? [
-              {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
-              {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
-              {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
-            ] : [
-              {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
-            ];
-            return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(l=>'<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>').join('')+'</div></div>';
-          }).join('')}
+          ${supplierTerms.slice(0,3).map((term,i)=> buildSupplierTermHtml(term,i,p.sourceType)).join('')}
         </div>
         <div style="background:var(--amber-bg);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:12px;color:#92400e;line-height:1.6">
           💡 <strong>Pro tip:</strong> Filter by 4★+ rating and 100+ orders. Read the negative reviews — they tell you what to improve when you brand this product.
@@ -1545,17 +1547,7 @@ async function generateProjection(btn) {
       if (data.supplierSearchTerms) {
         const wrap = document.querySelector('.supplier-terms');
         if (wrap) {
-          const isUK = p.sourceType === 'uk';
-          wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=>{
-            const links = isUK ? [
-              {label:'Search Avasam →', url:'https://app.avasam.com/search?q='+encodeURIComponent(term)},
-              {label:'Search Syncee →', url:'https://syncee.com/search?q='+encodeURIComponent(term)},
-              {label:'Search CJ UK →', url:'https://cjdropshipping.com/search?q='+encodeURIComponent(term)}
-            ] : [
-              {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
-            ];
-            return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(l=>'<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>').join('')+'</div></div>';
-          }).join('');
+          wrap.innerHTML = data.supplierSearchTerms.slice(0,3).map((term,i)=> buildSupplierTermHtml(term,i,p.sourceType)).join('');
         }
       }
       buildGrowthChart(data.growthCurve || [12,20,31,45,62,75,83], data.windowClosesWeek || 8);
@@ -2196,7 +2188,7 @@ function renderFulfilmentPanel(p) {
     } else {
       url = 'https://www.google.com/search?q=' + q + '+UK+dropship+supplier';
     }
-    return '<a href="' + url + '" target="_blank" rel="noopener" style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;margin:2px;text-decoration:none;transition:all .15s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='#f0fdf4'">' + t + ' ↗</a>';
+    return '<a href="' + url + '" target="_blank" rel="noopener" style="display:inline-block;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;margin:2px;text-decoration:none;transition:all .15s" onmouseover="this.style.background=&quot;#dcfce7&quot;" onmouseout="this.style.background=&quot;#f0fdf4&quot;">' + t + ' \u2197</a>';
   }).join('');
 
   panel.innerHTML = `
