@@ -435,6 +435,9 @@ select.filter-input{min-width:140px}
           <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
           <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
           <button class="analytics-tab" data-range="30d" onclick="setAnalyticsRange('30d',this)">30 days</button>
+          <input type="date" id="analytics-start" class="filter-input" style="min-width:145px">
+          <input type="date" id="analytics-end" class="filter-input" style="min-width:145px">
+          <button class="btn" onclick="applyAnalyticsDateRange()">Apply</button>
           <button class="btn" onclick="loadAnalytics()">↻ Refresh</button>
         </div>
       </div>
@@ -627,6 +630,15 @@ function show(id,btn){
 
 let analyticsRange='today';
 function setAnalyticsRange(range,btn){analyticsRange=range;document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');loadAnalytics()}
+function applyAnalyticsDateRange(){
+  const start=document.getElementById('analytics-start').value;
+  const end=document.getElementById('analytics-end').value;
+  if(!start||!end){toast('Choose a start and end date','error');return}
+  if(start>end){toast('Start date cannot be after end date','error');return}
+  analyticsRange='custom';
+  document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));
+  loadAnalytics();
+}
 
 async function loadAnalytics(){
   const section=document.getElementById('analytics');
@@ -634,7 +646,13 @@ async function loadAnalytics(){
   setText('ana-visitors','...');setText('ana-pageviews','...');setText('ana-trials','...');
   const live=document.getElementById('ana-live');if(live)live.innerHTML='<span class="analytics-live-dot"></span>...';
   try{
-    const res=await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
+    let analyticsUrl=`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`;
+    if(analyticsRange==='custom'){
+      const start=document.getElementById('analytics-start').value;
+      const end=document.getElementById('analytics-end').value;
+      analyticsUrl+=`&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
+    }
+    const res=await fetch(analyticsUrl,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error||data.details||`Analytics API error ${res.status}`);
     renderAnalytics(Array.isArray(data.events)?data.events:[]);
