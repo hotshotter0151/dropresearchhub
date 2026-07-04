@@ -648,7 +648,14 @@ async function loadAnalytics(){
   setText('ana-visitors','...');setText('ana-pageviews','...');setText('ana-trials','...');
   const live=document.getElementById('ana-live');if(live)live.innerHTML='<span class="analytics-live-dot"></span>...';
   try{
-    const res=await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
+    let analyticsUrl=`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`;
+    if(analyticsRange==='custom'){
+      const from=document.getElementById('date-from')?.value;
+      const to=document.getElementById('date-to')?.value;
+      if(!from||!to){setText('ana-visitors','Pick dates above');return}
+      analyticsUrl+=`&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+    }
+    const res=await fetch(analyticsUrl`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error||data.details||`Analytics API error ${res.status}`);
     renderAnalytics(Array.isArray(data.events)?data.events:[]);
