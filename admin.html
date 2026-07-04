@@ -435,13 +435,6 @@ select.filter-input{min-width:140px}
           <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
           <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
           <button class="analytics-tab" data-range="30d" onclick="setAnalyticsRange('30d',this)">30 days</button>
-          <button class="analytics-tab" data-range="custom" onclick="setAnalyticsRange('custom',this)">Custom</button>
-          </div>
-          <div id="custom-date-range" style="display:none;align-items:center;gap:6px;flex-wrap:wrap">
-            <input type="date" id="date-from" class="filter-input" style="min-width:130px;font-size:12px;padding:7px 10px" onchange="if(analyticsRange==='custom')loadAnalytics()">
-            <span style="font-size:12px;color:var(--g400)">to</span>
-            <input type="date" id="date-to" class="filter-input" style="min-width:130px;font-size:12px;padding:7px 10px" onchange="if(analyticsRange==='custom')loadAnalytics()">
-          </div>
           <button class="btn" onclick="loadAnalytics()">↻ Refresh</button>
         </div>
       </div>
@@ -633,14 +626,7 @@ function show(id,btn){
 }
 
 let analyticsRange='today';
-function setAnalyticsRange(range,btn){
-  analyticsRange=range;
-  document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  const customRange=document.getElementById('custom-date-range');
-  if(customRange)customRange.style.display=range==='custom'?'flex':'none';
-  if(range!=='custom')loadAnalytics();
-}
+function setAnalyticsRange(range,btn){analyticsRange=range;document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');loadAnalytics()}
 
 async function loadAnalytics(){
   const section=document.getElementById('analytics');
@@ -648,14 +634,7 @@ async function loadAnalytics(){
   setText('ana-visitors','...');setText('ana-pageviews','...');setText('ana-trials','...');
   const live=document.getElementById('ana-live');if(live)live.innerHTML='<span class="analytics-live-dot"></span>...';
   try{
-    let analyticsUrl=`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`;
-    if(analyticsRange==='custom'){
-      const from=document.getElementById('date-from')?.value;
-      const to=document.getElementById('date-to')?.value;
-      if(!from||!to){setText('ana-visitors','Pick dates above');return}
-      analyticsUrl+=`&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
-    }
-    const res=await fetch(analyticsUrl`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
+    const res=await fetch(`/api/admin-analytics?range=${encodeURIComponent(analyticsRange)}&t=${Date.now()}`,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error||data.details||`Analytics API error ${res.status}`);
     renderAnalytics(Array.isArray(data.events)?data.events:[]);
