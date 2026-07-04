@@ -633,7 +633,14 @@ function show(id,btn){
 }
 
 let analyticsRange='today';
-function setAnalyticsRange(range,btn){analyticsRange=range;document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');loadAnalytics()}
+function setAnalyticsRange(range,btn){
+  analyticsRange=range;
+  document.querySelectorAll('.analytics-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const customRange=document.getElementById('custom-date-range');
+  if(customRange)customRange.style.display=range==='custom'?'flex':'none';
+  if(range!=='custom')loadAnalytics();
+}
 
 async function loadAnalytics(){
   const section=document.getElementById('analytics');
