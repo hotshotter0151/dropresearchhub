@@ -55,6 +55,9 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sidebar-user{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sidebar-signout{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left}
 .sidebar-signout:hover{background:rgba(255,255,255,.1);color:#fff}
+.sidebar-subscription{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:var(--gold);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;transition:all .15s;text-align:left;margin-bottom:8px}
+.sidebar-subscription:hover{background:var(--gold);border-color:var(--gold);color:var(--navy-dark)}
+.sidebar-subscription:disabled{opacity:.6;cursor:not-allowed}
 
 /* ── MOBILE TOPBAR ── */
 .mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--navy-dark);z-index:150;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -416,6 +419,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
   <div class="sidebar-bottom">
     <div class="sidebar-user" id="sidebar-user-email">Loading...</div>
+    <button class="sidebar-subscription" id="manage-subscription-btn" onclick="manageSubscription()">Manage subscription →</button>
     <button class="sidebar-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
   </div>
 </aside>
@@ -842,6 +846,65 @@ function getUserEmail() {
   return null;
 }
 
+
+function parseMarginValue(value) {
+  if (value === null || value === undefined) return null;
+  let raw = String(value).trim().toLowerCase();
+  if (!raw) return null;
+
+  raw = raw.replace(/,/g, '').replace(/–|—/g, '-');
+
+  const nums = raw.match(/\d+(?:\.\d+)?/g);
+  if (!nums) return null;
+
+  const values = nums.map(Number).filter(Number.isFinite);
+  if (!values.length) return null;
+
+  let margin;
+
+  if (raw.includes('x')) {
+    margin = Math.max(...values.map(v => v > 1 ? (v - 1) * 100 : v * 100));
+  } else {
+    margin = Math.max(...values);
+  }
+
+  return margin > 500 ? null : margin;
+}
+
+async function manageSubscription() {
+  const btn = document.getElementById('manage-subscription-btn');
+  const userEmail = getUserEmail();
+
+  if (!userEmail) {
+    showToast('Could not find your email. Please sign in again.');
+    return;
+  }
+
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Opening billing portal...';
+    }
+
+    const res = await fetch('/api/stripe-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userEmail })
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.url) throw new Error(data.error || data.message || 'Billing portal failed');
+
+    window.location.href = data.url;
+  } catch (err) {
+    showToast('Could not open subscription portal. Try again.');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Manage subscription →';
+    }
+  }
+}
+
 const email = getUserEmail();
 if (email) {
   document.getElementById('sidebar-user-email').textContent = email;
@@ -953,9 +1016,9 @@ async function loadProducts() {
     document.getElementById('stat-products').textContent = latest3.length;
     document.getElementById('stat-products-trend').textContent = 'Fresh research ready';
 
-    const margins = products.map(p => parseFloat((p.margin||'0').replace(/[^0-9.]/g,''))).filter(Boolean);
+    const margins = products.map(p => parseMarginValue(p.margin)).filter(v => Number.isFinite(v) && v > 0 && v <= 500);
     const strongestMargin = margins.length ? Math.round(Math.max(...margins)) : 0;
-    if (strongestMargin) document.getElementById('stat-margin').textContent = strongestMargin + '%';
+    document.getElementById('stat-margin').textContent = strongestMargin ? strongestMargin + '%' : '—';
     const topGrade = products.map(p=>p.grade).sort((a,b)=>({'A+':0,'A':1,'B+':2,'B':3,'C':4}[a]||5)-({'A+':0,'A':1,'B+':2,'B':3,'C':4}[b]||5))[0];
     if (topGrade) document.getElementById('stat-grade').textContent = topGrade;
 
