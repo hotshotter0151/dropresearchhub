@@ -431,11 +431,36 @@ select.filter-input{min-width:140px}
     <section id="analytics" class="section">
       <div class="analytics-toolbar">
         <div><div class="panel-title">📈 DRH Analytics</div><div class="panel-sub">Shopify-style traffic and conversion intelligence powered by your analytics_events table.</div></div>
-        <div class="analytics-tabs">
-          <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
-          <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
-          <button class="analytics-tab" data-range="30d" onclick="setAnalyticsRange('30d',this)">30 days</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <div class="analytics-tabs">
+            <button class="analytics-tab active" data-range="today" onclick="setAnalyticsRange('today',this)">Today</button>
+            <button class="analytics-tab" data-range="7d" onclick="setAnalyticsRange('7d',this)">7 days</button>
+            <button class="analytics-tab" data-range="30d" onclick="setAnalyticsRange('30d',this)">30 days</button>
+            <button class="analytics-tab" data-range="custom" onclick="setAnalyticsRange('custom',this)">Custom</button>
+          </div>
+          <div id="custom-date-range" style="display:none;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <input type="date" id="date-from" class="filter-input" style="min-width:140px;font-size:12px;padding:7px 10px" onchange="loadAnalytics()">
+            <span style="font-size:12px;color:var(--g400)">to</span>
+            <input type="date" id="date-to" class="filter-input" style="min-width:140px;font-size:12px;padding:7px 10px" onchange="loadAnalytics()">
+          </div>
           <button class="btn" onclick="loadAnalytics()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px;border-left:4px solid #F59E0B">
+        <div class="panel-head">
+          <div><div class="panel-title">🎵 TikTok Launch Tracker</div><div class="panel-sub">Log your TikTok posts to correlate traffic spikes with content</div></div>
+          <button class="btn primary" onclick="addTikTokEntry()">+ Add Post</button>
+        </div>
+        <div id="tiktok-tracker-list" style="padding:0">
+          <div class="analytics-empty" id="tiktok-empty">No TikTok posts logged yet — add your first post above</div>
+        </div>
+        <div id="tiktok-add-form" style="display:none;padding:16px;border-top:1px solid var(--g200);background:var(--g50)">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end">
+            <div><label class="form-label">Post title / hook</label><input class="form-input" id="tt-title" placeholder="e.g. Scrolling TikTok for products..."></div>
+            <div><label class="form-label">Date posted</label><input class="form-input" type="datetime-local" id="tt-date"></div>
+            <div><label class="form-label">Video URL (optional)</label><input class="form-input" id="tt-url" placeholder="https://tiktok.com/@..."></div>
+            <div style="display:flex;gap:6px"><button class="btn primary" onclick="saveTikTokEntry()">Save</button><button class="btn" onclick="cancelTikTokEntry()">Cancel</button></div>
+          </div>
         </div>
       </div>
       <div class="analytics-mini-note">💡 Page views are live now. Next we can track trial clicks, checkout starts, product analyses, saved products and Ask Hub actions.</div>
