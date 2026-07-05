@@ -673,6 +673,8 @@ nav{
 
       <div class="error-msg" id="error-msg"></div>
 
+      <form id="signup-form">
+
       <div class="form-group">
         <label class="form-label" for="name">Full name</label>
         <input class="form-input" type="text" id="name" placeholder="Your full name" autocomplete="name"/>
@@ -680,7 +682,7 @@ nav{
 
       <div class="form-group">
         <label class="form-label" for="email">Email address</label>
-        <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+        <input class="form-input" type="email" id="email" placeholder="Enter your account email" autocomplete="email"/>
       </div>
 
       <div class="form-group">
@@ -699,7 +701,9 @@ nav{
         </div>
       </div>
 
-      <button class="form-submit" id="submit-btn" onclick="handleSignup()">Start my free trial →</button>
+      <button class="form-submit" id="submit-btn" type="submit">Start my free trial →</button>
+
+      </form>
 
       <div class="secure-row">
         <div class="secure-item">
@@ -730,16 +734,49 @@ nav{
 </div>
 
 <script>
+const signupForm = document.getElementById('signup-form');
+const errorBox = document.getElementById('error-msg');
+const submitBtn = document.getElementById('submit-btn');
+
+function readExistingSession() {
+  try {
+    return JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function redirectExistingSession() {
+  const session = readExistingSession();
+
+  if (!session || !session.email) return;
+
+  const role = String(session.role || '').toLowerCase();
+  const status = String(session.status || session.subscription_status || '').toLowerCase();
+
+  if (role === 'admin') {
+    window.location.href = 'admin.html';
+    return;
+  }
+
+  if (status === 'active') {
+    window.location.href = 'members.html';
+    return;
+  }
+
+  if (status === 'trial') {
+    window.location.href = 'dashboard.html';
+  }
+}
+
 function showError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = msg;
-  el.classList.add('show');
+  errorBox.textContent = msg || 'Something went wrong. Please try again.';
+  errorBox.classList.add('show');
 }
 
 function clearError() {
-  const el = document.getElementById('error-msg');
-  el.textContent = '';
-  el.classList.remove('show');
+  errorBox.textContent = '';
+  errorBox.classList.remove('show');
 }
 
 function togglePassword(inputId, btn) {
@@ -759,18 +796,61 @@ function isValidEmail(email) {
 }
 
 function setButtonLoading(isLoading) {
-  const btn = document.getElementById('submit-btn');
-
   if (isLoading) {
-    btn.disabled = true;
-    btn.textContent = 'Setting up your trial...';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Setting up your trial...';
   } else {
-    btn.disabled = false;
-    btn.textContent = 'Start my free trial →';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Start my free trial →';
   }
 }
 
-async function handleSignup() {
+async function readJsonSafely(response, fallbackMessage) {
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (response.status === 404 || text.toLowerCase().includes('page could not be found')) {
+      throw new Error(fallbackMessage || 'This service is not live yet. Check the API file is uploaded and deployed.');
+    }
+
+    throw new Error('The server returned an invalid response. Check the Vercel function logs.');
+  }
+}
+
+function validateForm(name, email, password, confirm) {
+  if (!name) {
+    showError('Please enter your full name.');
+    return false;
+  }
+
+  if (!isValidEmail(email)) {
+    showError('Please enter a valid email address.');
+    return false;
+  }
+
+  if (password.length < 8) {
+    showError('Password must be at least 8 characters.');
+    return false;
+  }
+
+  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+    showError('Password must include at least one letter and one number.');
+    return false;
+  }
+
+  if (password !== confirm) {
+    showError('Passwords do not match.');
+    return false;
+  }
+
+  return true;
+}
+
+async function handleSignup(event) {
+  event.preventDefault();
+
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim().toLowerCase();
   const password = document.getElementById('password').value;
@@ -778,30 +858,14 @@ async function handleSignup() {
 
   clearError();
 
-  if (!name) {
-    showError('Please enter your full name.');
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    showError('Please enter a valid email address.');
-    return;
-  }
-
-  if (password.length < 8) {
-    showError('Password must be at least 8 characters.');
-    return;
-  }
-
-  if (password !== confirm) {
-    showError('Passwords do not match.');
+  if (!validateForm(name, email, password, confirm)) {
     return;
   }
 
   setButtonLoading(true);
 
   try {
-    const regRes = await fetch('/api/auth', {
+    const registerResponse = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -812,47 +876,42 @@ async function handleSignup() {
       })
     });
 
-    const regData = await regRes.json().catch(() => ({}));
+    const registerData = await readJsonSafely(
+      registerResponse,
+      'Signup service is not available. Check /api/auth is deployed.'
+    );
 
-    if (!regRes.ok) {
-      showError(regData.error || 'Registration failed. Please try again.');
-      setButtonLoading(false);
-      return;
+    if (!registerResponse.ok || registerData.success === false) {
+      throw new Error(registerData.error || 'Registration failed. Please try again.');
     }
 
     sessionStorage.setItem('drh_pending_email', email);
     sessionStorage.setItem('drh_pending_name', name);
 
-    const stripeRes = await fetch('/api/stripe-checkout', {
+    const stripeResponse = await fetch('/api/stripe-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        name
-      })
+      body: JSON.stringify({ email, name })
     });
 
-    const stripeData = await stripeRes.json().catch(() => ({}));
+    const stripeData = await readJsonSafely(
+      stripeResponse,
+      'Stripe checkout service is not available. Check /api/stripe-checkout is deployed.'
+    );
 
-    if (stripeData.url) {
-      window.location.href = stripeData.url;
-      return;
+    if (!stripeResponse.ok || !stripeData.url) {
+      throw new Error(stripeData.error || 'Could not start trial. Please try again.');
     }
 
-    showError(stripeData.error || 'Could not start trial. Please try again.');
-    setButtonLoading(false);
-
-  } catch (e) {
-    showError('Something went wrong. Please try again.');
+    window.location.href = stripeData.url;
+  } catch (error) {
+    showError(error.message || 'Something went wrong. Please try again.');
     setButtonLoading(false);
   }
 }
 
-['name','email','password','confirm-password'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleSignup();
-  });
-});
+redirectExistingSession();
+signupForm.addEventListener('submit', handleSignup);
 </script>
 
 </body>
