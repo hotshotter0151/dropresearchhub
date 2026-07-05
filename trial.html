@@ -3,20 +3,344 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DropResearch Hub</title>
-<meta http-equiv="refresh" content="0;url=dashboard.html"/>
+<title>Trial Access — DropResearch Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-body{font-family:'Inter',system-ui,sans-serif;background:#142840;color:rgba(255,255,255,.7);min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0;font-size:14px}
-a{color:#F59E0B;font-weight:700;text-decoration:none}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E3A5F;
+  --navy-dark:#142840;
+  --gold:#F59E0B;
+  --gold-soft:#FCD34D;
+  --white:#ffffff;
+  --muted:rgba(255,255,255,.72);
+  --line:rgba(255,255,255,.14);
+  --danger:#EF4444;
+}
+body{
+  font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#0a1628 0%,#142840 55%,#1E3A5F 100%);
+  color:var(--white);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.card{
+  width:100%;
+  max-width:460px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 24px 80px rgba(0,0,0,.28);
+  text-align:center;
+  backdrop-filter:blur(14px);
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:rgba(245,158,11,.14);
+  border:1px solid rgba(245,158,11,.35);
+  color:var(--gold-soft);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:8px 12px;
+  border-radius:999px;
+  margin-bottom:18px;
+}
+h1{
+  font-size:26px;
+  line-height:1.15;
+  margin-bottom:12px;
+  letter-spacing:-.04em;
+}
+p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.65;
+  margin-bottom:22px;
+}
+.actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+a,button{
+  appearance:none;
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+  font-weight:900;
+  border-radius:14px;
+  padding:12px 16px;
+  text-decoration:none;
+  font-size:14px;
+}
+.primary{
+  background:linear-gradient(135deg,var(--gold),#FCD34D);
+  color:#142840;
+}
+.secondary{
+  background:rgba(255,255,255,.1);
+  color:var(--white);
+  border:1px solid var(--line);
+}
+.small{
+  margin-top:16px;
+  font-size:12px;
+  color:rgba(255,255,255,.55);
+}
 </style>
 </head>
 <body>
-<!--
-  trial.html is retired. Trialists now get full access to the current drop
-  via dashboard.html (with a countdown banner) — this stub only exists so
-  old bookmarks, emails and cached redirects don't 404.
--->
-<div>Taking you to your dashboard... <a href="dashboard.html">Click here if nothing happens</a></div>
-<script>window.location.replace('dashboard.html');</script>
+
+<div class="card">
+  <div class="badge">DropResearch Hub</div>
+  <h1 id="title">Checking your access...</h1>
+  <p id="message">Please wait while we securely route you to the correct area.</p>
+
+  <div class="actions">
+    <a id="mainLink" class="primary" href="login.html" style="display:none">Go to Login</a>
+    <button id="logoutBtn" class="secondary" type="button" style="display:none">Log out</button>
+  </div>
+
+  <div class="small">Protected trial access</div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  const LOGIN_URL = 'login.html';
+  const DASHBOARD_URL = 'dashboard.html';
+
+  const titleEl = document.getElementById('title');
+  const messageEl = document.getElementById('message');
+  const mainLink = document.getElementById('mainLink');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const DRH_STORAGE_KEYS = [
+    'drh_session',
+    'drh_user',
+    'drh_admin_session',
+    'drh_member_session',
+    'drh_trial_session',
+    'drh_customer',
+    'drh_access',
+    'drh_email'
+  ];
+
+  function cleanDrhSession(){
+    DRH_STORAGE_KEYS.forEach(function(key){
+      try{ sessionStorage.removeItem(key); }catch(e){}
+      try{ localStorage.removeItem(key); }catch(e){}
+    });
+  }
+
+  function safeParse(raw){
+    if(!raw) return null;
+
+    try{
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function getSession(){
+    let raw = null;
+
+    try{
+      raw = sessionStorage.getItem('drh_session');
+    }catch(e){}
+
+    if(!raw){
+      try{
+        raw = localStorage.getItem('drh_session');
+      }catch(e){}
+    }
+
+    return safeParse(raw);
+  }
+
+  function normalise(value){
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[_\s]+/g,'-');
+  }
+
+  function pick(session, keys){
+    for(const key of keys){
+      if(session && session[key] !== undefined && session[key] !== null && session[key] !== ''){
+        return session[key];
+      }
+    }
+    return '';
+  }
+
+  function getAccess(session){
+    const user = session.user && typeof session.user === 'object' ? session.user : {};
+    const meta = user.user_metadata && typeof user.user_metadata === 'object' ? user.user_metadata : {};
+    const appMeta = user.app_metadata && typeof user.app_metadata === 'object' ? user.app_metadata : {};
+
+    const merged = Object.assign({}, appMeta, meta, user, session);
+
+    const role = normalise(pick(merged, [
+      'role',
+      'userRole',
+      'accountRole',
+      'account_type',
+      'accountType',
+      'type'
+    ]));
+
+    const status = normalise(pick(merged, [
+      'status',
+      'subscription_status',
+      'subscriptionStatus',
+      'memberStatus',
+      'membershipStatus',
+      'planStatus',
+      'accessStatus',
+      'stripeStatus'
+    ]));
+
+    const plan = normalise(pick(merged, [
+      'plan',
+      'tier',
+      'membership',
+      'subscription',
+      'customerType'
+    ]));
+
+    const combined = [role,status,plan].filter(Boolean).join('-');
+
+    const blockedStatuses = [
+      'cancelled',
+      'canceled',
+      'inactive',
+      'expired',
+      'past-due',
+      'past_due',
+      'unpaid',
+      'incomplete',
+      'incomplete-expired',
+      'paused',
+      'blocked'
+    ];
+
+    const trialStatuses = [
+      'trial',
+      'trialing',
+      'trial-active',
+      'free-trial'
+    ];
+
+    const activeStatuses = [
+      'active',
+      'paid',
+      'member',
+      'subscriber',
+      'subscribed'
+    ];
+
+    const isAdmin =
+      role === 'admin' ||
+      role === 'administrator' ||
+      merged.isAdmin === true;
+
+    const isBlocked =
+      blockedStatuses.includes(status) ||
+      blockedStatuses.includes(plan) ||
+      blockedStatuses.includes(role) ||
+      blockedStatuses.some(function(item){ return combined.includes(item); });
+
+    const isTrial =
+      trialStatuses.includes(status) ||
+      trialStatuses.includes(plan) ||
+      trialStatuses.includes(role) ||
+      combined.includes('trialing') ||
+      combined.includes('trial-active') ||
+      combined.includes('free-trial') ||
+      merged.isTrial === true;
+
+    const isActive =
+      activeStatuses.includes(status) ||
+      activeStatuses.includes(plan) ||
+      role === 'member' ||
+      role === 'customer' ||
+      merged.isActive === true;
+
+    return {
+      isAdmin,
+      isBlocked,
+      isTrial,
+      isActive
+    };
+  }
+
+  function showLogin(message){
+    titleEl.textContent = 'Login required';
+    messageEl.textContent = message || 'Please log in to continue to DropResearch Hub.';
+    mainLink.href = LOGIN_URL;
+    mainLink.textContent = 'Go to Login';
+    mainLink.style.display = 'inline-flex';
+    logoutBtn.style.display = 'none';
+  }
+
+  function showBlocked(){
+    titleEl.textContent = 'Access not active';
+    messageEl.textContent = 'This session does not currently have active trial or member access. Please log in again or restart checkout.';
+    mainLink.href = LOGIN_URL;
+    mainLink.textContent = 'Go to Login';
+    mainLink.style.display = 'inline-flex';
+    logoutBtn.style.display = 'inline-flex';
+  }
+
+  function redirectToDashboard(){
+    titleEl.textContent = 'Access confirmed';
+    messageEl.textContent = 'Taking you to your dashboard...';
+    window.location.replace(DASHBOARD_URL);
+  }
+
+  logoutBtn.addEventListener('click', function(){
+    cleanDrhSession();
+    window.location.replace(LOGIN_URL);
+  });
+
+  const session = getSession();
+
+  if(!session){
+    showLogin('Please log in to continue to your trial dashboard.');
+    return;
+  }
+
+  const access = getAccess(session);
+
+  if(access.isAdmin || access.isTrial || access.isActive){
+    redirectToDashboard();
+    return;
+  }
+
+  if(access.isBlocked){
+    cleanDrhSession();
+    showBlocked();
+    return;
+  }
+
+  cleanDrhSession();
+  showLogin('Your session could not be verified. Please log in again.');
+})();
+</script>
+
 </body>
 </html>
