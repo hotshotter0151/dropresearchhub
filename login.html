@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1E3A5F;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626}
+:root{--navy:#1E3A5F;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626}
 body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0a1628 0%,#142840 60%,#1a3558 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .card{background:#fff;border-radius:24px;padding:48px;max-width:420px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.3)}
 .logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:32px;text-decoration:none}
@@ -61,6 +61,15 @@ h1{font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bot
   <a href="index.html" class="back">← Back to homepage</a>
 </div>
 <script>
+function showError(msg) {
+  const error = document.getElementById('error');
+  const btn = document.getElementById('submit-btn');
+  error.textContent = msg;
+  error.classList.add('show');
+  btn.disabled = false;
+  btn.textContent = 'Sign in →';
+}
+
 async function handleLogin() {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
@@ -68,20 +77,11 @@ async function handleLogin() {
   const btn = document.getElementById('submit-btn');
 
   error.classList.remove('show');
-  if (!email) { error.textContent = 'Please enter your email.'; error.classList.add('show'); return; }
-  if (!password) { error.textContent = 'Please enter your password.'; error.classList.add('show'); return; }
+  if (!email) { showError('Please enter your email.'); return; }
+  if (!password) { showError('Please enter your password.'); return; }
 
   btn.disabled = true;
   btn.textContent = 'Signing in...';
-
-  // Check for admin access
-  if (password === 'Billy1234.' && email.includes('@')) {
-    sessionStorage.setItem('drh_auth', 'member');
-    sessionStorage.setItem('drh_email', email);
-    sessionStorage.setItem('drh_name', 'Admin');
-    window.location.href = 'members.html';
-    return;
-  }
 
   try {
     const res = await fetch('/api/auth', {
@@ -91,36 +91,36 @@ async function handleLogin() {
     });
     const data = await res.json();
 
-    if (!res.ok) {
-      error.textContent = data.error || 'Invalid email or password.';
-      error.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Sign in →';
+    if (!res.ok || !data.success) {
+      showError(data.error || 'Invalid email or password.');
       return;
     }
 
-    // Store session
-    sessionStorage.setItem('drh_auth', data.user.status === 'active' ? 'member' : 'trial');
-    sessionStorage.setItem('drh_email', data.user.email);
-    sessionStorage.setItem('drh_name', data.user.name);
-    sessionStorage.setItem('drh_user_id', data.user.id);
-
-    // Redirect based on status
-    if (data.user.status === 'active') {
-      window.location.href = 'members.html';
-    } else if (data.user.status === 'cancelled') {
-      error.textContent = 'Your subscription has been cancelled. Please resubscribe to access the platform.';
-      error.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Sign in →';
-    } else {
-      window.location.href = 'trial.html';
+    // Cancelled accounts: block with a resubscribe prompt
+    if (data.subscription_status === 'cancelled') {
+      showError('Your subscription has been cancelled. Please resubscribe to access the platform.');
+      return;
     }
-  } catch(e) {
-    error.textContent = 'Something went wrong. Please try again.';
-    error.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Sign in →';
+
+    // Store the session — drh_session JSON is what dashboard/members read
+    const status = data.role === 'admin' ? 'active' : (data.subscription_status || 'trial');
+    sessionStorage.setItem('drh_session', JSON.stringify({
+      email: data.email,
+      name: data.name,
+      userId: data.userId,
+      status: status,
+      role: data.role || 'member',
+      trial_ends_at: data.trial_ends_at || null
+    }));
+    sessionStorage.setItem('drh_auth', status === 'active' ? 'member' : 'trial');
+    sessionStorage.setItem('drh_email', data.email);
+    sessionStorage.setItem('drh_name', data.name || '');
+
+    // Server decides where everyone goes:
+    // admin -> admin.html, active -> members.html, trial -> dashboard.html
+    window.location.href = data.redirect || 'dashboard.html';
+  } catch (e) {
+    showError('Something went wrong. Please try again.');
   }
 }
 
