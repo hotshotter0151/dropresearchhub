@@ -75,6 +75,26 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
 .sidebar-overlay.show{display:block}
 
+/* ── TRIAL BANNER v1.0 ── */
+.trial-banner{display:none;background:linear-gradient(135deg,#fff7ed 0%,#fef3c7 100%);border:1.5px solid var(--gold);border-radius:16px;padding:14px 18px;margin-bottom:18px;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 8px 22px rgba(245,158,11,.10)}
+.trial-banner.show{display:flex}
+.trial-banner-days{width:44px;height:44px;border-radius:12px;background:var(--gold);color:var(--navy-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
+.trial-banner-days-num{font-size:18px;font-weight:900}
+.trial-banner-days-lbl{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.trial-banner-text{flex:1;min-width:220px}
+.trial-banner-title{font-size:14px;font-weight:900;color:#7c2d12}
+.trial-banner-sub{font-size:12px;color:#9a3412;line-height:1.5}
+.trial-banner-btn{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.trial-banner-btn:hover{background:var(--navy-light)}
+
+/* ── ARCHIVE TEASER (trial tier) ── */
+.archive-teaser{display:none;background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 100%);border:1px solid rgba(245,158,11,.35);border-radius:18px;padding:18px 20px;margin:16px 0 4px;align-items:center;gap:14px;flex-wrap:wrap}
+.archive-teaser.show{display:flex}
+.archive-teaser-icon{width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.archive-teaser-text{flex:1;min-width:220px}
+.archive-teaser-title{font-size:14px;font-weight:900;color:#fff}
+.archive-teaser-sub{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5}
+
 /* ── DASHBOARD PAGE ── */
 .dash-welcome{background:var(--navy);border-radius:20px;padding:28px 28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
 .dash-welcome::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.03)}
@@ -437,6 +457,19 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
 
+    <!-- TRIAL COUNTDOWN BANNER (hidden unless trialing) -->
+    <div class="trial-banner" id="trial-banner">
+      <div class="trial-banner-days">
+        <div class="trial-banner-days-num" id="trial-banner-days-num">7</div>
+        <div class="trial-banner-days-lbl">days</div>
+      </div>
+      <div class="trial-banner-text">
+        <div class="trial-banner-title" id="trial-banner-title">Free trial active</div>
+        <div class="trial-banner-sub" id="trial-banner-sub">You have full access to this week's drop. Your membership starts automatically when the trial ends — cancel anytime.</div>
+      </div>
+      <button class="trial-banner-btn" onclick="manageSubscription()">Manage subscription</button>
+    </div>
+
     <!-- HUB COMMAND CENTRE -->
     <div class="dash-welcome">
       <div class="dash-command-inner">
@@ -507,6 +540,15 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
         <div style="font-size:32px;margin-bottom:12px">⏳</div>
         <div style="font-weight:700;color:var(--g600)">Hub is preparing this week's picks</div>
         <div style="font-size:13px;margin-top:4px">Check back Monday when the weekly drop lands</div>
+      </div>
+    </div>
+
+    <!-- ARCHIVE TEASER (trial tier only) -->
+    <div class="archive-teaser" id="archive-teaser">
+      <div class="archive-teaser-icon">🔒</div>
+      <div class="archive-teaser-text">
+        <div class="archive-teaser-title"><span id="archive-teaser-count">0</span> more products in Hub's research archive</div>
+        <div class="archive-teaser-sub">Every past drop Hub has ever ranked unlocks automatically when your membership starts at the end of your trial.</div>
       </div>
     </div>
 
@@ -830,12 +872,12 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
 
 // ── AUTH CHECK ────────────────────────────────────────────────────────────
+// Trialists are welcome here now — trial.html is retired. Only unauthenticated
+// visitors get bounced to login.
 const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
 const _auth = sessionStorage.getItem('drh_auth');
 if (!_auth && !_session?.email) {
   window.location.href = 'login.html';
-} else if (_auth === 'trial') {
-  window.location.href = 'trial.html';
 }
 
 // ── USER ─────────────────────────────────────────────────────────────────
@@ -908,6 +950,40 @@ async function manageSubscription() {
 const email = getUserEmail();
 if (email) {
   document.getElementById('sidebar-user-email').textContent = email;
+}
+
+// ── TRIAL COUNTDOWN BANNER ────────────────────────────────────────────────
+async function checkTrialBanner() {
+  if (!email) return;
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'checkStatus', email })
+    });
+    const data = await res.json();
+    if (!data.success) return;
+
+    const status = data.subscription_status;
+    if (status !== 'trial' && status !== 'trialing') return;
+
+    const banner = document.getElementById('trial-banner');
+    banner.classList.add('show');
+
+    if (data.trial_ends_at) {
+      const end = new Date(data.trial_ends_at);
+      const daysLeft = Math.max(0, Math.ceil((end - new Date()) / 86400000));
+      document.getElementById('trial-banner-days-num').textContent = daysLeft;
+      document.getElementById('trial-banner-title').textContent =
+        daysLeft > 0
+          ? 'Free trial — ' + daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' left'
+          : 'Your trial ends today';
+      document.getElementById('trial-banner-sub').textContent =
+        "You have full access to this week's drop. Your membership starts automatically on " +
+        end.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) +
+        ' at £24.99/month — cancel anytime.';
+    }
+  } catch (e) { /* stay quiet — banner just won't show */ }
 }
 
 // ── GREETING ─────────────────────────────────────────────────────────────
@@ -1002,9 +1078,18 @@ function rankWeeklyProducts(products) {
 // ── LOAD PRODUCTS ─────────────────────────────────────────────────────────
 async function loadProducts() {
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch('/api/products' + (email ? '?email=' + encodeURIComponent(email) : ''));
     const data = await res.json();
     const products = data.products || [];
+
+    // Trial tier: show the locked-archive teaser with the real count
+    if (data.tier === 'trial' && data.lockedCount > 0) {
+      const teaser = document.getElementById('archive-teaser');
+      if (teaser) {
+        document.getElementById('archive-teaser-count').textContent = data.lockedCount;
+        teaser.classList.add('show');
+      }
+    }
 
     if (!products.length) return;
 
@@ -1195,6 +1280,7 @@ function showToast(msg) {
 // ── INIT ──────────────────────────────────────────────────────────────────
 loadProducts();
 loadSaved();
+checkTrialBanner();
 
 // ── HANDLE INCOMING LAUNCH PLAN REQUEST FROM URL PARAMS ───────────────────
 // members.html "Build My Launch Plan" links here as:
