@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Admin — DropResearch Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  function clearDRHAdminSession(){
+    ['drh_session','drh_auth','drh_email','drh_name'].forEach(key=>sessionStorage.removeItem(key));
+  }
+
+  try{
+    const session=JSON.parse(sessionStorage.getItem('drh_session')||'null');
+    const role=String(session?.role||'').trim().toLowerCase();
+    const email=String(session?.email||'').trim().toLowerCase();
+
+    if(!session||role!=='admin'||!email){
+      clearDRHAdminSession();
+      window.location.replace('admin-login.html');
+    }
+  }catch(e){
+    clearDRHAdminSession();
+    window.location.replace('admin-login.html');
+  }
+})();
+</script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626;--orange:#EA580C;--blue:#2563EB;--blue-bg:#EFF6FF;--green-bg:#DCFCE7;--red-bg:#FEE2E2;--amber:#D97706;--amber-bg:#FEF3C7}
@@ -275,12 +298,12 @@ select.filter-input{min-width:140px}
   <main class="main">
     <div class="topbar">
       <div>
-        <div class="personal-topline" id="personal-greeting">Good day, Billy</div>
+        <div class="personal-topline" id="personal-greeting">Good day</div>
         <h1 id="section-title">Overview</h1>
         <p id="section-sub">Live data from Supabase & Stripe</p>
         <div class="workbench-note">Your DRH workbench — generate, review and control what members see.</div>
       </div>
-      <div class="admin-pill"><div class="avatar">BH</div>Admin</div>
+      <div class="admin-pill"><div class="avatar" id="admin-avatar">DRH</div><span id="admin-pill-name">Admin</span></div>
     </div>
 
     <section id="overview" class="section active">
@@ -543,21 +566,42 @@ function closeMobileNav(){document.body.classList.remove('mobile-nav-open')}
 const SUPABASE_URL='https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_KEY='sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
 
+function clearDRHAdminSession(){
+  ['drh_session','drh_auth','drh_email','drh_name'].forEach(key=>sessionStorage.removeItem(key));
+}
+
+function redirectToAdminLogin(){
+  clearDRHAdminSession();
+  window.location.replace('admin-login.html');
+}
+
 function getAdminSession(){
   let session=null;
-  try{session=JSON.parse(sessionStorage.getItem('drh_session')||'null')}catch(e){}
+
+  try{
+    session=JSON.parse(sessionStorage.getItem('drh_session')||'null');
+  }catch(e){
+    session=null;
+  }
+
   const email=String(session?.email||'').trim().toLowerCase();
-  const userId=String(session?.userId||'').trim();
+  const userId=String(session?.userId||session?.id||'').trim();
   const role=String(session?.role||'').trim().toLowerCase();
+  const status=String(session?.status||session?.subscription_status||'active').trim().toLowerCase();
 
   if(!session||role!=='admin'||!email){
-    sessionStorage.removeItem('drh_session');
-    sessionStorage.removeItem('drh_auth');
-    window.location.replace('admin-login.html');
+    redirectToAdminLogin();
     return null;
   }
 
-  return {...session,email,userId,role:'admin'};
+  return {
+    ...session,
+    email,
+    userId,
+    role:'admin',
+    status:status||'active',
+    subscription_status:session?.subscription_status||status||'active'
+  };
 }
 
 const ADMIN_SESSION=getAdminSession();
@@ -581,6 +625,56 @@ async function adminFetch(url,options={}){
     headers:adminHeaders(options.headers||{}),
     cache:options.cache || 'no-store'
   });
+}
+
+async function verifyAdminAccess(){
+  if(!ADMIN_SESSION)return false;
+
+  try{
+    const res=await fetch('/api/auth',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'checkStatus',email:ADMIN_SESSION.email}),
+      cache:'no-store'
+    });
+
+    const data=await res.json().catch(()=>({}));
+
+    if(!res.ok||!data.success){
+      redirectToAdminLogin();
+      return false;
+    }
+
+    if(data.role&&String(data.role).toLowerCase()!=='admin'){
+      redirectToAdminLogin();
+      return false;
+    }
+
+    const currentSession=JSON.parse(sessionStorage.getItem('drh_session')||'null')||{};
+    sessionStorage.setItem('drh_session',JSON.stringify({
+      ...currentSession,
+      email:data.email||ADMIN_SESSION.email,
+      name:data.name||currentSession.name||ADMIN_SESSION.name||'',
+      userId:data.userId||currentSession.userId||ADMIN_SESSION.userId||null,
+      role:'admin',
+      status:'active',
+      subscription_status:'active',
+      trial_ends_at:data.trial_ends_at||currentSession.trial_ends_at||null
+    }));
+    sessionStorage.setItem('drh_auth','member');
+    sessionStorage.setItem('drh_email',data.email||ADMIN_SESSION.email);
+    sessionStorage.setItem('drh_name',data.name||currentSession.name||ADMIN_SESSION.name||'');
+
+    return true;
+  }catch(e){
+    console.warn('Admin status check failed:',e);
+    return true;
+  }
+}
+
+function logoutDRHAdmin(){
+  clearDRHAdminSession();
+  window.location.href='admin-login.html';
 }
 
 let pendingPulse=null;
@@ -641,7 +735,7 @@ async function publishPulse(){
   }catch(e){toast('Error: '+e.message,'error')}
 }
 
-function logout(){sessionStorage.removeItem('drh_session');sessionStorage.removeItem('drh_auth');window.location.href='admin-login.html'}
+function logout(){logoutDRHAdmin()}
 
 async function sbFetch(path,options={}){
   const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
@@ -1112,7 +1206,7 @@ async function loadHealth(){
   ['supabase','claude','stripe'].forEach(k=>setHealth(k,'gold','Checking…','…'));
   try{await sbFetch('users?select=id&limit=1');setHealth('supabase','green','Connected','Online')}catch{setHealth('supabase','red','Connection failed','Error')}
   try{const r=await adminFetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})});setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning')}catch{setHealth('claude','gold','Could not reach','Unknown')}
-  try{await adminFetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})});setHealth('stripe','green','API key configured','Online')}catch{setHealth('stripe','red','Could not reach','Error')}
+  try{await adminFetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:ADMIN_SESSION?.email||''})});setHealth('stripe','green','API key configured','Online')}catch{setHealth('stripe','red','Could not reach','Error')}
 }
 function setHealth(key,color,sub,badge){
   const dot=document.getElementById(`dot-${key}`),subEl=document.getElementById(`status-${key}`),badgeEl=document.getElementById(`badge-${key}`);
@@ -1160,18 +1254,48 @@ function updateHubNote(){
   if(footer)footer.innerHTML=note.chips.map(c=>`<span class="hub-note-chip">${esc(c)}</span>`).join('');
 }
 
+function adminDisplayName(){
+  const raw=String(ADMIN_SESSION?.name||'').trim();
+  if(raw)return raw.split(' ')[0];
+  const emailName=String(ADMIN_SESSION?.email||'').split('@')[0]||'Admin';
+  return emailName.replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function adminInitials(){
+  const name=adminDisplayName();
+  const parts=name.split(/\s+/).filter(Boolean);
+  if(parts.length>=2)return (parts[0][0]+parts[1][0]).toUpperCase();
+  return String(name||'DRH').slice(0,3).toUpperCase();
+}
+
+function updateAdminIdentity(){
+  const avatar=document.getElementById('admin-avatar');
+  const pill=document.getElementById('admin-pill-name');
+  if(avatar)avatar.textContent=adminInitials();
+  if(pill)pill.textContent='Admin';
+}
+
 function updatePersonalGreeting(){
   const el=document.getElementById('personal-greeting');if(!el)return;
   const hour=new Date().getHours();
   let greeting='Good evening';
   if(hour<12)greeting='Good morning';else if(hour<17)greeting='Good afternoon';
-  el.textContent=`${greeting}, Billy`;
+  el.textContent=`${greeting}, ${adminDisplayName()}`;
 }
 
-updatePersonalGreeting();
-updateHubNote();
-loadUsers();
-loadHealth();
+async function initialiseAdminPage(){
+  updateAdminIdentity();
+  updatePersonalGreeting();
+  updateHubNote();
+
+  const allowed=await verifyAdminAccess();
+  if(!allowed)return;
+
+  loadUsers();
+  loadHealth();
+}
+
+initialiseAdminPage();
 </script>
 </body>
 </html>
