@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Contact — DropResearchHub</title>
+<title>Contact — DropResearch Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+
 :root{
   --navy:#1E3A5F;
   --navy-light:#2B4F82;
@@ -22,60 +24,504 @@
   --green:#16A34A;
   --blue:#2563EB;
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
 a{color:inherit}
-.site-header{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
-.nav{max-width:1120px;margin:0 auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
-.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff}
-.logo-mark{width:38px;height:38px;background:#fff;border-radius:10px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px 7px;box-shadow:0 8px 20px rgba(0,0,0,.12)}
-.logo-bar{width:4px;border-radius:2px;background:var(--navy)}
+
+.site-header{
+  background:linear-gradient(135deg,var(--navy-dark),var(--navy));
+  color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.nav{
+  max-width:1120px;
+  margin:0 auto;
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-decoration:none;
+  color:#fff;
+}
+
+.logo-mark{
+  width:38px;
+  height:38px;
+  background:#fff;
+  border-radius:10px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:3px;
+  padding:8px 7px;
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.logo-bar{
+  width:4px;
+  border-radius:2px;
+  background:var(--navy);
+}
+
 .logo-bar.gold{background:var(--gold)}
-.logo-text{font-weight:900;font-size:15px;letter-spacing:-.2px}.logo-text span{color:var(--gold)}
-.nav-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.nav-link{font-size:13px;font-weight:700;color:rgba(255,255,255,.78);text-decoration:none;padding:8px 11px;border-radius:999px;transition:all .15s}
-.nav-link:hover{background:rgba(255,255,255,.1);color:#fff}
-.nav-link.primary{background:#fff;color:var(--navy)}
-.hero{max-width:1120px;margin:0 auto;padding:54px 22px 62px;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:end}
-.kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.32);color:#FCD34D;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;margin-bottom:16px}
-h1{font-size:48px;line-height:1.04;letter-spacing:-1.8px;font-weight:900;margin-bottom:16px}
-.hero p{font-size:17px;color:rgba(255,255,255,.78);max-width:650px}
-.hero-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:20px;backdrop-filter:blur(10px);box-shadow:0 20px 50px rgba(0,0,0,.18)}
-.hero-card-title{font-size:13px;font-weight:900;color:#fff;margin-bottom:10px}.hero-card p{font-size:13px;color:rgba(255,255,255,.74)}
-.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
-.status{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px}
-.status b{display:block;color:#fff;font-size:13px}.status span{font-size:11px;color:rgba(255,255,255,.62)}
-.page-wrap{max-width:1120px;margin:-28px auto 0;padding:0 22px 58px;display:grid;grid-template-columns:270px 1fr;gap:22px;align-items:start}
-.sidebar{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 28px rgba(17,24,39,.05)}
-.sidebar-title{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
-.side-link{display:block;text-decoration:none;color:#374151;font-size:13px;font-weight:700;padding:9px 10px;border-radius:10px;margin-bottom:2px}
-.side-link:hover{background:var(--soft);color:var(--navy)}
-.legal-card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px rgba(17,24,39,.05);overflow:hidden}
-.legal-intro{padding:28px 30px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#F9FAFB)}
-.legal-intro h2{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
-.legal-intro p{font-size:14px;color:var(--muted)}
-.policy{padding:30px}
-.policy section{scroll-margin-top:24px;margin-bottom:34px;padding-bottom:26px;border-bottom:1px solid var(--line)}
-.policy section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-h3{font-size:19px;font-weight:900;letter-spacing:-.35px;margin-bottom:10px;color:var(--navy-dark)}
-h4{font-size:14px;font-weight:900;margin:18px 0 8px;color:#1F2937}
-p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;margin:8px 0 14px}.policy li{font-size:14px;color:#374151;margin:6px 0}
-.notice{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.notice b{color:#1D4ED8}
-.warn{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;border-radius:14px;padding:14px 16px;font-size:13px;margin:15px 0}.warn b{color:#78350F}
-.table{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:14px 0;background:#fff}
-.row{display:grid;grid-template-columns:210px 1fr;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}
-.cell{padding:12px 14px;font-size:13px;color:#374151}.cell:first-child{background:#F9FAFB;font-weight:800;color:#1F2937}
-.site-footer{border-top:1px solid var(--line);background:#fff;margin-top:48px}
-.footer-inner{max-width:1120px;margin:0 auto;padding:28px 22px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}
-.footer-brand{font-size:13px;color:#6B7280}.footer-brand b{color:var(--navy);font-weight:900}
-.footer-links{display:flex;gap:14px;flex-wrap:wrap}.footer-links a{font-size:12px;font-weight:800;color:#4B5563;text-decoration:none}.footer-links a:hover{color:var(--navy)}
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:38px}.page-wrap{grid-template-columns:1fr}.sidebar{position:relative;top:auto}.nav{align-items:flex-start}.nav-links{justify-content:flex-end}h1{font-size:38px}.row{grid-template-columns:1fr}.cell:first-child{border-bottom:1px solid var(--line)}}
-@media(max-width:560px){.nav{flex-direction:column;align-items:flex-start}.hero{padding-bottom:44px}h1{font-size:32px}.policy,.legal-intro{padding:22px}.status-grid{grid-template-columns:1fr}.footer-inner{align-items:flex-start;flex-direction:column}}
+
+.logo-text{
+  font-weight:900;
+  font-size:15px;
+  letter-spacing:-.2px;
+}
+
+.logo-text span{color:var(--gold)}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.nav-link{
+  font-size:13px;
+  font-weight:700;
+  color:rgba(255,255,255,.78);
+  text-decoration:none;
+  padding:8px 11px;
+  border-radius:999px;
+  transition:all .15s;
+}
+
+.nav-link:hover{
+  background:rgba(255,255,255,.1);
+  color:#fff;
+}
+
+.nav-link.primary{
+  background:#fff;
+  color:var(--navy);
+}
+
+.hero{
+  max-width:1120px;
+  margin:0 auto;
+  padding:54px 22px 62px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:30px;
+  align-items:end;
+}
+
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(245,158,11,.14);
+  border:1px solid rgba(245,158,11,.32);
+  color:#FCD34D;
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:16px;
+}
+
+h1{
+  font-size:48px;
+  line-height:1.04;
+  letter-spacing:-1.8px;
+  font-weight:900;
+  margin-bottom:16px;
+}
+
+.hero p{
+  font-size:17px;
+  color:rgba(255,255,255,.78);
+  max-width:650px;
+}
+
+.hero-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:18px;
+  padding:20px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 20px 50px rgba(0,0,0,.18);
+}
+
+.hero-card-title{
+  font-size:13px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:10px;
+}
+
+.hero-card p{
+  font-size:13px;
+  color:rgba(255,255,255,.74);
+}
+
+.status-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.status{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  padding:12px;
+}
+
+.status b{
+  display:block;
+  color:#fff;
+  font-size:13px;
+}
+
+.status span{
+  font-size:11px;
+  color:rgba(255,255,255,.62);
+}
+
+.page-wrap{
+  max-width:1120px;
+  margin:-28px auto 0;
+  padding:0 22px 58px;
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:22px;
+  align-items:start;
+}
+
+.sidebar{
+  position:sticky;
+  top:18px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 8px 28px rgba(17,24,39,.05);
+}
+
+.sidebar-title{
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+
+.side-link{
+  display:block;
+  text-decoration:none;
+  color:#374151;
+  font-size:13px;
+  font-weight:700;
+  padding:9px 10px;
+  border-radius:10px;
+  margin-bottom:2px;
+}
+
+.side-link:hover{
+  background:var(--soft);
+  color:var(--navy);
+}
+
+.legal-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 8px 28px rgba(17,24,39,.05);
+  overflow:hidden;
+}
+
+.legal-intro{
+  padding:28px 30px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#fff,#F9FAFB);
+}
+
+.legal-intro h2{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.5px;
+  margin-bottom:8px;
+}
+
+.legal-intro p{
+  font-size:14px;
+  color:var(--muted);
+}
+
+.policy{
+  padding:30px;
+}
+
+.policy section{
+  scroll-margin-top:24px;
+  margin-bottom:34px;
+  padding-bottom:26px;
+  border-bottom:1px solid var(--line);
+}
+
+.policy section:last-child{
+  border-bottom:none;
+  margin-bottom:0;
+  padding-bottom:0;
+}
+
+h3{
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:-.35px;
+  margin-bottom:10px;
+  color:var(--navy-dark);
+}
+
+h4{
+  font-size:14px;
+  font-weight:900;
+  margin:18px 0 8px;
+  color:#1F2937;
+}
+
+p{
+  margin-bottom:12px;
+  color:#374151;
+  font-size:14px;
+}
+
+.policy ul{
+  padding-left:20px;
+  margin:8px 0 14px;
+}
+
+.policy li{
+  font-size:14px;
+  color:#374151;
+  margin:6px 0;
+}
+
+.notice{
+  background:#EFF6FF;
+  border:1px solid #BFDBFE;
+  color:#1E40AF;
+  border-radius:14px;
+  padding:14px 16px;
+  font-size:13px;
+  margin:15px 0;
+}
+
+.notice b{color:#1D4ED8}
+
+.warn{
+  background:#FFFBEB;
+  border:1px solid #FDE68A;
+  color:#92400E;
+  border-radius:14px;
+  padding:14px 16px;
+  font-size:13px;
+  margin:15px 0;
+}
+
+.warn b{color:#78350F}
+
+.table{
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  margin:14px 0;
+  background:#fff;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:210px 1fr;
+  border-bottom:1px solid var(--line);
+}
+
+.row:last-child{border-bottom:none}
+
+.cell{
+  padding:12px 14px;
+  font-size:13px;
+  color:#374151;
+}
+
+.cell:first-child{
+  background:#F9FAFB;
+  font-weight:800;
+  color:#1F2937;
+}
+
+.cta-box{
+  background:linear-gradient(135deg,var(--navy-dark),var(--navy));
+  color:#fff;
+  border-radius:18px;
+  padding:22px;
+  margin-top:24px;
+}
+
+.cta-box h3{
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.cta-box p{
+  color:rgba(255,255,255,.72);
+  margin-bottom:16px;
+}
+
+.cta-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--gold);
+  color:var(--navy-dark);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:900;
+  border-radius:999px;
+  padding:11px 16px;
+}
+
+.cta-btn:hover{
+  background:#FCD34D;
+}
+
+.site-footer{
+  border-top:1px solid var(--line);
+  background:#fff;
+  margin-top:48px;
+}
+
+.footer-inner{
+  max-width:1120px;
+  margin:0 auto;
+  padding:28px 22px;
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.footer-brand{
+  font-size:13px;
+  color:#6B7280;
+}
+
+.footer-brand b{
+  color:var(--navy);
+  font-weight:900;
+}
+
+.footer-links{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.footer-links a{
+  font-size:12px;
+  font-weight:800;
+  color:#4B5563;
+  text-decoration:none;
+}
+
+.footer-links a:hover{
+  color:var(--navy);
+}
+
+@media(max-width:900px){
+  .hero{
+    grid-template-columns:1fr;
+    padding-top:38px;
+  }
+
+  .page-wrap{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    position:relative;
+    top:auto;
+  }
+
+  .nav{
+    align-items:flex-start;
+  }
+
+  .nav-links{
+    justify-content:flex-end;
+  }
+
+  h1{
+    font-size:38px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .cell:first-child{
+    border-bottom:1px solid var(--line);
+  }
+}
+
+@media(max-width:560px){
+  .nav{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .hero{
+    padding-bottom:44px;
+  }
+
+  h1{
+    font-size:32px;
+  }
+
+  .policy,
+  .legal-intro{
+    padding:22px;
+  }
+
+  .status-grid{
+    grid-template-columns:1fr;
+  }
+
+  .footer-inner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header class="site-header">
   <nav class="nav">
-    <a class="logo" href="index.html" aria-label="DropResearchHub home">
+    <a class="logo" href="index.html" aria-label="DropResearch Hub home">
       <div class="logo-mark">
         <div class="logo-bar" style="height:8px;opacity:.4"></div>
         <div class="logo-bar" style="height:14px;opacity:.7"></div>
@@ -84,23 +530,26 @@ p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;m
       </div>
       <div class="logo-text">Drop<span>Research</span> Hub</div>
     </a>
+
     <div class="nav-links">
       <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link" href="trial.html">Start Trial</a>
+      <a class="nav-link" href="signup.html">Start Trial</a>
       <a class="nav-link primary" href="contact.html">Contact</a>
     </div>
   </nav>
+
   <div class="hero">
     <div>
       <div class="kicker">Support & enquiries</div>
       <h1>Contact</h1>
-      <p>How to contact DropResearchHub for member support, billing questions, account help, privacy requests and business enquiries.</p>
+      <p>How to contact DropResearch Hub for member support, billing questions, account help, privacy requests and business enquiries.</p>
     </div>
+
     <div class="hero-card">
       <div class="hero-card-title">Contact summary</div>
       <p>Use the correct contact route so we can help with your account, subscription, billing question or platform issue as quickly as possible.</p>
       <div class="status-grid">
-        <div class="status"><b>Last updated</b><span>26 June 2026</span></div>
+        <div class="status"><b>Last updated</b><span>5 July 2026</span></div>
         <div class="status"><b>Applies to</b><span>dropresearchhub.com</span></div>
       </div>
     </div>
@@ -108,6 +557,7 @@ p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;m
 </header>
 
 <main class="page-wrap">
+
   <aside class="sidebar">
     <div class="sidebar-title">On this page</div>
     <a class="side-link" href="#support">Member support</a>
@@ -120,35 +570,53 @@ p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;m
 
   <article class="legal-card">
     <div class="legal-intro">
-      <h2>Contact DropResearchHub</h2>
+      <h2>Contact DropResearch Hub</h2>
       <p>For account questions, subscription support, billing queries or platform feedback, use the relevant contact route below.</p>
     </div>
 
     <div class="policy">
+
       <section id="support">
         <h3>1. Member support</h3>
         <p>For member support, account access issues, platform questions or product research tool issues, contact:</p>
-        <div class="notice"><b>Email:</b> <a href="mailto:support@dropresearchhub.com">support@dropresearchhub.com</a></div>
-        <p>This is the best route for existing members who need help with their DRH account or the member platform.</p>
+
+        <div class="notice">
+          <b>Email:</b> <a href="mailto:support@dropresearchhub.com">support@dropresearchhub.com</a>
+        </div>
+
+        <p>This is the best route for existing members who need help with their DropResearch Hub account or the member platform.</p>
       </section>
 
       <section id="billing">
         <h3>2. Billing and subscription questions</h3>
-        <p>If your query relates to a Stripe payment, cancellation, invoice, trial or subscription status, please contact support and include the email address used for your DRH account.</p>
+        <p>If your query relates to a Stripe payment, cancellation, invoice, trial or subscription status, please contact support and include the email address used for your DropResearch Hub account.</p>
+
         <ul>
           <li>Account email address.</li>
           <li>Date of the payment or attempted payment.</li>
           <li>Short explanation of the billing issue.</li>
           <li>Any Stripe receipt or invoice details you have available.</li>
         </ul>
+
+        <div class="warn">
+          <b>Important:</b> Please do not send full card numbers, passwords or sensitive login credentials by email.
+        </div>
       </section>
 
       <section id="business">
         <h3>3. General and business enquiries</h3>
         <p>For general questions, partnerships, media, collaborations or business enquiries, contact:</p>
+
         <div class="table">
-          <div class="row"><div class="cell">General enquiries</div><div class="cell"><a href="mailto:hello@dropresearchhub.com">hello@dropresearchhub.com</a></div></div>
-          <div class="row"><div class="cell">Member support</div><div class="cell"><a href="mailto:support@dropresearchhub.com">support@dropresearchhub.com</a></div></div>
+          <div class="row">
+            <div class="cell">General enquiries</div>
+            <div class="cell"><a href="mailto:hello@dropresearchhub.com">hello@dropresearchhub.com</a></div>
+          </div>
+
+          <div class="row">
+            <div class="cell">Member support</div>
+            <div class="cell"><a href="mailto:support@dropresearchhub.com">support@dropresearchhub.com</a></div>
+          </div>
         </div>
       </section>
 
@@ -161,27 +629,40 @@ p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;m
       <section id="include">
         <h3>5. What to include when contacting us</h3>
         <p>To help us respond properly, please include:</p>
+
         <ul>
-          <li>The email address linked to your DRH account.</li>
+          <li>The email address linked to your DropResearch Hub account.</li>
           <li>A clear description of what you need help with.</li>
           <li>Relevant screenshots, error messages or page names where useful.</li>
           <li>Billing references where the issue relates to payment.</li>
         </ul>
-        <div class="warn"><b>Tip:</b> Do not send full card numbers, passwords or sensitive account credentials by email.</div>
+
+        <div class="notice">
+          <b>Tip:</b> For billing issues, include the same email address you used when starting your Stripe trial.
+        </div>
       </section>
 
       <section id="response">
         <h3>6. Response times</h3>
         <p>We aim to respond as soon as reasonably possible. Response times may vary depending on the nature of the query, weekends, public holidays or busy periods.</p>
         <p>If your query is urgent because you cannot access your account or you believe there is a billing error, make this clear in the subject line.</p>
+
+        <div class="cta-box">
+          <h3>Ready to start researching products?</h3>
+          <p>Start your free trial and get access to Hub’s product research tools, weekly curated picks and UK ecommerce intelligence.</p>
+          <a class="cta-btn" href="signup.html">Start free trial →</a>
+        </div>
       </section>
+
     </div>
   </article>
+
 </main>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-brand"><b>DropResearchHub</b> © 2026. Built for UK ecommerce entrepreneurs.</div>
+    <div class="footer-brand"><b>DropResearch Hub</b> © 2026. Built for UK ecommerce entrepreneurs.</div>
+
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
@@ -192,5 +673,6 @@ p{margin-bottom:12px;color:#374151;font-size:14px}.policy ul{padding-left:20px;m
     </div>
   </div>
 </footer>
+
 </body>
 </html>
