@@ -5,6 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>DropResearch Hub — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  function readSession(){
+    try{return JSON.parse(sessionStorage.getItem('drh_session') || 'null')}catch(e){return null}
+  }
+  function clearDRHSession(){
+    ['drh_session','drh_auth','drh_email','drh_name','drh_pending_email','drh_pending_name'].forEach(function(key){
+      sessionStorage.removeItem(key);
+    });
+  }
+  var session = readSession();
+  var email = session && typeof session.email === 'string' ? session.email.trim() : '';
+  var role = session && session.role ? String(session.role).toLowerCase() : '';
+  var status = session ? String(session.status || session.subscription_status || '').toLowerCase() : '';
+  if (!email) {
+    clearDRHSession();
+    window.location.replace('login.html');
+    return;
+  }
+  if (status === 'cancelled' || status === 'inactive' || status === 'expired') {
+    clearDRHSession();
+    window.location.replace('login.html');
+    return;
+  }
+})();
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -440,7 +467,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   <div class="sidebar-bottom">
     <div class="sidebar-user" id="sidebar-user-email">Loading...</div>
     <button class="sidebar-subscription" id="manage-subscription-btn" onclick="manageSubscription()">Manage subscription →</button>
-    <button class="sidebar-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+    <button class="sidebar-signout" onclick="logoutDRH()">Sign out →</button>
   </div>
 </aside>
 
@@ -872,23 +899,130 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
 
 // ── AUTH CHECK ────────────────────────────────────────────────────────────
-// Trialists are welcome here now — trial.html is retired. Only unauthenticated
-// visitors get bounced to login.
-const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-const _auth = sessionStorage.getItem('drh_auth');
-if (!_auth && !_session?.email) {
+// Dashboard is available to signed-in trial, active and admin users.
+// Logged-out, cancelled or invalid sessions are redirected before member data loads.
+function readDRHSession() {
+  try {
+    return JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function clearDRHSession() {
+  ['drh_session','drh_auth','drh_email','drh_name','drh_pending_email','drh_pending_name'].forEach(key => {
+    sessionStorage.removeItem(key);
+  });
+}
+
+function logoutDRH() {
+  clearDRHSession();
   window.location.href = 'login.html';
 }
 
-// ── USER ─────────────────────────────────────────────────────────────────
-function getUserEmail() {
-  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  if (s?.email) return s.email;
-  if (sessionStorage.getItem('drh_auth') === 'member') return 'admin@dropresearchhub.com';
-  return null;
+function normaliseStatus(value) {
+  return String(value || '').trim().toLowerCase();
 }
 
+let DASHBOARD_SESSION = readDRHSession();
 
+function getDashboardSession() {
+  DASHBOARD_SESSION = readDRHSession();
+
+  const email = String(DASHBOARD_SESSION?.email || '').trim().toLowerCase();
+  const role = normaliseStatus(DASHBOARD_SESSION?.role || 'member');
+  const status = normaliseStatus(DASHBOARD_SESSION?.status || DASHBOARD_SESSION?.subscription_status || '');
+
+  if (!DASHBOARD_SESSION || !email) {
+    clearDRHSession();
+    window.location.replace('login.html');
+    return null;
+  }
+
+  if (status === 'cancelled' || status === 'inactive' || status === 'expired') {
+    clearDRHSession();
+    window.location.replace('login.html');
+    return null;
+  }
+
+  return {
+    ...DASHBOARD_SESSION,
+    email,
+    role,
+    status,
+    subscription_status: normaliseStatus(DASHBOARD_SESSION?.subscription_status || status)
+  };
+}
+
+const DRH_SESSION = getDashboardSession();
+const email = DRH_SESSION?.email || null;
+
+function getUserEmail() {
+  return email;
+}
+
+async function readJsonSafely(response, fallbackMessage) {
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (response.status === 404 || text.toLowerCase().includes('page could not be found')) {
+      throw new Error(fallbackMessage || 'This service is not live yet. Check the API file is uploaded and deployed.');
+    }
+
+    throw new Error('The server returned an invalid response. Check the Vercel function logs.');
+  }
+}
+
+async function verifyDashboardAccess() {
+  if (!email) return;
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'checkStatus', email })
+    });
+
+    const data = await readJsonSafely(res, 'Auth status service is not available. Check /api/auth is deployed.');
+
+    if (!res.ok || !data.success) {
+      clearDRHSession();
+      window.location.replace('login.html');
+      return;
+    }
+
+    const role = normaliseStatus(data.role || DRH_SESSION?.role || 'member');
+    const subscriptionStatus = normaliseStatus(data.subscription_status || data.status || DRH_SESSION?.subscription_status || DRH_SESSION?.status || '');
+
+    if (subscriptionStatus === 'cancelled' || subscriptionStatus === 'inactive' || subscriptionStatus === 'expired') {
+      clearDRHSession();
+      window.location.replace('login.html');
+      return;
+    }
+
+    const updatedSession = {
+      ...DRH_SESSION,
+      email: data.email || email,
+      name: data.name || DRH_SESSION?.name || '',
+      userId: data.userId || data.id || DRH_SESSION?.userId || null,
+      role,
+      status: role === 'admin' ? 'active' : (subscriptionStatus || DRH_SESSION?.status || 'trial'),
+      subscription_status: role === 'admin' ? 'active' : (subscriptionStatus || DRH_SESSION?.subscription_status || 'trial'),
+      trial_ends_at: data.trial_ends_at || DRH_SESSION?.trial_ends_at || null
+    };
+
+    sessionStorage.setItem('drh_session', JSON.stringify(updatedSession));
+    sessionStorage.setItem('drh_auth', updatedSession.status === 'active' ? 'member' : 'trial');
+    sessionStorage.setItem('drh_email', updatedSession.email);
+    sessionStorage.setItem('drh_name', updatedSession.name || '');
+  } catch (error) {
+    console.warn('Dashboard auth check skipped:', error.message);
+  }
+}
+
+// ── USER ─────────────────────────────────────────────────────────────────
 function parseMarginValue(value) {
   if (value === null || value === undefined) return null;
   let raw = String(value).trim().toLowerCase();
@@ -918,7 +1052,7 @@ async function manageSubscription() {
   const userEmail = getUserEmail();
 
   if (!userEmail) {
-    showToast('Could not find your email. Please sign in again.');
+    showToast('Could not find your account email. Please sign in again.');
     return;
   }
 
@@ -934,8 +1068,11 @@ async function manageSubscription() {
       body: JSON.stringify({ email: userEmail })
     });
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.url) throw new Error(data.error || data.message || 'Billing portal failed');
+    const data = await readJsonSafely(res, 'Subscription portal service is not available. Check /api/stripe-portal is deployed.');
+
+    if (!res.ok || !data.url) {
+      throw new Error(data.error || data.message || 'Billing portal failed');
+    }
 
     window.location.href = data.url;
   } catch (err) {
@@ -947,27 +1084,32 @@ async function manageSubscription() {
   }
 }
 
-const email = getUserEmail();
 if (email) {
-  document.getElementById('sidebar-user-email').textContent = email;
+  const sidebarEmail = document.getElementById('sidebar-user-email');
+  if (sidebarEmail) sidebarEmail.textContent = email;
 }
 
 // ── TRIAL COUNTDOWN BANNER ────────────────────────────────────────────────
 async function checkTrialBanner() {
   if (!email) return;
+
   try {
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'checkStatus', email })
     });
-    const data = await res.json();
-    if (!data.success) return;
 
-    const status = data.subscription_status;
+    const data = await readJsonSafely(res, 'Auth status service is not available. Check /api/auth is deployed.');
+
+    if (!res.ok || !data.success) return;
+
+    const status = normaliseStatus(data.subscription_status || data.status);
     if (status !== 'trial' && status !== 'trialing') return;
 
     const banner = document.getElementById('trial-banner');
+    if (!banner) return;
+
     banner.classList.add('show');
 
     if (data.trial_ends_at) {
@@ -983,7 +1125,9 @@ async function checkTrialBanner() {
         end.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) +
         ' at £24.99/month — cancel anytime.';
     }
-  } catch (e) { /* stay quiet — banner just won't show */ }
+  } catch (e) {
+    console.warn('Trial banner check skipped:', e.message);
+  }
 }
 
 // ── GREETING ─────────────────────────────────────────────────────────────
@@ -1278,6 +1422,7 @@ function showToast(msg) {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
+verifyDashboardAccess();
 loadProducts();
 loadSaved();
 checkTrialBanner();
