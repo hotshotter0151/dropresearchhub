@@ -6,6 +6,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
+const TRIAL_DAYS = 7;
+
+function computeTrialEnd(user) {
+  // If the webhook ever stores a real Stripe trial end date on the row,
+  // prefer it. Otherwise approximate: signup date + 7 days.
+  if (!user?.created_at) return null;
+  return new Date(
+    new Date(user.created_at).getTime() + TRIAL_DAYS * 86400000
+  ).toISOString();
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -65,7 +76,7 @@ export default async function handler(req, res) {
 
     const { data: user, error } = await supabase
       .from('users')
-      .select('id, email, name, password_hash, subscription_status, role')
+      .select('id, email, name, password_hash, subscription_status, role, created_at')
       .eq('email', email)
       .single();
 
@@ -82,19 +93,24 @@ export default async function handler(req, res) {
         email: user.email,
         name: user.name,
         role: 'admin',
+        subscription_status: 'active',
         redirect: '/admin.html',
       });
     }
 
+    // Trialists now get the real dashboard — trial.html is retired.
     const redirect =
-      user.subscription_status === 'active' ? '/members.html' : '/trial.html';
+      user.subscription_status === 'active' ? '/members.html' : '/dashboard.html';
 
     return res.status(200).json({
       success: true,
       userId: user.id,
       email: user.email,
       name: user.name,
+      role: user.role || 'member',
       subscription_status: user.subscription_status,
+      trial_ends_at:
+        user.subscription_status === 'trial' ? computeTrialEnd(user) : null,
       redirect,
     });
   }
@@ -105,7 +121,7 @@ export default async function handler(req, res) {
 
     const { data: user, error } = await supabase
       .from('users')
-      .select('subscription_status')
+      .select('subscription_status, name, role, created_at')
       .eq('email', email)
       .single();
 
@@ -114,6 +130,10 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       subscription_status: user.subscription_status,
+      role: user.role || 'member',
+      name: user.name,
+      trial_ends_at:
+        user.subscription_status === 'trial' ? computeTrialEnd(user) : null,
     });
   }
 
