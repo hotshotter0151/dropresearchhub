@@ -7,25 +7,125 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const _session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-const _auth = sessionStorage.getItem('drh_auth');
-if (_auth === 'member' && !_session?.email) {
-} else if (!_auth && !_session?.email) {
-  window.location.href = 'login.html';
-} else if (_auth === 'trial') {
-  window.location.href = 'trial.html';
-}
-async function verifyMemberAccess() {
-  const session = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  if (!session?.email) return;
-  try {
-    const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'checkStatus', email: session.email }) });
-    const data = await res.json();
-    if (!data.success) { sessionStorage.clear(); window.location.href = 'login.html'; return; }
-    if (data.subscription_status !== 'active') { window.location.href = 'trial.html'; }
-  } catch(e) {}
-}
-verifyMemberAccess();
+(function () {
+  const LOGIN_PAGE = 'login.html';
+  const TRIAL_REDIRECT_PAGE = 'dashboard.html';
+
+  function readSession() {
+    try {
+      return JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+    } catch {
+      return null;
+    }
+  }
+
+  function normalise(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function clearDrhSession() {
+    try {
+      Object.keys(sessionStorage).forEach((key) => {
+        if (key.startsWith('drh_')) sessionStorage.removeItem(key);
+      });
+    } catch {
+      sessionStorage.clear();
+    }
+  }
+
+  function redirectTo(url) {
+    window.location.replace(url);
+  }
+
+  window.logoutDRH = function logoutDRH() {
+    clearDrhSession();
+    redirectTo(LOGIN_PAGE);
+  };
+
+  function saveVerifiedSession(currentSession, data) {
+    const role = data.role || currentSession.role || 'member';
+    const subscriptionStatus =
+      role === 'admin'
+        ? 'active'
+        : (data.subscription_status || data.status || currentSession.subscription_status || currentSession.status || 'trial');
+
+    const updatedSession = {
+      ...currentSession,
+      email: data.email || currentSession.email,
+      name: data.name || currentSession.name || '',
+      userId: data.userId || data.id || currentSession.userId || null,
+      role,
+      status: subscriptionStatus,
+      subscription_status: subscriptionStatus,
+      trial_ends_at: data.trial_ends_at || currentSession.trial_ends_at || null
+    };
+
+    sessionStorage.setItem('drh_session', JSON.stringify(updatedSession));
+    sessionStorage.setItem('drh_auth', subscriptionStatus === 'active' ? 'member' : 'trial');
+    sessionStorage.setItem('drh_email', updatedSession.email || '');
+    sessionStorage.setItem('drh_name', updatedSession.name || '');
+
+    return updatedSession;
+  }
+
+  async function readJsonSafely(response) {
+    const text = await response.text();
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error('Auth service returned an invalid response.');
+    }
+  }
+
+  async function verifyMemberAccess() {
+    const session = readSession();
+    const auth = normalise(sessionStorage.getItem('drh_auth'));
+    const role = normalise(session?.role);
+    const status = normalise(session?.subscription_status || session?.status);
+
+    if (!session?.email) {
+      clearDrhSession();
+      redirectTo(LOGIN_PAGE);
+      return;
+    }
+
+    if (role !== 'admin' && (auth === 'trial' || status === 'trial' || status === 'cancelled' || status === 'inactive')) {
+      redirectTo(TRIAL_REDIRECT_PAGE);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'checkStatus', email: session.email })
+      });
+
+      const data = await readJsonSafely(response);
+
+      if (!response.ok || !data.success) {
+        clearDrhSession();
+        redirectTo(LOGIN_PAGE);
+        return;
+      }
+
+      const verifiedSession = saveVerifiedSession(session, data);
+      const verifiedRole = normalise(verifiedSession.role);
+      const verifiedStatus = normalise(verifiedSession.subscription_status || verifiedSession.status);
+
+      if (verifiedRole !== 'admin' && verifiedStatus !== 'active') {
+        redirectTo(TRIAL_REDIRECT_PAGE);
+      }
+    } catch (error) {
+      console.warn('[DRH auth] Member access check failed:', error.message);
+      clearDrhSession();
+      redirectTo(LOGIN_PAGE);
+    }
+  }
+
+  verifyMemberAccess();
+})();
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -516,7 +616,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
   </nav>
   <div class="sb-bottom">
     <div class="sb-user" id="sb-user-email">Members area</div>
-    <button class="sb-signout" onclick="sessionStorage.clear();window.location.href='login.html'">Sign out →</button>
+    <button class="sb-signout" onclick="logoutDRH()">Sign out →</button>
   </div>
 </aside>
 
@@ -1785,11 +1885,12 @@ async function goToPortal(){
 let savedProductNames = new Set();
 
 function getUserEmail() {
-  const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  if (s?.email) return s.email;
-  const auth = sessionStorage.getItem('drh_auth');
-  if (auth === 'member') return 'admin@dropresearchhub.com';
-  return null;
+  try {
+    const s = JSON.parse(sessionStorage.getItem('drh_session') || 'null');
+    return s?.email || null;
+  } catch {
+    return null;
+  }
 }
 
 // ── STATUS TRACKER ────────────────────────────────────────────────────────
@@ -2291,7 +2392,7 @@ function stopHubMessages() { if (hubMsgInterval) { clearInterval(hubMsgInterval)
 <script>
 function openSidebar(){document.getElementById("sidebar").classList.add("open");document.getElementById("sb-overlay").classList.add("show");document.body.style.overflow="hidden"}
 function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("show");document.body.style.overflow=""}
-const _sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null");if(_sbSession?.email)document.getElementById("sb-user-email").textContent=_sbSession.email;
+let _sbSession=null;try{_sbSession=JSON.parse(sessionStorage.getItem("drh_session")||"null")}catch(e){_sbSession=null}if(_sbSession?.email){const _sbUserEl=document.getElementById("sb-user-email");if(_sbUserEl)_sbUserEl.textContent=_sbSession.email;}
 </script>
 </div>
 
