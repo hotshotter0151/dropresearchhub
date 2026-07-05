@@ -5,53 +5,586 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Start Your Free Trial — DropResearch Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1E3A5F;--navy-light:#2B4F82;--navy-dark:#142840;--gold:#F59E0B;--gold-light:#FCD34D;--g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g400:#9CA3AF;--g500:#6B7280;--g700:#374151;--g900:#111827;--green:#16A34A;--red:#DC2626}
+
+:root{
+  --navy:#1E3A5F;
+  --navy-light:#2B4F82;
+  --navy-dark:#142840;
+  --gold:#F59E0B;
+  --gold-light:#FCD34D;
+  --g50:#F9FAFB;
+  --g100:#F3F4F6;
+  --g200:#E5E7EB;
+  --g300:#D1D5DB;
+  --g400:#9CA3AF;
+  --g500:#6B7280;
+  --g600:#4B5563;
+  --g700:#374151;
+  --g900:#111827;
+  --green:#16A34A;
+  --green-soft:#DCFCE7;
+  --red:#DC2626;
+  --red-soft:#FEE2E2;
+}
+
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;color:var(--g900);line-height:1.6;min-height:100vh;background:linear-gradient(135deg,#0a1628 0%,#142840 60%,#1a3558 100%)}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo-icon{width:36px;height:36px;background:#fff;border-radius:9px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:7px 6px}
-.nav-logo-bar{width:5px;border-radius:2px;background:var(--navy)}.nav-logo-bar.g{background:var(--gold)}
-.nav-logo-text{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}.nav-logo-text span{color:var(--gold)}
-.nav-back{color:rgba(255,255,255,.6);text-decoration:none;font-size:14px;font-weight:600}
-.nav-back:hover{color:#fff}
-.page{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;padding-top:64px}
-.page-left{padding:60px 5%;display:flex;flex-direction:column;justify-content:center;color:#fff}
-.page-left h1{font-size:clamp(30px,3.5vw,44px);font-weight:900;letter-spacing:-1.5px;line-height:1.08;margin-bottom:14px}
+
+body{
+  font-family:'Inter',sans-serif;
+  color:var(--g900);
+  line-height:1.6;
+  min-height:100vh;
+  background:linear-gradient(135deg,#0a1628 0%,#142840 58%,#1a3558 100%);
+}
+
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  background:rgba(20,40,64,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+}
+
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+}
+
+.nav-logo-icon{
+  width:36px;
+  height:36px;
+  background:#fff;
+  border-radius:9px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:3px;
+  padding:7px 6px;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
+}
+
+.nav-logo-bar{
+  width:5px;
+  border-radius:2px;
+  background:var(--navy);
+}
+
+.nav-logo-bar.g{background:var(--gold)}
+
+.nav-logo-text{
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:-.3px;
+}
+
+.nav-logo-text span{color:var(--gold)}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.nav-link{
+  color:rgba(255,255,255,.65);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+}
+
+.nav-link:hover{color:#fff}
+
+.page{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+  padding-top:64px;
+}
+
+.page-left{
+  padding:58px 5%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.page-left::before{
+  content:'';
+  position:absolute;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.16),transparent 68%);
+  top:8%;
+  right:-160px;
+  pointer-events:none;
+}
+
+.left-inner{
+  max-width:520px;
+  position:relative;
+  z-index:2;
+}
+
+.trial-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(245,158,11,.15);
+  border:1px solid rgba(245,158,11,.32);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:12px;
+  font-weight:900;
+  color:var(--gold-light);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  margin-bottom:24px;
+}
+
+.page-left h1{
+  font-size:clamp(31px,3.8vw,48px);
+  font-weight:900;
+  letter-spacing:-1.7px;
+  line-height:1.06;
+  margin-bottom:16px;
+}
+
 .page-left h1 span{color:var(--gold)}
-.page-left p{font-size:16px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:36px;max-width:420px}
-.trial-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:999px;padding:8px 16px;font-size:12px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:24px}
-.includes{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
-.include-item{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,.8)}
-.include-item::before{content:'✓';width:22px;height:22px;border-radius:50%;background:rgba(22,163,74,.2);color:#86efac;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.trust-row{display:flex;gap:20px;flex-wrap:wrap}
-.trust-item{font-size:12px;color:rgba(255,255,255,.4);font-weight:600}
-.trust-item span{color:rgba(255,255,255,.7)}
-.page-right{background:#fff;padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
-.form-title{font-size:26px;font-weight:900;letter-spacing:-.8px;color:var(--navy);margin-bottom:6px}
-.form-sub{font-size:14px;color:var(--g500);margin-bottom:32px}
-.form-group{margin-bottom:18px}
-.form-label{display:block;font-size:13px;font-weight:700;color:var(--g700);margin-bottom:6px}
-.form-input{width:100%;border:1.5px solid var(--g200);border-radius:12px;padding:13px 16px;font-size:15px;font-family:inherit;color:var(--g900);outline:none;transition:border-color .15s;background:#fff}
-.form-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,58,95,.08)}
-.form-input::placeholder{color:var(--g400)}
-.error-msg{background:#FEE2E2;color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:16px;display:none}
+
+.hero-copy{
+  font-size:16px;
+  color:rgba(255,255,255,.68);
+  line-height:1.7;
+  margin-bottom:28px;
+  max-width:440px;
+}
+
+.path-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:24px;
+  backdrop-filter:blur(10px);
+}
+
+.path-title{
+  font-size:13px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:12px;
+  letter-spacing:-.2px;
+}
+
+.path-steps{
+  display:grid;
+  gap:10px;
+}
+
+.path-step{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  color:rgba(255,255,255,.75);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.step-num{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:rgba(245,158,11,.18);
+  border:1px solid rgba(245,158,11,.35);
+  color:var(--gold-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-size:11px;
+  font-weight:900;
+}
+
+.includes{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:28px;
+}
+
+.include-item{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  font-size:14px;
+  color:rgba(255,255,255,.82);
+}
+
+.include-item::before{
+  content:'✓';
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:rgba(22,163,74,.2);
+  color:#86efac;
+  font-size:12px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+.trust-row{
+  display:flex;
+  gap:13px;
+  flex-wrap:wrap;
+}
+
+.trust-item{
+  font-size:12px;
+  color:rgba(255,255,255,.48);
+  font-weight:700;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  padding:8px 11px;
+}
+
+.trust-item span{color:rgba(255,255,255,.82)}
+
+.page-right{
+  background:#fff;
+  padding:54px 48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.form-shell{
+  width:100%;
+  max-width:460px;
+  margin:0 auto;
+}
+
+.checkout-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--g50);
+  border:1px solid var(--g200);
+  color:var(--g600);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+.checkout-badge strong{
+  color:var(--navy);
+}
+
+.form-title{
+  font-size:29px;
+  font-weight:900;
+  letter-spacing:-1px;
+  color:var(--navy);
+  margin-bottom:7px;
+  line-height:1.15;
+}
+
+.form-sub{
+  font-size:14px;
+  color:var(--g500);
+  margin-bottom:22px;
+}
+
+.mini-proof{
+  background:linear-gradient(135deg,#F9FAFB,#fff);
+  border:1px solid var(--g200);
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:22px;
+}
+
+.mini-proof-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+}
+
+.mini-proof-title{
+  font-size:13px;
+  font-weight:900;
+  color:var(--g900);
+}
+
+.mini-proof-tag{
+  font-size:11px;
+  font-weight:900;
+  color:var(--green);
+  background:var(--green-soft);
+  border-radius:999px;
+  padding:4px 8px;
+  white-space:nowrap;
+}
+
+.mini-proof p{
+  font-size:12.5px;
+  color:var(--g600);
+  line-height:1.55;
+}
+
+.error-msg{
+  background:var(--red-soft);
+  color:var(--red);
+  border-radius:12px;
+  padding:11px 14px;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:16px;
+  display:none;
+}
+
 .error-msg.show{display:block}
-.form-submit{width:100%;background:var(--gold);color:var(--navy-dark);border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px}
-.form-submit:hover{background:var(--gold-light);transform:translateY(-1px)}
-.form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.form-note{font-size:12px;color:var(--g400);text-align:center;margin-top:14px;line-height:1.5}
-.form-note strong{color:var(--g500)}
-.form-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--g300);font-size:12px}
-.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--g200)}
-.login-link{text-align:center;font-size:14px;color:var(--g500)}
-.login-link a{color:var(--navy);font-weight:700;text-decoration:none}
-@media(max-width:900px){.page{grid-template-columns:1fr;min-height:auto}.page-left{padding:48px 5% 32px}.page-right{padding:40px 5% 60px}}
+
+.form-group{margin-bottom:15px}
+
+.form-label{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+  color:var(--g700);
+  margin-bottom:6px;
+}
+
+.form-input{
+  width:100%;
+  border:1.5px solid var(--g200);
+  border-radius:13px;
+  padding:13px 15px;
+  font-size:15px;
+  font-family:inherit;
+  color:var(--g900);
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+  background:#fff;
+}
+
+.form-input:focus{
+  border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(30,58,95,.08);
+}
+
+.form-input::placeholder{color:var(--g400)}
+
+.password-wrap{
+  position:relative;
+}
+
+.password-wrap .form-input{
+  padding-right:86px;
+}
+
+.show-pass{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  border:none;
+  background:var(--g100);
+  color:var(--g600);
+  border-radius:9px;
+  padding:7px 9px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.show-pass:hover{
+  background:var(--g200);
+  color:var(--g900);
+}
+
+.form-submit{
+  width:100%;
+  background:var(--gold);
+  color:var(--navy-dark);
+  border:none;
+  border-radius:15px;
+  padding:16px;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  font-family:inherit;
+  transition:all .2s;
+  margin-top:7px;
+  box-shadow:0 14px 28px rgba(245,158,11,.25);
+}
+
+.form-submit:hover{
+  background:var(--gold-light);
+  transform:translateY(-1px);
+}
+
+.form-submit:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+.secure-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.secure-item{
+  border:1px solid var(--g200);
+  border-radius:13px;
+  padding:10px;
+  font-size:12px;
+  font-weight:800;
+  color:var(--g600);
+  background:var(--g50);
+}
+
+.secure-item strong{
+  display:block;
+  color:var(--g900);
+  font-size:12px;
+  margin-bottom:1px;
+}
+
+.form-note{
+  font-size:12px;
+  color:var(--g500);
+  text-align:center;
+  margin-top:14px;
+  line-height:1.55;
+}
+
+.form-note strong{color:var(--g700)}
+
+.form-note a{
+  color:var(--navy);
+  font-weight:800;
+  text-decoration:none;
+}
+
+.form-note a:hover{text-decoration:underline}
+
+.form-divider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:22px 0 14px;
+  color:var(--g400);
+  font-size:12px;
+  font-weight:700;
+}
+
+.form-divider::before,
+.form-divider::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--g200);
+}
+
+.login-link{
+  text-align:center;
+  font-size:14px;
+  color:var(--g500);
+}
+
+.login-link a{
+  color:var(--navy);
+  font-weight:800;
+  text-decoration:none;
+}
+
+.login-link a:hover{text-decoration:underline}
+
+@media(max-width:980px){
+  .page{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+
+  .page-left{
+    padding:46px 5% 34px;
+  }
+
+  .left-inner{
+    max-width:680px;
+  }
+
+  .page-right{
+    padding:40px 5% 60px;
+  }
+}
+
+@media(max-width:560px){
+  nav{
+    padding:0 4%;
+  }
+
+  .nav-logo-text{
+    font-size:14px;
+  }
+
+  .nav-links{
+    gap:10px;
+  }
+
+  .nav-link{
+    font-size:12px;
+  }
+
+  .page-left h1{
+    font-size:32px;
+  }
+
+  .secure-row{
+    grid-template-columns:1fr;
+  }
+
+  .mini-proof-top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <nav>
   <a class="nav-logo" href="index.html">
     <div class="nav-logo-icon">
@@ -62,113 +595,265 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(20,40,64,.96
     </div>
     <div class="nav-logo-text">Drop<span>Research</span> Hub</div>
   </a>
-  <a href="index.html" class="nav-back">← Back to homepage</a>
-</nav>
-<div class="page">
-  <div class="page-left">
-    <div class="trial-badge">🎯 7-day free trial</div>
-    <h1>Start finding products<br><span>before everyone else does.</span></h1>
-    <p>Join DropResearch Hub and get your first batch of emerging product intelligence — fully free for 7 days.</p>
-    <div class="includes">
-      <div class="include-item">Twice-weekly product feed — every product that passes the framework</div>
-      <div class="include-item">Full 7-point scoring & analysis per product</div>
-      <div class="include-item">TikTok + Meta ad scripts for every product</div>
-      <div class="include-item">Unlimited product validator</div>
-      <div class="include-item">Unit Economics Engine — model your profits</div>
-      <div class="include-item">UK Market Pulse — weekly intelligence</div>
-      <div class="include-item">Cancel anytime — no questions asked</div>
-    </div>
-    <div class="trust-row">
-      <div class="trust-item"><span>7 days</span> free</div>
-      <div class="trust-item">Then <span>£24.99/month</span></div>
-      <div class="trust-item"><span>Cancel</span> anytime</div>
-      <div class="trust-item"><span>UK-focused</span> research</div>
-    </div>
+
+  <div class="nav-links">
+    <a href="login.html" class="nav-link">Sign in</a>
+    <a href="index.html" class="nav-link">← Homepage</a>
   </div>
-  <div class="page-right">
-    <div id="form-section">
+</nav>
+
+<div class="page">
+
+  <section class="page-left">
+    <div class="left-inner">
+      <div class="trial-badge">7-day free trial</div>
+
+      <h1>Start finding products<br><span>before everyone else does.</span></h1>
+
+      <p class="hero-copy">
+        Get full access to DropResearch Hub for 7 days. Validate products, review Hub’s curated picks, build launch plans, and pressure-test ideas before wasting money on ads.
+      </p>
+
+      <div class="path-card">
+        <div class="path-title">What happens after you sign up?</div>
+        <div class="path-steps">
+          <div class="path-step">
+            <div class="step-num">1</div>
+            <div>Create your account and start your 7-day free trial.</div>
+          </div>
+          <div class="path-step">
+            <div class="step-num">2</div>
+            <div>Secure checkout is handled by Stripe. You are not charged today.</div>
+          </div>
+          <div class="path-step">
+            <div class="step-num">3</div>
+            <div>Get instant access to Hub’s product research tools and latest curated picks.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="includes">
+        <div class="include-item">Curated product drops every week, with extra opportunities added when Hub finds something strong</div>
+        <div class="include-item">Full 7-point product scoring and research framework</div>
+        <div class="include-item">TikTok and Meta ad angle support for product ideas</div>
+        <div class="include-item">Unlimited product validator during your trial</div>
+        <div class="include-item">Unit Economics Engine to model profit before you launch</div>
+        <div class="include-item">UK Market Pulse for ecommerce trend intelligence</div>
+        <div class="include-item">Cancel anytime before your trial ends</div>
+      </div>
+
+      <div class="trust-row">
+        <div class="trust-item"><span>7 days</span> free</div>
+        <div class="trust-item">Then <span>£24.99/month</span></div>
+        <div class="trust-item"><span>No charge</span> today</div>
+        <div class="trust-item"><span>UK-focused</span> research</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-right">
+    <div class="form-shell" id="form-section">
+
+      <div class="checkout-badge">
+        Secure trial setup via <strong>Stripe</strong>
+      </div>
+
       <div class="form-title">Create your account</div>
-      <div class="form-sub">Fill in your details to start your 7-day free trial.</div>
+      <div class="form-sub">Start your 7-day free trial. Full access today, no charge today.</div>
+
+      <div class="mini-proof">
+        <div class="mini-proof-top">
+          <div class="mini-proof-title">Built for early product research</div>
+          <div class="mini-proof-tag">Early access</div>
+        </div>
+        <p>
+          DropResearch Hub is designed to help you make better product decisions before launching ads — not overwhelm you with random winning-product lists.
+        </p>
+      </div>
+
       <div class="error-msg" id="error-msg"></div>
+
       <div class="form-group">
-        <label class="form-label">Full name</label>
+        <label class="form-label" for="name">Full name</label>
         <input class="form-input" type="text" id="name" placeholder="Your full name" autocomplete="name"/>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Email address</label>
+        <label class="form-label" for="email">Email address</label>
         <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+        <label class="form-label" for="password">Password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+          <button type="button" class="show-pass" onclick="togglePassword('password', this)">Show</button>
+        </div>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Confirm password</label>
-        <input class="form-input" type="password" id="confirm-password" placeholder="Repeat your password" autocomplete="new-password"/>
+        <label class="form-label" for="confirm-password">Confirm password</label>
+        <div class="password-wrap">
+          <input class="form-input" type="password" id="confirm-password" placeholder="Repeat your password" autocomplete="new-password"/>
+          <button type="button" class="show-pass" onclick="togglePassword('confirm-password', this)">Show</button>
+        </div>
       </div>
+
       <button class="form-submit" id="submit-btn" onclick="handleSignup()">Start my free trial →</button>
-      <div class="form-note"><strong>No charge for 7 days.</strong> Then £24.99/month — cancel anytime.<br>By signing up you agree to our Terms of Service.</div>
+
+      <div class="secure-row">
+        <div class="secure-item">
+          <strong>No charge today</strong>
+          Your trial lasts 7 days.
+        </div>
+        <div class="secure-item">
+          <strong>Cancel anytime</strong>
+          Then £24.99/month.
+        </div>
+      </div>
+
+      <div class="form-note">
+        <strong>Your payment is securely handled by Stripe.</strong><br>
+        By signing up, you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a>
+        and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+      </div>
+
       <div class="form-divider">already have an account?</div>
-      <div class="login-link"><a href="login.html">Sign in to your account →</a></div>
+
+      <div class="login-link">
+        <a href="login.html">Sign in to your account →</a>
+      </div>
+
     </div>
-  </div>
+  </section>
+
 </div>
+
 <script>
 function showError(msg) {
   const el = document.getElementById('error-msg');
   el.textContent = msg;
   el.classList.add('show');
 }
-async function handleSignup() {
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const confirm = document.getElementById('confirm-password').value;
+
+function clearError() {
+  const el = document.getElementById('error-msg');
+  el.textContent = '';
+  el.classList.remove('show');
+}
+
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function setButtonLoading(isLoading) {
   const btn = document.getElementById('submit-btn');
-  document.getElementById('error-msg').classList.remove('show');
-  if (!name) { showError('Please enter your full name.'); return; }
-  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
-  if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
-  if (password !== confirm) { showError('Passwords do not match.'); return; }
-  btn.disabled = true;
-  btn.textContent = 'Setting up your trial...';
-  try {
-    const regRes = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'register', email, name, password })
-    });
-    const regData = await regRes.json();
-    if (!regRes.ok) {
-      showError(regData.error || 'Registration failed. Please try again.');
-      btn.disabled = false;
-      btn.textContent = 'Start my free trial →';
-      return;
-    }
-    sessionStorage.setItem('drh_pending_email', email);
-    sessionStorage.setItem('drh_pending_name', name);
-    const stripeRes = await fetch('/api/stripe-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name })
-    });
-    const stripeData = await stripeRes.json();
-    if (stripeData.url) {
-      window.location.href = stripeData.url;
-    } else {
-      showError(stripeData.error || 'Could not start trial. Please try again.');
-      btn.disabled = false;
-      btn.textContent = 'Start my free trial →';
-    }
-  } catch(e) {
-    showError('Something went wrong. Please try again.');
+
+  if (isLoading) {
+    btn.disabled = true;
+    btn.textContent = 'Setting up your trial...';
+  } else {
     btn.disabled = false;
     btn.textContent = 'Start my free trial →';
   }
 }
-document.getElementById('confirm-password').addEventListener('keydown', e => {
-  if (e.key === 'Enter') handleSignup();
+
+async function handleSignup() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirm-password').value;
+
+  clearError();
+
+  if (!name) {
+    showError('Please enter your full name.');
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    showError('Please enter a valid email address.');
+    return;
+  }
+
+  if (password.length < 8) {
+    showError('Password must be at least 8 characters.');
+    return;
+  }
+
+  if (password !== confirm) {
+    showError('Passwords do not match.');
+    return;
+  }
+
+  setButtonLoading(true);
+
+  try {
+    const regRes = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'register',
+        email,
+        name,
+        password
+      })
+    });
+
+    const regData = await regRes.json().catch(() => ({}));
+
+    if (!regRes.ok) {
+      showError(regData.error || 'Registration failed. Please try again.');
+      setButtonLoading(false);
+      return;
+    }
+
+    sessionStorage.setItem('drh_pending_email', email);
+    sessionStorage.setItem('drh_pending_name', name);
+
+    const stripeRes = await fetch('/api/stripe-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        name
+      })
+    });
+
+    const stripeData = await stripeRes.json().catch(() => ({}));
+
+    if (stripeData.url) {
+      window.location.href = stripeData.url;
+      return;
+    }
+
+    showError(stripeData.error || 'Could not start trial. Please try again.');
+    setButtonLoading(false);
+
+  } catch (e) {
+    showError('Something went wrong. Please try again.');
+    setButtonLoading(false);
+  }
+}
+
+['name','email','password','confirm-password'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSignup();
+  });
 });
 </script>
+
 </body>
 </html>
