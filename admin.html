@@ -543,11 +543,45 @@ function closeMobileNav(){document.body.classList.remove('mobile-nav-open')}
 const SUPABASE_URL='https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_KEY='sb_publishable_VcnZOKeGMQy5LHfPo6wdsA_FxDrRyrL';
 
-(function(){
+function getAdminSession(){
   let session=null;
   try{session=JSON.parse(sessionStorage.getItem('drh_session')||'null')}catch(e){}
-  if(!session||session.role!=='admin'){window.location.href='admin-login.html'}
-})();
+  const email=String(session?.email||'').trim().toLowerCase();
+  const userId=String(session?.userId||'').trim();
+  const role=String(session?.role||'').trim().toLowerCase();
+
+  if(!session||role!=='admin'||!email){
+    sessionStorage.removeItem('drh_session');
+    sessionStorage.removeItem('drh_auth');
+    window.location.replace('admin-login.html');
+    return null;
+  }
+
+  return {...session,email,userId,role:'admin'};
+}
+
+const ADMIN_SESSION=getAdminSession();
+
+function adminHeaders(headers={}){
+  return {
+    ...headers,
+    'X-DRH-Admin-Email': ADMIN_SESSION?.email || '',
+    'X-DRH-Admin-User': ADMIN_SESSION?.userId || '',
+    'X-DRH-Admin-Role': 'admin'
+  };
+}
+
+async function adminFetch(url,options={}){
+  if(!ADMIN_SESSION){
+    throw new Error('Admin session missing. Please sign in again.');
+  }
+
+  return fetch(url,{
+    ...options,
+    headers:adminHeaders(options.headers||{}),
+    cache:options.cache || 'no-store'
+  });
+}
 
 let pendingPulse=null;
 
@@ -559,7 +593,7 @@ async function generatePulse(){
   statusEl.style.display='block';statusEl.style.background='var(--g50)';statusEl.style.border='1px solid var(--g200)';statusEl.style.color='var(--g600)';statusEl.style.padding='12px 16px';
   statusEl.textContent='Hub is scanning UK market signals...';
   try{
-    const res=await fetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preview:true})});
+    const res=await adminFetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preview:true})});
     const data=await res.json();
     if(!res.ok)throw new Error(data.error||'Generation failed');
     pendingPulse=data.pulse;
@@ -601,7 +635,7 @@ async function publishPulse(){
   if(!selected.length){toast('Toggle on at least one opportunity','error');return}
   const publishData={...pendingPulse,opportunities:selected};
   try{
-    const res=await fetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publish:true,pulse:publishData})});
+    const res=await adminFetch('/api/pulse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({publish:true,pulse:publishData})});
     if(!res.ok)throw new Error('Publish failed');
     toast('Market Pulse published! Members can see it now.','success');clearPulseQueue();
   }catch(e){toast('Error: '+e.message,'error')}
@@ -652,7 +686,7 @@ async function loadAnalytics(){
       const end=document.getElementById('analytics-end').value;
       analyticsUrl+=`&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
     }
-    const res=await fetch(analyticsUrl,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
+    const res=await adminFetch(analyticsUrl,{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});
     const data=await res.json().catch(()=>({}));
     if(!res.ok)throw new Error(data.error||data.details||`Analytics API error ${res.status}`);
     renderAnalytics(Array.isArray(data.events)?data.events:[]);
@@ -726,7 +760,7 @@ function setText(id,value){const el=document.getElementById(id);if(el)el.textCon
 let allUsers=[];
 async function loadUsers(){
   try{
-    const res=await fetch('/api/admin-users');const data=await res.json();
+    const res=await adminFetch('/api/admin-users',{method:'GET'});const data=await res.json();
     if(!res.ok)throw new Error(data.error||'Failed to load users');
     const users=data.users||[];allUsers=users;
     renderUsersTable(users);renderRecentSignups(users.slice(0,10));renderKPIs(users);renderBilling(users);
@@ -837,7 +871,7 @@ async function adminGenerate(sourceMode){
   setGenLog('gen-log-request','done','Request sent to Hub');
   setGenLog('gen-log-ai','active','Waiting for AI product research');
   try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging',sourceMode})});
+    const r=await adminFetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode:'emerging',sourceMode})});
     const d=await r.json();if(!r.ok)throw new Error(d.error||'Generate failed');
     setGenLog('gen-log-ai','done','AI product research complete');
     setGenLog('gen-log-supplier','active','Reading supplier-enriched product data');
@@ -943,7 +977,7 @@ async function publishSelected(){
   const selected=pendingProducts.filter((_,i)=>{const b=document.getElementById('ptoggle-'+i);return b&&b.classList.contains('on')});
   if(!selected.length){toast('Toggle on at least one product first');return}
   try{
-    const r=await fetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:selected})});
+    const r=await adminFetch('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({products:selected})});
     if(!r.ok)throw new Error('Publish failed');
     const selectedNames=new Set(selected.map(p=>p.name));
     pendingProducts=pendingProducts.filter(p=>!selectedNames.has(p.name));
@@ -958,7 +992,7 @@ async function notifyMembers(){
   if(!confirm('Send the weekly product notification email to all active members now?'))return;
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending...';
   try{
-    const res=await fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'}});
+    const res=await adminFetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'}});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
     toast(`✅ Sent to ${data.sent} member${data.sent!==1?'s':''} — ${data.totalProducts} products previewed`,'success');
   }catch(e){toast('Notify failed: '+e.message,'error')}
@@ -969,7 +1003,7 @@ async function loadAllProducts(){
   const list=document.getElementById('all-products-list');
   list.innerHTML='<div class="table-empty"><span class="spinner"></span>Loading...</div>';
   try{
-    const r=await fetch('/api/products?all=true');const d=await r.json();const products=d.products||[];
+    const r=await adminFetch('/api/products?all=true',{method:'GET'});const d=await r.json();const products=d.products||[];
     lastAllProducts = products;
     renderAllProductsList(products);
   }catch(e){list.innerHTML=`<div class="table-empty">Error: ${e.message}</div>`}
@@ -1017,7 +1051,7 @@ function renderAllProductsList(products){
 async function toggleLiveProduct(name,idx){
   const btn=document.getElementById('ltoggle-'+idx);const newState=!btn.classList.contains('on');btn.classList.toggle('on');
   try{
-    const r=await fetch('/api/products',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name,is_live:newState})});
+    const r=await adminFetch('/api/products',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name,is_live:newState})});
     if(!r.ok)throw new Error('Toggle failed');
     toast(newState?`✅ "${name}" is now live`:`"${name}" hidden from feed`,newState?'success':'');
     const row=document.getElementById('allrow-'+idx);
@@ -1027,7 +1061,7 @@ async function toggleLiveProduct(name,idx){
 
 async function deleteProduct(name,idx){
   if(!confirm(`Permanently delete "${name}"? This cannot be undone.`))return;
-  try{const r=await fetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name})});if(!r.ok)throw new Error('Delete failed');toast(`Deleted: ${name}`,'success');loadAllProducts()}catch(e){toast('Delete failed: '+e.message,'error')}
+  try{const r=await adminFetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name})});if(!r.ok)throw new Error('Delete failed');toast(`Deleted: ${name}`,'success');loadAllProducts()}catch(e){toast('Delete failed: '+e.message,'error')}
 }
 
 async function runAdminValidator(){
@@ -1036,7 +1070,7 @@ async function runAdminValidator(){
   if(!input){toast('Enter a product name first');return}
   result.innerHTML='<div style="text-align:center;padding:30px;color:var(--g500)"><span class="spinner"></span> Analysing '+input+'...</div>';
   try{
-    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:input})});
+    const res=await adminFetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:input})});
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Failed');
     const score=data.opportunityScore||'B';
     const sc=s=>s.includes('A')?'#166534':s.includes('B')?'#92400E':'#991B1B';
@@ -1070,15 +1104,15 @@ async function massDeleteProducts(){
   if(!checked.length){toast('Select at least one product first');return}
   if(!confirm(`Permanently delete ${checked.length} product${checked.length!==1?'s':''}? This cannot be undone.`))return;
   let deleted=0;
-  for(const cb of checked){try{const r=await fetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:cb.dataset.name})});if(r.ok)deleted++}catch(e){}}
+  for(const cb of checked){try{const r=await adminFetch('/api/products',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:cb.dataset.name})});if(r.ok)deleted++}catch(e){}}
   toast(`Deleted ${deleted} product${deleted!==1?'s':''}`,'success');loadAllProducts();
 }
 
 async function loadHealth(){
   ['supabase','claude','stripe'].forEach(k=>setHealth(k,'gold','Checking…','…'));
   try{await sbFetch('users?select=id&limit=1');setHealth('supabase','green','Connected','Online')}catch{setHealth('supabase','red','Connection failed','Error')}
-  try{const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})});setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning')}catch{setHealth('claude','gold','Could not reach','Unknown')}
-  try{await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})});setHealth('stripe','green','API key configured','Online')}catch{setHealth('stripe','red','Could not reach','Error')}
+  try{const r=await adminFetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_ping:true})});setHealth('claude',r.status<500?'green':'gold',r.status<500?'Route active':'Route error',r.status<500?'Online':'Warning')}catch{setHealth('claude','gold','Could not reach','Unknown')}
+  try{await adminFetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkStatus',email:'health@check.com'})});setHealth('stripe','green','API key configured','Online')}catch{setHealth('stripe','red','Could not reach','Error')}
 }
 function setHealth(key,color,sub,badge){
   const dot=document.getElementById(`dot-${key}`),subEl=document.getElementById(`status-${key}`),badgeEl=document.getElementById(`badge-${key}`);
