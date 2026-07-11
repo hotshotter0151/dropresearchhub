@@ -29,7 +29,7 @@ function startOfISOWeek(date) {
 const TRIAL_DAYS = 7;
 function trialExpired(u) {
   if (!u?.created_at) return false;
-  return (Date.now() - new Date(u.created_at).getTime()) > TRIAL_DAYS * 86400000;
+ return (Date.now() - new Date(u.created_at).getTime()) > TRIAL_DAYS * 86400000 + 12 * 3600000;
 }
 
 export default async function handler(req, res) {
