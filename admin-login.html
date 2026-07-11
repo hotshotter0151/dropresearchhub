@@ -123,7 +123,8 @@ form.addEventListener('submit', async (e) => {
       email: data.email || email,
       name: data.name || 'Admin',
       role: data.role || 'admin',
-      subscription_status: data.subscription_status || 'active'
+      subscription_status: data.subscription_status || 'active',
+      admin_token: data.admin_token || null
     }));
 
     window.location.href = 'admin.html';
