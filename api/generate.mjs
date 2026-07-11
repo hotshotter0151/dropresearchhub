@@ -343,9 +343,4 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
     const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
     return res.status(200).json({ content: [{ type: 'text', text: raw }] });
   }
-
-  return res.status(400).json({ error: 'Invalid request format' });
-}
-```
-
 Copy that whole block into `api/generate.mjs`, push, and test.
