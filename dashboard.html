@@ -328,6 +328,103 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 .priority-kicker{color:var(--gold)}
 @media(max-width:700px){.star-week-badge{position:static;margin:0 14px 14px}.mini-star-week-badge{font-size:8px}}
 
+
+/* ── LAUNCH STRATEGY v2.0 ── */
+.launch-input-card{background:#fff;border:1px solid var(--g200);border-radius:20px;padding:20px;box-shadow:0 10px 28px rgba(30,58,95,.05);margin-bottom:18px}
+.launch-input-row{display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.launch-input-row:focus-within{border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,58,95,.08)}
+.launch-input-row input{flex:1;min-width:0;border:none;background:transparent;padding:15px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none}
+.launch-input-row button{background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:900;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s}
+.launch-input-row button:hover{background:var(--navy-light)}
+.launch-input-help{font-size:12px;color:var(--g400);margin-top:9px;line-height:1.55}
+.launch-result{display:flex;flex-direction:column;gap:14px}
+.launch-hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 62%,#2B4F82 100%);border-radius:22px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:22px;align-items:center;position:relative;overflow:hidden;box-shadow:0 18px 44px rgba(20,40,64,.16)}
+.launch-hero::before{content:'';position:absolute;width:240px;height:240px;border-radius:50%;right:-90px;top:-120px;background:rgba(245,158,11,.12)}
+.launch-hero-copy,.launch-product-visual{position:relative;z-index:1}
+.launch-eyebrow{font-size:10px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.launch-title{font-size:27px;font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.7px;margin-bottom:8px}
+.launch-subtitle{font-size:13px;color:rgba(255,255,255,.68);line-height:1.65;max-width:680px}
+.launch-decision-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:15px}
+.launch-decision{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 12px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+.launch-decision.test{background:rgba(34,197,94,.16);border:1px solid rgba(134,239,172,.35);color:#bbf7d0}
+.launch-decision.improve{background:rgba(245,158,11,.16);border:1px solid rgba(252,211,77,.35);color:#fde68a}
+.launch-decision.stop{background:rgba(220,38,38,.16);border:1px solid rgba(254,202,202,.35);color:#fecaca}
+.launch-route-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.76);border-radius:999px;padding:7px 12px;font-size:11px;font-weight:800}
+.launch-product-visual{height:180px;background:#fff;border:1px solid rgba(255,255,255,.24);border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 18px 36px rgba(0,0,0,.18)}
+.launch-product-visual img{width:100%;height:100%;object-fit:contain;padding:14px}
+.launch-overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.launch-overview-card{background:#fff;border:1px solid var(--g200);border-radius:15px;padding:14px;min-height:95px;box-shadow:0 7px 18px rgba(30,58,95,.035)}
+.launch-overview-label{font-size:9px;font-weight:900;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px}
+.launch-overview-value{font-size:14px;font-weight:900;color:var(--navy-dark);line-height:1.3}
+.launch-overview-note{font-size:10px;color:var(--g400);margin-top:4px;line-height:1.4}
+.launch-verdict{background:linear-gradient(135deg,#fff7ed 0%,#fffbeb 100%);border:1px solid #fed7aa;border-radius:18px;padding:18px 20px;display:grid;grid-template-columns:46px 1fr;gap:13px;align-items:start}
+.launch-verdict-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid rgba(245,158,11,.35);display:flex;align-items:center;justify-content:center;font-size:22px}
+.launch-verdict-avatar img{width:100%;height:100%;object-fit:cover}
+.launch-card{background:#fff;border:1px solid var(--g200);border-radius:18px;overflow:hidden;box-shadow:0 8px 22px rgba(30,58,95,.04)}
+.launch-card-head{padding:16px 19px;border-bottom:1px solid var(--g100);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff 0%,#fbfcff 100%)}
+.launch-card-title{font-size:15px;font-weight:900;color:var(--navy-dark);letter-spacing:-.25px}
+.launch-card-kicker{font-size:10px;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:.75px;margin-bottom:2px}
+.launch-card-body{padding:18px 19px}
+.launch-two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.launch-four-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.launch-info-box{background:var(--g50);border:1px solid var(--g200);border-radius:13px;padding:13px}
+.launch-info-label{font-size:9px;font-weight:900;color:var(--g400);text-transform:uppercase;letter-spacing:.65px;margin-bottom:5px}
+.launch-info-value{font-size:12px;font-weight:750;color:var(--g700);line-height:1.55}
+.launch-angle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.launch-angle{border:1px solid var(--g200);border-radius:14px;padding:15px;background:#fff;position:relative;overflow:hidden}
+.launch-angle::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--navy),var(--gold))}
+.launch-angle-num{width:26px;height:26px;border-radius:8px;background:#eff6ff;color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;margin-bottom:9px}
+.launch-angle h4{font-size:13px;font-weight:900;color:var(--g900);margin-bottom:5px}
+.launch-angle p{font-size:12px;color:var(--g500);line-height:1.55}
+.launch-hooks{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.launch-hook{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--g700);line-height:1.5}
+.launch-script-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.launch-script{border-radius:12px;padding:13px;border:1px solid #bfdbfe;background:#eff6ff}
+.launch-script.green{border-color:#bbf7d0;background:#f0fdf4}
+.launch-script-label{font-size:10px;font-weight:900;color:#1d4ed8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.launch-script.green .launch-script-label{color:#15803d}
+.launch-script p{font-size:12px;color:#1e40af;line-height:1.6}
+.launch-script.green p{color:#166534}
+.launch-timeline{display:flex;flex-direction:column}
+.launch-day{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--g100)}
+.launch-day:last-child{border-bottom:none;padding-bottom:0}
+.launch-day:first-child{padding-top:0}
+.launch-day-num{width:36px;height:36px;border-radius:11px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+.launch-day h4{font-size:13px;font-weight:900;color:var(--g900);margin-bottom:3px}
+.launch-day p{font-size:12px;color:var(--g500);line-height:1.55}
+.launch-budget-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.launch-budget-item{background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:12px;text-align:center}
+.launch-budget-label{font-size:9px;color:var(--g400);font-weight:900;text-transform:uppercase;letter-spacing:.55px}
+.launch-budget-value{font-size:15px;color:var(--navy-dark);font-weight:900;margin-top:4px}
+.launch-budget-total{margin-top:10px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+.launch-budget-total strong{font-size:17px;color:var(--gold)}
+.launch-targets{width:100%;border-collapse:collapse}
+.launch-targets th{font-size:9px;color:var(--g400);font-weight:900;text-transform:uppercase;letter-spacing:.55px;text-align:left;padding:9px 10px;border-bottom:1px solid var(--g200)}
+.launch-targets td{font-size:12px;color:var(--g700);padding:10px;border-bottom:1px solid var(--g100);vertical-align:top}
+.launch-targets tr:last-child td{border-bottom:none}
+.launch-target-good{font-weight:900;color:var(--green)}
+.launch-target-review{font-weight:900;color:var(--amber)}
+.launch-target-stop{font-weight:900;color:var(--red)}
+.launch-decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.launch-decision-card{border-radius:14px;padding:15px;border:1px solid var(--g200)}
+.launch-decision-card.scale{background:#f0fdf4;border-color:#bbf7d0}
+.launch-decision-card.improve{background:#fffbeb;border-color:#fde68a}
+.launch-decision-card.stop{background:#fef2f2;border-color:#fecaca}
+.launch-decision-card h4{font-size:12px;font-weight:900;margin-bottom:7px}
+.launch-decision-card.scale h4{color:#15803d}.launch-decision-card.improve h4{color:#92400e}.launch-decision-card.stop h4{color:#b91c1c}
+.launch-decision-card p{font-size:11px;line-height:1.55;color:var(--g700)}
+.launch-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding-top:2px}
+.launch-action-primary,.launch-action-secondary,.launch-action-ghost{border-radius:10px;padding:10px 14px;font-size:12px;font-weight:900;cursor:pointer;font-family:inherit;transition:all .15s}
+.launch-action-primary{background:var(--navy);border:1px solid var(--navy);color:#fff}
+.launch-action-primary:hover{background:var(--navy-light)}
+.launch-action-secondary{background:#fff;border:1px solid var(--g200);color:var(--navy)}
+.launch-action-secondary:hover{border-color:var(--navy);background:var(--off)}
+.launch-action-ghost{background:none;border:1px solid transparent;color:var(--g500);margin-left:auto}
+.launch-action-ghost:hover{background:var(--g100);color:var(--g700)}
+@media(max-width:1100px){.launch-overview-grid{grid-template-columns:repeat(3,1fr)}.launch-four-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.launch-hero{grid-template-columns:1fr;padding:20px}.launch-product-visual{height:210px}.launch-overview-grid{grid-template-columns:repeat(2,1fr)}.launch-two-col,.launch-script-grid{grid-template-columns:1fr}.launch-angle-grid,.launch-decision-grid{grid-template-columns:1fr}.launch-budget-grid{grid-template-columns:repeat(2,1fr)}.launch-actions{align-items:stretch}.launch-action-primary,.launch-action-secondary,.launch-action-ghost{width:100%;margin-left:0}.launch-input-row{flex-direction:column}.launch-input-row button{width:100%}}
+@media(max-width:480px){.launch-overview-grid,.launch-four-grid,.launch-budget-grid{grid-template-columns:1fr}.launch-title{font-size:22px}.launch-card-body{padding:15px}.launch-targets{display:block;overflow-x:auto;white-space:nowrap}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
@@ -426,7 +523,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <span class="nav-item-icon">🔍</span> About A Product
     </button>
     <button class="nav-item" onclick="showPage('simulator',this)">
-      <span class="nav-item-icon">🚀</span> For A Launch Plan
+      <span class="nav-item-icon">🚀</span> For A Launch Strategy
     </button>
 
     <div class="nav-section-label" style="margin-top:8px">Build</div>
@@ -581,8 +678,8 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <a class="qa-card" onclick="showPage('simulator',null)">
         <div class="qa-icon" style="background:#f0fdf4">🚀</div>
         <div class="qa-text">
-          <div class="qa-title">Build A Launch Plan</div>
-          <div class="qa-desc">Get a store concept, launch roadmap and next-step plan.</div>
+          <div class="qa-title">Build A Launch Strategy</div>
+          <div class="qa-desc">Get a focused plan for positioning, testing and deciding whether to scale.</div>
         </div>
       </a>
       <a class="qa-card" onclick="showPage('saved',null)">
@@ -622,7 +719,7 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
       <span style="font-size:24px">🎯</span>
       <div>
         <strong>Hub's Mission Today</strong>
-        <span>Review today's featured opportunity. Read the full analysis. Build a launch plan. Only then move on to the next product. The best stores come from execution, not endless research.</span>
+        <span>Review today's featured opportunity. Read the full analysis. Build a launch strategy. Only then move on to the next product. The best stores come from execution, not endless research.</span>
       </div>
     </div>
 
@@ -726,33 +823,34 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
     </div>
   </div>
 
-  <!-- ASK HUB — SIMULATOR -->
+  <!-- ASK HUB — LAUNCH STRATEGY -->
   <div class="page" id="page-simulator">
     <div class="feature-header">
       <div class="feature-header-icon">🚀</div>
       <div class="feature-header-text">
-        <h1>Build A Launch Plan</h1>
-        <p>Hub builds your store concept and a week-by-week plan for launching any product. Takes about 15 seconds.</p>
+        <h1>Build My Launch Strategy</h1>
+        <p>Turn any product into a practical plan for positioning, testing and deciding whether it deserves more time and budget.</p>
         <div class="feature-hub-note">
           <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" onerror="this.style.display='none'">
-          <div class="feature-hub-note-text">"Give me a product and I'll build the launch plan. Store concept, four-week roadmap, honest verdict. Everything you need to decide whether to go."</div>
+          <div class="feature-hub-note-text">"I’ll turn the product into a focused launch strategy: customer, offer, creative angles, seven-day test plan, budget and clear scale-or-stop rules."</div>
         </div>
       </div>
     </div>
-    <div class="feature-card">
-      <div class="feature-card-body">
-        <div style="display:flex;gap:0;background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:8px;transition:border-color .15s" onfocusin="this.style.borderColor='var(--navy)'" onfocusout="this.style.borderColor='var(--g200)'">
-          <input id="dash-sim-input" placeholder="Type a product name e.g. Lightweight Folding Bike Fender..." style="flex:1;border:none;background:transparent;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--g900);outline:none">
-          <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;padding:14px 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s" onmouseover="this.style.background='var(--navy-light)'" onmouseout="this.style.background='var(--navy)'">Ask Hub →</button>
-        </div>
-        <div style="font-size:12px;color:var(--g400);margin-bottom:24px">Hub will build a store concept + 4-week launch roadmap + honest verdict</div>
-        <div id="dash-sim-loading" style="display:none;text-align:center;padding:40px 20px">
-          <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.outerHTML='<div style='font-size:60px;margin-bottom:16px'>🤖</div>'">
-          <div style="font-size:15px;font-weight:700;color:var(--g700)" id="dash-sim-msg">Hub is building your launch plan...</div>
-        </div>
-        <div id="dash-sim-result" style="display:none"></div>
+
+    <div class="launch-input-card">
+      <div class="launch-input-row">
+        <input id="dash-sim-input" placeholder="Type a product name e.g. Lightweight Folding Bike Fender...">
+        <button onclick="runDashSimulator()">Build strategy →</button>
       </div>
+      <div class="launch-input-help">Hub will create a positioning plan, launch offer, marketing angles, seven-day validation roadmap, test budget and success targets.</div>
     </div>
+
+    <div id="dash-sim-loading" style="display:none;text-align:center;padding:44px 20px;background:#fff;border:1px solid var(--g200);border-radius:18px">
+      <img src="https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png" alt="Hub" style="width:80px;height:80px;border-radius:50%;margin-bottom:16px;animation:hubFloat 3s ease-in-out infinite" onerror="this.style.display='none'">
+      <div style="font-size:15px;font-weight:800;color:var(--g700)" id="dash-sim-msg">Hub is building your launch strategy...</div>
+      <div style="font-size:12px;color:var(--g400);margin-top:6px">Turning the product into a practical test plan</div>
+    </div>
+    <div id="dash-sim-result" style="display:none"></div>
   </div>
 
   <!-- SAVED PRODUCTS -->
@@ -877,6 +975,8 @@ body{font-family:'Inter',sans-serif;background:var(--g50);color:var(--g900);line
 
 <script>
 const HUB_IMG = 'https://raw.githubusercontent.com/hotshotter0151/dropresearchhub/main/hub.png';
+let dashboardProducts = [];
+let lastLaunchStrategyText = '';
 
 // ── AUTH CHECK ────────────────────────────────────────────────────────────
 // Trialists are welcome here now — trial.html is retired. Only unauthenticated
@@ -1123,6 +1223,7 @@ async function loadProducts() {
     const res = await fetch('/api/products' + (email ? '?email=' + encodeURIComponent(email) : ''));
     const data = await res.json();
     const products = data.products || [];
+    dashboardProducts = products;
 
     // Trial tier: show the locked-archive teaser with the real count
     if (data.tier === 'trial' && data.lockedCount > 0) {
@@ -1335,12 +1436,15 @@ function handleLaunchPlanParams() {
   const product = params.get('product');
   if (!product) return;
 
+  window._launchPlanProduct = product.trim();
+  window._launchPlanImage = (params.get('image') || '').trim();
+
   const simNavBtn = document.querySelector('.nav-item[onclick*="simulator"]');
   showPage('simulator', simNavBtn || null);
 
   const input = document.getElementById('dash-sim-input');
   if (input) {
-    input.value = decodeURIComponent(product);
+    input.value = window._launchPlanProduct;
     runDashSimulator();
   }
 }
@@ -1533,144 +1637,494 @@ async function runDashCreative() {
   }
 }
 
-// ── DASHBOARD SIMULATOR ───────────────────────────────────────────────────
+// ── DASHBOARD LAUNCH STRATEGY ─────────────────────────────────────────────
 const SIM_MSGS = [
-  "Hub is building your launch plan...",
-  "Designing your store concept...",
-  "Writing your week-by-week roadmap...",
-  "Calculating profit projections...",
-  "Almost ready..."
+  "Hub is building your launch strategy...",
+  "Defining the customer and strongest angle...",
+  "Structuring the offer and test budget...",
+  "Writing your seven-day validation plan...",
+  "Setting clear scale-or-stop rules..."
 ];
 
+function esc(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function cleanSentence(value, fallback = '') {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  return text || fallback;
+}
+
+function asArray(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+  return [value];
+}
+
+function normaliseName(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function findMatchingProduct(products, productName) {
+  const wanted = normaliseName(productName);
+  if (!wanted) return null;
+  return products.find(p => normaliseName(p.name) === wanted)
+    || products.find(p => normaliseName(p.name).includes(wanted) || wanted.includes(normaliseName(p.name)))
+    || null;
+}
+
+async function getLaunchProductRecord(productName) {
+  const cached = findMatchingProduct(dashboardProducts, productName);
+  if (cached) return cached;
+  try {
+    const res = await fetch('/api/products' + (email ? '?email=' + encodeURIComponent(email) : ''));
+    if (!res.ok) return null;
+    const data = await res.json();
+    dashboardProducts = data.products || dashboardProducts;
+    return findMatchingProduct(dashboardProducts, productName);
+  } catch (e) {
+    return null;
+  }
+}
+
+function currencyNumbers(value) {
+  const matches = String(value || '').replace(/,/g, '').match(/\d+(?:\.\d+)?/g);
+  return matches ? matches.map(Number).filter(Number.isFinite) : [];
+}
+
+function currencyRange(value, fallbackLow, fallbackHigh) {
+  const nums = currencyNumbers(value);
+  if (!nums.length) return { low: fallbackLow, high: fallbackHigh };
+  if (nums.length === 1) return { low: nums[0], high: nums[0] };
+  return { low: Math.min(...nums), high: Math.max(...nums) };
+}
+
+function formatGBP(value) {
+  const rounded = Math.max(0, Math.round(Number(value) || 0));
+  return '£' + rounded.toLocaleString('en-GB');
+}
+
+function pickLaunchDecision(product, data) {
+  const grade = String(product?.grade || product?.opportunityScore || data?.opportunityScore || '').toUpperCase();
+  const saturation = String(product?.saturationRisk || data?.saturationRisk || '').toLowerCase();
+  if (grade.startsWith('A') || grade.startsWith('B+') || saturation === 'low') return { key:'test', label:'Controlled test recommended' };
+  if (grade.startsWith('B') || saturation === 'medium') return { key:'improve', label:'Test after tightening the offer' };
+  if (saturation.includes('high') || grade.startsWith('C') || grade.startsWith('D')) return { key:'stop', label:'High-risk test — validate carefully' };
+  return { key:'test', label:'Validate before committing budget' };
+}
+
+function inferDifficulty(product, data) {
+  const saturation = String(product?.saturationRisk || data?.saturationRisk || '').toLowerCase();
+  if (saturation.includes('very high') || saturation === 'high') return 'High';
+  if (saturation === 'low') return 'Low–moderate';
+  return 'Moderate';
+}
+
+function buildLaunchModel(productName, data = {}, product = null) {
+  const risks = asArray(product?.risks).map(v => cleanSentence(v)).filter(Boolean);
+  const strengths = asArray(product?.whyItCouldWork).map(v => cleanSentence(v)).filter(Boolean);
+  const features = asArray(data.features).map(f => cleanSentence(typeof f === 'string' ? f : (f?.title || f?.description))).filter(Boolean);
+  const decision = pickLaunchDecision(product, data);
+
+  const supplier = product?.supplierCost || product?.cost || '';
+  const selling = product?.sellingPrice || product?.sell || '';
+  const margin = product?.margin || data.margin || '';
+  const supplierRange = currencyRange(supplier, 15, 30);
+  const sampleLow = Math.max(15, supplierRange.low + 5);
+  const sampleHigh = Math.max(sampleLow + 5, supplierRange.high + 15);
+  const adLow = 100;
+  const adHigh = 200;
+  const creativeLow = 0;
+  const creativeHigh = 50;
+  const contingency = 25;
+  const totalLow = sampleLow + adLow + creativeLow + contingency;
+  const totalHigh = sampleHigh + adHigh + creativeHigh + contingency;
+
+  const problem = cleanSentence(product?.problemSolved, 'The customer needs a simpler, more convenient way to solve the problem this product addresses.');
+  const mainAngle = cleanSentence(product?.mainAngle || data.heroHeadline, `Position ${productName} as the simplest practical answer to a clear everyday problem.`);
+  const tiktokAngle = cleanSentence(product?.tiktokAngle, `Show the problem in the opening two seconds, then demonstrate ${productName} solving it.`);
+  const metaAngle = cleanSentence(product?.metaAngle, `Lead with the outcome, add proof and remove the biggest buying objection.`);
+  const customer = cleanSentence(product?.targetCustomer, 'Problem-aware buyers already searching for a practical, low-friction solution.');
+  const objection = cleanSentence(risks[0] || data.worstCase, 'Customers may hesitate if the benefit, quality or compatibility is not immediately clear.');
+  const motivation = cleanSentence(product?.whyNow || product?.whyEmerging || data.heroSubheadline, mainAngle);
+  const verdict = cleanSentence(product?.verdictReason || data.verdict || product?.verdict, `${productName} is worth a controlled test, but only after the product, supplier and message have been verified.`);
+  const bundle = cleanSentence(product?.bundleIdea, 'Test a two-pack or a complementary add-on once the single-product offer converts.');
+  const bestCase = cleanSentence(data.bestCase || strengths[0], 'One clear creative angle produces repeatable sales at a cost that leaves room for profit.');
+  const worstCase = cleanSentence(data.worstCase || risks[0], 'The product attracts attention but fails to create enough buying intent at a workable acquisition cost.');
+  const image = ((normaliseName(window._launchPlanProduct) === normaliseName(productName)) ? window._launchPlanImage : '') || product?.img || data.heroImage || '';
+
+  const priceRule = selling || 'Price at roughly 2.5–3× verified landed cost';
+  const costRule = supplier || 'Confirm after ordering the sample';
+  const marginRule = margin || 'Target 60%+ gross margin before ad spend';
+  const launchRoute = String(product?.saturationRisk || data.saturationRisk || '').toLowerCase().includes('high')
+    ? 'Organic validation before paid traffic'
+    : 'Organic proof → controlled paid test';
+
+  const angleFallbacks = [
+    features[0] || mainAngle,
+    features[1] || tiktokAngle,
+    features[2] || metaAngle
+  ];
+
+  const hookProblem = product?.problemSolved
+    ? cleanSentence(product.problemSolved).toLowerCase()
+    : `the problem ${productName} is designed to solve`;
+  const hooks = [
+    `Still dealing with ${hookProblem}? Watch this.`,
+    `I tested ${productName} so you don’t have to.`,
+    `Before you buy ${productName}, look for this.`,
+    `The quickest way to get the result people actually want from ${productName}.`,
+    `This is the ${productName} detail most sellers forget to explain.`
+  ];
+
+  return {
+    productName,
+    image,
+    decision,
+    launchRoute,
+    testBudget: `${formatGBP(totalLow)}–${formatGBP(totalHigh)}`,
+    channel: 'TikTok first · Meta second',
+    prepTime: '3–5 days',
+    difficulty: inferDifficulty(product, data),
+    verdict,
+    customer,
+    problem,
+    motivation,
+    objection,
+    mainAngle,
+    priceRule,
+    costRule,
+    marginRule,
+    bundle,
+    delivery: 'Use honest tracked-delivery messaging based on the sample order.',
+    guarantee: 'Offer a clear 30-day guarantee only after checking quality and return costs.',
+    angles: [
+      { title:'Problem → solution', text:angleFallbacks[0] },
+      { title:'Demonstration', text:angleFallbacks[1] },
+      { title:'Proof and objection', text:angleFallbacks[2] }
+    ],
+    hooks,
+    creatorScript: `“I kept seeing people struggle with ${hookProblem} — so I tested ${productName}. Here’s what happened, how it works and who I think it is actually useful for.”`,
+    demoScript: `Open on the problem. Show ${productName} in use immediately. Demonstrate the main benefit, answer the biggest objection, then finish with one clear offer.` ,
+    days: [
+      { day:1, title:'Verify the product and supplier', text:`Order a sample, message the supplier and confirm real delivery time, build quality and packaging. Do not advertise ${productName} before this step.` },
+      { day:2, title:'Lock the customer, angle and offer', text:`Use this customer: ${customer} Lead with: ${mainAngle} Set the initial offer using the verified cost and margin rules above.` },
+      { day:3, title:'Produce three distinct creatives', text:'Film one problem/solution video, one direct demonstration and one proof or objection-breaking creative. Change the angle, not just the opening caption.' },
+      { day:4, title:'Run the organic signal test', text:'Publish the three creatives across TikTok, Instagram Reels and YouTube Shorts. Record watch time, comments, profile visits and buying questions.' },
+      { day:5, title:'Choose the strongest message', text:'Keep the creative that earns the clearest buying intent. Rewrite weak hooks, clarify the offer and remove repeated customer confusion.' },
+      { day:6, title:'Start a controlled paid test', text:'Put £10–£20 per day behind the strongest creative. Keep the audience broad enough to test the message rather than over-targeting.' },
+      { day:7, title:'Make the scale, improve or stop decision', text:'Compare the results with Hub’s targets below. Do not scale because a video got views; scale only when buying behaviour and economics support it.' }
+    ],
+    budget: {
+      sample:`${formatGBP(sampleLow)}–${formatGBP(sampleHigh)}`,
+      creative:`${formatGBP(creativeLow)}–${formatGBP(creativeHigh)}`,
+      ads:`${formatGBP(adLow)}–${formatGBP(adHigh)}`,
+      contingency:formatGBP(contingency),
+      total:`${formatGBP(totalLow)}–${formatGBP(totalHigh)}`
+    },
+    bestCase,
+    worstCase
+  };
+}
+
+function launchStrategyPlainText(model) {
+  const lines = [
+    `DropResearch Hub — Launch Strategy`,
+    `Product: ${model.productName}`,
+    `Recommendation: ${model.decision.label}`,
+    `Launch route: ${model.launchRoute}`,
+    `Test budget: ${model.testBudget}`,
+    `Primary channel: ${model.channel}`,
+    `Preparation: ${model.prepTime}`,
+    `Difficulty: ${model.difficulty}`,
+    '',
+    `HUB'S VERDICT`, model.verdict,
+    '',
+    `TARGET CUSTOMER`, model.customer,
+    `Problem: ${model.problem}`,
+    `Buying motivation: ${model.motivation}`,
+    `Main objection: ${model.objection}`,
+    `Winning angle: ${model.mainAngle}`,
+    '',
+    `RECOMMENDED OFFER`,
+    `Selling price: ${model.priceRule}`,
+    `Landed cost: ${model.costRule}`,
+    `Margin rule: ${model.marginRule}`,
+    `Bundle: ${model.bundle}`,
+    `Delivery: ${model.delivery}`,
+    `Guarantee: ${model.guarantee}`,
+    '',
+    `MARKETING ANGLES`,
+    ...model.angles.map((a,i)=>`${i+1}. ${a.title}: ${a.text}`),
+    '',
+    `OPENING HOOKS`,
+    ...model.hooks.map((h,i)=>`${i+1}. ${h}`),
+    '',
+    `7-DAY VALIDATION PLAN`,
+    ...model.days.map(d=>`Day ${d.day} — ${d.title}: ${d.text}`),
+    '',
+    `TEST BUDGET`,
+    `Sample: ${model.budget.sample}`,
+    `Creative: ${model.budget.creative}`,
+    `Paid test: ${model.budget.ads}`,
+    `Contingency: ${model.budget.contingency}`,
+    `Total: ${model.budget.total}`,
+    '',
+    `SUCCESS TARGETS`,
+    `3-second hold: Continue 30%+ | Review 20–30% | Stop below 20%`,
+    `Click-through rate: Continue 1.5%+ | Review 0.8–1.5% | Stop below 0.8%`,
+    `Add-to-cart rate: Continue 5%+ | Review 3–5% | Stop below 3%`,
+    `Conversion rate: Continue 2%+ | Review 1–2% | Stop below 1%`,
+    `Cost per purchase: Must remain below gross profit per order`,
+    '',
+    `BEST CASE`, model.bestCase,
+    `MAIN RISK`, model.worstCase
+  ];
+  return lines.join('\n');
+}
+
+function renderLaunchStrategy(model) {
+  const imageHtml = model.image
+    ? `<img src="${esc(model.image)}" alt="${esc(model.productName)}" onerror="this.parentElement.innerHTML='<div style=&quot;font-size:64px&quot;>📦</div>'">`
+    : '<div style="font-size:64px">📦</div>';
+
+  lastLaunchStrategyText = launchStrategyPlainText(model);
+
+  return `
+    <div class="launch-result launch-export">
+      <div class="launch-hero">
+        <div class="launch-hero-copy">
+          <div class="launch-eyebrow">Hub's launch strategy</div>
+          <div class="launch-title">${esc(model.productName)}</div>
+          <div class="launch-subtitle">A focused route from product idea to a controlled market test — without committing serious budget before the evidence is there.</div>
+          <div class="launch-decision-row">
+            <span class="launch-decision ${esc(model.decision.key)}">${esc(model.decision.label)}</span>
+            <span class="launch-route-pill">${esc(model.launchRoute)}</span>
+          </div>
+        </div>
+        <div class="launch-product-visual">${imageHtml}</div>
+      </div>
+
+      <div class="launch-overview-grid">
+        ${[
+          ['Launch route',model.launchRoute,'Recommended sequence'],
+          ['Test budget',model.testBudget,'Including sample and ads'],
+          ['Primary channel',model.channel,'Best first test'],
+          ['Preparation',model.prepTime,'Before paid traffic'],
+          ['Difficulty',model.difficulty,'Execution level']
+        ].map(item=>`<div class="launch-overview-card"><div class="launch-overview-label">${esc(item[0])}</div><div class="launch-overview-value">${esc(item[1])}</div><div class="launch-overview-note">${esc(item[2])}</div></div>`).join('')}
+      </div>
+
+      <div class="launch-verdict">
+        <div class="launch-verdict-avatar"><img src="${HUB_IMG}" alt="Hub" onerror="this.style.display='none'"></div>
+        <div><div class="launch-card-kicker">Hub's verdict</div><div style="font-size:13px;color:#7c2d12;line-height:1.7;font-weight:650">${esc(model.verdict)}</div></div>
+      </div>
+
+      <div class="launch-card">
+        <div class="launch-card-head"><div><div class="launch-card-kicker">Position the opportunity</div><div class="launch-card-title">Target customer and winning message</div></div><span style="font-size:20px">🎯</span></div>
+        <div class="launch-card-body">
+          <div class="launch-four-grid">
+            <div class="launch-info-box"><div class="launch-info-label">Primary customer</div><div class="launch-info-value">${esc(model.customer)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Problem being solved</div><div class="launch-info-value">${esc(model.problem)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Buying motivation</div><div class="launch-info-value">${esc(model.motivation)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Main objection</div><div class="launch-info-value">${esc(model.objection)}</div></div>
+          </div>
+          <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:13px;padding:14px"><div class="launch-info-label" style="color:#1d4ed8">Recommended positioning</div><div style="font-size:13px;font-weight:800;color:#1e40af;line-height:1.55">${esc(model.mainAngle)}</div></div>
+        </div>
+      </div>
+
+      <div class="launch-card">
+        <div class="launch-card-head"><div><div class="launch-card-kicker">Commercial setup</div><div class="launch-card-title">Recommended launch offer</div></div><span style="font-size:20px">🏷️</span></div>
+        <div class="launch-card-body">
+          <div class="launch-four-grid">
+            <div class="launch-info-box"><div class="launch-info-label">Selling price</div><div class="launch-info-value">${esc(model.priceRule)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Verified landed cost</div><div class="launch-info-value">${esc(model.costRule)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Margin rule</div><div class="launch-info-value">${esc(model.marginRule)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Bundle opportunity</div><div class="launch-info-value">${esc(model.bundle)}</div></div>
+          </div>
+          <div class="launch-two-col" style="margin-top:10px">
+            <div class="launch-info-box"><div class="launch-info-label">Delivery promise</div><div class="launch-info-value">${esc(model.delivery)}</div></div>
+            <div class="launch-info-box"><div class="launch-info-label">Guarantee</div><div class="launch-info-value">${esc(model.guarantee)}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="launch-card">
+        <div class="launch-card-head"><div><div class="launch-card-kicker">Creative testing</div><div class="launch-card-title">Three marketing angles to launch with</div></div><span style="font-size:20px">📣</span></div>
+        <div class="launch-card-body">
+          <div class="launch-angle-grid">
+            ${model.angles.map((a,i)=>`<div class="launch-angle"><div class="launch-angle-num">${i+1}</div><h4>${esc(a.title)}</h4><p>${esc(a.text)}</p></div>`).join('')}
+          </div>
+          <div style="font-size:12px;font-weight:900;color:var(--g900);margin-top:16px">Five opening hooks</div>
+          <div class="launch-hooks">${model.hooks.map((h,i)=>`<div class="launch-hook"><strong>${i+1}.</strong> ${esc(h)}</div>`).join('')}</div>
+          <div class="launch-script-grid">
+            <div class="launch-script"><div class="launch-script-label">Creator-style video</div><p>${esc(model.creatorScript)}</p></div>
+            <div class="launch-script green"><div class="launch-script-label">Demonstration video</div><p>${esc(model.demoScript)}</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="launch-card">
+        <div class="launch-card-head"><div><div class="launch-card-kicker">Execution roadmap</div><div class="launch-card-title">Hub's seven-day validation plan</div></div><span style="font-size:20px">📅</span></div>
+        <div class="launch-card-body"><div class="launch-timeline">${model.days.map(d=>`<div class="launch-day"><div class="launch-day-num">D${d.day}</div><div><h4>${esc(d.title)}</h4><p>${esc(d.text)}</p></div></div>`).join('')}</div></div>
+      </div>
+
+      <div class="launch-two-col">
+        <div class="launch-card">
+          <div class="launch-card-head"><div><div class="launch-card-kicker">Financial guardrail</div><div class="launch-card-title">Suggested test budget</div></div><span style="font-size:20px">💷</span></div>
+          <div class="launch-card-body">
+            <div class="launch-budget-grid">
+              <div class="launch-budget-item"><div class="launch-budget-label">Sample</div><div class="launch-budget-value">${esc(model.budget.sample)}</div></div>
+              <div class="launch-budget-item"><div class="launch-budget-label">Creative</div><div class="launch-budget-value">${esc(model.budget.creative)}</div></div>
+              <div class="launch-budget-item"><div class="launch-budget-label">Paid test</div><div class="launch-budget-value">${esc(model.budget.ads)}</div></div>
+              <div class="launch-budget-item"><div class="launch-budget-label">Contingency</div><div class="launch-budget-value">${esc(model.budget.contingency)}</div></div>
+            </div>
+            <div class="launch-budget-total"><span>Suggested starting total</span><strong>${esc(model.budget.total)}</strong></div>
+          </div>
+        </div>
+        <div class="launch-card">
+          <div class="launch-card-head"><div><div class="launch-card-kicker">Reality check</div><div class="launch-card-title">Best case and main risk</div></div><span style="font-size:20px">⚖️</span></div>
+          <div class="launch-card-body" style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:13px"><div class="launch-info-label" style="color:#15803d">Best case</div><div class="launch-info-value" style="color:#166534">${esc(model.bestCase)}</div></div>
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:13px"><div class="launch-info-label" style="color:#b91c1c">Main risk</div><div class="launch-info-value" style="color:#991b1b">${esc(model.worstCase)}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="launch-card">
+        <div class="launch-card-head"><div><div class="launch-card-kicker">Decision thresholds</div><div class="launch-card-title">Success targets for the first test</div></div><span style="font-size:20px">📊</span></div>
+        <div class="launch-card-body" style="overflow-x:auto">
+          <table class="launch-targets">
+            <thead><tr><th>Metric</th><th>Continue</th><th>Review</th><th>Stop / rethink</th></tr></thead>
+            <tbody>
+              <tr><td>3-second hold rate</td><td class="launch-target-good">30%+</td><td class="launch-target-review">20–30%</td><td class="launch-target-stop">Below 20%</td></tr>
+              <tr><td>Click-through rate</td><td class="launch-target-good">1.5%+</td><td class="launch-target-review">0.8–1.5%</td><td class="launch-target-stop">Below 0.8%</td></tr>
+              <tr><td>Add-to-cart rate</td><td class="launch-target-good">5%+</td><td class="launch-target-review">3–5%</td><td class="launch-target-stop">Below 3%</td></tr>
+              <tr><td>Conversion rate</td><td class="launch-target-good">2%+</td><td class="launch-target-review">1–2%</td><td class="launch-target-stop">Below 1%</td></tr>
+              <tr><td>Cost per purchase</td><td class="launch-target-good">Below gross profit</td><td class="launch-target-review">Near break-even</td><td class="launch-target-stop">Above contribution margin</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="launch-decision-grid">
+        <div class="launch-decision-card scale"><h4>✅ Scale</h4><p>Increase spend gradually when purchases repeat at a cost below gross profit and one creative keeps working beyond the first few sales.</p></div>
+        <div class="launch-decision-card improve"><h4>🛠 Improve</h4><p>Keep testing when people click or ask buying questions but the offer, product explanation or checkout conversion is weak.</p></div>
+        <div class="launch-decision-card stop"><h4>⛔ Stop</h4><p>Pause after three genuinely different angles fail to create buying intent or the supplier economics leave no workable margin.</p></div>
+      </div>
+
+      <div class="launch-actions">
+        <button class="launch-action-primary" onclick="copyLaunchStrategy()">📋 Copy launch strategy</button>
+        <button class="launch-action-secondary" onclick="downloadLaunchChecklist()">⬇ Download checklist</button>
+        <button class="launch-action-ghost" onclick="resetLaunchStrategy()">Ask Hub about another product</button>
+      </div>
+    </div>`;
+}
+
+function showLaunchError(message) {
+  const result = document.getElementById('dash-sim-result');
+  result.style.display = 'block';
+  result.innerHTML = `
+    <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:32px;text-align:center">
+      <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+      <div style="font-size:15px;font-weight:900;color:var(--g900);margin-bottom:6px">${esc(message || "Hub couldn't finish the strategy")}</div>
+      <div style="font-size:13px;color:var(--g500);margin-bottom:18px">Try the request again. Your existing dashboard and product research have not been changed.</div>
+      <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit">Try again →</button>
+    </div>`;
+}
+
 async function runDashSimulator() {
-  const productName = document.getElementById('dash-sim-input').value.trim();
+  const input = document.getElementById('dash-sim-input');
+  const productName = input.value.trim();
   if (!productName) { showToast('Type a product name first'); return; }
 
   document.getElementById('dash-sim-loading').style.display = 'block';
   document.getElementById('dash-sim-result').style.display = 'none';
 
   let i = 0;
-  const t = setInterval(() => {
-    i = (i+1) % SIM_MSGS.length;
+  const timer = setInterval(() => {
+    i = (i + 1) % SIM_MSGS.length;
     const el = document.getElementById('dash-sim-msg');
     if (el) el.textContent = SIM_MSGS[i];
   }, 2500);
 
   try {
-    const res = await fetch('/api/simulate', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name: productName, adBudget: 20, salesTarget: 5, platform: 'TikTok + Meta' })
-    });
-    const data = await res.json();
-    clearInterval(t);
+    const [productRecord, simResponse] = await Promise.all([
+      getLaunchProductRecord(productName),
+      fetch('/api/simulate', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ name: productName, adBudget: 20, salesTarget: 5, platform: 'TikTok + Meta' })
+      }).then(async res => ({ ok: res.ok, data: await res.json().catch(() => ({})) })).catch(() => ({ ok:false, data:{} }))
+    ]);
+
+    clearInterval(timer);
     document.getElementById('dash-sim-loading').style.display = 'none';
 
-    if (!res.ok || data.error) {
-      document.getElementById('dash-sim-result').style.display = 'block';
-      document.getElementById('dash-sim-result').innerHTML = `
-        <div style="background:#fff;border:1px solid var(--g200);border-radius:16px;padding:32px;text-align:center">
-          <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-          <div style="font-size:15px;font-weight:800;color:var(--g900);margin-bottom:6px">${data.error || "Hub couldn't finish building the plan"}</div>
-          <div style="font-size:13px;color:var(--g500);margin-bottom:18px">This sometimes happens on a busy request — try again.</div>
-          <button onclick="runDashSimulator()" style="background:var(--navy);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Try again →</button>
-        </div>`;
+    const simData = simResponse.ok && !simResponse.data?.error ? simResponse.data : {};
+    if (!productRecord && !Object.keys(simData).length) {
+      showLaunchError(simResponse.data?.error || "Hub couldn't reach the launch strategy service");
       return;
     }
 
-    const cs = data.colorScheme || {bg:'#ffffff',nav:'#ffffff',navText:'#0f1f2e',accent:'#0f1f2e',text:'#0f1f2e',sub:'#5b6470',btn:'#0f1f2e',btnText:'#ffffff',border:'#e5e7eb'};
-    const weekColors = [{bg:'#DCFCE7',color:'#166534'},{bg:'#FEF3C7',color:'#92400E'},{bg:'#DBEAFE',color:'#1E40AF'},{bg:'#E1F5EE',color:'#0F6E56'}];
-    const navLinks = (data.navLinks && data.navLinks.length) ? data.navLinks : ['Shop','Reviews','FAQ'];
-    const trustBadges = (data.trustBadges && data.trustBadges.length) ? data.trustBadges : ['Free UK delivery','30-day returns','Secure checkout'];
-    const heroImg = data.heroImage || '';
-    const features = (data.features && data.features.length === 3) ? data.features : [];
-    const testimonial = data.testimonial || null;
-
-    document.getElementById('dash-sim-result').style.display = 'block';
-    document.getElementById('dash-sim-result').innerHTML = `
-      <div style="border-radius:16px;overflow:hidden;margin-bottom:16px;border:1px solid ${cs.border};box-shadow:0 1px 3px rgba(0,0,0,.06)">
-        <div style="background:#e9ecef;padding:8px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid ${cs.border}">
-          <div style="width:9px;height:9px;border-radius:50%;background:#ff5f57"></div>
-          <div style="width:9px;height:9px;border-radius:50%;background:#febc2e"></div>
-          <div style="width:9px;height:9px;border-radius:50%;background:#28c840"></div>
-          <div style="flex:1;background:#fff;border-radius:6px;padding:3px 10px;font-size:10px;color:#9CA3AF;margin-left:8px">${(data.storeName||productName).toLowerCase().replace(/[^a-z0-9]/g,'')}.com</div>
-        </div>
-        <div style="background:${cs.nav};padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid ${cs.border}">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:8px;height:8px;border-radius:2px;background:${cs.accent};flex-shrink:0"></div>
-            <div style="font-size:17px;font-weight:900;color:${cs.navText};letter-spacing:-.3px">${data.storeName||productName}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:22px">
-            ${navLinks.slice(0,3).map(l=>`<div style="font-size:12px;font-weight:600;color:${cs.sub}">${l}</div>`).join('')}
-            <div style="background:${cs.accent};color:${cs.btnText};font-size:11px;font-weight:800;padding:6px 14px;border-radius:7px">Cart (0)</div>
-          </div>
-        </div>
-        <div style="background:${cs.bg};display:grid;grid-template-columns:1fr 1fr;min-height:280px">
-          <div style="padding:36px 32px;display:flex;flex-direction:column;justify-content:center">
-            <div style="background:${cs.accent}1a;color:${cs.accent};font-size:10px;font-weight:800;padding:5px 12px;border-radius:999px;width:fit-content;margin-bottom:16px;text-transform:uppercase;letter-spacing:.6px">${data.heroTag||'As seen on TikTok'}</div>
-            <div style="font-size:26px;font-weight:900;color:${cs.text};line-height:1.2;margin-bottom:12px;letter-spacing:-.5px">${data.heroHeadline||''}</div>
-            <div style="font-size:13px;color:${cs.sub};line-height:1.6;margin-bottom:22px;max-width:380px">${data.heroSubheadline||''}</div>
-            <button style="background:${cs.btn};color:${cs.btnText};font-size:14px;font-weight:900;padding:13px 26px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;width:fit-content;margin-bottom:18px">${data.heroCTA||'Shop now →'}</button>
-            <div style="display:flex;gap:14px;flex-wrap:wrap">
-              ${trustBadges.slice(0,3).map(b=>`<div style="font-size:11px;color:${cs.sub};display:flex;align-items:center;gap:5px"><span style="color:${cs.accent}">✓</span>${b}</div>`).join('')}
-            </div>
-          </div>
-          <div style="background:${cs.bg};display:flex;align-items:center;justify-content:center;padding:24px;border-left:1px solid ${cs.border}">
-            ${heroImg
-              ? `<img src="${heroImg}" alt="${productName}" style="max-width:100%;max-height:230px;object-fit:contain" onerror="this.parentElement.innerHTML='<div style=font-size:64px>📦</div>'">`
-              : `<div style="font-size:64px">📦</div>`}
-          </div>
-        </div>
-        ${features.length ? `
-        <div style="background:${cs.bg};border-top:1px solid ${cs.border};padding:32px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
-          ${features.map(f=>`
-          <div style="text-align:center">
-            <div style="width:40px;height:40px;border-radius:10px;background:${cs.accent}1a;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:18px">${f.icon||'✓'}</div>
-            <div style="font-size:13px;font-weight:800;color:${cs.text};margin-bottom:5px">${f.title||''}</div>
-            <div style="font-size:11px;color:${cs.sub};line-height:1.5">${f.description||''}</div>
-          </div>`).join('')}
-        </div>` : ''}
-        ${testimonial?.quote ? `
-        <div style="background:${cs.nav};border-top:1px solid ${cs.border};padding:28px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
-          <div style="color:${cs.accent};font-size:14px;letter-spacing:2px">${'★'.repeat(testimonial.rating||5)}</div>
-          <div style="font-size:14px;color:${cs.text};line-height:1.6;max-width:480px;font-style:italic">"${testimonial.quote}"</div>
-          <div style="font-size:11px;color:${cs.sub};font-weight:700">${testimonial.name||''}${testimonial.location?', '+testimonial.location:''}</div>
-        </div>` : ''}
-      </div>
-      <div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:1.5px solid #f59e0b;border-radius:14px;padding:20px 22px;margin-bottom:14px">
-        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
-          <div style="font-size:24px;flex-shrink:0">📦</div>
-          <div>
-            <div style="font-size:14px;font-weight:900;color:#78350f;margin-bottom:2px">First phase of product testing. Order the product yourself, first</div>
-            <div style="font-size:12px;color:#92400e;line-height:1.6">Before you spend a penny on ads or website subscriptions, order this product to your own address. This isn't optional — it's the foundation every product brand should be built on.</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;padding-left:36px">
-          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Test the product.</strong> Check the real build quality, how it feels in hand, and whether it matches the listing — you can't sell what you haven't used.</div>
-          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Test the delivery time.</strong> Time it from order to arrival. That's the real number you'll need to set customer expectations and write your shipping policy.</div>
-          <div style="font-size:12px;color:#78350f;line-height:1.6"><strong>Message the supplier.</strong> Ask a question and see how fast and how well they respond. If this product takes off, you'll need them for bulk orders, pricing negotiations and fast problem-solving — find out now if they're reliable.</div>
-        </div>
-      </div>
-      <div style="background:#fff;border:1px solid var(--g200);border-radius:14px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--g100);font-size:14px;font-weight:800;color:var(--g900)">📅 Hub's 4-Week Launch Plan</div>
-        ${(data.weeks||[]).map((w,i)=>{const wc=weekColors[i]||weekColors[0];return`<div style="padding:16px 20px;border-bottom:1px solid var(--g100)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div style="width:26px;height:26px;border-radius:50%;background:${wc.bg};color:${wc.color};font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">${w.week}</div><div><div style="font-size:13px;font-weight:800;color:var(--g900)">${w.title}</div><div style="font-size:11px;color:var(--g400)">${w.subtitle||''}</div></div></div><div style="padding-left:36px">${(w.items||[]).map(item=>`<div style="font-size:12px;color:var(--g700);margin-bottom:4px;line-height:1.5">· ${item}</div>`).join('')}</div></div>`;}).join('')}
-      </div>
-      <div style="background:var(--g50);border:1px solid var(--g200);border-radius:12px;padding:16px;margin-bottom:12px">
-        <div style="font-size:10px;font-weight:800;color:var(--g400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px">Hub's Verdict</div>
-        <div style="font-size:13px;color:var(--g700);line-height:1.65">${data.verdict||''}</div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px"><div style="font-size:10px;font-weight:800;color:#b91c1c;text-transform:uppercase;margin-bottom:4px">⚠️ Worst Case</div><div style="font-size:12px;color:#991b1b;line-height:1.5">${data.worstCase||''}</div></div>
-        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px"><div style="font-size:10px;font-weight:800;color:#15803d;text-transform:uppercase;margin-bottom:4px">✅ Best Case</div><div style="font-size:12px;color:#166534;line-height:1.5">${data.bestCase||''}</div></div>
-      </div>
-      <button onclick="document.getElementById('dash-sim-result').style.display='none';document.getElementById('dash-sim-input').value=''" style="background:none;border:1px solid var(--g200);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--g500);font-family:inherit">Ask Hub about another product</button>
-    `;
-  } catch(e) {
-    clearInterval(t);
+    const model = buildLaunchModel(productName, simData, productRecord);
+    const result = document.getElementById('dash-sim-result');
+    result.style.display = 'block';
+    result.innerHTML = renderLaunchStrategy(model);
+  } catch (e) {
+    clearInterval(timer);
     document.getElementById('dash-sim-loading').style.display = 'none';
-    showToast('Could not reach Hub — try again');
+    showLaunchError('Hub could not finish the strategy');
   }
 }
+
+async function copyLaunchStrategy() {
+  if (!lastLaunchStrategyText) return showToast('Build a launch strategy first');
+  try {
+    await navigator.clipboard.writeText(lastLaunchStrategyText);
+    showToast('Launch strategy copied ✓');
+  } catch (e) {
+    showToast('Could not copy — try the download button');
+  }
+}
+
+function downloadLaunchChecklist() {
+  if (!lastLaunchStrategyText) return showToast('Build a launch strategy first');
+  const productName = document.getElementById('dash-sim-input')?.value.trim() || 'product';
+  const filename = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0,60) || 'product';
+  const blob = new Blob([lastLaunchStrategyText], { type:'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename + '-launch-strategy.txt';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast('Launch checklist downloaded ✓');
+}
+
+function resetLaunchStrategy() {
+  document.getElementById('dash-sim-result').style.display = 'none';
+  document.getElementById('dash-sim-input').value = '';
+  window._launchPlanProduct = '';
+  window._launchPlanImage = '';
+  lastLaunchStrategyText = '';
+  document.getElementById('dash-sim-input').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const simInput = document.getElementById('dash-sim-input');
+simInput?.addEventListener('input', () => {
+  if (normaliseName(simInput.value) !== normaliseName(window._launchPlanProduct)) {
+    window._launchPlanImage = '';
+  }
+});
 </script>
 </body>
 </html>
