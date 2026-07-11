@@ -1,3 +1,6 @@
+The file itself is fine — 348 lines, 23KB — so it's the download link playing up (same gremlin as the admin.html issue). Here's the full content to copy-paste instead:
+
+```javascript
 const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 async function sbFetch(path, method = 'GET', body) {
@@ -122,6 +125,68 @@ export default async function handler(req, res) {
     return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   }
 
+  // ── JSON REPAIR HELPERS ──────────────────────────────────────────────
+  function tryParseProducts(rawText) {
+    let cleaned = rawText.replace(/```json/gi,'').replace(/```/g,'').trim();
+    const start = cleaned.indexOf('[');
+    if (start === -1) return null;
+    let end = cleaned.lastIndexOf(']');
+    if (end === -1) end = cleaned.length - 1;
+    cleaned = cleaned.slice(start, end + 1);
+
+    // Attempt 1: parse as-is
+    try { return JSON.parse(cleaned); } catch(e) {}
+
+    // Attempt 2: remove trailing commas
+    let fixed = cleaned.replace(/,\s*([}\]])/g, '$1');
+    try { return JSON.parse(fixed); } catch(e) {}
+
+    // Attempt 3: escape rogue double quotes inside string values.
+    // Heuristic: a quote only legitimately ends a string if the next
+    // non-space char is a structural char (, } ] :) — otherwise escape it.
+    let out = '', inS = false, es = false;
+    for (let i = 0; i < fixed.length; i++) {
+      const ch = fixed[i];
+      if (es) { out += ch; es = false; continue; }
+      if (ch === '\\') { out += ch; es = true; continue; }
+      if (ch === '"') {
+        if (!inS) { inS = true; out += ch; continue; }
+        let j = i + 1;
+        while (j < fixed.length && /\s/.test(fixed[j])) j++;
+        const nx = fixed[j];
+        if (nx === ',' || nx === '}' || nx === ']' || nx === ':' || j >= fixed.length) { inS = false; out += ch; }
+        else { out += '\\"'; }
+        continue;
+      }
+      out += ch;
+    }
+    try { return JSON.parse(out); } catch(e) {}
+
+    // Attempt 4: salvage complete top-level objects from a truncated array
+    const objects = [];
+    let depth = 0, objStart = -1, inStr = false, esc = false;
+    for (let i = 0; i < cleaned.length; i++) {
+      const c = cleaned[i];
+      if (esc) { esc = false; continue; }
+      if (c === '\\') { esc = true; continue; }
+      if (c === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (c === '{') { if (depth === 0) objStart = i; depth++; }
+      else if (c === '}') {
+        depth--;
+        if (depth === 0 && objStart !== -1) {
+          const chunk = cleaned.slice(objStart, i + 1);
+          try { objects.push(JSON.parse(chunk)); }
+          catch(e) {
+            try { objects.push(JSON.parse(chunk.replace(/,\s*([}\]])/g, '$1'))); } catch(e2) {}
+          }
+          objStart = -1;
+        }
+      }
+    }
+    return objects.length ? objects : null;
+  }
+
   // ── EMERGING MODE ────────────────────────────────────────────────────
   if (body.mode === 'emerging') {
     console.log('[DRH] Starting...');
@@ -175,7 +240,7 @@ ${sourceLines}
 Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats), evergreen demand, strong video potential.
 ${sourceRules}
 
-Return ONLY valid JSON array of 3 objects. No markdown.
+Return ONLY valid JSON array of 3 objects. No markdown. CRITICAL: never use double quote characters inside any string value — use single quotes or rephrase. All strings must be short and JSON-safe.
 
 Each object: {"name":"string","niche":"string","emoji":"string","stage":"Pre-launch|Early Adopter|Growing","season":"Evergreen","grade":"A+|A|B+|B","confidence":"High|Medium|Speculative","investmentTest":"TEST|PASS","trendVelocity":"Accelerating|Rising","whyNow":"one sentence","subscriberExcitement":number,"opportunityMultiplier":number,"trendScore":number,"problemScore":number,"saturationRisk":"Low|Medium","competitionLevel":"Low|Medium","emergingScore":number,"scoring":{"ukMarketGap":number,"problemIntensity":number,"creativePotential":number,"profitPotential":number,"competitionBarrier":number,"easeOfEntry":number,"earlySignalStrength":number},"supplierCost":"£X-£X","sellingPrice":"£X-£X","margin":"XX%","targetCustomer":"string","whyEmerging":"string","problemSolved":"string","mainAngle":"string","tiktokAngle":"string","metaAngle":"string","usAuSignal":"string","verdict":"Strong Opportunity|Watch List","verdictReason":"string","whyItCouldWork":["r1","r2","r3"],"risks":["r1","r2"],"bundleIdea":"string","repeatPurchase":true,"repeatReason":"string","aliSearchTerm":"string","bgColor":"#EFF6FF","growthData":[{"label":"W1","value":8},{"label":"W2","value":18},{"label":"W3","value":33},{"label":"W4","value":52},{"label":"W5","value":70},{"label":"W6","value":84}],"sourceType":"international|uk","fulfilment":{"internationalAvailable":true,"internationalSupplierType":"AliExpress","internationalDeliveryEstimate":"7-14 days","ukSupplierAvailable":false,"ukSupplierConfidence":"Low","ukDeliveryEstimate":"","ukSupplierSearchTerms":[],"recommendedRoute":"string"}}
 
@@ -183,34 +248,34 @@ ${fulfilmentRules}
 
 scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensity 20, creativePotential 10, profitPotential 12, competitionBarrier 20, easeOfEntry 8, earlySignalStrength 15.`;
 
-    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 3800, messages: [{ role: 'user', content: prompt }] })
-    });
+    let products = null;
+    for (let attempt = 1; attempt <= 2 && !products; attempt++) {
+      const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 6000, messages: [{ role: 'user', content: prompt }] })
+      });
 
-    if (!aiRes.ok) {
-      const err = await aiRes.text();
-      console.error('[DRH] AI error:', aiRes.status, err.slice(0,200));
-      return res.status(500).json({ error: 'AI error ' + aiRes.status });
+      if (!aiRes.ok) {
+        const err = await aiRes.text();
+        console.error('[DRH] AI error (attempt ' + attempt + '):', aiRes.status, err.slice(0,200));
+        if (attempt === 2) return res.status(500).json({ error: 'AI error ' + aiRes.status });
+        continue;
+      }
+
+      const aiData = await aiRes.json();
+      const rawText = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+      console.log('[DRH] Response (attempt ' + attempt + '):', rawText.length, 'chars, stop_reason:', aiData.stop_reason);
+
+      products = tryParseProducts(rawText);
+      if (!products || !products.length) {
+        products = null;
+        console.error('[DRH] Parse failed on attempt ' + attempt);
+      }
     }
 
-    const aiData = await aiRes.json();
-    const rawText = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
-    console.log('[DRH] Response:', rawText.length, 'chars');
-
-    let cleaned = rawText.replace(/```json/gi,'').replace(/```/g,'').trim();
-    const start = cleaned.indexOf('[');
-    const end = cleaned.lastIndexOf(']');
-    if (start === -1 || end === -1) {
-      console.error('[DRH] No JSON array:', cleaned.slice(0,200));
-      return res.status(500).json({ error: 'No product array in response' });
-    }
-    cleaned = cleaned.slice(start, end + 1);
-
-    let products;
-    try { products = JSON.parse(cleaned); }
-    catch(e) { console.error('[DRH] Parse error:', e.message); return res.status(500).json({ error: 'Parse error: ' + e.message }); }
+    if (!products) return res.status(500).json({ error: 'Parse error: could not recover valid products after 2 attempts' });
+    console.log('[DRH] Parsed', products.length, 'products');
 
     // ── UNTOUCHED — scoring fix ──────────────────────────────────────
     products = products.map(p => p.investmentTest === 'PASS' ? { ...p, verdict: 'Watch List', confidence: 'Speculative' } : p);
@@ -284,3 +349,6 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
 
   return res.status(400).json({ error: 'Invalid request format' });
 }
+```
+
+Copy that whole block into `api/generate.mjs`, push, and test.
