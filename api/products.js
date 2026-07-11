@@ -66,9 +66,7 @@ export default async function handler(req, res) {
       if (all) return res.status(200).json({ products: mapped });
 
       // Work out the requester's tier
-      let tier = 'member'; // default when no email is sent (backwards compat
-                           // for members.html until it passes email — then
-                           // change this default to 'trial' to close the gap)
+      let tier = 'trial'; // no email = current week only (all real pages send email)
       if (email) {
         const users = await sbFetch(
           `/users?email=eq.${encodeURIComponent(email)}&select=subscription_status,role,created_at`
