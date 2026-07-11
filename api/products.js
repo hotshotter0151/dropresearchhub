@@ -29,7 +29,35 @@ function startOfISOWeek(date) {
 const TRIAL_DAYS = 7;
 function trialExpired(u) {
   if (!u?.created_at) return false;
- return (Date.now() - new Date(u.created_at).getTime()) > TRIAL_DAYS * 86400000 + 12 * 3600000;
+  return (Date.now() - new Date(u.created_at).getTime()) > TRIAL_DAYS * 86400000 + 12 * 3600000;
+}
+
+// ── Admin API token verification ──────────────────────────────────────
+// Tokens are minted by auth.js on admin login (HMAC-signed).
+// If ADMIN_TOKEN_SECRET isn't set in Vercel yet, checks are skipped so
+// nothing breaks — set the env var to arm the protection.
+import crypto from 'crypto';
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || '';
+
+function verifyAdminToken(token) {
+  if (!ADMIN_TOKEN_SECRET) return true; // not armed yet — allow
+  if (!token || !token.includes('.')) return false;
+  const [payload, sig] = token.split('.');
+  const expected = crypto.createHmac('sha256', ADMIN_TOKEN_SECRET).update(payload).digest('hex');
+  if (sig !== expected) return false;
+  try {
+    const decoded = Buffer.from(payload, 'base64url').toString();
+    const expires = Number(decoded.split(':').pop());
+    return Number.isFinite(expires) && expires > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function requireAdmin(req, res) {
+  if (verifyAdminToken(req.headers['x-drh-admin-token'])) return true;
+  res.status(401).json({ error: 'Admin authorisation required' });
+  return false;
 }
 
 export default async function handler(req, res) {
@@ -62,8 +90,11 @@ export default async function handler(req, res) {
         published_at: p.published_at
       }));
 
-      // Admin feed — unchanged
-      if (all) return res.status(200).json({ products: mapped });
+      // Admin feed — requires admin token
+      if (all) {
+        if (!requireAdmin(req, res)) return;
+        return res.status(200).json({ products: mapped });
+      }
 
       // Work out the requester's tier
       let tier = 'trial'; // no email = current week only (all real pages send email)
@@ -122,8 +153,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST — publish new products to feed
+  // POST — publish new products to feed (admin only)
   if (req.method === 'POST') {
+    if (!requireAdmin(req, res)) return;
     const { products, replace } = req.body;
     if (!Array.isArray(products)) return res.status(400).json({ error: 'No products provided' });
     try {
@@ -140,8 +172,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // PATCH — toggle is_live on/off for a product by name
+  // PATCH — toggle is_live on/off for a product by name (admin only)
   if (req.method === 'PATCH') {
+    if (!requireAdmin(req, res)) return;
     const { productName, is_live } = req.body;
     if (!productName) return res.status(400).json({ error: 'No product name provided' });
     try {
@@ -152,8 +185,9 @@ export default async function handler(req, res) {
     }
   }
 
-  // DELETE — permanently remove a product by name
+  // DELETE — permanently remove a product by name (admin only)
   if (req.method === 'DELETE') {
+    if (!requireAdmin(req, res)) return;
     const { productName } = req.body;
     if (!productName) return res.status(400).json({ error: 'No product name provided' });
     try {
