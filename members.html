@@ -90,7 +90,7 @@
       return;
     }
 
-    if (role !== 'admin' && (auth === 'trial' || status === 'trial' || status === 'cancelled' || status === 'inactive')) {
+    if (role !== 'admin' && (status === 'cancelled' || status === 'inactive')) {
       redirectTo(TRIAL_REDIRECT_PAGE);
       return;
     }
@@ -114,7 +114,7 @@
       const verifiedRole = normalise(verifiedSession.role);
       const verifiedStatus = normalise(verifiedSession.subscription_status || verifiedSession.status);
 
-      if (verifiedRole !== 'admin' && verifiedStatus !== 'active') {
+      if (verifiedRole !== 'admin' && verifiedStatus !== 'active' && verifiedStatus !== 'trial' && verifiedStatus !== 'trialing') {
         redirectTo(TRIAL_REDIRECT_PAGE);
       }
     } catch (error) {
@@ -1059,7 +1059,7 @@ function renderProductsGrid() {
   if (!list.length) {
     const msg = activeSource === 'uk'
       ? 'No UK-sourceable products this week. Switch to All Products to see the full drop.'
-      : 'No products yet. The admin generates the weekly product feed. Check back Monday.';
+      : 'No products yet. Hub drops new products every Monday and Friday.';
     grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><h3>No products found</h3><p>${msg}</p></div>`;
     return;
   }
@@ -2117,8 +2117,13 @@ function runCompare() {
 
 async function loadPublishedProducts() {
   try {
-    const res = await fetch('/api/products');
+    const email = getUserEmail();
+    const res = await fetch('/api/products' + (email ? '?email=' + encodeURIComponent(email) : ''));
     const data = await res.json();
+    if (data.tier === 'trial' && data.lockedCount > 0) {
+      const lockBadge = document.getElementById('last-updated-badge');
+      if (lockBadge) lockBadge.textContent = '🔒 ' + data.lockedCount + ' archived products unlock with full membership';
+    }
     if (data.products && data.products.length) {
       allProducts = data.products;
       buildNicheFilters();
