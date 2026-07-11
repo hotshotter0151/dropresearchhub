@@ -25,10 +25,14 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { action, email, password, name } = req.body;
+  const { action, email, password, name, website } = req.body;
 
   // ── Register ───────────────────────────────────────────────────────────
   if (action === 'register') {
+    // Honeypot: 'website' is an invisible field humans never see.
+    // Bots auto-fill it — return a fake success and create nothing.
+    if (website) return res.status(200).json({ success: true });
+
     if (!email || !password || !name)
       return res.status(400).json({ error: 'Name, email and password required' });
 
@@ -127,13 +131,21 @@ export default async function handler(req, res) {
 
     if (error || !user) return res.status(404).json({ error: 'User not found' });
 
+    // Trial older than 7 days that never converted (webhook flips real
+    // conversions to 'active') — report it as expired so the frontend
+    // can lock products and show the restart prompt.
+    let status = user.subscription_status;
+    const endsAt = status === 'trial' ? computeTrialEnd(user) : null;
+    if (status === 'trial' && endsAt && new Date(endsAt) < new Date()) {
+      status = 'trial_expired';
+    }
+
     return res.status(200).json({
       success: true,
-      subscription_status: user.subscription_status,
+      subscription_status: status,
       role: user.role || 'member',
       name: user.name,
-      trial_ends_at:
-        user.subscription_status === 'trial' ? computeTrialEnd(user) : null,
+      trial_ends_at: endsAt,
     });
   }
 
