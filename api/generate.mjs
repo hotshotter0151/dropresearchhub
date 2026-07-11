@@ -1,6 +1,3 @@
-The file itself is fine — 348 lines, 23KB — so it's the download link playing up (same gremlin as the admin.html issue). Here's the full content to copy-paste instead:
-
-```javascript
 const SUPABASE_URL = 'https://qpkpvtsoxiqcrkztkagn.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 async function sbFetch(path, method = 'GET', body) {
