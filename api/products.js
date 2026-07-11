@@ -24,6 +24,14 @@ function startOfISOWeek(date) {
   return d;
 }
 
+// A 'trial' status user whose signup is more than 7 days old never converted
+// (real conversions get flipped to 'active' by the Stripe webhook) — expired.
+const TRIAL_DAYS = 7;
+function trialExpired(u) {
+  if (!u?.created_at) return false;
+  return (Date.now() - new Date(u.created_at).getTime()) > TRIAL_DAYS * 86400000;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
@@ -63,14 +71,27 @@ export default async function handler(req, res) {
                            // change this default to 'trial' to close the gap)
       if (email) {
         const users = await sbFetch(
-          `/users?email=eq.${encodeURIComponent(email)}&select=subscription_status,role`
+          `/users?email=eq.${encodeURIComponent(email)}&select=subscription_status,role,created_at`
         );
         const u = Array.isArray(users) ? users[0] : null;
         if (u && (u.role === 'admin' || u.subscription_status === 'active')) {
           tier = 'member';
+        } else if (u && u.subscription_status === 'trial' && trialExpired(u)) {
+          tier = 'expired'; // 7 days up, never converted — no products
+        } else if (u && u.subscription_status === 'cancelled') {
+          tier = 'expired'; // cancelled members keep nothing
         } else {
-          tier = 'trial'; // trialists, cancelled, unknown emails
+          tier = 'trial'; // live trialists, unknown emails
         }
+      }
+
+      if (tier === 'expired') {
+        return res.status(200).json({
+          products: [],
+          tier: 'expired',
+          lockedCount: mapped.length,
+          totalLive: mapped.length
+        });
       }
 
       if (tier === 'member') {
