@@ -136,7 +136,7 @@ export default async function handler(req, res) {
     // can lock products and show the restart prompt.
     let status = user.subscription_status;
     const endsAt = status === 'trial' ? computeTrialEnd(user) : null;
-    if (status === 'trial' && endsAt && new Date(endsAt) < new Date()) {
+   if (status === 'trial' && endsAt && new Date(endsAt).getTime() + 12 * 3600000 < Date.now()) {
       status = 'trial_expired';
     }
 
