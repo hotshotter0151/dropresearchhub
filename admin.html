@@ -611,7 +611,8 @@ function adminHeaders(headers={}){
     ...headers,
     'X-DRH-Admin-Email': ADMIN_SESSION?.email || '',
     'X-DRH-Admin-User': ADMIN_SESSION?.userId || '',
-    'X-DRH-Admin-Role': 'admin'
+    'X-DRH-Admin-Role': 'admin',
+    'X-DRH-Admin-Token': ADMIN_SESSION?.admin_token || ''
   };
 }
 
