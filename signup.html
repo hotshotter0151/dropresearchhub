@@ -400,6 +400,18 @@ nav{
 
 .form-input::placeholder{color:var(--g400)}
 
+/* Honeypot — invisible to humans, irresistible to bots */
+.hp-field{
+  position:absolute;
+  left:-9999px;
+  top:-9999px;
+  opacity:0;
+  height:0;
+  width:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
 .password-wrap{
   position:relative;
 }
@@ -633,7 +645,7 @@ nav{
       </div>
 
       <div class="includes">
-        <div class="include-item">Curated product drops every week, with extra opportunities added when Hub finds something strong</div>
+        <div class="include-item">New product drops every Monday and Friday</div>
         <div class="include-item">Full 7-point product scoring and research framework</div>
         <div class="include-item">TikTok and Meta ad angle support for product ideas</div>
         <div class="include-item">Unlimited product validator during your trial</div>
@@ -673,8 +685,6 @@ nav{
 
       <div class="error-msg" id="error-msg"></div>
 
-      <form id="signup-form">
-
       <div class="form-group">
         <label class="form-label" for="name">Full name</label>
         <input class="form-input" type="text" id="name" placeholder="Your full name" autocomplete="name"/>
@@ -682,7 +692,13 @@ nav{
 
       <div class="form-group">
         <label class="form-label" for="email">Email address</label>
-        <input class="form-input" type="email" id="email" placeholder="Enter your account email" autocomplete="email"/>
+        <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <!-- Honeypot: humans never see or fill this. Bots do. -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off"/>
       </div>
 
       <div class="form-group">
@@ -701,9 +717,7 @@ nav{
         </div>
       </div>
 
-      <button class="form-submit" id="submit-btn" type="submit">Start my free trial →</button>
-
-      </form>
+      <button class="form-submit" id="submit-btn" onclick="handleSignup()">Start my free trial →</button>
 
       <div class="secure-row">
         <div class="secure-item">
@@ -734,49 +748,16 @@ nav{
 </div>
 
 <script>
-const signupForm = document.getElementById('signup-form');
-const errorBox = document.getElementById('error-msg');
-const submitBtn = document.getElementById('submit-btn');
-
-function readExistingSession() {
-  try {
-    return JSON.parse(sessionStorage.getItem('drh_session') || 'null');
-  } catch {
-    return null;
-  }
-}
-
-function redirectExistingSession() {
-  const session = readExistingSession();
-
-  if (!session || !session.email) return;
-
-  const role = String(session.role || '').toLowerCase();
-  const status = String(session.status || session.subscription_status || '').toLowerCase();
-
-  if (role === 'admin') {
-    window.location.href = 'admin.html';
-    return;
-  }
-
-  if (status === 'active') {
-    window.location.href = 'members.html';
-    return;
-  }
-
-  if (status === 'trial') {
-    window.location.href = 'dashboard.html';
-  }
-}
-
 function showError(msg) {
-  errorBox.textContent = msg || 'Something went wrong. Please try again.';
-  errorBox.classList.add('show');
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.add('show');
 }
 
 function clearError() {
-  errorBox.textContent = '';
-  errorBox.classList.remove('show');
+  const el = document.getElementById('error-msg');
+  el.textContent = '';
+  el.classList.remove('show');
 }
 
 function togglePassword(inputId, btn) {
@@ -796,122 +777,112 @@ function isValidEmail(email) {
 }
 
 function setButtonLoading(isLoading) {
+  const btn = document.getElementById('submit-btn');
+
   if (isLoading) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Setting up your trial...';
+    btn.disabled = true;
+    btn.textContent = 'Setting up your trial...';
   } else {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Start my free trial →';
+    btn.disabled = false;
+    btn.textContent = 'Start my free trial →';
   }
 }
 
-async function readJsonSafely(response, fallbackMessage) {
-  const text = await response.text();
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    if (response.status === 404 || text.toLowerCase().includes('page could not be found')) {
-      throw new Error(fallbackMessage || 'This service is not live yet. Check the API file is uploaded and deployed.');
-    }
-
-    throw new Error('The server returned an invalid response. Check the Vercel function logs.');
-  }
-}
-
-function validateForm(name, email, password, confirm) {
-  if (!name) {
-    showError('Please enter your full name.');
-    return false;
-  }
-
-  if (!isValidEmail(email)) {
-    showError('Please enter a valid email address.');
-    return false;
-  }
-
-  if (password.length < 8) {
-    showError('Password must be at least 8 characters.');
-    return false;
-  }
-
-  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
-    showError('Password must include at least one letter and one number.');
-    return false;
-  }
-
-  if (password !== confirm) {
-    showError('Passwords do not match.');
-    return false;
-  }
-
-  return true;
-}
-
-async function handleSignup(event) {
-  event.preventDefault();
-
+async function handleSignup() {
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim().toLowerCase();
   const password = document.getElementById('password').value;
   const confirm = document.getElementById('confirm-password').value;
+  const honeypot = document.getElementById('website').value;
 
   clearError();
 
-  if (!validateForm(name, email, password, confirm)) {
+  // Honeypot filled = bot. Pretend to work, do nothing.
+  if (honeypot) {
+    setButtonLoading(true);
+    return;
+  }
+
+  if (!name) {
+    showError('Please enter your full name.');
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    showError('Please enter a valid email address.');
+    return;
+  }
+
+  if (password.length < 8) {
+    showError('Password must be at least 8 characters.');
+    return;
+  }
+
+  if (password !== confirm) {
+    showError('Passwords do not match.');
     return;
   }
 
   setButtonLoading(true);
 
   try {
-    const registerResponse = await fetch('/api/auth', {
+    const regRes = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'register',
         email,
         name,
-        password
+        password,
+        website: honeypot
       })
     });
 
-    const registerData = await readJsonSafely(
-      registerResponse,
-      'Signup service is not available. Check /api/auth is deployed.'
-    );
+    const regData = await regRes.json().catch(() => ({}));
 
-    if (!registerResponse.ok || registerData.success === false) {
-      throw new Error(registerData.error || 'Registration failed. Please try again.');
+    if (!regRes.ok) {
+      // 409 = account already exists — usually an abandoned checkout.
+      // Don't block them; carry on to Stripe so they can finish setup.
+      if (regRes.status !== 409) {
+        showError(regData.error || 'Registration failed. Please try again.');
+        setButtonLoading(false);
+        return;
+      }
     }
 
     sessionStorage.setItem('drh_pending_email', email);
     sessionStorage.setItem('drh_pending_name', name);
 
-    const stripeResponse = await fetch('/api/stripe-checkout', {
+    const stripeRes = await fetch('/api/stripe-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name })
+      body: JSON.stringify({
+        email,
+        name
+      })
     });
 
-    const stripeData = await readJsonSafely(
-      stripeResponse,
-      'Stripe checkout service is not available. Check /api/stripe-checkout is deployed.'
-    );
+    const stripeData = await stripeRes.json().catch(() => ({}));
 
-    if (!stripeResponse.ok || !stripeData.url) {
-      throw new Error(stripeData.error || 'Could not start trial. Please try again.');
+    if (stripeData.url) {
+      window.location.href = stripeData.url;
+      return;
     }
 
-    window.location.href = stripeData.url;
-  } catch (error) {
-    showError(error.message || 'Something went wrong. Please try again.');
+    showError(stripeData.error || 'Could not start trial. Please try again.');
+    setButtonLoading(false);
+
+  } catch (e) {
+    showError('Something went wrong. Please try again.');
     setButtonLoading(false);
   }
 }
 
-redirectExistingSession();
-signupForm.addEventListener('submit', handleSignup);
+['name','email','password','confirm-password'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSignup();
+  });
+});
 </script>
 
 </body>
