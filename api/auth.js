@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 const supabase = createClient(
   'https://qpkpvtsoxiqcrkztkagn.supabase.co',
@@ -7,6 +8,19 @@ const supabase = createClient(
 );
 
 const TRIAL_DAYS = 7;
+
+// ── Admin API token ────────────────────────────────────────────────────
+// Minted on admin login, verified by write endpoints (products.js etc).
+// HMAC-signed so it can't be forged without ADMIN_TOKEN_SECRET.
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || '';
+
+function mintAdminToken(email) {
+  if (!ADMIN_TOKEN_SECRET) return null;
+  const expires = Date.now() + 7 * 86400000; // 7 days
+  const payload = Buffer.from(`${email}:${expires}`).toString('base64url');
+  const sig = crypto.createHmac('sha256', ADMIN_TOKEN_SECRET).update(payload).digest('hex');
+  return `${payload}.${sig}`;
+}
 
 function computeTrialEnd(user) {
   // If the webhook ever stores a real Stripe trial end date on the row,
@@ -98,6 +112,7 @@ export default async function handler(req, res) {
         name: user.name,
         role: 'admin',
         subscription_status: 'active',
+        admin_token: mintAdminToken(user.email),
         redirect: '/admin.html',
       });
     }
@@ -136,7 +151,7 @@ export default async function handler(req, res) {
     // can lock products and show the restart prompt.
     let status = user.subscription_status;
     const endsAt = status === 'trial' ? computeTrialEnd(user) : null;
-   if (status === 'trial' && endsAt && new Date(endsAt).getTime() + 12 * 3600000 < Date.now()) {
+    if (status === 'trial' && endsAt && new Date(endsAt).getTime() + 12 * 3600000 < Date.now()) {
       status = 'trial_expired';
     }
 
