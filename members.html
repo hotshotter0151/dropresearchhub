@@ -1413,8 +1413,8 @@ function buildAnalysisBody(p) {
       <div class="analysis-panel-body">
         <p style="font-size:13px;color:var(--g500);margin-bottom:18px">Enter your numbers — Hub models three scenarios and tells you exactly what success looks like before you spend a penny.</p>
         <div class="calc-grid" style="margin-bottom:12px">
-          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="34.99" value="${(p.sellingPrice||'').replace(/[^0-9.]/g,'')||''}" oninput="liveCalc()"></div></div>
-          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="8.50" value="${(p.supplierCost||'').replace(/[^0-9.]/g,'')||''}" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
           <div class="calc-field"><label class="calc-label">Shipping per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50" oninput="liveCalc()"></div></div>
           <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20" oninput="liveCalc()"></div></div>
         </div>
