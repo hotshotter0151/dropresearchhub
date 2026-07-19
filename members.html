@@ -1426,6 +1426,7 @@ function buildAnalysisBody(p) {
             <div style="font-size:11px;color:var(--g400);font-weight:700;margin-bottom:3px">Monthly profit</div>
             <div style="font-size:20px;font-weight:900;margin-bottom:5px" id="sc-cons-profit">—</div>
             <div style="font-size:10px;color:var(--g400)" id="sc-cons-roas">ROAS: —</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-cons-cpp">Cost per purchase: —</div>
             <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-cons-days">Break-even: —</div>
           </div>
           <div style="background:var(--navy);border:1.5px solid var(--navy);border-radius:14px;padding:14px;text-align:center;position:relative">
@@ -1435,6 +1436,7 @@ function buildAnalysisBody(p) {
             <div style="font-size:11px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:3px">Monthly profit</div>
             <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:5px" id="sc-real-profit">—</div>
             <div style="font-size:10px;color:rgba(255,255,255,.5)" id="sc-real-roas">ROAS: —</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px" id="sc-real-cpp">Cost per purchase: —</div>
             <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px" id="sc-real-days">Break-even: —</div>
           </div>
           <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:14px;padding:14px;text-align:center">
@@ -1443,6 +1445,7 @@ function buildAnalysisBody(p) {
             <div style="font-size:11px;color:var(--g400);font-weight:700;margin-bottom:3px">Monthly profit</div>
             <div style="font-size:20px;font-weight:900;margin-bottom:5px" id="sc-agg-profit">—</div>
             <div style="font-size:10px;color:var(--g400)" id="sc-agg-roas">ROAS: —</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-agg-cpp">Cost per purchase: —</div>
             <div style="font-size:10px;color:var(--g400);margin-top:2px" id="sc-agg-days">Break-even: —</div>
           </div>
         </div>
@@ -1741,7 +1744,7 @@ function liveCalc() {
   const scenarios = [ ['cons', 1], ['real', 3], ['agg', 7] ];
   scenarios.forEach(([key, sales]) => {
     if (!ready) {
-      setEl(`sc-${key}-profit`, '—'); setEl(`sc-${key}-roas`, 'ROAS: —'); setEl(`sc-${key}-days`, 'Break-even: —');
+      setEl(`sc-${key}-profit`, '—'); setEl(`sc-${key}-roas`, 'ROAS: —'); setEl(`sc-${key}-cpp`, 'Cost per purchase: —'); setEl(`sc-${key}-days`, 'Break-even: —');
       return;
     }
     const monthlyRev = sell * sales * 30;
@@ -1752,6 +1755,8 @@ function liveCalc() {
     if (profitEl) { profitEl.textContent = fmt(profit); if (key !== 'real') profitEl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)'; }
     const roas = ads > 0 ? ((sell * sales) / ads).toFixed(2) + 'x' : '—';
     setEl(`sc-${key}-roas`, 'ROAS: ' + roas);
+    const cpp = ads > 0 ? `£${(ads / sales).toFixed(2)}` : '—';
+    setEl(`sc-${key}-cpp`, 'Cost per purchase: ' + cpp);
     const dailyProfit = profit / 30;
     let be;
     if (ads <= 0) be = 'no ad spend';
