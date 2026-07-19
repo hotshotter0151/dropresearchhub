@@ -1415,8 +1415,8 @@ function buildAnalysisBody(p) {
         <div class="calc-grid" style="margin-bottom:12px">
           <div class="calc-field"><label class="calc-label">Your selling price</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-sell" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
           <div class="calc-field"><label class="calc-label">Supplier cost</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-supplier" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
-          <div class="calc-field"><label class="calc-label">Shipping per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
-          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="0.00" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Shipping per unit</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-shipping" type="number" placeholder="2.50" oninput="liveCalc()"></div></div>
+          <div class="calc-field"><label class="calc-label">Daily ad budget</label><div class="calc-input-wrap"><span class="calc-prefix">£</span><input class="calc-input" id="calc-ads" type="number" placeholder="20" oninput="liveCalc()"></div></div>
         </div>
         <div id="margin-alert" style="display:none;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.5;border:1px solid">⚠️ <strong>Hub says:</strong> <span id="margin-alert-text"></span></div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
@@ -1699,6 +1699,100 @@ function updateSlider(val) {
   const profEl = document.getElementById('slider-profit');
   if(profEl){ profEl.textContent=fmt(netProfit); profEl.style.color=netProfit>=0?'var(--green)':'var(--red)'; }
   setEl('slider-roas', roas+(roas!=='—'?'x':''));
+}
+
+let _calcState = { sell: 0, supplier: 0, shipping: 0, ads: 0 };
+
+function liveCalc() {
+  const num = id => { const e = document.getElementById(id); const v = parseFloat(e && e.value); return isNaN(v) ? 0 : v; };
+  const sell = num('calc-sell');
+  const supplier = num('calc-supplier');
+  const shipping = num('calc-shipping');
+  const ads = num('calc-ads');
+  _calcState = { sell, supplier, shipping, ads };
+
+  const setEl = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  const fmt = n => n >= 0 ? `£${Math.round(n).toLocaleString()}` : `-£${Math.abs(Math.round(n)).toLocaleString()}`;
+
+  const ready = sell > 0 && supplier > 0;
+
+  // Margin alert
+  const alertBox = document.getElementById('margin-alert');
+  const alertText = document.getElementById('margin-alert-text');
+  if (alertBox && alertText) {
+    if (ready) {
+      const unitProfit = sell - supplier - shipping;
+      const marginPct = (unitProfit / sell) * 100;
+      if (unitProfit <= 0) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = '#FEF2F2'; alertBox.style.borderColor = '#FECACA'; alertBox.style.color = '#B91C1C';
+        alertText.textContent = `You lose money on every sale at these numbers — supplier cost plus shipping is more than your selling price.`;
+      } else if (marginPct < 40) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = '#FFFBEB'; alertBox.style.borderColor = '#FDE68A'; alertBox.style.color = '#92400E';
+        alertText.textContent = `Margin is ${marginPct.toFixed(0)}% — below the 45% I look for. Ads will eat this fast; push price up or source cheaper.`;
+      } else {
+        alertBox.style.display = 'none';
+      }
+    } else { alertBox.style.display = 'none'; }
+  }
+
+  // Scenario cards: 1 / 3 / 7 sales per day
+  const scenarios = [ ['cons', 1], ['real', 3], ['agg', 7] ];
+  scenarios.forEach(([key, sales]) => {
+    if (!ready) {
+      setEl(`sc-${key}-profit`, '—'); setEl(`sc-${key}-roas`, 'ROAS: —'); setEl(`sc-${key}-days`, 'Break-even: —');
+      return;
+    }
+    const monthlyRev = sell * sales * 30;
+    const monthlyCogs = (supplier + shipping) * sales * 30;
+    const monthlyAds = ads * 30;
+    const profit = monthlyRev - monthlyCogs - monthlyAds;
+    const profitEl = document.getElementById(`sc-${key}-profit`);
+    if (profitEl) { profitEl.textContent = fmt(profit); if (key !== 'real') profitEl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)'; }
+    const roas = ads > 0 ? ((sell * sales) / ads).toFixed(2) + 'x' : '—';
+    setEl(`sc-${key}-roas`, 'ROAS: ' + roas);
+    const dailyProfit = profit / 30;
+    let be;
+    if (ads <= 0) be = 'no ad spend';
+    else if (dailyProfit <= 0) be = 'not at this rate';
+    else { const unitsToBE = Math.ceil(ads / (sell - supplier - shipping)); be = `${unitsToBE} sale${unitsToBE === 1 ? '' : 's'}/day`; }
+    setEl(`sc-${key}-days`, 'Break-even: ' + be);
+  });
+
+  // Slider follows current inputs
+  const slider = document.getElementById('sales-slider');
+  if (slider) updateSlider(slider.value);
+
+  // Platform comparison — est sales/day from daily ad budget
+  // Assumptions: CTR 1.5%, CVR 2.5% on TikTok/Meta CPM; Google CPC model CVR 3.5%
+  if (ready && ads > 0) {
+    const est = (cpm, ctr, cvr) => { const clicks = (ads / cpm) * 1000 * ctr; return Math.max(0, clicks * cvr); };
+    const fmtSales = n => n >= 1 ? n.toFixed(1) : n.toFixed(2);
+    setEl('plat-tiktok', fmtSales(est(6, 0.015, 0.025)));
+    setEl('plat-meta', fmtSales(est(11, 0.015, 0.025)));
+    setEl('plat-google', fmtSales(Math.max(0, (ads / 0.8) * 0.035)));
+  } else {
+    setEl('plat-tiktok', '—'); setEl('plat-meta', '—'); setEl('plat-google', '—');
+  }
+
+  // Hub verdict
+  const verdictBox = document.getElementById('hub-calc-verdict');
+  const verdictText = document.getElementById('hub-calc-text');
+  if (verdictBox && verdictText) {
+    if (ready) {
+      const unitProfit = sell - supplier - shipping;
+      const marginPct = (unitProfit / sell) * 100;
+      const realProfit = (sell * 3 * 30) - ((supplier + shipping) * 3 * 30) - (ads * 30);
+      let v;
+      if (unitProfit <= 0) v = `These numbers don't work — you're underwater before ads. Reprice or find a cheaper supplier before going any further.`;
+      else if (marginPct >= 60 && realProfit > 500) v = `Strong economics. ${marginPct.toFixed(0)}% margin gives you real room for ad testing — at a realistic 3 sales/day you'd clear ${fmt(realProfit)}/month. Worth a proper test.`;
+      else if (marginPct >= 45) v = `Workable. ${marginPct.toFixed(0)}% margin is inside my range — at 3 sales/day you're looking at ${fmt(realProfit)}/month. Keep creative costs tight and this can run.`;
+      else v = `Thin. ${marginPct.toFixed(0)}% margin means ads have to overperform for this to pay. I'd only test this with a proven angle — or push the price.`;
+      verdictBox.style.display = 'block';
+      verdictText.textContent = v;
+    } else { verdictBox.style.display = 'none'; }
+  }
 }
 
 function runCalc(){liveCalc();}
