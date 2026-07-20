@@ -67,9 +67,12 @@ export default async function handler(req, res) {
       const first = items[0]?.item || null;
       if (!first) { console.log('[ALI] No items for:', aliSearchTerm); return null; }
       const img = first.image ? 'https:' + first.image : null;
-      console.log('[ALI] Got image:', img ? 'yes' : 'no', 'for:', aliSearchTerm);
+      const itemId = first.itemId || first.item_id || null;
+      const productUrl = itemId ? ('https://www.aliexpress.com/item/' + itemId + '.html') : (first.itemUrl ? (String(first.itemUrl).startsWith('http') ? first.itemUrl : 'https:' + first.itemUrl) : null);
+      console.log('[ALI] Got image:', img ? 'yes' : 'no', '| exact URL:', productUrl ? 'yes' : 'no', 'for:', aliSearchTerm);
       return {
         img,
+        productUrl,
         supplierPrice: first.sku?.def?.promotionPrice || null,
         orderCount: first.sales || null,
         rating: first.averageStarRate || null,
@@ -323,6 +326,7 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
       return {
         ...p,
         img: ali?.img || serpImages[i] || '',
+        aliProductUrl: ali?.productUrl || null,
         supplierCost: ali?.supplierPrice ? `£${parseFloat(String(ali.supplierPrice).replace(/[^\d.]/g,'')).toFixed(2)} (AliExpress)` : p.supplierCost,
         aliOrderCount: ali?.orderCount || null,
         aliRating: ali?.rating || null,
@@ -367,5 +371,6 @@ scoring values must be real whole numbers, maxes: ukMarketGap 25, problemIntensi
     const raw = (aiData.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
     return res.status(200).json({ content: [{ type: 'text', text: raw }] });
   }
+
   return res.status(400).json({ error: 'Invalid request format' });
 }
