@@ -1509,9 +1509,9 @@ function buildAnalysisBody(p) {
             <div class="research-link-icon" style="background:#f3e8ff">🛍️</div>
             <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">TIKTOK SHOP UK</div>What's actually selling</div>
           </a>
-          <a class="research-link" href="${p.sourceType==='uk'?'https://www.google.com/search?q='+aliQ+'+site:app.avasam.com':'https://www.aliexpress.com/wholesale?SearchText='+aliQ}" target="_blank">
+          <a class="research-link" href="${p.sourceType==='uk'?'https://www.google.com/search?q='+aliQ+'+site:app.avasam.com':(p.aliProductUrl||'https://www.aliexpress.com/wholesale?SearchText='+aliQ)}" target="_blank">
             <div class="research-link-icon" style="background:#fff0e6">🛒</div>
-            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">ALIEXPRESS</div>Find suppliers</div>
+            <div><div style="font-size:11px;color:var(--g400);margin-bottom:2px">${p.sourceType==='uk'?'UK SUPPLIERS':'ALIEXPRESS'}</div>${p.sourceType==='uk'?'Find UK suppliers (Avasam)':(p.aliProductUrl?'View exact product':'Find suppliers')}</div>
           </a>
           <a class="research-link" href="https://www.amazon.co.uk/s?k=${aliQ}" target="_blank">
             <div class="research-link-icon" style="background:#fff8e6">📦</div>
