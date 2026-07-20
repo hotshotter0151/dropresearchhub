@@ -224,18 +224,42 @@ Product 3 must be a product type realistically stocked by UK dropship suppliers.
 - aliSearchTerm: for product 3 (UK) still provide an AliExpress search term as a fallback reference`;
     }
 
-    const prompt = `UK dropshipping product researcher. Today: ${today}.
+    const prompt = `Elite UK emerging-product analyst. Today: ${today}.
 
 LIVE SIGNALS:
 ${trendingContext || 'Use mid-2026 UK ecommerce knowledge.'}
 
 ALREADY PUBLISHED (never repeat): ${publishedNames.slice(0,20).join(', ') || 'none'}
 
+You are the research engine behind DropResearch Hub. Members pay for one thing: products caught BEFORE the crowd sees them. One recognisable, saturated pick destroys the product's credibility. Your job is not to list good products — it is to identify products almost nobody in the UK is selling yet that the signals say they soon will be.
+
+THE MEMORY RULE — read twice: your training data is months old. Any product you remember being a dropshipping winner, seeing in trend lists, or associating with success stories has ALREADY saturated in the real world. Familiarity is disqualification. If a product idea comes easily because you have seen it discussed before, that ease is the signal to reject it. Correct picks should feel slightly obscure and un-proven — genuinely emerging products have not yet generated the content you were trained on.
+
+METHOD — derive, do not recall. For each niche, reason in this exact chain:
+1. Driver first: identify a current force creating NEW demand. Valid driver types: (a) a behaviour shift — a new routine, habit, anxiety or hobby growing in the UK; (b) geographic lag — working in the US/Australia/Korea but NOT yet crossed to the UK (check the live signals); (c) a pre-seasonal window — a need peaking 6-10 weeks from today, positioned before UK sellers stock it; (d) a platform/tech/regulation change creating a new need; (e) a subculture practice crossing into the mainstream.
+2. Product second: infer what physical product that driver creates demand for. The product serves the driver — never pick a product then reverse-engineer a driver.
+3. UK check: confirm the driver applies to UK life specifically (climate, housing, commuting, pets, gardens, school terms, UK events).
+
+REALITY CONSTRAINT: every pick must be a product that already exists and is purchasable on AliExpress today with multiple supplier listings. Emerging means unknown to UK BUYERS — not unmanufactured. The sweet spot: products Chinese suppliers already list in volume that UK sellers have not noticed. If you doubt suppliers currently list it, discard.
+
+THE FIVE KILL TESTS — apply to every candidate; one failure = discard and derive again:
+1. Recognition test: would a typical UK buyer recognise this product type from Amazon bestsellers, supermarket shelves, TikTok Shop ads, or a mate owning one? Recognised = dead.
+2. Commodity test: is it, or is it a variant/bundle/colour/size of, a commoditised product (power banks, chargers, cables, phone accessories, water bottles, LED products, mini fans, humidifiers, generic cleaning gadgets)? A twist on a commodity is still a commodity = dead.
+3. Fad test: does demand depend on one viral moment or meme rather than a durable driver? Spike-shaped = dead.
+4. Crowding test: would you estimate many UK sellers already run ads for this exact product? If your honest estimate is probably yes = dead.
+5. Boredom test: if this pick could appear in a generic top-10 dropshipping products article, it is not emerging = dead.
+
 Find 3 emerging UK dropshipping products — one per niche:
 ${sourceLines}
 
 Rules: physical products only, £20-£60 price, 45%+ margin, not banned (no: air fryers, massage guns, resistance bands, LED strips, posture correctors, water bottles, phone cases, beard trimmers, wireless earbuds, yoga mats), evergreen demand, strong video potential.
 ${sourceRules}
+
+HONESTY CONSTRAINTS (non-negotiable):
+- whyNow must name the DRIVER and why the window is open NOW. Rising search volume on an old product type is not a valid whyNow.
+- If saturationRisk is Medium: grade cannot exceed B+, confidence cannot be High, and verdict cannot be Strong Opportunity.
+- If no pick in a niche passes all five kill tests, choose a more obscure product in that niche rather than a safer familiar one. Obscure-but-reasoned beats familiar-but-safe.
+- aliSearchTerm must be the literal 2-4 word generic phrase a supplier listing would use (e.g. silicone pet paw cleaner) — never the marketing name you invented. Product names can be specific; search terms must be supplier-generic and findable.
 
 Return ONLY valid JSON array of 3 objects. No markdown. CRITICAL: never use double quote characters inside any string value — use single quotes or rephrase. All strings must be short and JSON-safe.
 
