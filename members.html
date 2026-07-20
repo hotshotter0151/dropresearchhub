@@ -1175,6 +1175,40 @@ function buildSupplierTermHtml(term, i, sourceType) {
   return '<div class="supplier-term"><div class="supplier-term-num">'+(i+1)+'</div><div class="supplier-term-text">'+term+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+links.map(function(l){return '<a class="supplier-term-link" href="'+l.url+'" target="_blank">'+l.label+'</a>';}).join('')+'</div></div>';
 }
 
+async function drhCopyImage(url, btn) {
+  const orig = btn.textContent;
+  try {
+    const resp = await fetch(url, {mode:'cors'});
+    const blob = await resp.blob();
+    const pngBlob = blob.type === 'image/png' ? blob : await new Promise((resolve,reject)=>{
+      const img = new Image(); img.crossOrigin='anonymous';
+      img.onload = ()=>{ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); c.toBlob(b=>b?resolve(b):reject(new Error('no blob')),'image/png'); };
+      img.onerror = reject; img.src = URL.createObjectURL(blob);
+    });
+    await navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob})]);
+    btn.textContent = '\u2713 Copied \u2014 paste into Ali';
+  } catch(e) {
+    btn.textContent = 'Copy blocked \u2014 use Download';
+  }
+  setTimeout(()=>{ btn.textContent = orig; }, 2500);
+}
+async function drhDownloadImage(url, name, btn) {
+  const orig = btn.textContent;
+  try {
+    const resp = await fetch(url, {mode:'cors'});
+    const blob = await resp.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (name||'product') + '.jpg';
+    document.body.appendChild(a); a.click(); a.remove();
+    btn.textContent = '\u2713 Downloaded';
+  } catch(e) {
+    window.open(url, '_blank');
+    btn.textContent = 'Opened \u2014 right-click, Save image';
+  }
+  setTimeout(()=>{ btn.textContent = orig; }, 2500);
+}
+
 function buildAnalysisBody(p) {
   const body=document.getElementById('analysis-body');
   const aliQ=encodeURIComponent(p.aliSearchTerm||p.name);
@@ -1245,6 +1279,70 @@ function buildAnalysisBody(p) {
   // Build launch plan URL with product name and image
   const launchUrl = `dashboard.html?product=${encodeURIComponent(p.name)}&image=${encodeURIComponent(p.img||'')}`;window._currentLaunchUrl = launchUrl;
 
+  // ── SOURCE THIS PRODUCT bar ──
+  const srcTerm = p.aliSearchTerm || p.name || '';
+  const srcTermEnc = encodeURIComponent(srcTerm);
+  const isUKsrc = p.sourceType === 'uk';
+  const hasExact = !!p.aliProductUrl;
+  const proofChips = [];
+  if (p.supplierCost && String(p.supplierCost).includes('AliExpress')) proofChips.push('💷 Supplier: ' + String(p.supplierCost).replace(' (AliExpress)',''));
+  if (p.aliOrderCount) proofChips.push('📦 ' + Number(p.aliOrderCount).toLocaleString() + ' orders');
+  if (p.aliRating) proofChips.push('⭐ ' + p.aliRating + ' rating');
+  const proofHtml = proofChips.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${proofChips.map(c=>`<span style="background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:700">${c}</span>`).join('')}</div>` : '';
+  const reportHref = `mailto:support@dropresearchhub.com?subject=${encodeURIComponent('Listing check: ' + (p.name||'product'))}&body=${encodeURIComponent('Hi Hub, the sourcing link for this product did not match what I expected: ' + (p.name||''))}`;
+  const imgForSearch = p.img || p.image || '';
+  const imgToolsHtml = imgForSearch ? `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dashed var(--g200)">
+        <span style="font-size:11px;font-weight:800;color:var(--g500);text-transform:uppercase">🔍 Image search on AliExpress:</span>
+        <button onclick="drhCopyImage('${imgForSearch.replace(/'/g,'')}',this)" style="background:#fff;color:var(--navy);border:1.5px solid var(--navy);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:800;cursor:pointer">📋 Copy image</button>
+        <button onclick="drhDownloadImage('${imgForSearch.replace(/'/g,'')}','${(p.name||'product').replace(/[^a-zA-Z0-9 ]/g,'').replace(/ /g,'-')}',this)" style="background:#fff;color:var(--g700);border:1.5px solid var(--g300);border-radius:8px;padding:7px 14px;font-size:11px;font-weight:800;cursor:pointer">⬇ Download image</button>
+        <span style="font-size:11px;color:var(--g400)">then click the 📷 camera icon in AliExpress search and paste or upload — finds the exact product and cheaper clones</span>
+      </div>` : '';
+  let sourceBarHtml = '';
+  if (isUKsrc) {
+    sourceBarHtml = `
+    <div style="background:#fff;border:2px solid var(--navy);border-radius:16px;padding:18px 22px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-size:20px">🇬🇧</span><div style="font-size:14px;font-weight:900;color:var(--navy)">Source this product — UK suppliers</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:var(--g50);border:1.5px dashed var(--g300);border-radius:10px;padding:10px 12px">
+          <span style="font-size:13px;font-weight:800;color:var(--navy)" id="src-term-text">${srcTerm}</span>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('src-term-text').textContent).then(()=>{this.textContent='✓ Copied';setTimeout(()=>{this.textContent='Copy term'},1500)})" style="margin-left:auto;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">Copy term</button>
+        </div>
+        <a href="https://app.avasam.com/search?keyword=${srcTermEnc}" target="_blank" style="background:var(--navy);color:#fff;border-radius:10px;padding:11px 18px;font-size:12px;font-weight:800;text-decoration:none">Search Avasam →</a>
+        <a href="https://www.cjdropshipping.com/search?keyword=${srcTermEnc}" target="_blank" style="background:#fff;color:var(--navy);border:1.5px solid var(--navy);border-radius:10px;padding:10px 18px;font-size:12px;font-weight:800;text-decoration:none">Search CJ UK →</a>
+        <a href="https://www.amazon.co.uk/s?k=${srcTermEnc}" target="_blank" style="background:#fff;color:var(--g700);border:1.5px solid var(--g300);border-radius:10px;padding:10px 18px;font-size:12px;font-weight:800;text-decoration:none">Amazon UK check →</a>
+      </div>
+      ${imgToolsHtml}
+      <div style="font-size:12px;color:var(--g500);line-height:1.6">How to find it: <b>1)</b> free Avasam login <b>2)</b> paste Hub's term above into their search <b>3)</b> confirm the exact variant and price before listing. UK supplier stock varies — Hub's image shows the product type; always confirm the listing you'll fulfil from. <a href="${reportHref}" style="color:var(--g400)">Listing not matching? Tell Hub →</a></div>
+    </div>`;
+  } else if (hasExact) {
+    sourceBarHtml = `
+    <div style="background:#fff;border:2px solid #16A34A;border-radius:16px;padding:18px 22px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:900">● VERIFIED LIVE LISTING</span>
+        <div style="font-size:13px;color:var(--g600)">Hub's image, price and analysis come from this exact listing.</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <a href="${p.aliProductUrl}" target="_blank" style="background:#16A34A;color:#fff;border-radius:10px;padding:12px 20px;font-size:13px;font-weight:900;text-decoration:none">🛒 View the exact listing Hub analysed →</a>
+        <a href="https://www.amazon.co.uk/s?k=${srcTermEnc}" target="_blank" style="background:#fff;color:var(--g700);border:1.5px solid var(--g300);border-radius:10px;padding:11px 18px;font-size:12px;font-weight:800;text-decoration:none;align-self:center">Amazon UK competition check →</a>
+      </div>
+      ${proofHtml}
+      ${imgToolsHtml}
+      <div style="font-size:11px;color:var(--g400);margin-top:10px"><a href="${reportHref}" style="color:var(--g400)">Listing not matching? Tell Hub →</a></div>
+    </div>`;
+  } else {
+    sourceBarHtml = `
+    <div style="background:#fff;border:2px solid var(--g300);border-radius:16px;padding:18px 22px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-size:18px">🛒</span><div style="font-size:14px;font-weight:900;color:var(--navy)">Source this product</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="https://www.aliexpress.com/wholesale?SearchText=${srcTermEnc}" target="_blank" style="background:var(--navy);color:#fff;border-radius:10px;padding:11px 18px;font-size:12px;font-weight:800;text-decoration:none">Search AliExpress for this product →</a>
+        <a href="https://www.amazon.co.uk/s?k=${srcTermEnc}" target="_blank" style="background:#fff;color:var(--g700);border:1.5px solid var(--g300);border-radius:10px;padding:10px 18px;font-size:12px;font-weight:800;text-decoration:none">Amazon UK check →</a>
+      </div>
+      ${imgToolsHtml}
+      <div style="font-size:12px;color:var(--g500);margin-top:10px;line-height:1.6">Use Hub's exact term — <b>${srcTerm}</b> — and match the product image above to the listing. <a href="${reportHref}" style="color:var(--g400)">Listing not matching? Tell Hub →</a></div>
+    </div>`;
+  }
+
   body.innerHTML=`
     <div class="hub-analysis-complete">
       <div class="hub-complete-step"><span class="hub-complete-tick">✓</span>Trend analysed</div>
@@ -1276,6 +1374,8 @@ function buildAnalysisBody(p) {
         </div>
       </div>
     </div>
+
+    ${sourceBarHtml}
 
     <div class="score-row">
       <div class="score-card"><div class="score-card-label">Emerging Score</div><div class="score-card-value" style="color:${gradeColor(p.grade)}">${emergingScoreDisplay ? `<span class="drh-counter" data-target="${emergingScoreDisplay}" data-duration="920">${p.emergingScore}</span>` : '—'}<span style="font-size:16px;color:var(--g400)">/100</span></div><div class="score-card-sub">Overall opportunity</div></div>
