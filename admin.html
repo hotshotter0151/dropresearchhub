@@ -1049,7 +1049,13 @@ function renderPendingList(){
         ${productImageHtml(p)}
         <div class="product-links">
           <a href="https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=GB&q=${encodeURIComponent(p.name)}" target="_blank" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe">📺 Meta Ads</a>
-          <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fff0e6;color:#c2410c;border:1px solid #fed7aa">🛒 AliExpress</a>
+          ${String(p.sourceType||'').toLowerCase()==='uk'
+            ? `<a href="https://app.avasam.com/search?keyword=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0">🇬🇧 Avasam</a>
+               <a href="https://www.cjdropshipping.com/search?keyword=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0">🇬🇧 CJ UK</a>
+               <a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fff0e6;color:#c2410c;border:1px solid #fed7aa">🛒 Ali ref</a>`
+            : p.aliProductUrl
+              ? `<a href="${p.aliProductUrl}" target="_blank" style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0">🛒 Exact listing ✓</a>`
+              : `<a href="https://www.aliexpress.com/wholesale?SearchText=${encodeURIComponent(p.aliSearchTerm||p.name)}" target="_blank" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a">🛒 Ali search only ⚠</a>`}
           <a href="https://trends.pinterest.com/trends/explore#ideas=${encodeURIComponent(p.name)}&country=GB" target="_blank" style="background:#fce4ec;color:#9c27b0;border:1px solid #f48fb1">📌 Pinterest</a>
         </div>
       </div>
