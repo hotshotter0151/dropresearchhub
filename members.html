@@ -1168,7 +1168,7 @@ function buildSupplierTermHtml(term, i, sourceType) {
   var links = isUK ? [
     {label:'Search Avasam →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:app.avasam.com'},
     {label:'Search Syncee →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:syncee.com'},
-    {label:'Search CJ UK →', url:'https://www.google.com/search?q='+encodeURIComponent(term)+'+site:cjdropshipping.com'}
+    {label:'Search CJ UK →', url:'https://cjdropshipping.com/search/'+encodeURIComponent(term).replace(/%20/g,'+')+'.html'}
   ] : [
     {label:'Search AliExpress →', url:'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(term)}
   ];
