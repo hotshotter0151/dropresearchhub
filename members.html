@@ -2497,7 +2497,7 @@ function renderFulfilmentPanel(p) {
     } else if (t.toLowerCase().includes('syncee')) {
       url = 'https://www.google.com/search?q=' + q + '+site:syncee.com';
     } else if (t.toLowerCase().includes('cj') || t.toLowerCase().includes('cjdrop')) {
-      url = 'https://www.google.com/search?q=' + q + '+site:cjdropshipping.com';
+      url = 'https://cjdropshipping.com/search/' + q.replace(/%20/g,'+') + '.html';
     } else if (t.toLowerCase().includes('go dropship') || t.toLowerCase().includes('godropship')) {
       url = 'https://www.google.com/search?q=' + q + '+site:godropship.co.uk';
     } else {
